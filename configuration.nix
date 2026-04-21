@@ -9,9 +9,9 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
-      ./modules/hyperv-guest.nix
-      ./modules/home-manager.nix
-      ./modules/git.nix
+      ./modules/core/hyperv-guest.nix
+      ./modules/core/home-manager.nix
+      ./modules/apps/utilities/git.nix
     ];
 
   # Bootloader.
@@ -108,7 +108,6 @@
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
 
-  git
   htop
   vscode
   ];
