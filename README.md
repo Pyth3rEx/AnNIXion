@@ -1,5 +1,7 @@
 # AnNIXion
 
+![](https://github.com/Pyth3rEx/AnNIXion/blob/Switch-to-flakes/banner.png)
+
 > A reproducible, privacy-first offensive security Linux distribution built on NixOS — designed for red teamers and OSINT practitioners who need discretion as much as capability.
 
 ---
