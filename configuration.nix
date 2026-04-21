@@ -9,8 +9,12 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
+      # Core
       ./modules/core/hyperv-guest.nix
       ./modules/core/home-manager.nix
+
+      # Apps
+      ## Utilities
       ./modules/apps/utilities/git.nix
     ];
 
