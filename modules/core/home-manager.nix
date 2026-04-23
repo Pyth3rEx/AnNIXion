@@ -15,7 +15,8 @@ in
     programs.bash = {
       enable = true;
       shellAliases = {
-        rebuild = "sudo nixos-rebuild switch";
+        rebuild-reboot = "sudo nixos-rebuild switch --flake .#AnNIXion && sudo reboot";
+        rebuild-test = "sudo nixos-rebuild test --flake .#AnNIXions";
       };
     };
   };
