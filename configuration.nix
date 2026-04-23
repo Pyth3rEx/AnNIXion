@@ -90,6 +90,11 @@
     dunst         # notifications
     grim slurp    # screenshots
     wl-clipboard  # clipboard
+   
+    # Core packages
+    git
+    gh
+    code
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
