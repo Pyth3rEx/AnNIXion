@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
     description = "Main AnNIXion flake";
-=======
-    description = "Test flake";
->>>>>>> 7b645ace8466e5e350b8cdbf617ffaa41b75d3bb
 
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
@@ -22,8 +18,4 @@
             };
         };
     };
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 7b645ace8466e5e350b8cdbf617ffaa41b75d3bb
