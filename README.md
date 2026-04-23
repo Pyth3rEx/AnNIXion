@@ -1,6 +1,6 @@
-![](./banner.jpg)
-
 # AnNIXion
+
+![AnNIXion banner](banner.png)
 
 > A reproducible, privacy-first offensive security Linux distribution built on NixOS — designed for red teamers and OSINT practitioners who need discretion as much as capability.
 
