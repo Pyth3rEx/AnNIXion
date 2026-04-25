@@ -241,29 +241,18 @@
       # Dark theme
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
+
+      # Krohnkite tiling settings
+      "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
+      "kwinrc"."Script-krohnkite"."screenGapTop" = 8;
+      "kwinrc"."Script-krohnkite"."screenGapBottom" = 8;
+      "kwinrc"."Script-krohnkite"."screenGapLeft" = 8;
+      "kwinrc"."Script-krohnkite"."screenGapRight" = 8;
+      "kwinrc"."Script-krohnkite"."tileLayoutGap" = 8;
+      "kwinrc"."Script-krohnkite"."masterRatio" = "0.55";
     };
 
-    # ── Krohnkite tiling config ───────────────────────────────
-    # Krohnkite is configured via its own config file
-    dataFile = {
-      "krohnkite/krohnkiterc" = {
-        # Default layout: Tall (master + stack, like i3 default)
-        "layoutOrder" = "0,3";   # 0=Tall, 3=Monocle
 
-        # Gaps between windows (pixels)
-        "screenGapTop" = 8;
-        "screenGapBottom" = 8;
-        "screenGapLeft" = 8;
-        "screenGapRight" = 8;
-        "tileLayoutGap" = 8;
-
-        # Master area takes 55% of screen
-        "masterRatio" = 0.55;
-
-        # Float these window types (popups, dialogs etc.)
-        "floatingClass" = "plasmashell,krunner,kded5";
-      };
-    };
   };
 
   # ============================================================
