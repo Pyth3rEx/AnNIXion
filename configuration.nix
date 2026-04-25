@@ -33,7 +33,7 @@
     # Launch a proper KDE Plasma X11 session when someone connects.
     # "startkde" is the standard KDE session launcher — xrdp knows
     # how to set up the environment for it correctly.
-    defaultWindowManager = "${pkgs.plasma-workspace}/bin/startplasma-x11";
+    defaultWindowManager = "${pkgs.kdePackages.plasma-workspace}/bin/startplasma-x11";
   };
 
   # Override xrdp's ExecStart to listen on vsock://-1:3389 instead
