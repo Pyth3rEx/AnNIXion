@@ -2,7 +2,9 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   # ============================================================
   # HYPER-V GUEST SUPPORT
@@ -193,11 +195,6 @@
     git
     gh            # GitHub CLI
     wget
-
-    # RDP / remote desktop tools
-    # xrdp is already pulled in by services.xrdp above,
-    # but xorgxrdp is the X11 backend for xrdp sessions
-    xorgxrdp
 
     # Apps
     vscode
