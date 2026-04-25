@@ -81,7 +81,7 @@
       fi
     '';
     serviceConfig = {
-      ExecStart = lib.mkForce "${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://2:3389 --config /etc/xrdp/xrdp.ini";
+      ExecStart = lib.mkForce "${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://-1:3389 --config /etc/xrdp/xrdp.ini";
     };
   };
 
