@@ -2,7 +2,9 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [];
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   # ============================================================
   # HYPER-V GUEST SUPPORT
