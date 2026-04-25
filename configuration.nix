@@ -2,9 +2,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [];
 
   # ============================================================
   # HYPER-V GUEST SUPPORT
@@ -75,18 +73,8 @@
     });
   };
 
-  # This systemd service is what actually hooks vsock into Hyper-V.
-  # It tells the Windows host "I'm ready to accept Enhanced Sessions".
-  # Without this, Enhanced Session will try to connect and just fail silently.
-  systemd.services.hypervVsockd = {
-    description = "Hyper-V vSock daemon for Enhanced Session";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.util-linux}/bin/socat VSOCK-LISTEN:3389,fork TCP:127.0.0.1:3389";
-      Restart = "always";
-    };
-  };
+  # The vsock connection is handled automatically by xrdp when compiled
+  # with --enable-vsock. No extra bridge service is needed.
 
   # ============================================================
   # BOOT LOADER
