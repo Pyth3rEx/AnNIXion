@@ -33,7 +33,23 @@
     # Launch a proper KDE Plasma X11 session when someone connects.
     # "startkde" is the standard KDE session launcher — xrdp knows
     # how to set up the environment for it correctly.
-    defaultWindowManager = "${pkgs.kdePackages.plasma-workspace}/bin/startplasma-x11";
+    defaultWindowManager = "${pkgs.writeShellScript "start-plasma-rdp" ''
+      # Set up runtime directory for this user session
+      export XDG_RUNTIME_DIR=/run/user/$(id -u)
+      export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
+
+      # Start a D-Bus session if one isn't running
+      if ! [ -S "$XDG_RUNTIME_DIR/bus" ]; then
+        eval $(${pkgs.dbus}/bin/dbus-launch --sh-syntax --exit-with-session)
+      fi
+
+      # Required for Plasma to find its components
+      export XDG_SESSION_TYPE=x11
+      export DESKTOP_SESSION=plasma
+      export XDG_CURRENT_DESKTOP=KDE
+
+      exec ${pkgs.kdePackages.plasma-workspace}/bin/startplasma-x11
+    ''}";
   };
 
   # Override xrdp's ExecStart to listen on vsock://-1:3389 instead
