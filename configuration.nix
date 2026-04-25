@@ -2,77 +2,43 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [];
 
   # ============================================================
   # HYPER-V GUEST SUPPORT
   # ============================================================
 
-  # Tell NixOS "you are running inside Hyper-V".
-  # This loads the right kernel drivers (hv_vmbus, hv_storvsc, etc.)
+  # Tell NixOS it's running inside Hyper-V.
+  # Loads the right kernel drivers automatically.
   virtualisation.hypervGuest.enable = true;
 
-  # "hyperv_fb" is the old broken display driver for Hyper-V.
-  # Blacklisting it forces the system to use "hyperv_drm" instead,
-  # which gives you a proper working display.
+  # Kill the old broken Hyper-V display driver.
+  # Forces the system to use hyperv_drm (the modern one) instead.
   boot.blacklistedKernelModules = [ "hyperv_fb" ];
 
+  # Load the Hyper-V vsock kernel module at boot.
+  # This is the virtual cable Enhanced Session uses.
+  boot.kernelModules = [ "hv_sock" ];
+
   # ============================================================
-  # XRDP — THE REMOTE DESKTOP SERVER
+  # XRDP — ENHANCED SESSION
   # ============================================================
-  # Hyper-V Enhanced Session connects your Windows host to the VM
-  # over an internal virtual cable called "vsock".
-  # xrdp is the RDP server that needs to listen on that cable.
+  # Hyper-V Enhanced Session connects over vsock (a virtual internal
+  # cable) rather than the network. xrdp listens on that cable.
 
   services.xrdp = {
     enable = true;
     openFirewall = true;
 
-    # When someone connects via RDP, launch this script.
-    # It sets up the Wayland environment then starts Hyprland.
-    defaultWindowManager = "${pkgs.writeShellScript "start-hyprland-rdp" ''
-      export XDG_RUNTIME_DIR=/run/user/$(id -u)
-      export WAYLAND_DISPLAY=wayland-1
-      export QT_QPA_PLATFORM=wayland
-      export GDK_BACKEND=wayland
-      export MOZ_ENABLE_WAYLAND=1
-      exec ${pkgs.hyprland}/bin/Hyprland
-    ''}";
-
-    # Recompile xrdp with vsock support enabled.
-    # The default nixpkgs build does NOT include this flag,
-    # which is why xrdp crashes when we point it at vsock://2:3389.
-    package = pkgs.xrdp.overrideAttrs (old: {
-      configureFlags = (old.configureFlags or []) ++ [ "--enable-vsock" ];
-    });
+    # Launch a proper KDE Plasma X11 session when someone connects.
+    # "startkde" is the standard KDE session launcher — xrdp knows
+    # how to set up the environment for it correctly.
+    defaultWindowManager = "${pkgs.plasma-workspace}/bin/startplasma-x11";
   };
 
-  # ============================================================
-  # VSOCK CONFIG — THE KEY TO ENHANCED SESSION
-  # ============================================================
-  # The NixOS xrdp module writes xrdp.ini at runtime to a path we
-  # can't easily patch at build time. So we hook into the xrdp
-  # systemd service with a preStart script that patches the live
-  # config file just before xrdp launches.
-  #
-  # What the two sed commands do:
-  #
-  #   port=3389  ->  port=vsock://2:3389
-  #     Switches xrdp from listening on TCP port 3389 to listening
-  #     on the Hyper-V vsock cable. "2" is the Hyper-V host's
-  #     Context ID — it is ALWAYS 2, not something you configure.
-  #
-  #   #vmconnect=true  ->  vmconnect=true
-  #     Uncomments this option which enables the vmconnect protocol.
-  #     Hyper-V Enhanced Session needs this to negotiate the session.
-  # The NixOS xrdp module hardcodes "--port 3389" in ExecStart,
-  # which overrides anything in xrdp.ini. We use mkForce to replace
-  # that with the vsock address directly on the command line.
-  # CID 2 = Hyper-V host Context ID, always 2.
-  #
-  # We still patch vmconnect=true in the ini via preStart.
+  # Override xrdp's ExecStart to listen on vsock://-1:3389 instead
+  # of TCP. -1 means VMADDR_CID_ANY — accept from any CID.
+  # This is what makes Enhanced Session actually connect.
   systemd.services.xrdp = {
     preStart = lib.mkAfter ''
       cfg=/etc/xrdp/xrdp.ini
@@ -100,8 +66,12 @@
   # ============================================================
   # NIX SETTINGS
   # ============================================================
+  # Enable modern nix commands (nix run, nix build, nix flake etc.)
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Auto-delete old system generations older than 15 days.
+  # NixOS keeps every old version for rollback — this prevents
+  # your disk filling up over time.
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -115,31 +85,25 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   # ============================================================
-  # DISPLAY & DESKTOP
+  # DISPLAY & DESKTOP — KDE PLASMA (X11)
   # ============================================================
 
-  # X11 — needed for XWayland (lets old X11 apps run inside Wayland)
-  services.xserver.enable = true;
-
-  # Hyprland — your Wayland window manager
-  programs.hyprland = {
+  # X11 display server — KDE runs on top of this.
+  services.xserver = {
     enable = true;
-    xwayland.enable = true;
-  };
 
-  # GDM — the login screen
-  services.displayManager.gdm = {
-    enable = true;
-    wayland = true;
-  };
+    # SDDM is KDE's login screen. It's the one that knows how to
+    # launch a proper Plasma session for both local and xrdp use.
+    displayManager.sddm.enable = true;
 
-  services.displayManager.defaultSession = "hyprland";
+    # KDE Plasma 6 — the full desktop environment.
+    desktopManager.plasma6.enable = true;
+  };
 
   # ============================================================
   # AUDIO (Pipewire)
   # ============================================================
   # Enhanced Session passes audio from the VM to Windows.
-  # Pipewire is the modern audio system that makes this work.
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -148,43 +112,71 @@
   };
 
   # ============================================================
+  # SECURITY & PAM
+  # ============================================================
+  # KDE Wallet stores secrets (WiFi passwords, SSH keys etc.)
+  # This makes it unlock automatically on login.
+  security.pam.services.sddm.enableKwallet = true;
+
+  # Allow users in the "wheel" group to use sudo.
+  security.sudo.wheelNeedsPassword = true;
+
+  # ============================================================
   # USER ACCOUNT
   # ============================================================
   users.users.operator = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [
+      "wheel"          # sudo access
+      "networkmanager" # manage network connections
+      "video"          # needed for some hardware tools
+      "input"          # needed for input devices
+    ];
     hashedPassword = "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
-    packages = with pkgs; [ tree ];
   };
 
   # ============================================================
-  # PACKAGES
+  # SYSTEM PACKAGES
   # ============================================================
+  # These are installed system-wide, available to all users.
+  # User-specific tools go in home.nix instead.
   nixpkgs.config.allowUnfree = true;
 
-  programs.firefox.enable = true;
-
   environment.systemPackages = with pkgs; [
-    waybar
-    kitty
-    wofi
-    dunst
-    grim
-    slurp
-    wl-clipboard
+    # Core utilities
     git
-    gh
     wget
-    vscode
+    curl
+    htop
+    tree
+
+    # KDE extras that aren't pulled in automatically
+    kdePackages.kate          # KDE text editor
+    kdePackages.ark           # archive manager
+    kdePackages.kcalc         # calculator
+    kdePackages.filelight     # disk usage visualizer
+    kdePackages.kwalletmanager
+
+    # Networking tools
+    networkmanager
   ];
 
-  # ============================================================
-  # SSH — uncomment for a fallback way into the VM
-  # ============================================================
-  # services.openssh.enable = true;
+  # Some KDE programs need to be enabled this way rather than
+  # just added to systemPackages.
+  programs.firefox.enable = true;
 
   # ============================================================
-  # STATE VERSION — do not change this
+  # SSH — useful fallback if xrdp has issues
   # ============================================================
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = true;
+  };
+
+  # ============================================================
+  # STATE VERSION — do not change this ever
+  # ============================================================
+  # This is the NixOS version you first installed with.
+  # It controls stateful defaults. Changing it breaks things.
   system.stateVersion = "26.05";
 }
