@@ -10,7 +10,7 @@
   home.homeDirectory = "/home/operator";
 
   # Like system.stateVersion — do not change this.
-  home.stateVersion = "26.05";
+  home.stateVersion = "25.11";
 
   # Let Home Manager manage itself.
   programs.home-manager.enable = true;
