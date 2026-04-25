@@ -40,6 +40,13 @@
       export MOZ_ENABLE_WAYLAND=1
       exec ${pkgs.hyprland}/bin/Hyprland
     ''}";
+
+    # Recompile xrdp with vsock support enabled.
+    # The default nixpkgs build does NOT include this flag,
+    # which is why xrdp crashes when we point it at vsock://2:3389.
+    package = pkgs.xrdp.overrideAttrs (old: {
+      configureFlags = (old.configureFlags or []) ++ [ "--enable-vsock" ];
+    });
   };
 
   # ============================================================
