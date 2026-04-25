@@ -1,153 +1,219 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
+# configuration.nix
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      # ./hardware-configuration.nix
-    ];
+  imports = [];
 
-  # Use the systemd-boot EFI boot loader.
+  # ============================================================
+  # HYPER-V GUEST SUPPORT
+  # ============================================================
+
+  # Tell NixOS "you are running inside Hyper-V".
+  # This loads the right kernel drivers (hv_vmbus, hv_storvsc, etc.)
+  # so the VM can talk properly to the Windows host.
+  virtualisation.hypervGuest.enable = true;
+
+  # "hyperv_fb" is an old, broken framebuffer driver for Hyper-V.
+  # It conflicts with the modern "hyperv_drm" driver.
+  # Blacklisting it forces NixOS to use hyperv_drm instead,
+  # which gives you a proper display that actually works.
+  boot.blacklistedKernelModules = [ "hyperv_fb" ];
+
+  # ============================================================
+  # XRDP — THE REMOTE DESKTOP SERVER
+  # ============================================================
+  # Hyper-V Enhanced Session works by connecting your Windows host
+  # to the VM over a special internal cable called "vsock".
+  # xrdp is the RDP server that listens on that cable.
+
+  services.xrdp = {
+    enable = true;
+
+    # Open port 3389 in the firewall so RDP connections are allowed.
+    openFirewall = true;
+
+    # This tells xrdp which desktop to launch when someone connects.
+    # For Hyprland + Enhanced Session, we use a small wrapper script
+    # that sets up the Wayland environment properly before starting Hyprland.
+    defaultWindowManager = "${pkgs.writeShellScript "start-hyprland-rdp" ''
+      # Set the Wayland display socket name
+      export XDG_RUNTIME_DIR=/run/user/$(id -u)
+      export WAYLAND_DISPLAY=wayland-1
+
+      # Tell apps to use Wayland, not X11
+      export QT_QPA_PLATFORM=wayland
+      export GDK_BACKEND=wayland
+      export MOZ_ENABLE_WAYLAND=1
+
+      # Launch Hyprland
+      exec ${pkgs.hyprland}/bin/Hyprland
+    ''}";
+
+    # Override the xrdp package to enable vsock support.
+    # "vsock" is the virtual cable that Hyper-V Enhanced Session uses
+    # instead of a normal network connection.
+    #
+    # "overrideAttrs" means: take the default xrdp package and
+    # modify it slightly before building.
+    package = pkgs.xrdp.overrideAttrs (old: {
+      # Add the vsock flag when compiling xrdp from source
+      configureFlags = (old.configureFlags or []) ++ [ "--enable-vsock" ];
+
+      # After building, patch the config files to:
+      # - use vsock instead of TCP
+      # - use RDP security (required for Enhanced Session)
+      # - lower encryption overhead (vsock is already internal, no need for heavy crypto)
+      postInstall = (old.postInstall or "") + ''
+        substituteInPlace $out/etc/xrdp/xrdp.ini \
+          --replace "use_vsock=false" "use_vsock=true" \
+          --replace "security_layer=negotiate" "security_layer=rdp" \
+          --replace "crypt_level=high" "crypt_level=none" \
+          --replace "bitmap_compression=true" "bitmap_compression=false"
+      '';
+    });
+  };
+
+  # This systemd service is what actually hooks vsock into Hyper-V.
+  # It tells the Windows host "I'm ready to accept Enhanced Sessions".
+  # Without this, Enhanced Session will try to connect and just fail silently.
+  systemd.services.hypervVsockd = {
+    description = "Hyper-V vSock daemon for Enhanced Session";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.util-linux}/bin/socat VSOCK-LISTEN:3389,fork TCP:127.0.0.1:3389";
+      Restart = "always";
+    };
+  };
+
+  # ============================================================
+  # BOOT LOADER
+  # ============================================================
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "AnNIXion"; # Define your hostname.
-
-  # Configure network connections interactively with nmcli or nmtui.
+  # ============================================================
+  # NETWORKING
+  # ============================================================
+  networking.hostName = "AnNIXion";
   networking.networkmanager.enable = true;
 
+  # ============================================================
+  # NIX SETTINGS
+  # ============================================================
+  # Enable modern nix commands (nix run, nix build, etc.) and flakes.
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Set your time zone.
-  time.timeZone = "Europe/Amsterdam";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Desktop env
-  programs.hyprland.enable = true;
-  services.displayManager.gdm.enable = true; # or sddm, greetd, etc.
-  services.displayManager.defaultSession = "hyprland";
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # services.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-   users.users.operator = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-     packages = with pkgs; [
-       tree
-     ];
-     hashedPassword = "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
-   };
-
-  programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile.
-  # You can use https://search.nixos.org/ to find more packages (and options).
-  environment.systemPackages = with pkgs; [
-    #   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    
-    # Hyperland packages
-    waybar        # status bar
-    kitty         # terminal
-    wofi          # launcher
-    dunst         # notifications
-    grim slurp    # screenshots
-    wl-clipboard  # clipboard
-   
-    # Core packages
-    git
-    gh
-    wget
-
-    # Apps
-    ## Coding
-    vscode
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  # system.copySystemConfiguration = true;
-
-  # Nix cleanup
+  # Auto-clean old system generations weekly.
+  # NixOS keeps every old version of your system by default (great for rollbacks),
+  # but this would fill your disk. This deletes anything older than 15 days.
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 15d";
   };
 
-  # This option defines the first version of NixOS you have installed on this particular machine,
-  # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
-  #
-  # Most users should NEVER change this value after the initial install, for any reason,
-  # even if you've upgraded your system to a new NixOS release.
-  #
-  # This value does NOT affect the Nixpkgs version your packages and OS are pulled from,
-  # so changing it will NOT upgrade your system - see https://nixos.org/manual/nixos/stable/#sec-upgrading for how
-  # to actually do that.
-  #
-  # This value being lower than the current NixOS release does NOT mean your system is
-  # out of date, out of support, or vulnerable.
-  #
-  # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
-  # and migrated your data accordingly.
-  #
-  # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "26.05"; # Did you read the comment?
-}
+  # ============================================================
+  # LOCALE & TIME
+  # ============================================================
+  time.timeZone = "Europe/Paris"; # You're in France
 
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  # ============================================================
+  # DISPLAY & DESKTOP
+  # ============================================================
+
+  # X11 server — needed even for Wayland/Hyprland because some apps
+  # still use XWayland (a compatibility layer).
+  services.xserver.enable = true;
+
+  # Hyprland — your Wayland compositor (the thing that manages windows).
+  programs.hyprland = {
+    enable = true;
+    # XWayland lets old X11 apps run inside your Wayland session.
+    xwayland.enable = true;
+  };
+
+  # GDM is the login screen (display manager).
+  # It shows before you log in and launches your session.
+  services.displayManager.gdm = {
+    enable = true;
+    wayland = true; # Important: use the Wayland version of GDM
+  };
+
+  services.displayManager.defaultSession = "hyprland";
+
+  # ============================================================
+  # AUDIO (Pipewire)
+  # ============================================================
+  # Pipewire is the modern audio system. It replaces PulseAudio.
+  # Enhanced Session passes audio from the VM to Windows — pipewire
+  # is needed for that to work.
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;       # support for ALSA apps
+    alsa.support32Bit = true; # support for 32-bit ALSA apps
+    pulse.enable = true;      # pretend to be PulseAudio (for compatibility)
+  };
+
+  # ============================================================
+  # USER ACCOUNT
+  # ============================================================
+  users.users.operator = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel"        # allows sudo
+      "networkmanager" # allows managing network connections
+    ];
+    hashedPassword = "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
+    packages = with pkgs; [
+      tree
+    ];
+  };
+
+  # ============================================================
+  # PACKAGES
+  # ============================================================
+  nixpkgs.config.allowUnfree = true;
+
+  programs.firefox.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    # Hyprland ecosystem
+    waybar        # status bar at the top/bottom
+    kitty         # terminal emulator
+    wofi          # app launcher (like a start menu)
+    dunst         # notification daemon (shows popups)
+    grim          # screenshot tool
+    slurp         # screen region selector (used with grim)
+    wl-clipboard  # clipboard manager for Wayland
+
+    # Core tools
+    git
+    gh            # GitHub CLI
+    wget
+
+    # RDP / remote desktop tools
+    # xrdp is already pulled in by services.xrdp above,
+    # but xorgxrdp is the X11 backend for xrdp sessions
+    xorgxrdp
+
+    # Apps
+    vscode
+  ];
+
+  # ============================================================
+  # SSH (optional but recommended for Hyper-V)
+  # ============================================================
+  # Uncomment this if you want to SSH into the VM as a fallback
+  # when Enhanced Session isn't working yet.
+  # services.openssh.enable = true;
+
+  # ============================================================
+  # STATE VERSION
+  # ============================================================
+  # DO NOT CHANGE THIS. It's the NixOS version you first installed with.
+  # It has nothing to do with which version you're running now.
+  system.stateVersion = "26.05";
+}
