@@ -40,7 +40,7 @@
             home-manager.useGlobalPkgs = true;   # share system pkgs
             home-manager.useUserPackages = true;  # install to user profile
             # Give Home Manager access to the plasma-manager module
-            home-manager.sharedModules = [ plasma-manager.homeManagerModules.plasma-manager ];
+            home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
             home-manager.users.operator = import ./home.nix;
           }
         ];
