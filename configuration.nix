@@ -19,6 +19,8 @@
   # which gives you a proper working display.
   boot.blacklistedKernelModules = [ "hyperv_fb" ];
 
+  boot.kernelModules = [ "hv_sock" ];
+
   # ============================================================
   # XRDP — THE REMOTE DESKTOP SERVER
   # ============================================================
