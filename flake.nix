@@ -1,21 +1,21 @@
+# flake.nix
 {
-    description = "Main AnNIXion flake";
+  description = "Main AnNIXion flake";
 
-    inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-    };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
-    outputs = { self, nixpkgs, ... }:
-    let
-        lib = nixpkgs.lib;
-    in {
-        nixosConfigurations = {
-            AnNIXion = lib.nixosSystem {
-                system = "x86_64-linux";
-                modules = [
-                    ./configuration.nix
-                ];
-            };
-        };
+  outputs = { self, nixpkgs, ... }:
+  let
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations = {
+      AnNIXion = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./configuration.nix
+          ./hardware-configuration.nix
+        ];
+      };
     };
+  };
 }
