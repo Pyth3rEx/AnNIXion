@@ -19,8 +19,6 @@
   # which gives you a proper working display.
   boot.blacklistedKernelModules = [ "hyperv_fb" ];
 
-  boot.kernelModules = [ "hv_sock" ];
-
   # ============================================================
   # XRDP — THE REMOTE DESKTOP SERVER
   # ============================================================
@@ -62,14 +60,22 @@
   #   #vmconnect=true  ->  vmconnect=true
   #     Uncomments this option which enables the vmconnect protocol.
   #     Hyper-V Enhanced Session needs this to negotiate the session.
+  # The NixOS xrdp module hardcodes "--port 3389" in ExecStart,
+  # which overrides anything in xrdp.ini. We use mkForce to replace
+  # that with the vsock address directly on the command line.
+  # CID 2 = Hyper-V host Context ID, always 2.
+  #
+  # We still patch vmconnect=true in the ini via preStart.
   systemd.services.xrdp = {
     preStart = lib.mkAfter ''
       cfg=/etc/xrdp/xrdp.ini
       if [ -f "$cfg" ]; then
-        sed -i 's|^port=3389|port=vsock://2:3389|' "$cfg"
         sed -i 's|^#vmconnect=true|vmconnect=true|' "$cfg"
       fi
     '';
+    serviceConfig = {
+      ExecStart = lib.mkForce "${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://2:3389 --config /etc/xrdp/xrdp.ini";
+    };
   };
 
   # ============================================================
