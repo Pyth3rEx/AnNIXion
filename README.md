@@ -31,7 +31,7 @@ Both modes coexist on the same install. You choose what you load.
 
 ---
 
-## Key Features
+## Key Features (planned)
 
 ### Installer
 - Custom TUI installer built with `whiptail` — no GUI required
@@ -67,7 +67,7 @@ Both modes coexist on the same install. You choose what you load.
 
 ---
 
-## Installing
+## Installing (to be developped)
 
 
 ```bash
