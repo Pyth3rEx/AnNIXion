@@ -1,3 +1,0 @@
-{
-  virtualisation.hypervGuest.enable = true;
-}

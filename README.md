@@ -1,5 +1,7 @@
 # AnNIXion
 
+![AnNIXion banner](banner.png)
+
 > A reproducible, privacy-first offensive security Linux distribution built on NixOS — designed for red teamers and OSINT practitioners who need discretion as much as capability.
 
 ---
@@ -65,69 +67,12 @@ Both modes coexist on the same install. You choose what you load.
 
 ---
 
-## Repository Structure
-
-```
-AnNIXion/
-├── flake.nix                        # Entry point — inputs, outputs, ISO build target
-├── flake.lock                       # Pinned dependency versions
-│
-├── modules/
-│   ├── base/
-│   │   ├── system.nix               # Locale, timezone, kernel hardening, networking defaults
-│   │   └── users.nix                # Default user, sudo config, groups
-│   ├── tools/
-│   │   ├── redteam.nix              # Penetration testing and exploitation tools
-│   │   ├── osint.nix                # OSINT and recon tools
-│   │   └── privacy.nix              # Tor, VPN clients, proxychains, MAC randomization
-│   └── desktop/
-│       ├── default.nix              # Desktop environment / window manager
-│       └── firefox.nix              # Firefox policies and profile bootstrap
-│
-├── home/
-│   ├── default.nix                  # Home Manager entry point
-│   └── firefox/
-│       ├── redteam-profile.nix      # RedTeam profile: extensions, proxy, devtools
-│       └── osint-profile.nix        # OSINT profile: hardening, containers, VPN proxy
-│
-├── installer/
-│   └── annixion-install.sh          # TUI installer script (whiptail)
-│
-├── disko/
-│   └── luks-btrfs.nix               # Declarative disk layout with LUKS2 encryption
-│
-└── overlays/
-    └── default.nix                  # Custom packages not yet available in nixpkgs
-```
-
----
-
-## Building the ISO
-
-Requires Nix with flakes enabled.
-
-```bash
-nix build .#nixosConfigurations.annixion-iso.config.system.build.isoImage
-```
-
-The resulting ISO will be at `result/iso/*.iso`. Write it to a USB drive or load it in a VM.
-
----
-
 ## Installing
 
-Boot the ISO, then run:
 
 ```bash
-annixion-install
+sudo nixos-rebuild switch --flake git+ssh://git@github.com/Pyth3rEx/AnNIXion#nixos
 ```
-
-The TUI installer will walk you through:
-1. Disk selection and encryption passphrase
-2. Hostname (pre-filled with a random Windows-style name)
-3. Username and password
-4. Timezone
-5. Profile selection (RedTeam / OSINT / Both)
 
 ---
 
