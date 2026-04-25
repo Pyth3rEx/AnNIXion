@@ -2,7 +2,7 @@
 # This file declares everything about YOUR user environment.
 # Think of it as your personal layer on top of the system.
 # Changes here only affect the "operator" user, not the whole system.
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   # Home Manager needs to know your username and home directory.
@@ -66,6 +66,10 @@
     jq             # JSON processor
     unzip
     p7zip
+
+    # ── Fonts ─────────────────────────────────────────────────
+    nerd-fonts.jetbrains-mono  # terminal font with icons
+    nerd-fonts.fira-code
   ];
 
   # ============================================================
@@ -266,11 +270,4 @@
   # FONTS
   # ============================================================
   fonts.fontconfig.enable = true;
-  home.packages = lib.mkMerge [
-    config.home.packages
-    (with pkgs; [
-      nerd-fonts.jetbrains-mono  # terminal font with icons
-      nerd-fonts.fira-code
-    ])
-  ];
 }
