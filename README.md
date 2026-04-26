@@ -72,6 +72,9 @@ nix.settings.experimental-features = [ "nix-command" "flakes" ];
 git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
 cd ~/.dotfiles
 
+# Copy over your hardware config
+cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+
 # Update flake inputs
 nix flake update
 
