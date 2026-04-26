@@ -2,96 +2,136 @@
 
 ![AnNIXion banner](banner.png)
 
-> A reproducible, privacy-first offensive security Linux distribution built on NixOS — designed for red teamers and OSINT practitioners who need discretion as much as capability.
+> A declarative, reproducible offensive security distribution built on NixOS — for operators who treat their environment as infrastructure.
 
 ---
 
-## What is AnNIXion?
+## Overview
 
-AnNIXion is a NixOS-based security distro that takes the best ideas from Kali Linux and applies them through the lens of the Nix ecosystem: fully declarative, reproducible from source, and composable by design.
+AnNIXion is a NixOS-based security distribution designed for two audiences:
 
-It ships two distinct operational modes baked into the desktop from day one:
+- **Red teamers** — penetration testing, exploitation, network analysis, proxy interception
+- **OSINT & intelligence practitioners** — source gathering, identity compartmentalization, fingerprint evasion
 
-- **Red Team** — penetration testing, exploitation, network analysis, proxy interception
-- **OSINT** — open-source intelligence gathering with a heavy focus on privacy, account compartmentalization, and fingerprint evasion
-
-Both modes coexist on the same install. You choose what you load.
+The entire system — tools, desktop, configuration, user environment — is declared in code. No manual setup. No configuration drift. No "works on my machine."
 
 ---
 
-## Why NixOS?
+## Why AnNIXion
 
-| Property | Benefit |
+Most security distributions are curated package lists on top of a general-purpose OS. You get the tools, but not the environment. Configuration drifts. Reinstalls diverge. What ran on your last machine may not run on this one.
+
+AnNIXion is different in kind, not just degree. The name comes from *annexion* — to take full control of a territory, absorb it completely, make it yours. That is the operating principle.
+
+| Property | What it means in practice |
 |---|---|
-| Declarative config | Your entire OS is a set of text files you can version, share, and reproduce exactly |
-| Reproducible builds | Build the same ISO from the same flake and get the same result every time |
-| Rollbacks | Every system change is reversible — break something, boot the previous generation |
-| Composable modules | Add or remove entire tool layers (OSINT, RedTeam, Privacy) without conflicts |
-| Flake-based | Pinned dependencies, no surprise updates, auditable lock file |
+| Your environment is code | The entire system — tools, desktop, shell, shortcuts — lives in text files you own and version |
+| No drift | Two operators deploying the same config get the same machine. No exceptions. |
+| Reversible by default | Every change is a new generation. Break something, boot the previous state in seconds. |
+| Composable layers | RedTeam, OSINT, and Privacy tooling are separate modules. Load what the operation requires. |
+| Auditable supply chain | Pinned dependencies, lockfile-tracked. You know exactly what is running and where it came from. |
+
+You do not configure AnNIXion. You declare it — and it becomes exactly what you declared.
 
 ---
 
-## Key Features (planned)
+## Current State
 
-### Installer
-- Custom TUI installer built with `whiptail` — no GUI required
-- Full disk encryption via LUKS2 (configured with `disko`)
-- Random Windows-style hostname pre-generated at install time (e.g. `DESKTOP-K4MXR2J`) — changeable on prompt
-- Profile selection: install RedTeam tools, OSINT tools, or both
-- Configurable username, password, timezone
+AnNIXion is in active development. The following is implemented and functional:
 
-### Firefox — Two Profiles, Two Identities
+- NixOS flake with Home Manager integration
+- KDE Plasma 6 desktop (X11) with Krohnkite tiling
+- Hyper-V Enhanced Session support (vsock/xrdp)
+- Base security tooling declared in `home.nix`
+- ZSH + tmux + kitty terminal environment
 
-**RedTeam profile**
-- HTTP proxy pre-configured for Burp Suite (127.0.0.1:8080)
-- DevTools enabled and accessible
-- Extensions: FoxyProxy, Wappalyzer, HackTools
-- Minimal fingerprint hardening — speed and functionality over discretion
+The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 
-**OSINT profile**
-- Hardened against fingerprinting: Canvas Blocker, ResistFingerprinting flags enabled
-- Multi-Account Containers for identity compartmentalization
-- Extensions: uBlock Origin, Cookie AutoDelete, User-Agent Switcher, Temporary Containers
-- SOCKS5/VPN-aware proxy settings
-- JavaScript toggleable per-container
-
-### Tool Layers
-- **RedTeam**: nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, and more
-- **OSINT**: theHarvester, maltego, spiderfoot, sherlock, holehe, recon-ng, ExifTool, and more
-- **Privacy**: Tor, Proxychains-ng, VPN clients (Mullvad, ProtonVPN), MAC address randomization
-
-### System Hardening
-- Kernel hardening parameters enabled by default
-- MAC address randomization on network interfaces
-- Minimal attack surface — no unnecessary services running
+- Custom TUI installer
+- Firefox dual-profile setup (RedTeam / OSINT)
+- Full tool layer separation (RedTeam, OSINT, Privacy)
+- Kernel hardening and MAC randomization
+- ISO build pipeline
 
 ---
 
-## Installing (to be developped)
+## Installation
 
+> ⚠️ No automated installer yet. Manual setup required.
 
-```bash
-sudo nixos-rebuild switch --flake git+ssh://git@github.com/Pyth3rEx/AnNIXion#nixos
-```
-
----
-
-## Development Setup
-
-To contribute or build locally, you need a NixOS system (or VM) with flakes enabled:
+**Prerequisites:** A NixOS installation with flakes enabled.
 
 ```nix
-# In your NixOS configuration.nix
+# configuration.nix
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 ```
 
-Then clone the repo and iterate. Test ISOs in a nested VM — no need to install on bare metal during development.
+**Deploy:**
+
+```bash
+git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
+cd ~/.dotfiles
+
+# Update flake inputs
+nix flake update
+
+# Apply system + user config in one shot
+sudo nixos-rebuild switch --flake .#AnNIXion
+```
+
+**Hyper-V users:** Enhanced Session requires vsock support. Run this on the Windows host before connecting:
+
+```powershell
+Set-VM -VMName "AnNIXion" -EnhancedSessionTransportType HvSocket
+Set-VMHost -EnableEnhancedSessionMode $true
+```
+
+Then fully shut down the VM and reconnect from Hyper-V Manager.
 
 ---
 
-## License
+## Repository Structure
 
-GNU General Public License v3.0 — see [LICENSE](LICENSE).
+```
+.
+├── flake.nix            # Inputs: nixpkgs, home-manager, plasma-manager
+├── configuration.nix    # System config: hardware, services, desktop, xrdp
+├── hardware-configuration.nix  # Auto-generated — do not edit manually
+└── home.nix             # User environment: tools, shell, terminal, KDE shortcuts
+```
 
-> AnNIXion is intended for authorized security testing, research, and educational use only.
-> Always ensure you have explicit permission before conducting any security assessment.
+---
+
+## Planned Features
+
+### Installer
+- Custom TUI installer (`whiptail`) — no GUI required
+- Full disk encryption via LUKS2 with `disko`
+- Random Windows-style hostname at install time (e.g. `DESKTOP-K4MXR2J`)
+- Profile selection: RedTeam, OSINT, or both
+
+### Firefox — Two Profiles, Two Identities
+
+**RedTeam profile** — speed and visibility over discretion
+- Burp Suite proxy pre-configured (127.0.0.1:8080)
+- Extensions: FoxyProxy, Wappalyzer, HackTools
+
+**OSINT profile** — fingerprint evasion first
+- Canvas Blocker, ResistFingerprinting, Multi-Account Containers
+- Extensions: uBlock Origin, Cookie AutoDelete, User-Agent Switcher
+- SOCKS5/VPN-aware, per-container JavaScript control
+
+### Tool Layers
+- **RedTeam**: nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec
+- **OSINT**: theHarvester, maltego, spiderfoot, sherlock, holehe, recon-ng, ExifTool
+- **Privacy**: Tor, Proxychains-ng, Mullvad, ProtonVPN, MAC randomization
+
+### Hardening
+- Kernel hardening parameters (sysctl)
+- MAC address randomization on all interfaces
+- Minimal running services by default
+
+---
+
+> For authorized security testing, research, and educational use only.
+> Obtain explicit written permission before conducting any assessment.
