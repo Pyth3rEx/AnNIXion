@@ -68,7 +68,9 @@
       gl = "git pull";
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion";
       # Quick edit of your configs
-      enix = "kate ~/.dotfiles/configuration.nix";
+      enix  = "kate ~/.dotfiles/flake.nix";
+      emod  = "kate ~/.dotfiles/modules/";
+      euser = "kate ~/.dotfiles/user/";
       ehome = "kate ~/.dotfiles/home.nix";
     };
 

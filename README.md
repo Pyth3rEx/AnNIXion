@@ -64,7 +64,7 @@ The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 **Prerequisites:** A NixOS installation with flakes enabled.
 
 ```nix
-# configuration.nix
+# /etc/nixos/configuration.nix  (your current NixOS install, before deploying AnNIXion)
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 ```
 

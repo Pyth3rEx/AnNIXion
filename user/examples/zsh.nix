@@ -32,7 +32,7 @@
 
   # ── Extra aliases ─────────────────────────────────────────────────────────
   # These are merged with the defaults in home.nix at the key level, so
-  # existing aliases (ll, gs, gp, gl, rebuild, enix, ehome) are kept unless
+  # existing aliases (ll, gs, gp, gl, rebuild, enix, emod, euser, ehome) are kept unless
   # you redefine one here with the same name.
   programs.zsh.shellAliases = {
     # Network recon shortcuts
