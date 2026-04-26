@@ -8,8 +8,9 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 Goal: a flake that builds a bootable ISO with nothing but a shell on it.
 
-- [ ] `flake.nix` with inputs: `nixpkgs`, `home-manager`, `disko`
-- [ ] `modules/base/system.nix` — locale, timezone stub, basic kernel params
+- [x] `flake.nix` with inputs: `nixpkgs`, `home-manager`, `plasma-manager`
+- [x] `configuration.nix` — locale, timezone, basic kernel params
+- [ ] `modules/base/system.nix` — extract system config into proper module structure
 - [ ] `modules/iso.nix` — imports the NixOS cd-dvd installer module, boots to shell
 - [ ] ISO builds with `nix build .#nixosConfigurations.annixion-iso.config.system.build.isoImage`
 
@@ -38,28 +39,75 @@ Goal: running `annixion-install` from the live ISO walks through the full setup 
 
 ---
 
-## Phase 4 — Base System and User Management
+## Phase 4 — Base System and User Environment
 
-Goal: a clean, minimal installed system that boots to a desktop.
+Goal: a clean, minimal installed system that boots to a working desktop.
 
-- [ ] `modules/base/system.nix` — finalized: kernel hardening flags, MAC address randomization, no unnecessary services
-- [ ] `modules/base/users.nix` — default non-root user, sudo via wheel group
-- [ ] `home/default.nix` — Home Manager wired in, basic shell config (zsh or fish)
-- [ ] System boots, user can log in, flake is available for rebuilds
+- [x] Default non-root user (`operator`), sudo via wheel group
+- [x] Home Manager wired into flake — single `nixos-rebuild switch` handles system + user config
+- [x] ZSH with autosuggestions, syntax highlighting, fzf history search
+- [x] tmux, kitty terminal, git declared via Home Manager
+- [x] `nix.gc` — automatic weekly cleanup of old generations
+- [ ] `modules/base/system.nix` — finalized module structure
+- [ ] `modules/base/users.nix` — user management extracted into module
 
 ---
 
 ## Phase 5 — Desktop Environment
 
-Goal: a functional, minimal desktop that doesn't scream "hacker distro" from across the room.
+Goal: a functional desktop accessible to both technical and non-technical operators.
 
-- [ ] `modules/desktop/default.nix` — choose and configure DE/WM (decision pending)
-- [ ] Theming: clean, neutral appearance by default
-- [ ] Terminal emulator, file manager, basic tooling in place
+**Decision: KDE Plasma 6 on X11**
+
+Rationale:
+- Broadest audience compatibility — familiar paradigm for operators coming from Windows
+- Full keyboard-driven workflow available via KRunner and Krohnkite tiling
+- Stable X11 session required for reliable xrdp/Enhanced Session support
+- Wayland (Plasma 6) available as a future upgrade path once xrdp Wayland support matures
+
+- [x] KDE Plasma 6 declared in `configuration.nix`
+- [x] SDDM login manager
+- [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
+- [x] KDE shortcuts declared via `plasma-manager` in `home.nix` — Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
+- [x] Breeze Dark theme set as default
+- [x] 4 virtual desktops configured
+- [ ] Theming pass — neutral professional appearance, not default KDE blue
+- [ ] Application launcher and taskbar layout declared in Nix
+- [ ] Wallpaper and visual identity pass
 
 ---
 
-## Phase 6 — Firefox Profiles
+## Phase 5a — Hyper-V Enhanced Session Support
+
+Goal: full Enhanced Session (clipboard, audio, dynamic resolution, USB redirection) over vsock.
+
+- [x] `virtualisation.hypervGuest.enable = true`
+- [x] `boot.blacklistedKernelModules = [ "hyperv_fb" ]` — forces `hyperv_drm`
+- [x] `boot.kernelModules = [ "hv_sock" ]` — vsock transport loaded at boot
+- [x] xrdp compiled with `--enable-vsock` via `overrideAttrs`
+- [x] xrdp `ExecStart` overridden to `vsock://-1:3389` via `lib.mkForce`
+- [x] `vmconnect=true` patched into xrdp.ini via `preStart` hook
+- [x] KDE Plasma X11 session launches correctly over Enhanced Session
+- [ ] Performance tuning — compositor settings, RDP color depth, animation speed
+- [ ] Multi-monitor configuration declared in Nix
+- [ ] Audio passthrough verified end-to-end
+
+---
+
+## Phase 6 — Local User Overlay System
+
+Goal: users can drop personal dotfiles into a `local/` folder that survives reinstalls and never gets committed to the main repo.
+
+- [ ] `local/` directory created and added to `.gitignore`
+- [ ] `local/home.nix` — optional user override, merged into base `home.nix` at build time
+- [ ] `local/configuration.nix` — optional system override, merged at build time
+- [ ] `flake.nix` uses `lib.optional (builtins.pathExists ./local/...)` to conditionally import
+- [ ] `local/README.md` — explains what can be overridden and how, with examples
+- [ ] Users can add packages, override git identity, add keybinds, extend tool lists — all without touching base config
+
+---
+
+## Phase 7 — Firefox Profiles
 
 Goal: Firefox ships with two pre-configured profiles selectable from launch.
 
@@ -77,39 +125,40 @@ Goal: Firefox ships with two pre-configured profiles selectable from launch.
 
 ---
 
-## Phase 7 — Tool Layers
+## Phase 8 — Tool Layers
 
 Goal: RedTeam and OSINT tool sets installable as modules, selectable at install time.
 
-- [ ] `modules/tools/redteam.nix` — nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, netcat, wireshark, john, hashcat
+- [ ] `modules/tools/redteam.nix` — nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, netcat, wireshark, john, hashcat, hydra, aircrack-ng, ghidra, binwalk
 - [ ] `modules/tools/osint.nix` — theHarvester, spiderfoot, sherlock, holehe, recon-ng, maltego, ExifTool, metagoofil, photon
 - [ ] `modules/tools/privacy.nix` — tor, torbrowser, proxychains-ng, mullvad-vpn, protonvpn, macchanger
+- [ ] `modules/tools/sdr.nix` — hackrf, gqrx, gnuradio (RF/SDR toolchain)
 - [ ] Profile flag from Phase 3 installer controls which modules are included
 
 ---
 
-## Phase 8 — Overlays and Missing Packages
+## Phase 9 — Overlays and Missing Packages
 
 Goal: tools not in nixpkgs are packaged and available.
 
 - [ ] `overlays/default.nix` wired into flake
-- [ ] Audit Phase 7 tool lists — identify any tools missing from nixpkgs
-- [ ] Write derivations for missing tools or point to community flakes (e.g. `nix-security-box`)
+- [ ] Audit Phase 8 tool lists — identify any tools missing from nixpkgs
+- [ ] Write derivations for missing tools or point to community flakes
 
 ---
 
-## Phase 9 — Hardening and Privacy Defaults
+## Phase 10 — Hardening and Privacy Defaults
 
-Goal: system-level privacy and hardening that goes beyond just tool selection.
+Goal: system-level privacy and hardening that goes beyond tool selection.
 
-- [ ] Kernel: `kernel.dmesg_restrict`, `kernel.kptr_restrict`, sysctl hardening set
+- [ ] Kernel: `kernel.dmesg_restrict`, `kernel.kptr_restrict`, full sysctl hardening set
 - [ ] Network: MAC randomization on all interfaces at boot, firewall defaults
 - [ ] systemd: minimal services, no avahi, no cups unless opted in
-- [ ] Audit: check what the system phones home by default and silence it
+- [ ] Audit: verify what the system contacts by default and silence unnecessary traffic
 
 ---
 
-## Phase 10 — Polish and Documentation
+## Phase 11 — Polish and Documentation
 
 Goal: someone who has never used NixOS can follow the README and get a working install.
 
@@ -122,9 +171,10 @@ Goal: someone who has never used NixOS can follow the README and get a working i
 
 ## Deferred / Future Ideas
 
+- Wayland session support once xrdp Wayland backend matures
+- Hyprland as an optional power-user layer (declared via Home Manager, opt-in)
 - Calamares GUI installer as an alternative to the TUI installer
 - ARM64 / Raspberry Pi image target
 - Mullvad kill-switch integration at the NixOS firewall level
 - Auto-updating tool definitions via flake inputs
-- i3/Hyprland layout presets for RedTeam vs OSINT workspaces
-- Dedicated OSINT VM image (lighter, browser-forward, no pentest tools)
+- Dedicated OSINT VM image — lighter, browser-forward, no pentest tools
