@@ -72,11 +72,14 @@ nix.settings.experimental-features = [ "nix-command" "flakes" ];
 git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
 cd ~/.dotfiles
 
+# Copy over your hardware config
+cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
+
 # Update flake inputs
 nix flake update
 
 # Apply system + user config in one shot
-sudo nixos-rebuild switch --flake .#AnNIXion
+sudo nixos-rebuild switch --flake .#AnNIXion --impure
 ```
 
 **Hyper-V users:** Enhanced Session requires vsock support. Run this on the Windows host before connecting:
