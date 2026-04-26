@@ -39,17 +39,19 @@ You do not configure AnNIXion. You declare it — and it becomes exactly what yo
 
 AnNIXion is in active development. The following is implemented and functional:
 
-- NixOS flake with Home Manager integration
-- KDE Plasma 6 desktop (X11) with Krohnkite tiling
-- Hyper-V Enhanced Session support (vsock/xrdp)
-- Base security tooling declared in `home.nix`
-- ZSH + tmux + kitty terminal environment
+- NixOS flake with Home Manager and plasma-manager integration
+- Modular config structure — desktop, xrdp, shell, and security tools each in their own module
+- KDE Plasma 6 desktop (X11) with Krohnkite tiling and Breeze Dark theme
+- Hyper-V Enhanced Session over vsock (xrdp)
+- Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
+- ZSH + tmux + xterm terminal environment
+- User override system — drop personal settings into `user/` without touching base config
 
 The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 
 - Custom TUI installer
 - Firefox dual-profile setup (RedTeam / OSINT)
-- Full tool layer separation (RedTeam, OSINT, Privacy)
+- Full tool layer separation (RedTeam, OSINT, Privacy) as selectable profiles
 - Kernel hardening and MAC randomization
 - ISO build pipeline
 
@@ -97,10 +99,21 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 
 ```
 .
-├── flake.nix            # Inputs: nixpkgs, home-manager, plasma-manager
-├── configuration.nix    # System config: hardware, services, desktop, xrdp
-├── hardware-configuration.nix  # Auto-generated — do not edit manually
-└── home.nix             # User environment: tools, shell, terminal, KDE shortcuts
+├── flake.nix                    # Inputs, module wiring, conditional user imports
+├── hardware-configuration.nix   # Auto-generated — do not edit manually
+├── home.nix                     # Base user environment: shell, dev tools, KDE config
+├── modules/
+│   ├── desktop.nix              # KDE Plasma 6, SDDM, X11, Firefox
+│   ├── xrdp.nix                 # Hyper-V Enhanced Session via vsock
+│   ├── shell.nix                # System-wide zsh, login shell, xterm
+│   └── security-tools.nix      # Offensive, OSINT, and SDR packages
+└── user/                        # Your personal overrides — never committed upstream
+    ├── configuration.nix        # System-level overrides (hostname, timezone, groups…)
+    ├── home.nix                 # User-environment overrides (git, aliases, packages…)
+    ├── examples/
+    │   ├── git.nix              # Example: git identity and signing config
+    │   └── zsh.nix              # Example: welcome banner and recon aliases
+    └── README.md                # How the override system works
 ```
 
 ---
