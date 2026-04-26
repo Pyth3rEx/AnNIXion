@@ -46,10 +46,10 @@ Goal: a clean, minimal installed system that boots to a working desktop.
 - [x] Default non-root user (`operator`), sudo via wheel group
 - [x] Home Manager wired into flake — single `nixos-rebuild switch` handles system + user config
 - [x] ZSH with autosuggestions, syntax highlighting, fzf history search
-- [x] tmux, kitty terminal, git declared via Home Manager
+- [x] tmux, xterm terminal, git declared via Home Manager
 - [x] `nix.gc` — automatic weekly cleanup of old generations
-- [ ] `modules/base/system.nix` — finalized module structure
-- [ ] `modules/base/users.nix` — user management extracted into module
+- [x] `modules/` — flat module structure: desktop, xrdp, shell, security-tools
+- [ ] `modules/base/users.nix` — user management as a standalone module
 
 ---
 
@@ -65,7 +65,7 @@ Rationale:
 - Stable X11 session required for reliable xrdp/Enhanced Session support
 - Wayland (Plasma 6) available as a future upgrade path once xrdp Wayland support matures
 
-- [x] KDE Plasma 6 declared in `configuration.nix`
+- [x] KDE Plasma 6 declared in `modules/desktop.nix`
 - [x] SDDM login manager
 - [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
 - [x] KDE shortcuts declared via `plasma-manager` in `home.nix` — Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
@@ -84,8 +84,7 @@ Goal: full Enhanced Session (clipboard, audio, dynamic resolution, USB redirecti
 - [x] `virtualisation.hypervGuest.enable = true`
 - [x] `boot.blacklistedKernelModules = [ "hyperv_fb" ]` — forces `hyperv_drm`
 - [x] `boot.kernelModules = [ "hv_sock" ]` — vsock transport loaded at boot
-- [x] xrdp compiled with `--enable-vsock` via `overrideAttrs`
-- [x] xrdp `ExecStart` overridden to `vsock://-1:3389` via `lib.mkForce`
+- [x] xrdp `ExecStart` overridden to `vsock://-1:3389` via `lib.mkForce` in `modules/xrdp.nix`
 - [x] `vmconnect=true` patched into xrdp.ini via `preStart` hook
 - [x] KDE Plasma X11 session launches correctly over Enhanced Session
 - [ ] Performance tuning — compositor settings, RDP color depth, animation speed
@@ -94,16 +93,17 @@ Goal: full Enhanced Session (clipboard, audio, dynamic resolution, USB redirecti
 
 ---
 
-## Phase 6 — Local User Overlay System
+## Phase 6 — User Overlay System ✓
 
-Goal: users can drop personal dotfiles into a `local/` folder that survives reinstalls and never gets committed to the main repo.
+Goal: users can drop personal dotfiles into a `user/` folder that survives reinstalls and never gets committed to the main repo.
 
-- [ ] `local/` directory created and added to `.gitignore`
-- [ ] `local/home.nix` — optional user override, merged into base `home.nix` at build time
-- [ ] `local/configuration.nix` — optional system override, merged at build time
-- [ ] `flake.nix` uses `lib.optional (builtins.pathExists ./local/...)` to conditionally import
-- [ ] `local/README.md` — explains what can be overridden and how, with examples
-- [ ] Users can add packages, override git identity, add keybinds, extend tool lists — all without touching base config
+- [x] `user/` directory with stub files tracked in the repo
+- [x] `user/home.nix` — optional user override, merged into base `home.nix` at build time via `imports`
+- [x] `user/configuration.nix` — optional system override, conditionally imported via `builtins.pathExists`
+- [x] All base options use `lib.mkDefault` (priority 1000) so user overrides win at normal priority — no `lib.mkForce` needed
+- [x] `user/examples/git.nix` — ready-to-use git identity and signing override
+- [x] `user/examples/zsh.nix` — welcome banner and recon aliases
+- [x] `user/README.md` — explains what can be overridden and how, with examples
 
 ---
 
@@ -129,10 +129,13 @@ Goal: Firefox ships with two pre-configured profiles selectable from launch.
 
 Goal: RedTeam and OSINT tool sets installable as modules, selectable at install time.
 
+> **Partial progress:** `modules/security-tools.nix` currently ships all offensive, OSINT, and SDR tools as a single flat module. Phase 8 splits this into separate, independently selectable profiles.
+
 - [ ] `modules/tools/redteam.nix` — nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, netcat, wireshark, john, hashcat, hydra, aircrack-ng, ghidra, binwalk
 - [ ] `modules/tools/osint.nix` — theHarvester, spiderfoot, sherlock, holehe, recon-ng, maltego, ExifTool, metagoofil, photon
 - [ ] `modules/tools/privacy.nix` — tor, torbrowser, proxychains-ng, mullvad-vpn, protonvpn, macchanger
 - [ ] `modules/tools/sdr.nix` — hackrf, gqrx, gnuradio (RF/SDR toolchain)
+- [ ] Split `modules/security-tools.nix` into the above and remove it
 - [ ] Profile flag from Phase 3 installer controls which modules are included
 
 ---

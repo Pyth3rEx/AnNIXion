@@ -2,54 +2,34 @@
 # This file declares everything about YOUR user environment.
 # Think of it as your personal layer on top of the system.
 # Changes here only affect the "operator" user, not the whole system.
-{ config, pkgs, ... }:
+#
+# Every option uses lib.mkDefault (priority 1000). That means anything
+# you put in user/home.nix at normal priority (100) automatically wins
+# without needing lib.mkForce.
+{ config, lib, pkgs, ... }:
 
 {
   # Home Manager needs to know your username and home directory.
-  home.username = "operator";
-  home.homeDirectory = "/home/operator";
+  home.username = lib.mkDefault "operator";
+  home.homeDirectory = lib.mkDefault "/home/operator";
 
-  # Like system.stateVersion — do not change this.
+  # Like system.stateVersion — do not change this ever.
+  # It records the Home Manager version you first activated with.
   home.stateVersion = "25.11";
 
   # Let Home Manager manage itself.
-  programs.home-manager.enable = true;
+  programs.home-manager.enable = lib.mkDefault true;
 
   # ============================================================
   # USER PACKAGES
   # ============================================================
-  # These are installed only for your user, not system-wide.
-  # Security tools, personal apps, CLI utilities go here.
+  # These are installed only for the operator user, not system-wide.
+  # Offensive/OSINT/SDR tools have moved to modules/security-tools.nix
+  # and are now system-wide packages.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
     tmux           # terminal multiplexer (multiple panes/sessions)
     zsh            # better shell than bash
-
-    # ── Offensive Security ────────────────────────────────────
-    nmap           # network scanner
-    netcat-gnu     # networking swiss army knife
-    wireshark      # packet capture & analysis
-    burpsuite      # web app pentesting proxy
-    metasploit     # exploitation framework
-    sqlmap         # SQL injection tool
-    gobuster       # directory/DNS brute forcer
-    ffuf           # fast web fuzzer
-    john           # password cracker
-    hashcat        # GPU password cracker
-    hydra          # network login brute forcer
-    aircrack-ng    # WiFi security auditing
-    binwalk        # firmware analysis
-    ghidra         # reverse engineering / disassembler
-
-    # ── OSINT ─────────────────────────────────────────────────
-    theharvester   # email/domain/IP OSINT
-    whois
-    dnsutils       # dig, nslookup
-
-    # ── SDR / RF (your HackRF etc.) ───────────────────────────
-    hackrf         # HackRF tools
-    gqrx           # SDR receiver GUI
-    gnuradio       # SDR signal processing
 
     # ── Development ───────────────────────────────────────────
     vscode
@@ -75,25 +55,27 @@
   # SHELL — ZSH
   # ============================================================
   programs.zsh = {
-    enable = true;
-    autosuggestion.enable = true;      # suggests commands as you type
-    syntaxHighlighting.enable = true;  # colors valid/invalid commands
-    enableCompletion = true;
+    enable = lib.mkDefault true;
+    autosuggestion.enable = lib.mkDefault true;      # suggests commands as you type
+    syntaxHighlighting.enable = lib.mkDefault true;  # colors valid/invalid commands
+    enableCompletion = lib.mkDefault true;
 
     # Your shell aliases
-    shellAliases = {
+    shellAliases = lib.mkDefault {
       ll = "ls -la";
       gs = "git status";
       gp = "git push";
       gl = "git pull";
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion";
       # Quick edit of your configs
-      enix = "kate ~/.dotfiles/configuration.nix";
+      enix  = "kate ~/.dotfiles/flake.nix";
+      emod  = "kate ~/.dotfiles/modules/";
+      euser = "kate ~/.dotfiles/user/";
       ehome = "kate ~/.dotfiles/home.nix";
     };
 
     # Extra config appended to .zshrc
-    initContent = ''
+    initContent = lib.mkDefault ''
       # Auto-launch tmux when opening a terminal (but not inside tmux already)
       if [ -z "$TMUX" ]; then
         exec tmux new-session -A -s main
@@ -106,7 +88,7 @@
   };
 
   # Set zsh as default shell
-  home.sessionVariables = {
+  home.sessionVariables = lib.mkDefault {
     SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
@@ -115,7 +97,7 @@
   # ============================================================
   # xterm reads ~/.Xresources for its appearance settings.
   # Home Manager writes this file automatically.
-  xresources.properties = {
+  xresources.properties = lib.mkDefault {
     "XTerm.faceName" = "JetBrainsMono Nerd Font";
     "XTerm.faceSize" = 11;
     "XTerm*background" = "#0d0d0d";
@@ -131,10 +113,10 @@
   # GIT
   # ============================================================
   programs.git = {
-    enable = true;
-    userName = "CHANGME";
-    userEmail = "your@email.com"; # replace this
-    extraConfig = {
+    enable = lib.mkDefault true;
+    userName = lib.mkDefault "CHANGME";
+    userEmail = lib.mkDefault "your@email.com"; # replace this
+    extraConfig = lib.mkDefault {
       init.defaultBranch = "main";
       pull.rebase = false;
     };
@@ -144,14 +126,14 @@
   # TMUX
   # ============================================================
   programs.tmux = {
-    enable = true;
+    enable = lib.mkDefault true;
     # shortcut = "a";        # Ctrl+a prefix instead of Ctrl+b
-    baseIndex = 1;         # windows start at 1 not 0
-    escapeTime = 0;        # no delay on Escape key
-    historyLimit = 50000;
-    terminal = "screen-256color";
+    baseIndex = lib.mkDefault 1;         # windows start at 1 not 0
+    escapeTime = lib.mkDefault 0;        # no delay on Escape key
+    historyLimit = lib.mkDefault 50000;
+    terminal = lib.mkDefault "screen-256color";
 
-    extraConfig = ''
+    extraConfig = lib.mkDefault ''
       # Split panes with | and -
       bind | split-window -h
       bind - split-window -v
@@ -179,10 +161,10 @@
   # plasma-manager handles the translation to KDE format.
 
   programs.plasma = {
-    enable = true;
+    enable = lib.mkDefault true;
 
     # ── Global shortcuts ──────────────────────────────────────
-    shortcuts = {
+    shortcuts = lib.mkDefault {
       # KRunner — your app launcher (like wofi/rofi)
       "org.kde.krunner.desktop"."_launch" = [ "Alt+Space" "Alt+F2" ];
 
@@ -218,7 +200,7 @@
     };
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
-    configFile = {
+    configFile = lib.mkDefault {
       # Enable Krohnkite tiling script
       "kwinrc"."Plugins"."krohnkiteEnabled" = true;
 
@@ -252,12 +234,10 @@
       "kwinrc"."Script-krohnkite"."tileLayoutGap" = 8;
       "kwinrc"."Script-krohnkite"."masterRatio" = "0.55";
     };
-
-
   };
 
   # ============================================================
   # FONTS
   # ============================================================
-  fonts.fontconfig.enable = true;
+  fonts.fontconfig.enable = lib.mkDefault true;
 }
