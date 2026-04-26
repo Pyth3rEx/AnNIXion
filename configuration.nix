@@ -104,6 +104,9 @@
   # DISPLAY & DESKTOP — KDE PLASMA (X11)
   # ============================================================
 
+  # Exclude Konsole — we use xterm+tmux as the default terminal
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [ konsole ];
+
   # X11 display server — KDE runs on top of this.
   services.xserver = {
     enable = true;
@@ -115,6 +118,15 @@
     # KDE Plasma 6 — the full desktop environment.
     desktopManager.plasma6.enable = true;
   };
+
+  # ============================================================
+  # SHELL & TERMINAL
+  # ============================================================
+
+  # Enable zsh system-wide and set it as the default shell for operator.
+  # Without this, xterm ignores the home.nix zsh config entirely.
+  programs.zsh.enable = true;
+  users.users.operator.shell = pkgs.zsh;
 
   # ============================================================
   # AUDIO (Pipewire)

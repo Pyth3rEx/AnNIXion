@@ -22,7 +22,6 @@
   # Security tools, personal apps, CLI utilities go here.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
-    kitty          # fast GPU-accelerated terminal
     tmux           # terminal multiplexer (multiple panes/sessions)
     zsh            # better shell than bash
 
@@ -95,6 +94,11 @@
 
     # Extra config appended to .zshrc
     initContent = ''
+      # Auto-launch tmux when opening a terminal (but not inside tmux already)
+      if [ -z "$TMUX" ]; then
+        exec tmux new-session -A -s main
+      fi
+
       # Use fzf for ctrl+r history search
       source ${pkgs.fzf}/share/fzf/key-bindings.zsh
       source ${pkgs.fzf}/share/fzf/completion.zsh
@@ -107,28 +111,20 @@
   };
 
   # ============================================================
-  # TERMINAL — KITTY
+  # XTERM APPEARANCE
   # ============================================================
-  programs.kitty = {
-    enable = true;
-    settings = {
-      # Dark theme
-      background = "#0d0d0d";
-      foreground = "#e0e0e0";
-      cursor = "#e0e0e0";
-
-      # Font
-      font_family = "JetBrainsMono Nerd Font";
-      font_size = 12;
-
-      # Behavior
-      copy_on_select = true;   # auto-copy on mouse select
-      strip_trailing_spaces = "smart";
-
-      # Window
-      window_padding_width = 8;
-      hide_window_decorations = "yes";
-    };
+  # xterm reads ~/.Xresources for its appearance settings.
+  # Home Manager writes this file automatically.
+  xresources.properties = {
+    "XTerm.faceName" = "JetBrainsMono Nerd Font";
+    "XTerm.faceSize" = 11;
+    "XTerm*background" = "#0d0d0d";
+    "XTerm*foreground" = "#e0e0e0";
+    "XTerm*cursorColor" = "#e0e0e0";
+    "XTerm*loginShell" = true;
+    "XTerm*termName" = "xterm-256color";
+    "XTerm*selectToClipboard" = true;
+    "XTerm*scrollBar" = false;
   };
 
   # ============================================================
@@ -136,7 +132,7 @@
   # ============================================================
   programs.git = {
     enable = true;
-    userName = "Pyth3rEx";
+    userName = "CHANGME";
     userEmail = "your@email.com"; # replace this
     extraConfig = {
       init.defaultBranch = "main";
@@ -149,7 +145,7 @@
   # ============================================================
   programs.tmux = {
     enable = true;
-    shortcut = "a";        # Ctrl+a prefix instead of Ctrl+b
+    # shortcut = "a";        # Ctrl+a prefix instead of Ctrl+b
     baseIndex = 1;         # windows start at 1 not 0
     escapeTime = 0;        # no delay on Escape key
     historyLimit = 50000;
@@ -217,8 +213,8 @@
         "Switch Window Right" = "Meta+Shift+Right";
       };
 
-      # Launch terminal with Meta+Return (like i3/Hyprland)
-      "org.kde.konsole.desktop"."NewWindow" = "Meta+Return";
+      # Launch terminal with Meta+Return — tmux in xterm
+      "org.kde.kglobalaccel.desktop"."run command" = "Meta+Return";
     };
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
@@ -237,6 +233,11 @@
       # Compositor — keep effects minimal for VM performance
       "kwinrc"."Compositing"."AnimationSpeed" = 3;
       "kwinrc"."Compositing"."Enabled" = true;
+
+      # Default terminal — xterm running zsh+tmux
+      # KDE uses this when you open a terminal from the taskbar or file manager
+      "kdeglobals"."General"."TerminalApplication" = "xterm -e zsh -c 'tmux new-session'";
+      "kdeglobals"."General"."TerminalService" = "";
 
       # Dark theme
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
