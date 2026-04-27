@@ -4,10 +4,7 @@
   # ============================================================
   # DISPLAY & DESKTOP — KDE PLASMA 6 (X11)
   # ============================================================
-
-  # Exclude Konsole — we use xterm+tmux as the default terminal
-  environment.plasma6.excludePackages = lib.mkDefault (with pkgs.kdePackages; [ konsole ]);
-
+    
   # X11 display server — KDE runs on top of this.
   services.xserver.enable = lib.mkDefault true;
 

@@ -93,29 +93,12 @@
   };
 
   # ============================================================
-  # XTERM APPEARANCE
-  # ============================================================
-  # xterm reads ~/.Xresources for its appearance settings.
-  # Home Manager writes this file automatically.
-  xresources.properties = lib.mkDefault {
-    "XTerm.faceName" = "JetBrainsMono Nerd Font";
-    "XTerm.faceSize" = 11;
-    "XTerm*background" = "#0d0d0d";
-    "XTerm*foreground" = "#e0e0e0";
-    "XTerm*cursorColor" = "#e0e0e0";
-    "XTerm*loginShell" = true;
-    "XTerm*termName" = "xterm-256color";
-    "XTerm*selectToClipboard" = true;
-    "XTerm*scrollBar" = false;
-  };
-
-  # ============================================================
   # GIT
   # ============================================================
   programs.git.settings = {
     enable = lib.mkDefault true;
     userName = lib.mkDefault "CHANGME";
-    userEmail = lib.mkDefault "your@email.com"; # replace this
+    userEmail = lib.mkDefault "your@email.com";
     extraConfig = lib.mkDefault {
       init.defaultBranch = "main";
       pull.rebase = false;
@@ -215,11 +198,6 @@
       # Compositor — keep effects minimal for VM performance
       "kwinrc"."Compositing"."AnimationSpeed" = 3;
       "kwinrc"."Compositing"."Enabled" = true;
-
-      # Default terminal — xterm running zsh+tmux
-      # KDE uses this when you open a terminal from the taskbar or file manager
-      "kdeglobals"."General"."TerminalApplication" = "xterm -e zsh -c 'tmux new-session'";
-      "kdeglobals"."General"."TerminalService" = "";
 
       # Dark theme
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
