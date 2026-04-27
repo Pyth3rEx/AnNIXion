@@ -28,7 +28,6 @@
   # and are now system-wide packages.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
-    tmux           # terminal multiplexer (multiple panes/sessions)
     zsh            # better shell than bash
 
     # ── Development ───────────────────────────────────────────
@@ -65,7 +64,7 @@
       gs = "git status";
       gp = "git push";
       gl = "git pull";
-      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion";
+      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure";
 
       # Networking
       myip      = "curl -s https://ifconfig.me && echo";
@@ -106,38 +105,6 @@
       init.defaultBranch = "main";
       pull.rebase = false;
     };
-  };
-
-  # ============================================================
-  # TMUX
-  # ============================================================
-  programs.tmux = {
-    enable = lib.mkDefault true;
-    # shortcut = "a";        # Ctrl+a prefix instead of Ctrl+b
-    baseIndex = lib.mkDefault 1;         # windows start at 1 not 0
-    escapeTime = lib.mkDefault 0;        # no delay on Escape key
-    historyLimit = lib.mkDefault 50000;
-    terminal = lib.mkDefault "screen-256color";
-
-    extraConfig = lib.mkDefault ''
-      # Split panes with | and -
-      bind | split-window -h
-      bind - split-window -v
-
-      # Switch panes with Alt+arrow (no prefix needed)
-      bind -n M-Left select-pane -L
-      bind -n M-Right select-pane -R
-      bind -n M-Up select-pane -U
-      bind -n M-Down select-pane -D
-
-      # Reload config
-      bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
-
-      # Status bar
-      set -g status-style 'bg=#1a1a1a fg=#e0e0e0'
-      set -g status-left '#[fg=#ff5555,bold] AnNIXion #[fg=#e0e0e0]| '
-      set -g status-right '#[fg=#888888]%H:%M %d-%b-%Y'
-    '';
   };
 
   # ============================================================
