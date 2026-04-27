@@ -13,10 +13,10 @@
 
   # SDDM is KDE's login screen. It's the one that knows how to
   # launch a proper Plasma session for both local and xrdp use.
-  services.xserver.displayManager.sddm.enable = lib.mkDefault true;
+  services.displayManager.sddm.enable = lib.mkDefault true;
 
   # KDE Plasma 6 — the full desktop environment.
-  services.xserver.desktopManager.plasma6.enable = lib.mkDefault true;
+  services.desktopManager.plasma6.enable = lib.mkDefault true;
 
   # KDE extras that aren't pulled in automatically
   environment.systemPackages = with pkgs; [

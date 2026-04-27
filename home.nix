@@ -112,7 +112,7 @@
   # ============================================================
   # GIT
   # ============================================================
-  programs.git = {
+  programs.git.settings = {
     enable = lib.mkDefault true;
     userName = lib.mkDefault "CHANGME";
     userEmail = lib.mkDefault "your@email.com"; # replace this
