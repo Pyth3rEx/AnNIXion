@@ -35,7 +35,6 @@
           # ── Feature modules ──────────────────────────────────
           ./modules/desktop.nix
           ./modules/xrdp.nix
-          ./modules/shell.nix
           ./modules/security-tools.nix
 
           # ── Wire Home Manager into the NixOS build ───────────

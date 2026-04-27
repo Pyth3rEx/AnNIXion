@@ -34,6 +34,7 @@
     # ── Development ───────────────────────────────────────────
     vscode
     gh             # GitHub CLI
+    github-desktop # Github GUI
     python3
     python3Packages.pip
 
@@ -50,23 +51,26 @@
     nerd-fonts.jetbrains-mono  # terminal font with icons
     nerd-fonts.fira-code
   ];
-
-  # ============================================================
-  # SHELL — ZSH
-  # ============================================================
+  
   programs.zsh = {
     enable = lib.mkDefault true;
     autosuggestion.enable = lib.mkDefault true;      # suggests commands as you type
     syntaxHighlighting.enable = lib.mkDefault true;  # colors valid/invalid commands
     enableCompletion = lib.mkDefault true;
+    autocd = lib.mkDefault true;                     # Automaticaly enter into a directory if typed directly in the shell
 
     # Your shell aliases
-    shellAliases = lib.mkDefault {
+    shellAliases = {
       ll = "ls -la";
       gs = "git status";
       gp = "git push";
       gl = "git pull";
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion";
+
+      # Networking
+      myip      = "curl -s https://ifconfig.me && echo";
+      localip   = "ip -4 addr show scope global | awk '/inet/{print $2}'";
+      
       # Quick edit of your configs
       enix  = "kate ~/.dotfiles/flake.nix";
       emod  = "kate ~/.dotfiles/modules/";
@@ -74,22 +78,21 @@
       ehome = "kate ~/.dotfiles/home.nix";
     };
 
-    # Extra config appended to .zshrc
-    initContent = lib.mkDefault ''
-      # Auto-launch tmux when opening a terminal (but not inside tmux already)
-      if [ -z "$TMUX" ]; then
-        exec tmux new-session -A -s main
-      fi
-
-      # Use fzf for ctrl+r history search
-      source ${pkgs.fzf}/share/fzf/key-bindings.zsh
-      source ${pkgs.fzf}/share/fzf/completion.zsh
+    initContent = ''
+      # ── AnNIXion banner ───────────────────────────────────────────────────
+      echo ""
+      echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
+      echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
+      echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
+      echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
+      echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
+      echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
+      echo ""
+      echo "  \e[0;90mhost\e[0m  $(hostname)"
+      echo "  \e[0;90mdate\e[0m  $(date '+%A %d %B %Y  %H:%M')"
+      echo "  \e[0;90mip  \e[0m  $(ip -4 addr show scope global 2>/dev/null | awk '/inet/{print $2}' | head -1)"
+      echo ""
     '';
-  };
-
-  # Set zsh as default shell
-  home.sessionVariables = lib.mkDefault {
-    SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
   # ============================================================
@@ -178,7 +181,7 @@
         "Switch Window Right" = "Meta+Shift+Right";
       };
 
-      # Launch terminal with Meta+Return — tmux in xterm
+      # Launch terminal with Meta+Return
       "org.kde.kglobalaccel.desktop"."run command" = "Meta+Return";
     };
 

@@ -28,6 +28,10 @@
   # just added to systemPackages.
   programs.firefox.enable = lib.mkDefault true;
 
+  # Enable zsh system-wide and set it as the default shell for operator.
+  programs.zsh.enable = lib.mkDefault true;
+  users.users.operator.shell = pkgs.zsh;
+
   # KDE Wallet stores secrets (WiFi passwords, SSH keys etc.)
   # This makes it unlock automatically on login.
   security.pam.services.sddm.enableKwallet = lib.mkDefault true;
