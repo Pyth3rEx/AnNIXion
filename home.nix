@@ -8,7 +8,22 @@
 # without needing lib.mkForce.
 { config, lib, pkgs, ... }:
 
-{
+let
+  SlotIcons = pkgs.stdenvNoCC.mkDerivation {
+    name = "Slot-Nord-Dark-Icons";
+    src = pkgs.fetchFromGitHub {
+      owner = "L4ki";
+      repo = "Slot-Plasma-Themes";
+      rev = "4dd93ad62cf47307d85e3a624eacba34578bf1fe";
+      sha256 = "sha256-M2jCyPLPDqhF2KnovRIrsISOECpFgaR4TUI0N++P8ho=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/share/icons
+      cp -r "Slot Icons Themes/." $out/share/icons
+    '';
+  };
+in {
   # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
   home.homeDirectory = lib.mkDefault "/home/operator";
@@ -19,6 +34,9 @@
 
   # Let Home Manager manage itself.
   programs.home-manager.enable = lib.mkDefault true;
+
+  # Declare icons symlink so KDE sees them
+  xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
 
   # ============================================================
   # USER PACKAGES
@@ -49,6 +67,9 @@
     # ── Fonts ─────────────────────────────────────────────────
     nerd-fonts.jetbrains-mono  # terminal font with icons
     nerd-fonts.fira-code
+
+    # ── Icons ─────────────────────────────────────────────────
+    SlotIcons    
   ];
   
   programs.zsh = {
@@ -119,12 +140,12 @@
     # ── Global astetics ──────────────────────────────────────
     workspace = lib.mkDefault {
       clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
-      lookAndFeel = "org.kde.breezedark.desktop";
+      # lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
         theme = "Bibata-Modern-Ice";
         size = 32;
       };
-      iconTheme = "Slot-Nord-Dark-Icons";
+      iconTheme = "Slot-Nord-Dark-Colorize-Icons";
       wallpaper = "/home/operator/.dotfiles/assets/wallpaper/dementor-harry-5120x2880-18680.png"; # Wallpaper from https://4kwallpapers.com/black-dark/dementor-harry-18680.html - Will credit the artist once I find out who it is
       wallpaperFillMode = "preserveAspectFit";
       wallpaperBackground.color = "#000000";
@@ -346,9 +367,4 @@
       "kwinrc"."Script-krohnkite"."masterRatio" = "0.55";
     };
   };
-
-  # # ============================================================
-  # # FONTS
-  # # ============================================================
-  # fonts.fontconfig.enable = lib.mkDefault true;
 }
