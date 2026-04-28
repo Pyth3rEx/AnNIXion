@@ -77,10 +77,13 @@ cd ~/.dotfiles
 # Copy over your hardware config
 cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
 
+# Add to git so rebuild stops yelling - carefull not to commit
+git add ./hardware-configuration.nix -f
+
 # Update flake inputs
 nix flake update
 
-# Apply system + user config in one shot
+# Apply system + user config in one shot | You'll be able to user "rebuild" simply after first install
 sudo nixos-rebuild switch --flake .#AnNIXion --impure
 ```
 
@@ -105,7 +108,6 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 ├── modules/
 │   ├── desktop.nix              # KDE Plasma 6, SDDM, X11, Firefox
 │   ├── xrdp.nix                 # Hyper-V Enhanced Session via vsock
-│   ├── shell.nix                # System-wide zsh, login shell, xterm
 │   └── security-tools.nix      # Offensive, OSINT, and SDR packages
 └── user/                        # Your personal overrides — never committed upstream
     ├── configuration.nix        # System-level overrides (hostname, timezone, groups…)
