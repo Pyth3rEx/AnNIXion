@@ -20,11 +20,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    Slot-Plasma-Themes.url = "assets/derivations/Slot-Plasma-Themes";
   };
 
   outputs = { self, nixpkgs, home-manager, plasma-manager, ... }:
-  let
+  inputs: let
     system = "x86_64-linux";
+    pkgs = import inputs.nixpkgs { system = "x86_64-linux"; };
+    Slot-Plasma-Themes = inputs.Slot-Plasma-Themes.packages.${pkgs.system}.default;
   in {
     nixosConfigurations = {
       AnNIXion = nixpkgs.lib.nixosSystem {
@@ -140,7 +144,12 @@
               htop
               tree
               networkmanager
+
+              # Custom packaged themes
+              Slot-Plasma-Themes
             ];
+            # Make Plasma see the themes system-wide
+            environment.etc."xdg/share/plasma/desktoptheme/Slot-Plasma-Themes".source = pkgs.Slot-Plasma-Themes;
 
             # ============================================================
             # SSH — useful fallback if xrdp has issues
