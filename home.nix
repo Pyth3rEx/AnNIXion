@@ -164,6 +164,7 @@ in {
       # Windows-like panel at the bottom
       {
         location = "right";
+        screen = 0;
         widgets = [
           # We can configure the widgets by adding the name and config
           # attributes. For example to add the the kickoff widget and set the
@@ -228,6 +229,7 @@ in {
       # Application name, Global menu and Song information and playback controls at the top
       {
         location = "top";
+        screen = 0;
         height = 26;
         widgets = [
           {
