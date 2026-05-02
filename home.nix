@@ -8,7 +8,22 @@
 # without needing lib.mkForce.
 { config, lib, pkgs, ... }:
 
-{
+let
+  SlotIcons = pkgs.stdenvNoCC.mkDerivation {
+    name = "Slot-Nord-Dark-Icons";
+    src = pkgs.fetchFromGitHub {
+      owner = "L4ki";
+      repo = "Slot-Plasma-Themes";
+      rev = "4dd93ad62cf47307d85e3a624eacba34578bf1fe";
+      sha256 = "sha256-M2jCyPLPDqhF2KnovRIrsISOECpFgaR4TUI0N++P8ho=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/share/icons
+      cp -r "Slot Icons Themes/." $out/share/icons
+    '';
+  };
+in {
   # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
   home.homeDirectory = lib.mkDefault "/home/operator";
@@ -20,6 +35,9 @@
   # Let Home Manager manage itself.
   programs.home-manager.enable = lib.mkDefault true;
 
+  # Declare icons symlink so KDE sees them
+  xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
+
   # ============================================================
   # USER PACKAGES
   # ============================================================
@@ -28,12 +46,12 @@
   # and are now system-wide packages.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
-    tmux           # terminal multiplexer (multiple panes/sessions)
     zsh            # better shell than bash
 
     # ── Development ───────────────────────────────────────────
     vscode
     gh             # GitHub CLI
+    github-desktop # Github GUI
     python3
     python3Packages.pip
 
@@ -49,24 +67,30 @@
     # ── Fonts ─────────────────────────────────────────────────
     nerd-fonts.jetbrains-mono  # terminal font with icons
     nerd-fonts.fira-code
-  ];
 
-  # ============================================================
-  # SHELL — ZSH
-  # ============================================================
+    # ── Icons ─────────────────────────────────────────────────
+    SlotIcons    
+  ];
+  
   programs.zsh = {
     enable = lib.mkDefault true;
     autosuggestion.enable = lib.mkDefault true;      # suggests commands as you type
     syntaxHighlighting.enable = lib.mkDefault true;  # colors valid/invalid commands
     enableCompletion = lib.mkDefault true;
+    autocd = lib.mkDefault true;                     # Automaticaly enter into a directory if typed directly in the shell
 
     # Your shell aliases
-    shellAliases = lib.mkDefault {
+    shellAliases = {
       ll = "ls -la";
       gs = "git status";
       gp = "git push";
       gl = "git pull";
-      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion";
+      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure";
+
+      # Networking
+      myip      = "curl -s https://ifconfig.me && echo";
+      localip   = "ip -4 addr show scope global | awk '/inet/{print $2}'";
+      
       # Quick edit of your configs
       enix  = "kate ~/.dotfiles/flake.nix";
       emod  = "kate ~/.dotfiles/modules/";
@@ -74,28 +98,27 @@
       ehome = "kate ~/.dotfiles/home.nix";
     };
 
-    # Extra config appended to .zshrc
-    initContent = lib.mkDefault ''
-      # Auto-launch tmux when opening a terminal (but not inside tmux already)
-      if [ -z "$TMUX" ]; then
-        exec tmux new-session -A -s main
-      fi
-
-      # Use fzf for ctrl+r history search
-      source ${pkgs.fzf}/share/fzf/key-bindings.zsh
-      source ${pkgs.fzf}/share/fzf/completion.zsh
+    initContent = ''
+      # ── AnNIXion banner ───────────────────────────────────────────────────
+      echo ""
+      echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
+      echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
+      echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
+      echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
+      echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
+      echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
+      echo ""
+      echo "  \e[0;90mhost\e[0m  $(hostname)"
+      echo "  \e[0;90mdate\e[0m  $(date '+%A %d %B %Y  %H:%M')"
+      echo "  \e[0;90mip  \e[0m  $(ip -4 addr show scope global 2>/dev/null | awk '/inet/{print $2}' | head -1)"
+      echo ""
     '';
-  };
-
-  # Set zsh as default shell
-  home.sessionVariables = lib.mkDefault {
-    SHELL = "${pkgs.zsh}/bin/zsh";
   };
 
   # ============================================================
   # GIT
   # ============================================================
-  programs.git = {
+  programs.git.settings = {
     enable = lib.mkDefault true;
     userName = lib.mkDefault "CHANGME";
     userEmail = lib.mkDefault "your@email.com";
@@ -106,38 +129,6 @@
   };
 
   # ============================================================
-  # TMUX
-  # ============================================================
-  programs.tmux = {
-    enable = lib.mkDefault true;
-    # shortcut = "a";        # Ctrl+a prefix instead of Ctrl+b
-    baseIndex = lib.mkDefault 1;         # windows start at 1 not 0
-    escapeTime = lib.mkDefault 0;        # no delay on Escape key
-    historyLimit = lib.mkDefault 50000;
-    terminal = lib.mkDefault "screen-256color";
-
-    extraConfig = lib.mkDefault ''
-      # Split panes with | and -
-      bind | split-window -h
-      bind - split-window -v
-
-      # Switch panes with Alt+arrow (no prefix needed)
-      bind -n M-Left select-pane -L
-      bind -n M-Right select-pane -R
-      bind -n M-Up select-pane -U
-      bind -n M-Down select-pane -D
-
-      # Reload config
-      bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
-
-      # Status bar
-      set -g status-style 'bg=#1a1a1a fg=#e0e0e0'
-      set -g status-left '#[fg=#ff5555,bold] AnNIXion #[fg=#e0e0e0]| '
-      set -g status-right '#[fg=#888888]%H:%M %d-%b-%Y'
-    '';
-  };
-
-  # ============================================================
   # KDE / KWIN SETTINGS (Krohnkite tiling + shortcuts)
   # ============================================================
   # These write directly into KDE's config files in ~/.config/
@@ -145,6 +136,171 @@
 
   programs.plasma = {
     enable = lib.mkDefault true;
+
+    # ── Global astetics ──────────────────────────────────────
+    workspace = lib.mkDefault {
+      clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
+      # lookAndFeel = "org.kde.breezedark.desktop";
+      cursor = {
+        theme = "Bibata-Modern-Ice";
+        size = 32;
+      };
+      iconTheme = "Slot-Nord-Dark-Colorize-Icons";
+      wallpaper = "/home/operator/.dotfiles/assets/wallpaper/dementor-harry-5120x2880-18680.png"; # Wallpaper from https://4kwallpapers.com/black-dark/dementor-harry-18680.html - Will credit the artist once I find out who it is
+      wallpaperFillMode = "preserveAspectFit";
+      wallpaperBackground.color = "#000000";
+    };
+
+    kscreenlocker.appearance.wallpaper = "/home/operator/.dotfiles/assets/wallpaper/moon-planet-8k-7680x4320-87.jpg"; # Wallpaper from https://4kwallpapers.com/space/moon-planet-8k-87.html - Will credit the artist once I find out who it is
+
+    fonts = {
+      general = {
+        family = "JetBrains Mono";
+        pointSize = 12;
+      };
+    };
+
+    panels = [
+      # Windows-like panel at the bottom
+      {
+        location = "right";
+        screen = 0;
+        widgets = [
+          # We can configure the widgets by adding the name and config
+          # attributes. For example to add the the kickoff widget and set the
+          # icon to "nix-snowflake-white" use the below configuration. This will
+          # add the "icon" key to the "General" group for the widget in
+          # ~/.config/plasma-org.kde.plasma.desktop-appletsrc.
+          {
+            name = "org.kde.plasma.kickoff";
+            config = {
+              General = {
+                icon = "nix-snowflake-white";
+                alphaSort = true;
+              };
+            };
+          }
+          # Adding configuration to the widgets can also for example be used to
+          # pin apps to the task-manager, which this example illustrates by
+          # pinning dolphin and konsole to the task-manager by default with widget-specific options.
+          {
+            iconTasks = {
+              launchers = [
+                "applications:org.kde.dolphin.desktop"
+                "applications:org.kde.konsole.desktop"
+              ];
+            };
+          }
+          # If no configuration is needed, specifying only the name of the
+          # widget will add them with the default configuration.
+          "org.kde.plasma.marginsseparator"
+          # If you need configuration for your widget, instead of specifying the
+          # the keys and values directly using the config attribute as shown
+          # above, plasma-manager also provides some higher-level interfaces for
+          # configuring the widgets. See modules/widgets for supported widgets
+          # and options for these widgets. The widgets below shows two examples
+          # of usage, one where we add a digital clock, setting 12h time and
+          # first day of the week to Sunday and another adding a systray with
+          # some modifications in which entries to show.
+          {
+            digitalClock = {
+              calendar.firstDayOfWeek = "monday";
+              time.format = "24h";
+            };
+          }
+          {
+            systemTray.items = {
+              # We explicitly show bluetooth and battery
+              shown = [
+                "org.kde.plasma.battery"
+                "org.kde.plasma.bluetooth"
+              ];
+              # And explicitly hide networkmanagement and volume
+              hidden = [
+                "org.kde.plasma.networkmanagement"
+                "org.kde.plasma.volume"
+              ];
+            };
+          }
+        ];
+        hiding = "autohide";
+        opacity = "adaptive";
+      }
+      # Application name, Global menu and Song information and playback controls at the top
+      {
+        location = "top";
+        screen = 0;
+        height = 26;
+        widgets = [
+          {
+            applicationTitleBar = {
+              behavior = {
+                activeTaskSource = "activeTask";
+              };
+              layout = {
+                elements = [ "windowTitle" ];
+                horizontalAlignment = "left";
+                showDisabledElements = "deactivated";
+                verticalAlignment = "center";
+              };
+              overrideForMaximized.enable = false;
+              titleReplacements = [
+                {
+                  type = "regexp";
+                  originalTitle = "^Brave Web Browser$";
+                  newTitle = "Brave";
+                }
+                {
+                  type = "regexp";
+                  originalTitle = ''\\bDolphin\\b'';
+                  newTitle = "File manager";
+                }
+              ];
+              windowTitle = {
+                font = {
+                  bold = false;
+                  fit = "fixedSize";
+                  size = 12;
+                };
+                hideEmptyTitle = true;
+                margins = {
+                  bottom = 0;
+                  left = 10;
+                  right = 5;
+                  top = 0;
+                };
+                source = "appName";
+              };
+            };
+          }
+          "org.kde.plasma.appmenu"
+          "org.kde.plasma.panelspacer"
+          {
+            plasmusicToolbar = {
+              panelIcon = {
+                albumCover = {
+                  useAsIcon = false;
+                  radius = 8;
+                };
+                icon = "view-media-track";
+              };
+              playbackSource = "auto";
+              musicControls.showPlaybackControls = true;
+              songText = {
+                displayInSeparateLines = true;
+                maximumWidth = 640;
+                scrolling = {
+                  behavior = "alwaysScroll";
+                  speed = 3;
+                };
+              };
+            };
+          }
+        ];
+        opacity = "adaptive";
+      }
+    ];
+
 
     # ── Global shortcuts ──────────────────────────────────────
     shortcuts = lib.mkDefault {
@@ -178,7 +334,7 @@
         "Switch Window Right" = "Meta+Shift+Right";
       };
 
-      # Launch terminal with Meta+Return — tmux in xterm
+      # Launch terminal with Meta+Return
       "org.kde.kglobalaccel.desktop"."run command" = "Meta+Return";
     };
 
@@ -213,9 +369,4 @@
       "kwinrc"."Script-krohnkite"."masterRatio" = "0.55";
     };
   };
-
-  # ============================================================
-  # FONTS
-  # ============================================================
-  fonts.fontconfig.enable = lib.mkDefault true;
 }

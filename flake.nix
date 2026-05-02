@@ -20,6 +20,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
   };
 
   outputs = { self, nixpkgs, home-manager, plasma-manager, ... }:
@@ -35,7 +36,6 @@
           # ── Feature modules ──────────────────────────────────
           ./modules/desktop.nix
           ./modules/xrdp.nix
-          ./modules/shell.nix
           ./modules/security-tools.nix
 
           # ── Wire Home Manager into the NixOS build ───────────
@@ -161,7 +161,6 @@
             system.stateVersion = lib.mkDefault "26.05";
 
           })
-
         # ── User overrides (system level) ────────────────────────────
         # user/configuration.nix is imported only if the file exists.
         # Because all base options above use lib.mkDefault (priority 1000),

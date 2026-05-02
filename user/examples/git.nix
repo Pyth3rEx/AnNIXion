@@ -9,10 +9,10 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 {
-  programs.git.userName  = "Your Name";
-  programs.git.userEmail = "you@example.com";
+  programs.git.settings.userName  = "Your Name";
+  programs.git.settings.userEmail = "you@example.com";
 
-  programs.git.extraConfig = {
+  programs.git.settings.extraConfig = {
     init.defaultBranch = "main";
     pull.rebase        = false;
 
