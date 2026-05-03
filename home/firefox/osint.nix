@@ -38,11 +38,34 @@ in
           definedAliases = [ "@nw" ];
         };
 
+        shodan = {
+          name = "Shodan";
+          urls = [{ template = "https://www.shodan.io/search?query={searchTerms}"; }];
+          iconMapObj."16" = "https://www.shodan.io/favicon.ico";
+          definedAliases = [ "@sh" ];
+        };
+
+        censys = {
+          name = "Censys";
+          urls = [{ template = "https://search.censys.io/search?resource=hosts&q={searchTerms}"; }];
+          definedAliases = [ "@cs" ];
+        };
+
+        wayback = {
+          name = "Wayback Machine";
+          urls = [{ template = "https://web.archive.org/web/*/{searchTerms}"; }];
+          iconMapObj."16" = "https://archive.org/favicon.ico";
+          definedAliases = [ "@wb" ];
+        };
+
         bing.metaData.hidden = true;
         google.metaData.alias = "@g";
       };
       order = [
         "ddg"
+        "shodan"
+        "censys"
+        "wayback"
         "google"
       ];
     };

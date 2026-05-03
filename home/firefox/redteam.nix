@@ -41,11 +41,33 @@ in
           definedAliases = [ "@nw" ];
         };
 
+        exploit-db = {
+          name = "Exploit-DB";
+          urls = [{ template = "https://www.exploit-db.com/search?q={searchTerms}"; }];
+          iconMapObj."16" = "https://www.exploit-db.com/favicon.ico";
+          definedAliases = [ "@edb" ];
+        };
+
+        cve = {
+          name = "CVE Search";
+          urls = [{ template = "https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword={searchTerms}"; }];
+          definedAliases = [ "@cve" ];
+        };
+
+        nvd = {
+          name = "NVD";
+          urls = [{ template = "https://nvd.nist.gov/vuln/search/results?query={searchTerms}"; }];
+          definedAliases = [ "@nvd" ];
+        };
+
         bing.metaData.hidden = true;
         google.metaData.alias = "@g";
       };
       order = [
         "ddg"
+        "exploit-db"
+        "cve"
+        "nvd"
         "google"
       ];
     };
