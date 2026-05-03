@@ -1,10 +1,4 @@
-# Addons need to be turned on (allowed in private windows) manual
-# It's not a bug... it's a feature!
-
-
-# Update: just learned that firefox handles "allow in private windows" as runtime security policy, and therefore janky to mess with as declarative. I'll need to dig more if we want to change that (do we?)
-
-{ inputs, config, lib, pkgs, ...}:
+{ inputs, config, lib, pkgs, ... }:
 
 let
   repoRoot = inputs.firefox-addons.sourceInfo.outPath;
@@ -144,11 +138,6 @@ in
           force = true;
         };
         extensions = {
-          settings = {
-            # ublock-origin = {
-            #   force = true;
-            # };
-          };
           packages = with addons; [
             ublock-origin
             bitwarden
