@@ -19,7 +19,7 @@
       genericName = "Assault Browser";
       exec = ''firefox -P "Red Team" --no-remote'';
       terminal = false;
-      categories = [ "Network" "WebBrowser" ];
+      categories = [ "X-AnNIXion-Delivery-Proxy" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
       mimeType = [ "text/html" "text/xml" ];
     };
     firefox-osint = {
@@ -28,7 +28,7 @@
       genericName = "Search Browser";
       exec = ''firefox -P "OSINT" --no-remote'';
       terminal = false;
-      categories = [ "Network" "WebBrowser" ];
+      categories = [ "X-AnNIXion-Recon-OSINT" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
       mimeType = [ "text/html" "text/xml" ];
     };
   };

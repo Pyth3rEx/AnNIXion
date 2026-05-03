@@ -26,6 +26,7 @@ let
 in {
   imports = [
     ./home/firefox
+    ./home/apps-menu.nix
   ];
 
   # Home Manager needs to know your username and home directory.
@@ -178,11 +179,12 @@ in {
           # add the "icon" key to the "General" group for the widget in
           # ~/.config/plasma-org.kde.plasma.desktop-appletsrc.
           {
-            name = "org.kde.plasma.kickoff";
+            name = "org.kde.plasma.kicker";
             config = {
               General = {
-                icon = "nix-snowflake-white";
-                alphaSort = true;
+                icon            = "nix-snowflake-white";
+                showRecentApps  = false;
+                showRecentDocs  = false;
               };
             };
           }
