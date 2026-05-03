@@ -126,7 +126,7 @@ in {
   # ============================================================
   programs.git.settings = {
     enable = lib.mkDefault true;
-    userName = lib.mkDefault "CHANGME";
+    userName = lib.mkDefault "CHANGEME";
     userEmail = lib.mkDefault "your@email.com";
     extraConfig = lib.mkDefault {
       init.defaultBranch = "main";
