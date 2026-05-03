@@ -1,10 +1,19 @@
 # Addons need to be turned on (allowed in private windows) manual
 # It's not a bug... it's a feature!
 
+
+# Update: just learned that firefox handles "allow in private windows" as runtime security policy, and therefore janky to mess with as declarative. I'll need to dig more if we want to change that (do we?)
+
 { inputs, config, lib, pkgs, ...}:
 
 let
-  addons = inputs.firefox-addons.packages.${pkgs.system};
+  repoRoot = inputs.firefox-addons.sourceInfo.outPath;
+  libMozilla = import "${repoRoot}/lib/mozilla.nix" { lib = pkgs.lib; };
+  buildMozillaXpiAddon = libMozilla.mkBuildMozillaXpiAddon { inherit (pkgs) fetchurl stdenv; };
+  addons = import "${inputs.firefox-addons}" {
+    inherit buildMozillaXpiAddon;
+    inherit (pkgs) fetchurl lib stdenv;
+  };
 in
 {
   programs.firefox.enable = lib.mkDefault true;
