@@ -24,9 +24,18 @@
     kdePackages.kwalletmanager
   ];
 
+  # Default applications
+  xdg.mime.defaultApplications = {
+    "text/html" = "firefox-red.desktop";
+    "x-scheme-handler/http" = "firefox-red.desktop";
+    "x-scheme-handler/https" = "firefox-red.desktop";
+    "x-scheme-handler/about" = "firefox-red.desktop";
+    "x-scheme-handler/unknown" = "firefox-red.desktop";
+  };
+
   # Some KDE programs need to be enabled this way rather than
   # just added to systemPackages.
-  programs.firefox.enable = lib.mkDefault true;
+  # programs.firefox.enable = lib.mkDefault true;
 
   # Enable zsh system-wide and set it as the default shell for operator.
   programs.zsh.enable = lib.mkDefault true;

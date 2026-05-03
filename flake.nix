@@ -6,6 +6,9 @@
     # Main nixpkgs — your system packages come from here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
+    # NUR — Nix User Repository, a collection of community-maintained packages.
+    nur.url = "github:nix-community/NUR";
+
     # Home Manager — declares your user environment (dotfiles,
     # shortcuts, apps) in Nix. Follows the same nixpkgs version.
     home-manager = {
@@ -21,15 +24,20 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, plasma-manager, ... }:
+  outputs = { self, nixpkgs, home-manager, plasma-manager, firefox-addons, ... }@inputs:
   let
     system = "x86_64-linux";
   in {
     nixosConfigurations = {
       AnNIXion = nixpkgs.lib.nixosSystem {
         inherit system;
+        specialArgs = { inherit inputs; };
         modules = [
           ./hardware-configuration.nix
 
@@ -46,6 +54,9 @@
             home-manager.useUserPackages = true;  # install to user profile
             # Give Home Manager access to the plasma-manager module
             home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+
+            # Extra arguments to Home Manager modules
+            home-manager.extraSpecialArgs = { inherit inputs; };
 
             # Merge home.nix with user/home.nix (if it exists).
             # home.nix uses lib.mkDefault throughout (priority 1000).

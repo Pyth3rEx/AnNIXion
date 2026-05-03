@@ -6,7 +6,7 @@
 # Every option uses lib.mkDefault (priority 1000). That means anything
 # you put in user/home.nix at normal priority (100) automatically wins
 # without needing lib.mkForce.
-{ config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 
 let
   SlotIcons = pkgs.stdenvNoCC.mkDerivation {
@@ -24,6 +24,10 @@ let
     '';
   };
 in {
+  imports = [
+    ./home/firefox.nix
+  ]; 
+
   # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
   home.homeDirectory = lib.mkDefault "/home/operator";
@@ -64,12 +68,14 @@ in {
     unzip
     p7zip
 
+    # ── STYLES ────────────────────────────────────────────────
     # ── Fonts ─────────────────────────────────────────────────
     nerd-fonts.jetbrains-mono  # terminal font with icons
     nerd-fonts.fira-code
-
     # ── Icons ─────────────────────────────────────────────────
-    SlotIcons    
+    SlotIcons
+    # ── Cursors ───────────────────────────────────────────────
+    nordzy-cursor-theme
   ];
   
   programs.zsh = {
@@ -142,7 +148,7 @@ in {
       clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
       # lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
-        theme = "Bibata-Modern-Ice";
+        theme = "Nordzy-cursors";
         size = 32;
       };
       iconTheme = "Slot-Nord-Dark-Colorize-Icons";

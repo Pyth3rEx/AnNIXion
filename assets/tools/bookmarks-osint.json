@@ -1,0 +1,1969 @@
+[
+  {
+    "name": "Toolbar",
+    "toolbar": true,
+    "bookmarks": [
+      {
+        "name": "Quick Access",
+        "bookmarks": [
+          {
+            "name": "Shodan",
+            "url": "https://www.shodan.io/"
+          },
+          {
+            "name": "IntelTechniques",
+            "url": "https://inteltechniques.com/"
+          },
+          {
+            "name": "Have I Been Pwned",
+            "url": "https://haveibeenpwned.com/"
+          },
+          {
+            "name": "TinEye",
+            "url": "https://tineye.com/"
+          },
+          {
+            "name": "Wayback Machine",
+            "url": "https://archive.org/"
+          },
+          {
+            "name": "Hunter.io",
+            "url": "https://hunter.io/"
+          },
+          {
+            "name": "Censys",
+            "url": "https://search.censys.io/"
+          },
+          {
+            "name": "URLScan.io",
+            "url": "https://urlscan.io/"
+          },
+          {
+            "name": "Whois",
+            "url": "https://www.whois.com/whois/"
+          },
+          {
+            "name": "Google Dorks (GHDB)",
+            "url": "https://www.exploit-db.com/google-hacking-database"
+          },
+          {
+            "name": "OSINT Framework",
+            "url": "https://osintframework.com/"
+          },
+          {
+            "name": "Bellingcat Toolkit",
+            "url": "https://bellingcat.gitbook.io/toolkit"
+          }
+        ]
+      },
+      {
+        "name": "Bookmarks",
+        "bookmarks": [
+          {
+            "name": "Search Engines",
+            "bookmarks": [
+              {
+                "name": "General Search",
+                "bookmarks": [
+                  {
+                    "name": "Google",
+                    "url": "https://www.google.com/"
+                  },
+                  {
+                    "name": "Google Advanced Search",
+                    "url": "https://www.google.com/advanced_search"
+                  },
+                  {
+                    "name": "Google Advanced Operators Reference",
+                    "url": "https://support.google.com/websearch/answer/35890?hl=en&co=GENIE.Platform%3DDesktop"
+                  },
+                  {
+                    "name": "Boolean Strings - Advanced Searching",
+                    "url": "https://booleanstrings.com/"
+                  },
+                  {
+                    "name": "Bing",
+                    "url": "https://www.bing.com/"
+                  },
+                  {
+                    "name": "Bing Advanced Search Operators",
+                    "url": "https://support.microsoft.com/en-au/topic/advanced-search-keywords-ea595928-5d63-4a0b-9c6b-0b769865e78a"
+                  },
+                  {
+                    "name": "DuckDuckGo",
+                    "url": "https://duckduckgo.com/"
+                  },
+                  {
+                    "name": "DuckDuckGo Advanced Operators",
+                    "url": "https://duckduckgo.com/duckduckgo-help-pages/results/syntax/"
+                  },
+                  {
+                    "name": "Startpage",
+                    "url": "https://www.startpage.com/"
+                  },
+                  {
+                    "name": "Brave Search",
+                    "url": "https://search.brave.com/"
+                  },
+                  {
+                    "name": "Marginalia Search Engine",
+                    "url": "https://marginalia-search.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Regional Search Engines",
+                "bookmarks": [
+                  {
+                    "name": "Yandex",
+                    "url": "https://yandex.com/"
+                  },
+                  {
+                    "name": "Yandex Advanced Search Operators",
+                    "url": "https://yandex.com/support/search/en/search-results/settings"
+                  },
+                  {
+                    "name": "Baidu",
+                    "url": "https://www.baidu.com/"
+                  },
+                  {
+                    "name": "Baidu Advanced Search",
+                    "url": "https://www.baidu.com/gaoji/advanced.html"
+                  }
+                ]
+              },
+              {
+                "name": "Specialized & AI Search",
+                "bookmarks": [
+                  {
+                    "name": "Consensus - AI Research Search",
+                    "url": "https://consensus.app/"
+                  },
+                  {
+                    "name": "Perplexity AI",
+                    "url": "https://www.perplexity.ai/"
+                  },
+                  {
+                    "name": "Google Scholar",
+                    "url": "https://scholar.google.com.au/"
+                  },
+                  {
+                    "name": "Litmaps - Literature Search",
+                    "url": "https://app.litmaps.com/"
+                  },
+                  {
+                    "name": "Adverse Media Search Tool",
+                    "url": "https://www.no-nonsense-intel.com/adverse-media-search-tool"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "People & Identity",
+            "bookmarks": [
+              {
+                "name": "People Search",
+                "bookmarks": [
+                  {
+                    "name": "Pipl - People Search",
+                    "url": "https://pipl.com/"
+                  },
+                  {
+                    "name": "ZoomInfo",
+                    "url": "https://www.zoominfo.com/s/search"
+                  },
+                  {
+                    "name": "ThatsThem",
+                    "url": "https://thatsthem.com/people-search"
+                  },
+                  {
+                    "name": "Webmii",
+                    "url": "https://webmii.com/"
+                  },
+                  {
+                    "name": "PeekYou - People Search",
+                    "url": "https://www.peekyou.com/"
+                  },
+                  {
+                    "name": "411 - White Pages",
+                    "url": "https://www.411.com/"
+                  },
+                  {
+                    "name": "Intelius",
+                    "url": "https://www.intelius.com/people-search"
+                  },
+                  {
+                    "name": "Nuwber",
+                    "url": "https://nuwber.com/"
+                  },
+                  {
+                    "name": "Social Search (6 Platforms)",
+                    "url": "https://www.social-searcher.com/google-social-search/?q=person&fb=on&tw=on&gp=on&in=on&li=on&pi=on"
+                  }
+                ]
+              },
+              {
+                "name": "Username Search",
+                "bookmarks": [
+                  {
+                    "name": "WhatsMyName - Username Search",
+                    "url": "https://whatsmyname.app/"
+                  },
+                  {
+                    "name": "Instant Username Search",
+                    "url": "https://instantusername.com/#/"
+                  },
+                  {
+                    "name": "Sherlock - Username Hunt",
+                    "url": "https://github.com/sherlock-project/sherlock"
+                  },
+                  {
+                    "name": "Namechk - Username Availability",
+                    "url": "https://namechk.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Email",
+                "bookmarks": [
+                  {
+                    "name": "Hunter.io - Email Finder",
+                    "url": "https://hunter.io/"
+                  },
+                  {
+                    "name": "Email Format Finder",
+                    "url": "https://www.email-format.com/"
+                  },
+                  {
+                    "name": "Email Reputation - emailrep.io",
+                    "url": "https://emailrep.io/"
+                  },
+                  {
+                    "name": "Epieos - Gmail Account Lookup",
+                    "url": "https://tools.epieos.com/google-account.php"
+                  },
+                  {
+                    "name": "Email Permutator",
+                    "url": "https://polished.app/email-permutator/"
+                  },
+                  {
+                    "name": "Email to Skype - Vedbex",
+                    "url": "https://www.vedbex.com/tools/email2skype"
+                  },
+                  {
+                    "name": "Trace Email Address Source",
+                    "url": "https://whatismyipaddress.com/trace-email"
+                  },
+                  {
+                    "name": "Skymem - Company Email Addresses",
+                    "url": "http://www.skymem.info/"
+                  },
+                  {
+                    "name": "ViewDNS Reverse WHOIS by Email",
+                    "url": "https://viewdns.info/reversewhois/"
+                  }
+                ]
+              },
+              {
+                "name": "Documents & Public Records",
+                "bookmarks": [
+                  {
+                    "name": "Google Custom Document Search",
+                    "url": "http://cse.google.co.uk/cse?cof=CX:Documents%2520-%2520Formats;&cx=009462381166450434430:nudphlkt3p4&num=100"
+                  },
+                  {
+                    "name": "dedigger - Google Drive Search",
+                    "url": "https://www.dedigger.com/#gsc.tab=0"
+                  },
+                  {
+                    "name": "FamilySearch Genealogy",
+                    "url": "https://www.familysearch.org/tree/find/name"
+                  }
+                ]
+              },
+              {
+                "name": "Link Analysis",
+                "bookmarks": [
+                  {
+                    "name": "DataVis by OSINT Combine",
+                    "url": "https://osintcombine.tools/#"
+                  },
+                  {
+                    "name": "Polinode - Network Analysis",
+                    "url": "https://polinode.com/"
+                  },
+                  {
+                    "name": "VIS - Visual Investigative Scenarios",
+                    "url": "https://vis.occrp.org/"
+                  },
+                  {
+                    "name": "Maltego",
+                    "url": "https://www.maltego.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Social Media",
+            "bookmarks": [
+              {
+                "name": "Export Social Comments to CSV",
+                "url": "https://exportcomments.com/"
+              },
+              {
+                "name": "Twitter / X",
+                "bookmarks": [
+                  {
+                    "name": "Twitonomy - Twitter Analytics",
+                    "url": "https://www.twitonomy.com/"
+                  },
+                  {
+                    "name": "Bot Sentinel - Bot Detection",
+                    "url": "https://botsentinel.com/"
+                  },
+                  {
+                    "name": "Wayback Tweets",
+                    "url": "https://waybacktweets.streamlit.app/"
+                  },
+                  {
+                    "name": "Nitter - Twitter Mirror",
+                    "url": "https://nitter.net/"
+                  },
+                  {
+                    "name": "TrendsMap - Twitter Geo Trends",
+                    "url": "https://www.trendsmap.com/"
+                  },
+                  {
+                    "name": "OneMillionTweetMap",
+                    "url": "https://onemilliontweetmap.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Instagram",
+                "bookmarks": [
+                  {
+                    "name": "Instagram Explorer - OSINT Combine",
+                    "url": "https://www.osintcombine.com/free-osint-tools/instagram-explorer"
+                  },
+                  {
+                    "name": "Imginn - View Instagram Profile",
+                    "url": "https://imginn.com/"
+                  },
+                  {
+                    "name": "Instagram Person Google Search",
+                    "url": "https://www.google.com/search?q=site%3Ainstagram.com+%22person%22"
+                  }
+                ]
+              },
+              {
+                "name": "Facebook",
+                "bookmarks": [
+                  {
+                    "name": "Facebook Filter Search (graph.tips)",
+                    "url": "http://graph.tips/beta/"
+                  },
+                  {
+                    "name": "Facebook Data Breach Checker",
+                    "url": "https://haveibeenzuckered.com/"
+                  },
+                  {
+                    "name": "Facebook Google Search Tool",
+                    "url": "https://www.osintcanada.com/desktop-tools/facebook"
+                  },
+                  {
+                    "name": "Facebook Live Video Search",
+                    "url": "https://www.facebook.com/search/videos/?q=location"
+                  },
+                  {
+                    "name": "FDown - Facebook Video Downloader",
+                    "url": "https://fdown.net/index.php"
+                  },
+                  {
+                    "name": "Facebook Ad Library",
+                    "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=political_and_issue_ads&country=AU"
+                  }
+                ]
+              },
+              {
+                "name": "Reddit",
+                "bookmarks": [
+                  {
+                    "name": "Map of Reddit",
+                    "url": "https://anvaka.github.io/map-of-reddit/"
+                  },
+                  {
+                    "name": "SocialGrep - Reddit Search",
+                    "url": "https://socialgrep.com/"
+                  },
+                  {
+                    "name": "Reddit User Analyser",
+                    "url": "https://reddit-user-analyser.netlify.app/"
+                  },
+                  {
+                    "name": "Deck for Reddit",
+                    "url": "https://rdddeck.com/"
+                  },
+                  {
+                    "name": "Reddit Archive",
+                    "url": "https://www.redditarchive.com/"
+                  },
+                  {
+                    "name": "Search Reddit Comments by User",
+                    "url": "https://redditcommentsearch.com/"
+                  },
+                  {
+                    "name": "Subreddits.org Directory",
+                    "url": "https://subreddits.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Telegram",
+                "bookmarks": [
+                  {
+                    "name": "Telegago - Telegram Search",
+                    "url": "https://cse.google.com/cse?&cx=006368593537057042503:efxu7xprihg"
+                  },
+                  {
+                    "name": "TGStat - Telegram Search",
+                    "url": "https://tgstat.ru/en/search"
+                  },
+                  {
+                    "name": "Lyzem - Telegram Search",
+                    "url": "https://lyzem.com/"
+                  }
+                ]
+              },
+              {
+                "name": "TikTok",
+                "bookmarks": [
+                  {
+                    "name": "TikTok Quick Search - OSINT Combine",
+                    "url": "https://www.osintcombine.com/free-osint-tools/tiktok-quick-search"
+                  },
+                  {
+                    "name": "TikTok Timestamp Tool",
+                    "url": "https://bellingcat.github.io/tiktok-timestamp/"
+                  }
+                ]
+              },
+              {
+                "name": "VK",
+                "bookmarks": [
+                  {
+                    "name": "VKontakte People Search",
+                    "url": "https://vk.com/people"
+                  },
+                  {
+                    "name": "VK.watch - Profile History",
+                    "url": "https://vk.watch/"
+                  }
+                ]
+              },
+              {
+                "name": "Forums & Fringe",
+                "bookmarks": [
+                  {
+                    "name": "4chan Search",
+                    "url": "https://4chansearch.com/"
+                  },
+                  {
+                    "name": "Desuarchive (4Chan Archive)",
+                    "url": "https://desuarchive.org/"
+                  },
+                  {
+                    "name": "4Chan Search - find.4chan",
+                    "url": "https://find.4chan.org/?q=test"
+                  },
+                  {
+                    "name": "Gab Social Search",
+                    "url": "https://gab.com/search"
+                  },
+                  {
+                    "name": "Open Measures - Fringe Monitoring",
+                    "url": "https://public.openmeasures.io/"
+                  },
+                  {
+                    "name": "Boardreader - Forum Search",
+                    "url": "https://boardreader.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Corporate & Business",
+            "bookmarks": [
+              {
+                "name": "Corporate Registries & Transparency",
+                "bookmarks": [
+                  {
+                    "name": "OpenCorporates",
+                    "url": "https://opencorporates.com/"
+                  },
+                  {
+                    "name": "ICIJ Offshore Leaks Database",
+                    "url": "http://offshoreleaks.icij.org/"
+                  },
+                  {
+                    "name": "OCCRP Investigative Dashboard",
+                    "url": "http://data.occrp.org/"
+                  },
+                  {
+                    "name": "OpenSanctions",
+                    "url": "https://opensanctions.org/"
+                  },
+                  {
+                    "name": "US Treasury Sanctions Search",
+                    "url": "https://sanctionssearch.ofac.treas.gov/"
+                  },
+                  {
+                    "name": "Business Registers - EU",
+                    "url": "https://e-justice.europa.eu/content_business_registers_in_member_states-106-en.do"
+                  },
+                  {
+                    "name": "Influence Explorer (US & AU Contracts)",
+                    "url": "https://techinquiry.org/explorer"
+                  },
+                  {
+                    "name": "World Leaders - Peppercat",
+                    "url": "https://peppercat.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Financial Intelligence",
+                "bookmarks": [
+                  {
+                    "name": "Dun & Bradstreet",
+                    "url": "https://www.dnb.com/"
+                  },
+                  {
+                    "name": "OffshoreAlert - Financial Intelligence",
+                    "url": "https://www.offshorealert.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Domain & WHOIS",
+                "bookmarks": [
+                  {
+                    "name": "Whois Lookup",
+                    "url": "https://www.whois.com/whois/"
+                  },
+                  {
+                    "name": "Whoxy - Reverse WHOIS",
+                    "url": "https://www.whoxy.com/"
+                  },
+                  {
+                    "name": "DomainTools Whois",
+                    "url": "http://whois.domaintools.com/"
+                  },
+                  {
+                    "name": "Who.is",
+                    "url": "https://who.is/"
+                  },
+                  {
+                    "name": "WhoisXMLAPI",
+                    "url": "https://www.whoisxmlapi.com/"
+                  },
+                  {
+                    "name": "Whoisfreaks",
+                    "url": "https://whoisfreaks.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Web & IP Analysis",
+                "bookmarks": [
+                  {
+                    "name": "DNS Dumpster",
+                    "url": "https://dnsdumpster.com/"
+                  },
+                  {
+                    "name": "ViewDNS Multi-Search",
+                    "url": "https://viewdns.info/"
+                  },
+                  {
+                    "name": "BuiltWith - Technology Profiler",
+                    "url": "https://builtwith.com/"
+                  },
+                  {
+                    "name": "URLScan.io",
+                    "url": "https://urlscan.io/"
+                  },
+                  {
+                    "name": "Web Check",
+                    "url": "https://web-check.as93.net/"
+                  },
+                  {
+                    "name": "Central Ops - IP/Domain Lookup",
+                    "url": "https://centralops.net/"
+                  },
+                  {
+                    "name": "crt.sh - Certificate Search",
+                    "url": "https://crt.sh/"
+                  },
+                  {
+                    "name": "IPinfo.io",
+                    "url": "https://ipinfo.io/what-is-my-ip"
+                  },
+                  {
+                    "name": "BrowserLeaks - IP Lookup",
+                    "url": "https://browserleaks.com/ip"
+                  },
+                  {
+                    "name": "Robtex",
+                    "url": "https://www.robtex.com/"
+                  },
+                  {
+                    "name": "Easy Counter - Website Analysis",
+                    "url": "https://www.easycounter.com/"
+                  },
+                  {
+                    "name": "Blacklight - Tracker Detection",
+                    "url": "https://themarkup.org/series/blacklight"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Geolocation & Mapping",
+            "bookmarks": [
+              {
+                "name": "Maps & Terrain",
+                "bookmarks": [
+                  {
+                    "name": "Google Maps",
+                    "url": "https://www.google.com/maps"
+                  },
+                  {
+                    "name": "Google Earth",
+                    "url": "https://earth.google.com/web/"
+                  },
+                  {
+                    "name": "Bing Maps",
+                    "url": "https://www.bing.com/maps"
+                  },
+                  {
+                    "name": "OpenStreetMap",
+                    "url": "https://www.openstreetmap.org/"
+                  },
+                  {
+                    "name": "Overpass Turbo - OSM Query",
+                    "url": "https://overpass-turbo.eu/"
+                  },
+                  {
+                    "name": "Dual Maps - Side-by-Side Comparison",
+                    "url": "https://www.mapchannels.com/DualMaps.aspx"
+                  },
+                  {
+                    "name": "Quad Map Comparison Tool",
+                    "url": "https://mc.bbbike.org/mc/"
+                  },
+                  {
+                    "name": "BatchGeo - Map from Data",
+                    "url": "https://batchgeo.com/"
+                  },
+                  {
+                    "name": "Free Map Tools",
+                    "url": "https://www.freemaptools.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Shadow & Sun Analysis",
+                "bookmarks": [
+                  {
+                    "name": "SunCalc - Shadow Analysis",
+                    "url": "https://www.suncalc.org/"
+                  },
+                  {
+                    "name": "ShadeMap - Sun Shadow Simulator",
+                    "url": "https://shademap.app/"
+                  }
+                ]
+              },
+              {
+                "name": "Historic & Geospatial Data",
+                "bookmarks": [
+                  {
+                    "name": "OpenHistoricalMap",
+                    "url": "https://openhistoricalmap.org/"
+                  },
+                  {
+                    "name": "PeakFinder - Mountain Panorama",
+                    "url": "https://www.peakfinder.org/"
+                  },
+                  {
+                    "name": "GeoNames - Placename Database",
+                    "url": "http://www.geonames.org/"
+                  },
+                  {
+                    "name": "geojson.io - GeoJSON Editor",
+                    "url": "https://geojson.io/"
+                  },
+                  {
+                    "name": "Geospatial Intelligence Library",
+                    "url": "https://github.com/cartographia/geospatial-intelligence-library"
+                  },
+                  {
+                    "name": "Geolocation Estimation from Images",
+                    "url": "https://labs.tib.eu/geoestimation/"
+                  },
+                  {
+                    "name": "Social Geo Lens - OSINT Combine",
+                    "url": "https://www.osintcombine.com/free-osint-tools/social-geo-lens"
+                  },
+                  {
+                    "name": "Strava Segments Map",
+                    "url": "https://www.doogal.co.uk/strava.php"
+                  },
+                  {
+                    "name": "WiGLE - Wireless Network Mapping",
+                    "url": "https://wigle.net/"
+                  },
+                  {
+                    "name": "GPSJam - GPS Interference Map",
+                    "url": "https://gpsjam.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Satellite Imagery",
+                "bookmarks": [
+                  {
+                    "name": "Zoom Earth - Satellite / Weather",
+                    "url": "https://zoom.earth/"
+                  },
+                  {
+                    "name": "EOS Land Viewer - Satellite AOI",
+                    "url": "https://eos.com/landviewer/"
+                  },
+                  {
+                    "name": "EarthExplorer - USGS",
+                    "url": "https://earthexplorer.usgs.gov/"
+                  },
+                  {
+                    "name": "Soar.earth - Drone & Satellite Maps",
+                    "url": "https://soar.earth/"
+                  },
+                  {
+                    "name": "Sentinel Hub",
+                    "url": "https://www.sentinel-hub.com/"
+                  },
+                  {
+                    "name": "Wayback Imagery - Historic Satellite",
+                    "url": "http://livingatlas.arcgis.com/wayback/"
+                  },
+                  {
+                    "name": "Baidu Maps (China)",
+                    "url": "https://map.baidu.com/"
+                  },
+                  {
+                    "name": "25 Satellite Map Sources",
+                    "url": "https://gisgeography.com/satellite-maps/"
+                  }
+                ]
+              },
+              {
+                "name": "CCTV & Webcams",
+                "bookmarks": [
+                  {
+                    "name": "KartaView (OpenStreetCam)",
+                    "url": "https://openstreetcam.org/map/"
+                  },
+                  {
+                    "name": "EarthCam - Live Webcam Network",
+                    "url": "https://www.earthcam.com/network/map.php"
+                  },
+                  {
+                    "name": "Webcam Map - worldcam.eu",
+                    "url": "https://worldcam.eu/map/"
+                  },
+                  {
+                    "name": "Windy Webcams",
+                    "url": "https://www.windy.com/-Webcams/webcams"
+                  },
+                  {
+                    "name": "Citywalki - City Street Footage",
+                    "url": "https://www.citywalki.com/"
+                  },
+                  {
+                    "name": "Airport Webcams",
+                    "url": "http://airportwebcams.net/"
+                  },
+                  {
+                    "name": "Surveillance under Surveillance",
+                    "url": "https://sunders.uber.space/"
+                  }
+                ]
+              },
+              {
+                "name": "Maritime & Aviation",
+                "bookmarks": [
+                  {
+                    "name": "MarineTraffic - AIS Ship Tracking",
+                    "url": "https://www.marinetraffic.com/"
+                  },
+                  {
+                    "name": "Global Fishing Watch",
+                    "url": "https://globalfishingwatch.org/map/"
+                  },
+                  {
+                    "name": "Equasis - Vessel Ownership",
+                    "url": "http://www.equasis.org/EquasisWeb/public/HomePage"
+                  },
+                  {
+                    "name": "Maritime Database",
+                    "url": "https://www.maritime-database.com/"
+                  },
+                  {
+                    "name": "AirNav RadarBox - Live Flight Tracker",
+                    "url": "https://www.radarbox24.com/"
+                  },
+                  {
+                    "name": "FlightAware",
+                    "url": "https://uk.flightaware.com/"
+                  },
+                  {
+                    "name": "PlaneMapper - Aircraft Database",
+                    "url": "https://www.planemapper.com/aircrafts"
+                  },
+                  {
+                    "name": "PlaneFinder",
+                    "url": "https://planefinder.net/"
+                  },
+                  {
+                    "name": "ADS-B Historical Records",
+                    "url": "http://www.ads-b.nl/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Images & Media",
+            "bookmarks": [
+              {
+                "name": "Reverse Image Search",
+                "bookmarks": [
+                  {
+                    "name": "Google Reverse Image Search",
+                    "url": "https://images.google.com/"
+                  },
+                  {
+                    "name": "TinEye Reverse Image Search",
+                    "url": "https://tineye.com/"
+                  },
+                  {
+                    "name": "Yandex Images",
+                    "url": "https://yandex.com/images"
+                  },
+                  {
+                    "name": "Bing Image Feed",
+                    "url": "http://www.bing.com/images/discover?FORM=ILPMFT"
+                  },
+                  {
+                    "name": "Baidu Image Search",
+                    "url": "https://m.baidu.com/"
+                  },
+                  {
+                    "name": "Sogou Image Search",
+                    "url": "https://pic.sogou.com/"
+                  },
+                  {
+                    "name": "Lenso AI - Reverse Image Search",
+                    "url": "https://lenso.ai/en"
+                  },
+                  {
+                    "name": "Search by Image - Chrome Extension",
+                    "url": "https://chromewebstore.google.com/detail/search-by-image/cnojnbdhbhnkbcieeekonklommdnndci"
+                  }
+                ]
+              },
+              {
+                "name": "Face Recognition",
+                "bookmarks": [
+                  {
+                    "name": "FaceCheck.id - Face Recognition Search",
+                    "url": "https://facecheck.id/"
+                  },
+                  {
+                    "name": "PimEyes - Face Search",
+                    "url": "https://pimeyes.com/en/blog/image-search-with-pimeyes-how-to-reverse-image-search"
+                  },
+                  {
+                    "name": "AWS Rekognition - Facial Recognition",
+                    "url": "https://console.aws.amazon.com/rekognition/home"
+                  },
+                  {
+                    "name": "Google Cloud Vision API",
+                    "url": "https://cloud.google.com/vision/docs/drag-and-drop"
+                  }
+                ]
+              },
+              {
+                "name": "EXIF & Metadata",
+                "bookmarks": [
+                  {
+                    "name": "Jimpl - EXIF Viewer",
+                    "url": "https://jimpl.com/"
+                  },
+                  {
+                    "name": "FotoForensics - EXIF & Analysis",
+                    "url": "https://fotoforensics.com/"
+                  },
+                  {
+                    "name": "ImgOps - Image Operations",
+                    "url": "https://imgops.com/"
+                  },
+                  {
+                    "name": "Jeffrey's Image Metadata Viewer",
+                    "url": "https://exifdata.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Forensics & Manipulation Detection",
+                "bookmarks": [
+                  {
+                    "name": "FotoForensics",
+                    "url": "https://www.fotoforensics.com/"
+                  },
+                  {
+                    "name": "Forensically - Photo Forensics",
+                    "url": "https://29a.ch/photo-forensics/"
+                  },
+                  {
+                    "name": "MeVer - Image Verification",
+                    "url": "https://mever.iti.gr/forensics/"
+                  },
+                  {
+                    "name": "Ghiro - Automated Image Forensics",
+                    "url": "https://getghiro.org/"
+                  },
+                  {
+                    "name": "SunCalc - Shadow Dating",
+                    "url": "https://www.suncalc.org/"
+                  },
+                  {
+                    "name": "Remini - Photo Enhancer",
+                    "url": "https://app.remini.ai/"
+                  },
+                  {
+                    "name": "Cleanup.pictures - Object Removal",
+                    "url": "https://cleanup.pictures/"
+                  },
+                  {
+                    "name": "LunaPic - Online Photo Editor",
+                    "url": "https://www12.lunapic.com/editor/"
+                  },
+                  {
+                    "name": "Pixlr - AI Photo Editor",
+                    "url": "https://pixlr.com/"
+                  },
+                  {
+                    "name": "Free Online OCR",
+                    "url": "https://www.onlineocr.net/"
+                  }
+                ]
+              },
+              {
+                "name": "Object Identification",
+                "bookmarks": [
+                  {
+                    "name": "eBird - Bird Identification",
+                    "url": "https://ebird.org/home"
+                  },
+                  {
+                    "name": "PlantNet - Plant Identification",
+                    "url": "https://identify.plantnet.org/"
+                  },
+                  {
+                    "name": "OSMP - Munitions Identification",
+                    "url": "https://osmp.airwars.org/resources/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Documents & Archives",
+            "bookmarks": [
+              {
+                "name": "Web Archives",
+                "bookmarks": [
+                  {
+                    "name": "Wayback Machine",
+                    "url": "https://archive.org/"
+                  },
+                  {
+                    "name": "Archive.is / Archive.ph",
+                    "url": "https://archive.is/"
+                  },
+                  {
+                    "name": "Ghostarchive",
+                    "url": "https://ghostarchive.org/"
+                  },
+                  {
+                    "name": "Cached Pages - Webarchive",
+                    "url": "https://web.archive.org/"
+                  },
+                  {
+                    "name": "Google Cache Search",
+                    "url": "https://www.google.com/advanced_search"
+                  }
+                ]
+              },
+              {
+                "name": "Document & Code Search",
+                "bookmarks": [
+                  {
+                    "name": "dedigger - Google Drive Public Search",
+                    "url": "https://www.dedigger.com/#gsc.tab=0"
+                  },
+                  {
+                    "name": "FTP Search via Google",
+                    "url": "https://www.google.com/search?q=inurl%3Aftp+-inurl%3A%28http%7Chttps%29+searchterm"
+                  },
+                  {
+                    "name": "Source Code Search - searchcode.com",
+                    "url": "https://searchcode.com/"
+                  },
+                  {
+                    "name": "PublicWWW - Source Code Search",
+                    "url": "https://publicwww.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Internet Exposure",
+                "bookmarks": [
+                  {
+                    "name": "Shodan - Internet Archive",
+                    "url": "https://www.shodan.io/"
+                  },
+                  {
+                    "name": "GrayhatWarfare - Cloud Buckets",
+                    "url": "https://buckets.grayhatwarfare.com/"
+                  },
+                  {
+                    "name": "Investigator - Multi Search",
+                    "url": "https://abhijithb200.github.io/investigator/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Breached Data & Credentials",
+            "bookmarks": [
+              {
+                "name": "Breach Lookup",
+                "bookmarks": [
+                  {
+                    "name": "Have I Been Pwned",
+                    "url": "https://haveibeenpwned.com/"
+                  },
+                  {
+                    "name": "DeHashed",
+                    "url": "https://dehashed.com/"
+                  },
+                  {
+                    "name": "BreachDirectory",
+                    "url": "https://breachdirectory.org/"
+                  },
+                  {
+                    "name": "Snusbase - Breach Search",
+                    "url": "https://snusbase.com/"
+                  },
+                  {
+                    "name": "IntelX - Intelligence Exchange",
+                    "url": "https://intelx.io/"
+                  }
+                ]
+              },
+              {
+                "name": "Scam & Phishing",
+                "bookmarks": [
+                  {
+                    "name": "Facebook Data Breach Checker",
+                    "url": "https://haveibeenzuckered.com/"
+                  },
+                  {
+                    "name": "Scam Search",
+                    "url": "https://scamsearch.io/"
+                  },
+                  {
+                    "name": "OpenPhish - Phishing Intelligence",
+                    "url": "https://openphish.com/"
+                  },
+                  {
+                    "name": "PhishTank",
+                    "url": "https://phishtank.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Dark Web",
+                "bookmarks": [
+                  {
+                    "name": "Chain Abuse - Wallet Abuse DB",
+                    "url": "https://www.chainabuse.com/"
+                  },
+                  {
+                    "name": "DARK WEB DICTIONARY - IACA",
+                    "url": "https://iaca-darkweb-tools.com/dictionary/"
+                  },
+                  {
+                    "name": "Ahmia - Tor Search Engine",
+                    "url": "https://ahmia.fi/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Cryptocurrency",
+            "bookmarks": [
+              {
+                "name": "Investigation Tools",
+                "bookmarks": [
+                  {
+                    "name": "ETHTECTIVE - ETH Transaction Graph",
+                    "url": "https://ethtective.com/"
+                  },
+                  {
+                    "name": "Breadcrumbs - Crypto Investigation",
+                    "url": "https://www.breadcrumbs.app/"
+                  },
+                  {
+                    "name": "Blockchair - Universal Explorer",
+                    "url": "https://blockchair.com/"
+                  },
+                  {
+                    "name": "Bitcoin Who's Who - Wallet Search",
+                    "url": "https://www.bitcoinwhoswho.com/"
+                  },
+                  {
+                    "name": "Scam Search - Crypto",
+                    "url": "https://scamsearch.io/"
+                  },
+                  {
+                    "name": "Chain Abuse - Wallet Abuse DB",
+                    "url": "https://www.chainabuse.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Market Data",
+                "bookmarks": [
+                  {
+                    "name": "CoinMarketCap",
+                    "url": "https://coinmarketcap.com/"
+                  },
+                  {
+                    "name": "Oanda - Currency Converter",
+                    "url": "https://www.oanda.com/currency-converter/en/"
+                  },
+                  {
+                    "name": "Coin ATM Radar",
+                    "url": "https://coinatmradar.com/"
+                  },
+                  {
+                    "name": "Crypto ATM Map (BTCMap)",
+                    "url": "https://btcmap.org/map"
+                  },
+                  {
+                    "name": "Crypto Logos",
+                    "url": "https://cryptologos.cc/"
+                  }
+                ]
+              },
+              {
+                "name": "Blockchain Explorers",
+                "bookmarks": [
+                  {
+                    "name": "Blockchain.com Explorer",
+                    "url": "https://www.blockchain.com/explorer"
+                  },
+                  {
+                    "name": "BlockCypher - Bitcoin",
+                    "url": "https://live.blockcypher.com/btc/"
+                  },
+                  {
+                    "name": "Blockchair - Bitcoin",
+                    "url": "https://blockchair.com/bitcoin"
+                  },
+                  {
+                    "name": "Etherscan - Ethereum",
+                    "url": "https://etherscan.io/"
+                  },
+                  {
+                    "name": "Etherchain - Ethereum",
+                    "url": "https://www.etherchain.org/"
+                  },
+                  {
+                    "name": "Blockchair - Ethereum",
+                    "url": "https://blockchair.com/ethereum"
+                  },
+                  {
+                    "name": "xmrchain.net - Monero",
+                    "url": "https://xmrchain.net/"
+                  },
+                  {
+                    "name": "LocalMonero Blocks - Monero",
+                    "url": "https://localmonero.co/blocks"
+                  },
+                  {
+                    "name": "Blockchair - Dash",
+                    "url": "https://blockchair.com/dash"
+                  },
+                  {
+                    "name": "Blockchair - Litecoin",
+                    "url": "https://blockchair.com/litecoin"
+                  },
+                  {
+                    "name": "Blockchair - Bitcoin Cash",
+                    "url": "https://blockchair.com/bitcoin-cash"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Threat Intelligence",
+            "bookmarks": [
+              {
+                "name": "Malware & URL Analysis",
+                "bookmarks": [
+                  {
+                    "name": "VirusTotal",
+                    "url": "https://www.virustotal.com/"
+                  },
+                  {
+                    "name": "MalwareBazaar",
+                    "url": "https://bazaar.abuse.ch/"
+                  },
+                  {
+                    "name": "URLScan.io",
+                    "url": "https://urlscan.io/"
+                  },
+                  {
+                    "name": "Threat Intelligence Platform",
+                    "url": "https://threatintelligenceplatform.com/"
+                  },
+                  {
+                    "name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Network Threat Intelligence",
+                "bookmarks": [
+                  {
+                    "name": "Shodan",
+                    "url": "https://www.shodan.io/"
+                  },
+                  {
+                    "name": "Censys",
+                    "url": "https://search.censys.io/"
+                  },
+                  {
+                    "name": "GreyNoise",
+                    "url": "https://www.greynoise.io/"
+                  },
+                  {
+                    "name": "LeakIX - Exposed Services",
+                    "url": "https://leakix.net/"
+                  },
+                  {
+                    "name": "OpenPhish",
+                    "url": "https://openphish.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Conflict & Extremism Monitoring",
+                "bookmarks": [
+                  {
+                    "name": "ACLED - Conflict Data",
+                    "url": "https://www.acleddata.com/dashboard/"
+                  },
+                  {
+                    "name": "Live UA Map",
+                    "url": "https://liveuamap.com/"
+                  },
+                  {
+                    "name": "Counter Extremism Project Glossary",
+                    "url": "https://www.counterextremism.com/glossary"
+                  },
+                  {
+                    "name": "EU vs Disinfo Database",
+                    "url": "https://euvsdisinfo.eu/disinformation-cases/"
+                  },
+                  {
+                    "name": "Jamestown Foundation",
+                    "url": "https://jamestown.org/"
+                  },
+                  {
+                    "name": "Terrorism Research Dashboard",
+                    "url": "https://start.me/p/OmExgb/terrorism-radicalisation-research-dashboard"
+                  },
+                  {
+                    "name": "START - Militant Group Data",
+                    "url": "https://www.start.umd.edu/"
+                  },
+                  {
+                    "name": "UCDP - Uppsala Conflict Data",
+                    "url": "https://ucdp.uu.se/exploratory"
+                  },
+                  {
+                    "name": "Terrorist Attacks Storymap",
+                    "url": "https://storymaps.esri.com/stories/terrorist-attacks/"
+                  },
+                  {
+                    "name": "Group Linkages - Stanford Militants",
+                    "url": "http://web.stanford.edu/group/mappingmilitants/cgi-bin/"
+                  }
+                ]
+              },
+              {
+                "name": "Disaster & Health Surveillance",
+                "bookmarks": [
+                  {
+                    "name": "GDACS - Global Disaster Alerts",
+                    "url": "https://gdacs.org/"
+                  },
+                  {
+                    "name": "HealthMap - Disease Surveillance",
+                    "url": "https://www.healthmap.org/en/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Country-Specific",
+            "bookmarks": [
+              {
+                "name": "OSINT Map - Cybdetective",
+                "url": "https://cybdetective.com/osintmap/"
+              },
+              {
+                "name": "Australia",
+                "bookmarks": [
+                  {
+                    "name": "ASIC - Australian Securities Commission",
+                    "url": "https://asic.gov.au/"
+                  },
+                  {
+                    "name": "Australia Business Directory",
+                    "url": "https://au.companiesdb.net/"
+                  },
+                  {
+                    "name": "People Search Australia",
+                    "url": "https://www.peoplesearch.com.au/"
+                  },
+                  {
+                    "name": "White Pages Australia",
+                    "url": "https://www.whitepages.com.au/residential"
+                  },
+                  {
+                    "name": "Australia Public Records",
+                    "url": "https://www.australiapublicrecord.com/people-finder/"
+                  },
+                  {
+                    "name": "Australian War Memorial - People",
+                    "url": "https://www.awm.gov.au/collection/understanding-the-memorials-collection/researching-a-person"
+                  },
+                  {
+                    "name": "National Archives of Australia",
+                    "url": "https://recordsearch.naa.gov.au/SearchNRetrieve/Interface/SearchScreens/BasicSearch.aspx"
+                  },
+                  {
+                    "name": "Australian Cemeteries Index",
+                    "url": "https://www.austcemindex.com/"
+                  },
+                  {
+                    "name": "Missing Persons - Australia",
+                    "url": "https://www.missingpersons.gov.au/view-all-profiles"
+                  },
+                  {
+                    "name": "Vehicle Registrations",
+                    "bookmarks": [
+                      {
+                        "name": "NSW Vehicle Registration Check",
+                        "url": "https://www.service.nsw.gov.au/transaction/check-a-vehicle-registration"
+                      },
+                      {
+                        "name": "VIC Vehicle Registration",
+                        "url": "https://www.vicroads.vic.gov.au/registration/buy-sell-or-transfer-a-vehicle/check-vehicle-registration"
+                      },
+                      {
+                        "name": "QLD Vehicle Registration",
+                        "url": "https://www.service.transport.qld.gov.au/checkrego/public/Welcome.xhtml"
+                      },
+                      {
+                        "name": "Rego Check Australia",
+                        "url": "https://checkrego.com.au/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Real Estate & Land",
+                    "bookmarks": [
+                      {
+                        "name": "NSW Planning Spatial Viewer",
+                        "url": "https://www.planningportal.nsw.gov.au/spatialviewer/"
+                      },
+                      {
+                        "name": "Domain - Real Estate",
+                        "url": "https://www.domain.com.au/"
+                      },
+                      {
+                        "name": "REA Group - Real Estate",
+                        "url": "https://www.realestate.com.au/"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "China",
+                "bookmarks": [
+                  {
+                    "name": "Search & Reference",
+                    "bookmarks": [
+                      {
+                        "name": "Baike Baidu (Chinese Wikipedia)",
+                        "url": "https://baike.baidu.com/"
+                      },
+                      {
+                        "name": "so.com - 360 Search",
+                        "url": "https://www.so.com/"
+                      },
+                      {
+                        "name": "Sogou Search",
+                        "url": "https://www.sogou.com/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Corporate & Government",
+                    "bookmarks": [
+                      {
+                        "name": "Aiqicha - Corporate Search",
+                        "url": "https://aiqicha.baidu.com/"
+                      },
+                      {
+                        "name": "Qichacha - Company Search",
+                        "url": "https://www.qcc.com/"
+                      },
+                      {
+                        "name": "NECIPS - Company Registry",
+                        "url": "https://www.gsxt.gov.cn/index.html"
+                      },
+                      {
+                        "name": "ICP Database",
+                        "url": "https://www.beianx.cn/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Social Media & Tracking",
+                    "bookmarks": [
+                      {
+                        "name": "WeChat",
+                        "url": "https://www.wechat.com/"
+                      },
+                      {
+                        "name": "Weibo",
+                        "url": "https://weibo.com/overseas"
+                      },
+                      {
+                        "name": "PandaMetrics - WeChat/Weibo Tracking",
+                        "url": "https://www.pandametrics.com/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Research & Policy",
+                    "bookmarks": [
+                      {
+                        "name": "ChinaPower Project - CSIS",
+                        "url": "https://chinapower.csis.org/"
+                      },
+                      {
+                        "name": "ASPI - China",
+                        "url": "https://www.aspi.org.au/search?topics=39&topic=China"
+                      },
+                      {
+                        "name": "Chinese Defence Universities Tracker",
+                        "url": "https://unitracker.aspi.org.au/"
+                      },
+                      {
+                        "name": "China National Knowledge Infrastructure",
+                        "url": "https://oversea.cnki.net/index/"
+                      },
+                      {
+                        "name": "Xinjiang Victims Database",
+                        "url": "https://shahit.biz/eng/"
+                      },
+                      {
+                        "name": "Citizen Lab - Censored Words",
+                        "url": "https://citizenlab.ca/2014/12/repository-censored-sensitive-chinese-keywords-13-lists-9054-terms/"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Country Registers",
+                "bookmarks": [
+                  {
+                    "name": "Canada 411",
+                    "url": "http://www.canada411.ca/"
+                  },
+                  {
+                    "name": "Canada - Federal Corporations",
+                    "url": "https://www.ic.gc.ca/app/scr/cc/CorporationsCanada/fdrlCrpSrch.html"
+                  },
+                  {
+                    "name": "UK - Companies House",
+                    "url": "http://beta.companieshouse.gov.uk/"
+                  },
+                  {
+                    "name": "UK - 192.com People Search",
+                    "url": "https://www.192.com/"
+                  },
+                  {
+                    "name": "France - Societe.com",
+                    "url": "http://societe.com/"
+                  },
+                  {
+                    "name": "Norway - Bronnøysund Register",
+                    "url": "https://www.brreg.no/"
+                  },
+                  {
+                    "name": "Norway - Proff Business",
+                    "url": "https://www.proff.no/"
+                  },
+                  {
+                    "name": "Denmark - CVR Register",
+                    "url": "https://datacvr.virk.dk/data/"
+                  },
+                  {
+                    "name": "Sweden - Allabolag",
+                    "url": "http://www.allabolag.se/"
+                  },
+                  {
+                    "name": "Switzerland - Zefix",
+                    "url": "http://zefix.ch/en/search/entity/welcome"
+                  },
+                  {
+                    "name": "Russia - EGRUL Tax Register",
+                    "url": "https://egrul.nalog.ru/index.html"
+                  },
+                  {
+                    "name": "Cyprus - Company Search",
+                    "url": "https://efiling.drcor.mcit.gov.cy/DrcorPublic/SearchForm.aspx?sc=0&lang=EN"
+                  },
+                  {
+                    "name": "USA - Public Records",
+                    "url": "https://publicrecords.onlinesearches.com/"
+                  },
+                  {
+                    "name": "USA - Black Book Online",
+                    "url": "https://www.blackbookonline.info/USA-counties.aspx"
+                  },
+                  {
+                    "name": "Estonia - Teatmik",
+                    "url": "http://teatmik.ee/en"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "AI & Automation",
+            "bookmarks": [
+              {
+                "name": "Large Language Models",
+                "bookmarks": [
+                  {
+                    "name": "ChatGPT",
+                    "url": "https://chatgpt.com/"
+                  },
+                  {
+                    "name": "Claude (Anthropic)",
+                    "url": "https://claude.ai/"
+                  },
+                  {
+                    "name": "Gemini (Google)",
+                    "url": "https://bard.google.com/?hl=en"
+                  },
+                  {
+                    "name": "Copilot (Microsoft)",
+                    "url": "https://copilot.microsoft.com/"
+                  },
+                  {
+                    "name": "Perplexity AI",
+                    "url": "https://www.perplexity.ai/"
+                  },
+                  {
+                    "name": "Mistral AI",
+                    "url": "https://mistral.ai/en"
+                  },
+                  {
+                    "name": "Grok",
+                    "url": "https://grok.com/"
+                  },
+                  {
+                    "name": "Meta AI",
+                    "url": "https://www.meta.ai/"
+                  },
+                  {
+                    "name": "Google AI Studio",
+                    "url": "https://aistudio.google.com/app/prompts/new_chat"
+                  }
+                ]
+              },
+              {
+                "name": "AI Directories",
+                "bookmarks": [
+                  {
+                    "name": "There's An AI For That",
+                    "url": "https://theresanaiforthat.com/"
+                  },
+                  {
+                    "name": "Future Tools - AI Directory",
+                    "url": "https://www.futuretools.io/"
+                  },
+                  {
+                    "name": "Consensus - AI Research Search",
+                    "url": "https://consensus.app/"
+                  }
+                ]
+              },
+              {
+                "name": "AI Image Tools",
+                "bookmarks": [
+                  {
+                    "name": "Midjourney",
+                    "url": "https://www.midjourney.com/home"
+                  },
+                  {
+                    "name": "Image Creator - Microsoft Designer",
+                    "url": "https://www.bing.com/images/create"
+                  },
+                  {
+                    "name": "ImageFX - Google Labs",
+                    "url": "https://labs.google/fx/tools/image-fx"
+                  },
+                  {
+                    "name": "Deepswap - Face Swap",
+                    "url": "https://www.deepswap.ai/"
+                  },
+                  {
+                    "name": "AWS Rekognition - Image Analysis",
+                    "url": "https://console.aws.amazon.com/rekognition/home"
+                  },
+                  {
+                    "name": "Google Cloud Vision API",
+                    "url": "https://cloud.google.com/vision/docs/drag-and-drop"
+                  },
+                  {
+                    "name": "FaceCheck.id - Face Recognition",
+                    "url": "https://facecheck.id/"
+                  }
+                ]
+              },
+              {
+                "name": "AI Detectors",
+                "bookmarks": [
+                  {
+                    "name": "Undetectable AI - AI Detector",
+                    "url": "https://undetectable.ai/"
+                  },
+                  {
+                    "name": "CopyLeaks - AI Content Detector",
+                    "url": "https://copyleaks.com/ai-content-detector"
+                  },
+                  {
+                    "name": "ZeroGPT - AI Text Detector",
+                    "url": "https://www.zerogpt.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Translation",
+                "bookmarks": [
+                  {
+                    "name": "DeepL Translate",
+                    "url": "https://www.deepl.com/translator"
+                  },
+                  {
+                    "name": "Google Translate",
+                    "url": "https://translate.google.com/"
+                  },
+                  {
+                    "name": "Cambridge Dictionary Translate",
+                    "url": "https://dictionary.cambridge.org/translate/"
+                  },
+                  {
+                    "name": "Multi Language Keyboard - Lexilogos",
+                    "url": "https://www.lexilogos.com/english/index.htm"
+                  },
+                  {
+                    "name": "i2OCR - Image to Text (Multi-lang)",
+                    "url": "https://www.i2ocr.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Verification & Fact-Checking",
+            "bookmarks": [
+              {
+                "name": "Fact-Checkers",
+                "bookmarks": [
+                  {
+                    "name": "Google Fact Check Explorer",
+                    "url": "https://toolbox.google.com/factcheck/explorer"
+                  },
+                  {
+                    "name": "Snopes.com",
+                    "url": "https://www.snopes.com/"
+                  },
+                  {
+                    "name": "PolitiFact",
+                    "url": "https://www.politifact.com/"
+                  },
+                  {
+                    "name": "FactCheck.org",
+                    "url": "https://www.factcheck.org/"
+                  },
+                  {
+                    "name": "Africa Check",
+                    "url": "https://africacheck.org/"
+                  },
+                  {
+                    "name": "EU vs Disinfo Database",
+                    "url": "https://euvsdisinfo.eu/disinformation-cases/"
+                  },
+                  {
+                    "name": "Ground News - Multi-Source Media",
+                    "url": "https://ground.news/"
+                  },
+                  {
+                    "name": "First Draft News",
+                    "url": "https://firstdraftnews.org/"
+                  },
+                  {
+                    "name": "Fake News Detector - MIT",
+                    "url": "http://cbcl-web.mit.edu/FakeNewsApp-public/index.html"
+                  }
+                ]
+              },
+              {
+                "name": "Media Bias",
+                "bookmarks": [
+                  {
+                    "name": "AllSides - Media Bias",
+                    "url": "https://www.allsides.com/media-bias"
+                  },
+                  {
+                    "name": "Ad Fontes - Interactive Bias Chart",
+                    "url": "https://adfontesmedia.com/interactive-media-bias-chart/"
+                  },
+                  {
+                    "name": "Media Bias/Fact Check",
+                    "url": "https://mediabiasfactcheck.com/"
+                  },
+                  {
+                    "name": "Country Media Profiles",
+                    "url": "https://mediabiasfactcheck.com/country-profiles/"
+                  },
+                  {
+                    "name": "Media Landscapes",
+                    "url": "https://medialandscapes.org/"
+                  },
+                  {
+                    "name": "Front Pages - Global Newspapers",
+                    "url": "https://www.frontpages.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Resources & Training",
+            "bookmarks": [
+              {
+                "name": "Frameworks & Toolkits",
+                "bookmarks": [
+                  {
+                    "name": "OSINT Framework",
+                    "url": "https://osintframework.com/"
+                  },
+                  {
+                    "name": "Bellingcat Investigation Toolkit",
+                    "url": "https://bellingcat.gitbook.io/toolkit"
+                  },
+                  {
+                    "name": "Bellingcat - Online Investigations",
+                    "url": "https://www.bellingcat.com/"
+                  },
+                  {
+                    "name": "Bellingcat Toolkit Spreadsheet",
+                    "url": "https://docs.google.com/spreadsheets/d/18rtqh8EG2q1xBo2cLNyhIDuK9jrPGwYr9DI2UncoqJQ/edit"
+                  },
+                  {
+                    "name": "IntelTechniques - Michael Bazzell",
+                    "url": "https://inteltechniques.com/"
+                  },
+                  {
+                    "name": "awesome-osint - GitHub",
+                    "url": "https://github.com/jivoi/awesome-osint"
+                  },
+                  {
+                    "name": "SpiderFoot - Automated OSINT",
+                    "url": "https://www.spiderfoot.net/"
+                  }
+                ]
+              },
+              {
+                "name": "Blogs & Community",
+                "bookmarks": [
+                  {
+                    "name": "Week In OSINT - Sector035",
+                    "url": "https://sector035.nl/articles/category:week-in-osint"
+                  },
+                  {
+                    "name": "OSINT Dojo",
+                    "url": "https://www.osintdojo.com/resources/"
+                  },
+                  {
+                    "name": "OSINTCurio.us",
+                    "url": "https://www.osintcurio.us/"
+                  },
+                  {
+                    "name": "OSINT Techniques Blog",
+                    "url": "https://www.osinttechniques.com/blog"
+                  },
+                  {
+                    "name": "Nixintel OSINT & Investigations",
+                    "url": "https://nixintel.info/"
+                  },
+                  {
+                    "name": "Lorand Bodo - OSINT Blog",
+                    "url": "https://lorandbodo.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Curated Collections",
+                "bookmarks": [
+                  {
+                    "name": "The Ultimate OSINT Collection - start.me",
+                    "url": "https://start.me/p/DPYPMz/the-ultimate-osint-collection"
+                  },
+                  {
+                    "name": "OSINT4ALL - start.me",
+                    "url": "https://start.me/p/L1rEYQ/osint4all"
+                  },
+                  {
+                    "name": "AdvisorBM OSINT Tools",
+                    "url": "https://www.advisor-bm.com/osint-tools"
+                  },
+                  {
+                    "name": "CSE Utopia - start.me",
+                    "url": "https://start.me/p/EL84Km/cse-utopia"
+                  },
+                  {
+                    "name": "OSINT is Not a Crime",
+                    "url": "https://osintisnotacrime.com/desktop"
+                  },
+                  {
+                    "name": "Datasets & Databases - start.me",
+                    "url": "https://start.me/p/9E8BrL/datasets-databases"
+                  },
+                  {
+                    "name": "DMI Tool Database",
+                    "url": "https://wiki.digitalmethods.net/Dmi/ToolDatabase"
+                  }
+                ]
+              },
+              {
+                "name": "Gamification & Practice",
+                "bookmarks": [
+                  {
+                    "name": "GeoGuessr",
+                    "url": "https://www.geoguessr.com/"
+                  },
+                  {
+                    "name": "Sourcing.Games",
+                    "url": "https://sourcing.games/"
+                  },
+                  {
+                    "name": "MyOSINT Training",
+                    "url": "https://www.myosint.training/"
+                  },
+                  {
+                    "name": "Limitless OSINT Challenges",
+                    "url": "https://limitless-osint.com/challenges"
+                  },
+                  {
+                    "name": "First Draft - Online Verification Challenge",
+                    "url": "https://ftp.firstdraftnews.org/articulate/2020/en/OVC/story_html5.html"
+                  },
+                  {
+                    "name": "First Draft - Observation Challenge",
+                    "url": "https://firstdraftnews.org/en/education/curriculum-resource/2-assessment-observation/"
+                  }
+                ]
+              },
+              {
+                "name": "Persona Creation",
+                "bookmarks": [
+                  {
+                    "name": "Fake Name Generator",
+                    "url": "https://www.fakenamegenerator.com/"
+                  },
+                  {
+                    "name": "Fake Person Generator",
+                    "url": "https://www.fakepersongenerator.com/Index/generate"
+                  },
+                  {
+                    "name": "This Person Does Not Exist",
+                    "url": "https://thispersondoesnotexist.com/"
+                  },
+                  {
+                    "name": "10 Minute Mail",
+                    "url": "https://10minutemail.com/"
+                  },
+                  {
+                    "name": "Guerrilla Mail - Disposable Email",
+                    "url": "http://www.guerrillamail.com/"
+                  },
+                  {
+                    "name": "Receive SMS Online - MyTrashMobile",
+                    "url": "https://www.mytrashmobile.com/numbers"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

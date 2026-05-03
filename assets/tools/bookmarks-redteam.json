@@ -1,0 +1,1710 @@
+[
+  {
+    "name": "Toolbar",
+    "toolbar": true,
+    "bookmarks": [
+      {
+        "name": "Quick Access",
+        "bookmarks": [
+          {
+            "name": "HackTricks",
+            "url": "https://book.hacktricks.xyz/"
+          },
+          {
+            "name": "GTFOBins",
+            "url": "https://gtfobins.github.io/"
+          },
+          {
+            "name": "LOLBAS",
+            "url": "https://lolbas-project.github.io/"
+          },
+          {
+            "name": "PayloadsAllTheThings",
+            "url": "https://github.com/swisskyrepo/PayloadsAllTheThings"
+          },
+          {
+            "name": "RevShells",
+            "url": "https://www.revshells.com/"
+          },
+          {
+            "name": "CyberChef",
+            "url": "https://gchq.github.io/CyberChef/"
+          },
+          {
+            "name": "Exploit-DB",
+            "url": "https://www.exploit-db.com/"
+          },
+          {
+            "name": "CrackStation",
+            "url": "https://crackstation.net/"
+          },
+          {
+            "name": "Shodan",
+            "url": "https://www.shodan.io/"
+          },
+          {
+            "name": "URLScan.io",
+            "url": "https://urlscan.io/"
+          },
+          {
+            "name": "VirusTotal",
+            "url": "https://www.virustotal.com/"
+          },
+          {
+            "name": "MITRE ATT&CK",
+            "url": "https://attack.mitre.org/"
+          }
+        ]
+      },
+      {
+        "name": "Bookmarks",
+        "bookmarks": [
+          {
+            "name": "Reconnaissance",
+            "bookmarks": [
+              {
+                "name": "Internet Scanning",
+                "bookmarks": [
+                  {
+                    "name": "Shodan",
+                    "url": "https://www.shodan.io/"
+                  },
+                  {
+                    "name": "Censys",
+                    "url": "https://search.censys.io/"
+                  },
+                  {
+                    "name": "FOFA",
+                    "url": "https://fofa.info/"
+                  },
+                  {
+                    "name": "ZoomEye",
+                    "url": "https://www.zoomeye.org/"
+                  },
+                  {
+                    "name": "GreyNoise",
+                    "url": "https://www.greynoise.io/"
+                  },
+                  {
+                    "name": "LeakIX - Exposed Services",
+                    "url": "https://leakix.net/"
+                  },
+                  {
+                    "name": "GrayhatWarfare - Public Buckets",
+                    "url": "https://buckets.grayhatwarfare.com/"
+                  }
+                ]
+              },
+              {
+                "name": "DNS & Domain Intelligence",
+                "bookmarks": [
+                  {
+                    "name": "DNS Dumpster",
+                    "url": "https://dnsdumpster.com/"
+                  },
+                  {
+                    "name": "ViewDNS Multi-Search",
+                    "url": "https://viewdns.info/"
+                  },
+                  {
+                    "name": "MXToolbox",
+                    "url": "https://mxtoolbox.com/"
+                  },
+                  {
+                    "name": "SecurityTrails - DNS/IP History",
+                    "url": "https://securitytrails.com/"
+                  },
+                  {
+                    "name": "Robtex DNS",
+                    "url": "https://www.robtex.com/"
+                  },
+                  {
+                    "name": "Zone Transfer Test - HackerTarget",
+                    "url": "https://hackertarget.com/zone-transfer/"
+                  },
+                  {
+                    "name": "HackerTarget - Online Tools",
+                    "url": "https://hackertarget.com/"
+                  },
+                  {
+                    "name": "DNS Reconnaissance - HackerTarget",
+                    "url": "https://hackertarget.com/dns-lookup/"
+                  }
+                ]
+              },
+              {
+                "name": "WHOIS & Registration",
+                "bookmarks": [
+                  {
+                    "name": "Whois Lookup",
+                    "url": "https://www.whois.com/whois/"
+                  },
+                  {
+                    "name": "DomainTools Whois",
+                    "url": "http://whois.domaintools.com/"
+                  },
+                  {
+                    "name": "Domain Glass - WHOIS & DNS",
+                    "url": "https://domain.glass/"
+                  }
+                ]
+              },
+              {
+                "name": "Certificate Transparency",
+                "bookmarks": [
+                  {
+                    "name": "crt.sh - Certificate Transparency",
+                    "url": "https://crt.sh/"
+                  },
+                  {
+                    "name": "Certificate Search - crtfinder",
+                    "url": "https://crtfinder.com/"
+                  }
+                ]
+              },
+              {
+                "name": "ASN & IP Intelligence",
+                "bookmarks": [
+                  {
+                    "name": "BGP.he.net - ASN Lookup",
+                    "url": "https://bgp.he.net/"
+                  },
+                  {
+                    "name": "ASNLookup",
+                    "url": "https://asnlookup.com/"
+                  },
+                  {
+                    "name": "RIPE NCC Database",
+                    "url": "https://apps.db.ripe.net/db-web-ui/query"
+                  },
+                  {
+                    "name": "ipinfo.io",
+                    "url": "https://ipinfo.io/"
+                  },
+                  {
+                    "name": "IPVoid - IP Reputation",
+                    "url": "https://www.ipvoid.com/"
+                  },
+                  {
+                    "name": "Hosting Checker",
+                    "url": "https://hostingchecker.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Web & Tech Profiling",
+                "bookmarks": [
+                  {
+                    "name": "URLScan.io",
+                    "url": "https://urlscan.io/"
+                  },
+                  {
+                    "name": "Web Check",
+                    "url": "https://web-check.xyz/"
+                  },
+                  {
+                    "name": "BuiltWith - Technology Profiler",
+                    "url": "https://builtwith.com/"
+                  },
+                  {
+                    "name": "Wappalyzer",
+                    "url": "https://www.wappalyzer.com/"
+                  },
+                  {
+                    "name": "NetCraft - Site Report",
+                    "url": "https://sitereport.netcraft.com/"
+                  },
+                  {
+                    "name": "Wayback Machine",
+                    "url": "https://archive.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Source Code & Dork Searching",
+                "bookmarks": [
+                  {
+                    "name": "PublicWWW - Source Code Search",
+                    "url": "https://publicwww.com/"
+                  },
+                  {
+                    "name": "SearchCode",
+                    "url": "https://searchcode.com/"
+                  },
+                  {
+                    "name": "Google Hacking Database (GHDB)",
+                    "url": "https://www.exploit-db.com/google-hacking-database"
+                  },
+                  {
+                    "name": "Pentest-Tools Google Hacking",
+                    "url": "https://pentest-tools.com/information-gathering/google-hacking"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Web Application Testing",
+            "bookmarks": [
+              {
+                "name": "References & Methodology",
+                "bookmarks": [
+                  {
+                    "name": "HackTricks - Web Tricks",
+                    "url": "https://book.hacktricks.xyz/pentesting-web/web-vulnerabilities-methodology"
+                  },
+                  {
+                    "name": "PortSwigger Web Security Academy",
+                    "url": "https://portswigger.net/web-security"
+                  },
+                  {
+                    "name": "OWASP Top 10",
+                    "url": "https://owasp.org/www-project-top-ten/"
+                  },
+                  {
+                    "name": "OWASP Testing Guide",
+                    "url": "https://owasp.org/www-project-web-security-testing-guide/"
+                  },
+                  {
+                    "name": "OWASP Cheat Sheet Series",
+                    "url": "https://cheatsheetseries.owasp.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Injection",
+                "bookmarks": [
+                  {
+                    "name": "SQL Injection",
+                    "bookmarks": [
+                      {
+                        "name": "SQLi Cheat Sheet - PortSwigger",
+                        "url": "https://portswigger.net/web-security/sql-injection/cheat-sheet"
+                      },
+                      {
+                        "name": "SQLi Payloads - PayloadsAllTheThings",
+                        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection"
+                      },
+                      {
+                        "name": "SQLMap Documentation",
+                        "url": "https://sqlmap.org/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "XSS",
+                    "bookmarks": [
+                      {
+                        "name": "XSS Payload List",
+                        "url": "https://github.com/payloadbox/xss-payload-list"
+                      },
+                      {
+                        "name": "XSS - PortSwigger",
+                        "url": "https://portswigger.net/web-security/cross-site-scripting"
+                      },
+                      {
+                        "name": "XSS Hunter (Reflected/Stored)",
+                        "url": "https://xsshunter.trufflesecurity.com/"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "XXE",
+                    "bookmarks": [
+                      {
+                        "name": "XXE Injection - PayloadsAllTheThings",
+                        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection"
+                      },
+                      {
+                        "name": "XXE - PortSwigger",
+                        "url": "https://portswigger.net/web-security/xxe"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "SSTI",
+                    "bookmarks": [
+                      {
+                        "name": "SSTI Payloads - PayloadsAllTheThings",
+                        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection"
+                      },
+                      {
+                        "name": "SSTI - PortSwigger",
+                        "url": "https://portswigger.net/web-security/server-side-template-injection"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Command Injection",
+                    "bookmarks": [
+                      {
+                        "name": "Command Injection - PayloadsAllTheThings",
+                        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Command%20Injection"
+                      },
+                      {
+                        "name": "Argument Injection Vectors",
+                        "url": "https://sonarsource.github.io/argument-injection-vectors/"
+                      },
+                      {
+                        "name": "Command Injection - PortSwigger",
+                        "url": "https://portswigger.net/web-security/os-command-injection"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "Request & Protocol Attacks",
+                "bookmarks": [
+                  {
+                    "name": "SSRF Payload List - PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery"
+                  },
+                  {
+                    "name": "HTTP Request Smuggling - PortSwigger",
+                    "url": "https://portswigger.net/web-security/request-smuggling"
+                  },
+                  {
+                    "name": "Path Traversal - PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Directory%20Traversal"
+                  },
+                  {
+                    "name": "IDOR Testing Guide - PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Insecure%20Direct%20Object%20References"
+                  },
+                  {
+                    "name": "GraphQL Injection - PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection"
+                  }
+                ]
+              },
+              {
+                "name": "Authentication & Authorization",
+                "bookmarks": [
+                  {
+                    "name": "JWT Attack Playbook",
+                    "url": "https://github.com/ticarpi/jwt_tool/wiki"
+                  },
+                  {
+                    "name": "OAuth Security - PortSwigger",
+                    "url": "https://portswigger.net/web-security/oauth"
+                  },
+                  {
+                    "name": "CORS Misconfiguration Scanner",
+                    "url": "https://github.com/RUB-NDS/CORStest"
+                  },
+                  {
+                    "name": "Broken Access Control - PortSwigger",
+                    "url": "https://portswigger.net/web-security/access-control"
+                  }
+                ]
+              },
+              {
+                "name": "Deserialization & Logic",
+                "bookmarks": [
+                  {
+                    "name": "Deserialization Cheat Sheet",
+                    "url": "https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet"
+                  },
+                  {
+                    "name": "Deserialization - PortSwigger",
+                    "url": "https://portswigger.net/web-security/deserialization"
+                  },
+                  {
+                    "name": "WAF Bypass Techniques",
+                    "url": "https://github.com/0xInfection/Awesome-WAF"
+                  }
+                ]
+              },
+              {
+                "name": "Tools & Utilities",
+                "bookmarks": [
+                  {
+                    "name": "PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings"
+                  },
+                  {
+                    "name": "Offensive Payloads",
+                    "url": "https://github.com/InfoSecWarrior/Offensive-Payloads"
+                  },
+                  {
+                    "name": "Reverse Shell Generator",
+                    "url": "https://www.revshells.com/"
+                  },
+                  {
+                    "name": "CyberChef",
+                    "url": "https://gchq.github.io/CyberChef/"
+                  },
+                  {
+                    "name": "RequestBin - HTTP Inspector",
+                    "url": "https://requestbin.com/"
+                  },
+                  {
+                    "name": "Webhook.site",
+                    "url": "https://webhook.site/"
+                  },
+                  {
+                    "name": "Burp Suite Documentation",
+                    "url": "https://portswigger.net/burp/documentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Network & Infrastructure",
+            "bookmarks": [
+              {
+                "name": "Scanning & Discovery",
+                "bookmarks": [
+                  {
+                    "name": "Nmap Reference Guide",
+                    "url": "https://nmap.org/book/man.html"
+                  },
+                  {
+                    "name": "masscan",
+                    "url": "https://github.com/robertdavidgraham/masscan"
+                  },
+                  {
+                    "name": "HackerTarget Nmap Online",
+                    "url": "https://hackertarget.com/nmap-online-port-scanner/"
+                  },
+                  {
+                    "name": "NetDiscover",
+                    "url": "https://github.com/netdiscover-scanner/netdiscover"
+                  },
+                  {
+                    "name": "Rustscan - Fast Port Scanner",
+                    "url": "https://github.com/RustScan/RustScan"
+                  }
+                ]
+              },
+              {
+                "name": "Packet Analysis",
+                "bookmarks": [
+                  {
+                    "name": "Wireshark Documentation",
+                    "url": "https://www.wireshark.org/docs/"
+                  },
+                  {
+                    "name": "Scapy Documentation",
+                    "url": "https://scapy.readthedocs.io/"
+                  },
+                  {
+                    "name": "IANA Protocol Numbers",
+                    "url": "https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml"
+                  },
+                  {
+                    "name": "IANA Port Numbers",
+                    "url": "https://www.iana.org/assignments/service-names-port-numbers/"
+                  }
+                ]
+              },
+              {
+                "name": "MitM & Poisoning",
+                "bookmarks": [
+                  {
+                    "name": "Responder - LLMNR/NBT-NS Poisoner",
+                    "url": "https://github.com/lgandx/Responder"
+                  },
+                  {
+                    "name": "Bettercap",
+                    "url": "https://www.bettercap.org/"
+                  },
+                  {
+                    "name": "Impacket - Network Protocol Toolkit",
+                    "url": "https://github.com/fortra/impacket"
+                  },
+                  {
+                    "name": "IPv6 Attack Cheat Sheet",
+                    "url": "https://github.com/nicowillis/ipv6-attack-cheat-sheet"
+                  }
+                ]
+              },
+              {
+                "name": "Firewall & IDS Evasion",
+                "bookmarks": [
+                  {
+                    "name": "Firewall Evasion - Nmap",
+                    "url": "https://nmap.org/book/man-bypass-firewalls-ids.html"
+                  },
+                  {
+                    "name": "IDS/IPS Evasion - HackTricks",
+                    "url": "https://book.hacktricks.xyz/generic-methodologies-and-resources/pentesting-network/ids-evasion"
+                  }
+                ]
+              },
+              {
+                "name": "Service Enumeration",
+                "bookmarks": [
+                  {
+                    "name": "SMTP Enumeration - HackTricks",
+                    "url": "https://book.hacktricks.xyz/network-services-pentesting/pentesting-smtp"
+                  },
+                  {
+                    "name": "SMB Enumeration - HackTricks",
+                    "url": "https://book.hacktricks.xyz/network-services-pentesting/pentesting-smb"
+                  },
+                  {
+                    "name": "SNMP Enumeration - HackTricks",
+                    "url": "https://book.hacktricks.xyz/network-services-pentesting/pentesting-snmp"
+                  },
+                  {
+                    "name": "FTP Pentesting - HackTricks",
+                    "url": "https://book.hacktricks.xyz/network-services-pentesting/pentesting-ftp"
+                  },
+                  {
+                    "name": "VPN / Tunnel Detection (GOAD)",
+                    "url": "https://github.com/Orange-Cyberdefense/GOAD"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Exploitation",
+            "bookmarks": [
+              {
+                "name": "Vulnerability Databases",
+                "bookmarks": [
+                  {
+                    "name": "Exploit-DB",
+                    "url": "https://www.exploit-db.com/"
+                  },
+                  {
+                    "name": "NVD - National Vulnerability Database",
+                    "url": "https://nvd.nist.gov/"
+                  },
+                  {
+                    "name": "CVE Mitre",
+                    "url": "https://cve.mitre.org/"
+                  },
+                  {
+                    "name": "Rapid7 Vulnerability DB",
+                    "url": "https://www.rapid7.com/db/"
+                  },
+                  {
+                    "name": "Vulnerability Lab",
+                    "url": "https://www.vulnerability-lab.com/"
+                  },
+                  {
+                    "name": "GitHub Advisory Database",
+                    "url": "https://github.com/advisories"
+                  },
+                  {
+                    "name": "Sploitus - Exploit Aggregator",
+                    "url": "https://sploitus.com/"
+                  },
+                  {
+                    "name": "Packet Storm Security",
+                    "url": "https://packetstormsecurity.com/"
+                  },
+                  {
+                    "name": "0day.today",
+                    "url": "https://0day.today/"
+                  },
+                  {
+                    "name": "VulDB",
+                    "url": "https://vuldb.com/"
+                  },
+                  {
+                    "name": "Tenable Research Advisories",
+                    "url": "https://www.tenable.com/security/research"
+                  }
+                ]
+              },
+              {
+                "name": "CVSS & Scoring",
+                "bookmarks": [
+                  {
+                    "name": "CVSS v4 Calculator",
+                    "url": "https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator"
+                  },
+                  {
+                    "name": "CVSS v3 Calculator",
+                    "url": "https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator"
+                  },
+                  {
+                    "name": "CVSS v2.0 Calculator",
+                    "url": "https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator"
+                  },
+                  {
+                    "name": "CVSS v4.0 User Guide",
+                    "url": "https://www.first.org/cvss/user-guide"
+                  },
+                  {
+                    "name": "EPSS - Exploit Prediction Scoring",
+                    "url": "https://www.first.org/epss/"
+                  }
+                ]
+              },
+              {
+                "name": "Frameworks & PoCs",
+                "bookmarks": [
+                  {
+                    "name": "Metasploit Documentation",
+                    "url": "https://docs.metasploit.com/"
+                  },
+                  {
+                    "name": "Metasploit Unleashed",
+                    "url": "https://www.offensive-security.com/metasploit-unleashed/"
+                  },
+                  {
+                    "name": "SearchSploit Guide",
+                    "url": "https://www.exploit-db.com/searchsploit"
+                  },
+                  {
+                    "name": "PoC in GitHub",
+                    "url": "https://github.com/nomi-sec/PoC-in-GitHub"
+                  },
+                  {
+                    "name": "VulnHub - Vulnerable VMs",
+                    "url": "https://www.vulnhub.com/"
+                  },
+                  {
+                    "name": "Nodistribute - Safe File Scan",
+                    "url": "https://nodistribute.io/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Active Directory & Windows",
+            "bookmarks": [
+              {
+                "name": "Enumeration",
+                "bookmarks": [
+                  {
+                    "name": "HackTricks - AD Methodology",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology"
+                  },
+                  {
+                    "name": "BloodHound - SpecterOps",
+                    "url": "https://github.com/SpecterOps/BloodHound"
+                  },
+                  {
+                    "name": "SharpHound Collector",
+                    "url": "https://github.com/BloodHoundAD/SharpHound"
+                  },
+                  {
+                    "name": "PowerView / PowerSploit",
+                    "url": "https://github.com/PowerShellMafia/PowerSploit"
+                  },
+                  {
+                    "name": "LDAPDomainDump",
+                    "url": "https://github.com/dirkjanm/ldapdomaindump"
+                  },
+                  {
+                    "name": "ADACLScanner",
+                    "url": "https://github.com/canix1/ADACLScanner"
+                  },
+                  {
+                    "name": "WADComs - AD Cheat Sheet",
+                    "url": "https://wadcoms.github.io/"
+                  },
+                  {
+                    "name": "PingCastle - AD Auditing",
+                    "url": "https://www.pingcastle.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Kerberos Attacks",
+                "bookmarks": [
+                  {
+                    "name": "Rubeus - Kerberos Toolset",
+                    "url": "https://github.com/GhostPack/Rubeus"
+                  },
+                  {
+                    "name": "Kerbrute - Username Enumeration",
+                    "url": "https://github.com/ropnop/kerbrute"
+                  },
+                  {
+                    "name": "Kerberoasting Guide - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/kerberoast"
+                  },
+                  {
+                    "name": "GetNPUsers - AS-REP Roasting",
+                    "url": "https://github.com/fortra/impacket/blob/master/examples/GetNPUsers.py"
+                  },
+                  {
+                    "name": "S4U2Self / Constrained Delegation Abuse",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/constrained-delegation"
+                  }
+                ]
+              },
+              {
+                "name": "NTLM & Relay",
+                "bookmarks": [
+                  {
+                    "name": "Pass-the-Hash Guide - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/ntlm/pass-the-hash"
+                  },
+                  {
+                    "name": "Responder - LLMNR/NBT-NS Poisoner",
+                    "url": "https://github.com/lgandx/Responder"
+                  },
+                  {
+                    "name": "Impacket - AD Attacks",
+                    "url": "https://github.com/fortra/impacket"
+                  },
+                  {
+                    "name": "NTLM Relay - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/ntlm"
+                  },
+                  {
+                    "name": "Mimikatz",
+                    "url": "https://github.com/gentilkiwi/mimikatz"
+                  }
+                ]
+              },
+              {
+                "name": "Lateral Movement & Execution",
+                "bookmarks": [
+                  {
+                    "name": "CrackMapExec",
+                    "url": "https://github.com/byt3bl33d3r/CrackMapExec"
+                  },
+                  {
+                    "name": "NetExec (CME successor)",
+                    "url": "https://github.com/Pennyw0rth/NetExec"
+                  },
+                  {
+                    "name": "PsExec / Remote Execution",
+                    "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/psexec"
+                  },
+                  {
+                    "name": "WMI Lateral Movement - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/lateral-movement/wmiexec"
+                  },
+                  {
+                    "name": "DCOM Lateral Movement - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/lateral-movement/dcom-exec"
+                  }
+                ]
+              },
+              {
+                "name": "GPO & ACL Abuse",
+                "bookmarks": [
+                  {
+                    "name": "GPO Abuse - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse"
+                  },
+                  {
+                    "name": "DCSync Attack - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/dcsync"
+                  },
+                  {
+                    "name": "LAPS Abuse - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/laps"
+                  },
+                  {
+                    "name": "Shadow Credentials - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/shadow-credentials"
+                  }
+                ]
+              },
+              {
+                "name": "Windows Privilege Escalation",
+                "bookmarks": [
+                  {
+                    "name": "Windows PrivEsc - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation"
+                  },
+                  {
+                    "name": "Token Impersonation - Windows",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens"
+                  },
+                  {
+                    "name": "DLL Hijacking - Windows",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dll-hijacking"
+                  },
+                  {
+                    "name": "LOLBAS - Living Off The Land Binaries",
+                    "url": "https://lolbas-project.github.io/"
+                  },
+                  {
+                    "name": "WinPEAS",
+                    "url": "https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS"
+                  }
+                ]
+              },
+              {
+                "name": "Notable Exploits",
+                "bookmarks": [
+                  {
+                    "name": "PrintNightmare PoC",
+                    "url": "https://github.com/cube0x0/CVE-2021-1675"
+                  },
+                  {
+                    "name": "MS17-010 (EternalBlue)",
+                    "url": "https://github.com/worawit/MS17-010"
+                  },
+                  {
+                    "name": "ZeroLogon - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/zerologon"
+                  },
+                  {
+                    "name": "OffSec PEN-200 Windows AD Module",
+                    "url": "https://www.offsec.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Post-Exploitation",
+            "bookmarks": [
+              {
+                "name": "C2 Frameworks",
+                "bookmarks": [
+                  {
+                    "name": "Cobalt Strike Documentation",
+                    "url": "https://hstechdocs.helpsystems.com/manuals/cobaltstrike/"
+                  },
+                  {
+                    "name": "Sliver C2 Framework",
+                    "url": "https://github.com/BishopFox/sliver"
+                  },
+                  {
+                    "name": "Havoc C2 Framework",
+                    "url": "https://github.com/HavocFramework/Havoc"
+                  },
+                  {
+                    "name": "Metasploit Post Modules",
+                    "url": "https://docs.metasploit.com/docs/using-metasploit/intermediate/post-module-reference.html"
+                  },
+                  {
+                    "name": "Empire Post-Exploitation",
+                    "url": "https://github.com/BC-SECURITY/Empire"
+                  },
+                  {
+                    "name": "Pupy RAT",
+                    "url": "https://github.com/n1nj4sec/pupy"
+                  },
+                  {
+                    "name": "Covenant C2",
+                    "url": "https://github.com/cobbr/Covenant"
+                  }
+                ]
+              },
+              {
+                "name": "Lateral Movement",
+                "bookmarks": [
+                  {
+                    "name": "Lateral Movement - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/lateral-movement"
+                  },
+                  {
+                    "name": "PsExec / Remote Execution",
+                    "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/psexec"
+                  },
+                  {
+                    "name": "WMI Lateral Movement",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/lateral-movement/wmiexec"
+                  },
+                  {
+                    "name": "DCOM Lateral Movement",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/lateral-movement/dcom-exec"
+                  }
+                ]
+              },
+              {
+                "name": "Pivoting & Tunneling",
+                "bookmarks": [
+                  {
+                    "name": "Pivoting Techniques - HackTricks",
+                    "url": "https://book.hacktricks.xyz/generic-methodologies-and-resources/tunneling-and-port-forwarding"
+                  },
+                  {
+                    "name": "Chisel - Fast TCP/UDP Tunnel",
+                    "url": "https://github.com/jpillora/chisel"
+                  },
+                  {
+                    "name": "Ligolo-ng - Advanced Tunneling",
+                    "url": "https://github.com/nicocha30/ligolo-ng"
+                  },
+                  {
+                    "name": "SSHuttle - Transparent Proxy",
+                    "url": "https://github.com/sshuttle/sshuttle"
+                  },
+                  {
+                    "name": "Proxychains",
+                    "url": "https://github.com/haad/proxychains"
+                  }
+                ]
+              },
+              {
+                "name": "Persistence & Evasion",
+                "bookmarks": [
+                  {
+                    "name": "Persistence Techniques - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries"
+                  },
+                  {
+                    "name": "Living Off Trusted Sites (LOTS)",
+                    "url": "https://lots-project.com/"
+                  },
+                  {
+                    "name": "AMSI Bypass Techniques",
+                    "url": "https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell"
+                  },
+                  {
+                    "name": "Invoke-Obfuscation",
+                    "url": "https://github.com/danielbohannon/Invoke-Obfuscation"
+                  },
+                  {
+                    "name": "Linux Persistence - HackTricks",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation#scheduled-cron-jobs"
+                  }
+                ]
+              },
+              {
+                "name": "Data Exfiltration",
+                "bookmarks": [
+                  {
+                    "name": "Data Exfiltration - HackTricks",
+                    "url": "https://book.hacktricks.xyz/generic-methodologies-and-resources/exfiltration"
+                  },
+                  {
+                    "name": "DNSExfiltrator",
+                    "url": "https://github.com/Arno0x/DNSExfiltrator"
+                  },
+                  {
+                    "name": "DET - Data Exfiltration Toolkit",
+                    "url": "https://github.com/sensepost/DET"
+                  }
+                ]
+              },
+              {
+                "name": "ATT&CK Framework",
+                "bookmarks": [
+                  {
+                    "name": "MITRE ATT&CK Framework",
+                    "url": "https://attack.mitre.org/"
+                  },
+                  {
+                    "name": "MITRE ATT&CK Navigator",
+                    "url": "https://mitre-attack.github.io/attack-navigator/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Privilege Escalation",
+            "bookmarks": [
+              {
+                "name": "Linux",
+                "bookmarks": [
+                  {
+                    "name": "Linux PrivEsc - HackTricks",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/linux-privilege-escalation-checklist"
+                  },
+                  {
+                    "name": "GTFOBins",
+                    "url": "https://gtfobins.github.io/"
+                  },
+                  {
+                    "name": "LinPEAS",
+                    "url": "https://github.com/peass-ng/PEASS-ng/tree/master/linPEAS"
+                  },
+                  {
+                    "name": "Sudo Privilege Escalation",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation/sudo-and-suid"
+                  },
+                  {
+                    "name": "SUID / SGID Exploitation",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation/interesting-groups-linux-pe/suid-sgid-abuse"
+                  },
+                  {
+                    "name": "Capabilities Abuse - HackTricks",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation/linux-capabilities"
+                  },
+                  {
+                    "name": "Cron Job Abuse",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation#scheduled-cron-jobs"
+                  },
+                  {
+                    "name": "PATH Variable Abuse",
+                    "url": "https://book.hacktricks.xyz/linux-hardening/privilege-escalation#path"
+                  }
+                ]
+              },
+              {
+                "name": "Windows",
+                "bookmarks": [
+                  {
+                    "name": "Windows PrivEsc - HackTricks",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation"
+                  },
+                  {
+                    "name": "LOLBAS - Living Off the Land Binaries",
+                    "url": "https://lolbas-project.github.io/"
+                  },
+                  {
+                    "name": "WinPEAS",
+                    "url": "https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS"
+                  },
+                  {
+                    "name": "DLL Hijacking - Windows",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dll-hijacking"
+                  },
+                  {
+                    "name": "Token Impersonation - Windows",
+                    "url": "https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens"
+                  },
+                  {
+                    "name": "PrivEsc Checklist - Sushant747",
+                    "url": "https://sushant747.gitbooks.io/total-oscp-guide/content/privilege_escalation_windows.html"
+                  }
+                ]
+              },
+              {
+                "name": "References",
+                "bookmarks": [
+                  {
+                    "name": "PEASS-ng (All Enumeration Scripts)",
+                    "url": "https://github.com/peass-ng/PEASS-ng"
+                  },
+                  {
+                    "name": "Privilege Escalation Awesome List",
+                    "url": "https://github.com/m0nad/Awesome-Privilege-Escalation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Password Attacks",
+            "bookmarks": [
+              {
+                "name": "Wordlists & Dictionaries",
+                "bookmarks": [
+                  {
+                    "name": "SecLists - Wordlists & Payloads",
+                    "url": "https://github.com/danielmiessler/SecLists"
+                  },
+                  {
+                    "name": "Awesome Wordlists",
+                    "url": "https://github.com/gmelodie/awesome-wordlists"
+                  },
+                  {
+                    "name": "CrackStation Wordlists",
+                    "url": "https://crackstation.net/crackstation-wordlist-password-cracking-dictionary.htm"
+                  },
+                  {
+                    "name": "Mentalist - Wordlist Generator",
+                    "url": "https://github.com/sc0tfree/mentalist"
+                  }
+                ]
+              },
+              {
+                "name": "Hash Cracking",
+                "bookmarks": [
+                  {
+                    "name": "Hashcat Documentation",
+                    "url": "https://hashcat.net/wiki/"
+                  },
+                  {
+                    "name": "Hashcat Example Hashes",
+                    "url": "https://hashcat.net/wiki/doku.php?id=example_hashes"
+                  },
+                  {
+                    "name": "Hashcat Rules",
+                    "url": "https://github.com/hashcat/hashcat/tree/master/rules"
+                  },
+                  {
+                    "name": "John the Ripper Documentation",
+                    "url": "https://www.openwall.com/john/"
+                  },
+                  {
+                    "name": "CrackStation Online Hash Cracker",
+                    "url": "https://crackstation.net/"
+                  },
+                  {
+                    "name": "hashes.com - Hash Lookup",
+                    "url": "https://hashes.com/en/decrypt/hash"
+                  },
+                  {
+                    "name": "Rainbow Tables - Project RainbowCrack",
+                    "url": "https://project-rainbowcrack.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Hash Identification",
+                "bookmarks": [
+                  {
+                    "name": "Hash Identifier - hashID",
+                    "url": "https://github.com/psypanda/hashID"
+                  },
+                  {
+                    "name": "NTLM Hash Generator / Cracker",
+                    "url": "https://www.browserling.com/tools/ntlm-hash"
+                  },
+                  {
+                    "name": "Hash Analyzer - TunnelsUP",
+                    "url": "https://www.tunnelsup.com/hash-analyzer/"
+                  }
+                ]
+              },
+              {
+                "name": "Online Brute Force & Spraying",
+                "bookmarks": [
+                  {
+                    "name": "Hydra Documentation",
+                    "url": "https://github.com/vanhauser-thc/thc-hydra"
+                  },
+                  {
+                    "name": "Medusa - Parallel Login Brute-Forcer",
+                    "url": "https://github.com/jmk-foofus/medusa"
+                  },
+                  {
+                    "name": "Credential Stuffing - OWASP",
+                    "url": "https://owasp.org/www-community/attacks/Credential_stuffing"
+                  }
+                ]
+              },
+              {
+                "name": "Default & Leaked Credentials",
+                "bookmarks": [
+                  {
+                    "name": "Default Credentials - CIRT.net",
+                    "url": "https://www.cirt.net/passwords"
+                  },
+                  {
+                    "name": "Default Password DB",
+                    "url": "https://www.defaultpassword.com/"
+                  },
+                  {
+                    "name": "DeHashed - Credential Search",
+                    "url": "https://dehashed.com/"
+                  },
+                  {
+                    "name": "Have I Been Pwned",
+                    "url": "https://haveibeenpwned.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Wireless",
+            "bookmarks": [
+              {
+                "name": "Wi-Fi Attacks",
+                "bookmarks": [
+                  {
+                    "name": "Aircrack-ng Documentation",
+                    "url": "https://www.aircrack-ng.org/documentation.html"
+                  },
+                  {
+                    "name": "HackTricks - Wifi Hacking",
+                    "url": "https://book.hacktricks.xyz/generic-methodologies-and-resources/pentesting-wifi"
+                  },
+                  {
+                    "name": "Hostapd-WPE - Evil Twin",
+                    "url": "https://github.com/OpenSecurityResearch/hostapd-wpe"
+                  },
+                  {
+                    "name": "hcxdumptool - Packet Capture",
+                    "url": "https://github.com/ZerBea/hcxdumptool"
+                  },
+                  {
+                    "name": "Bettercap WiFi Module",
+                    "url": "https://www.bettercap.org/modules/wifi/"
+                  },
+                  {
+                    "name": "Hashcat WPA/WPA2 Mode",
+                    "url": "https://hashcat.net/wiki/doku.php?id=hashcat"
+                  },
+                  {
+                    "name": "WPA2 Attack Overview - KoreLogic",
+                    "url": "https://contest-2010.korelogic.com/rules.html"
+                  }
+                ]
+              },
+              {
+                "name": "Bluetooth",
+                "bookmarks": [
+                  {
+                    "name": "Bluetooth HackTricks",
+                    "url": "https://book.hacktricks.xyz/generic-methodologies-and-resources/pentesting-bluetooth"
+                  },
+                  {
+                    "name": "BlueZ - Linux Bluetooth",
+                    "url": "http://www.bluez.org/"
+                  },
+                  {
+                    "name": "Bettercap Bluetooth Module",
+                    "url": "https://www.bettercap.org/modules/ble/"
+                  }
+                ]
+              },
+              {
+                "name": "SDR & RF",
+                "bookmarks": [
+                  {
+                    "name": "SDR Sharp / SDR#",
+                    "url": "https://www.sdrsharp.com/"
+                  },
+                  {
+                    "name": "GNU Radio - SDR Framework",
+                    "url": "https://www.gnuradio.org/"
+                  },
+                  {
+                    "name": "RTL-SDR Resources",
+                    "url": "https://www.rtl-sdr.com/"
+                  },
+                  {
+                    "name": "GPSJam - GPS Interference Map",
+                    "url": "https://gpsjam.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Network Mapping",
+                "bookmarks": [
+                  {
+                    "name": "WiGLE - Wireless Network Mapping",
+                    "url": "https://wigle.net/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Reverse Engineering & Malware",
+            "bookmarks": [
+              {
+                "name": "Disassemblers & Decompilers",
+                "bookmarks": [
+                  {
+                    "name": "Ghidra - NSA RE Tool",
+                    "url": "https://ghidra-sre.org/"
+                  },
+                  {
+                    "name": "IDA Free",
+                    "url": "https://hex-rays.com/ida-free/"
+                  },
+                  {
+                    "name": "Binary Ninja Cloud",
+                    "url": "https://cloud.binary.ninja/"
+                  },
+                  {
+                    "name": "Cutter - RE Platform",
+                    "url": "https://cutter.re/"
+                  },
+                  {
+                    "name": "RetDec - Decompiler",
+                    "url": "https://retdec.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Debuggers",
+                "bookmarks": [
+                  {
+                    "name": "x64dbg Debugger",
+                    "url": "https://x64dbg.com/"
+                  },
+                  {
+                    "name": "GDB - GNU Debugger",
+                    "url": "https://www.gnu.org/software/gdb/"
+                  },
+                  {
+                    "name": "PEDA - GDB Enhancement",
+                    "url": "https://github.com/longld/peda"
+                  }
+                ]
+              },
+              {
+                "name": "Malware Sandboxes",
+                "bookmarks": [
+                  {
+                    "name": "Any.run - Interactive Malware Sandbox",
+                    "url": "https://any.run/"
+                  },
+                  {
+                    "name": "Hybrid Analysis Sandbox",
+                    "url": "https://www.hybrid-analysis.com/"
+                  },
+                  {
+                    "name": "Joe Sandbox",
+                    "url": "https://www.joesandbox.com/"
+                  },
+                  {
+                    "name": "Triage - Malware Analysis",
+                    "url": "https://tria.ge/"
+                  },
+                  {
+                    "name": "VirusTotal",
+                    "url": "https://www.virustotal.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Malware Samples & Repositories",
+                "bookmarks": [
+                  {
+                    "name": "MalwareBazaar - Malware Samples",
+                    "url": "https://bazaar.abuse.ch/"
+                  },
+                  {
+                    "name": "VirusShare - Malware Repository",
+                    "url": "https://virusshare.com/"
+                  },
+                  {
+                    "name": "Unpac.me - Automated Unpacker",
+                    "url": "https://www.unpac.me/"
+                  },
+                  {
+                    "name": "YARA Rules",
+                    "url": "https://virustotal.github.io/yara/"
+                  },
+                  {
+                    "name": "REMnux - Malware Analysis Distro",
+                    "url": "https://remnux.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Language-Specific",
+                "bookmarks": [
+                  {
+                    "name": "dnSpy - .NET Decompiler",
+                    "url": "https://github.com/dnSpy/dnSpy"
+                  },
+                  {
+                    "name": "dotPeek - .NET Decompiler",
+                    "url": "https://www.jetbrains.com/decompiler/"
+                  },
+                  {
+                    "name": "Jadx - Android Decompiler",
+                    "url": "https://github.com/skylot/jadx"
+                  },
+                  {
+                    "name": "apktool - Android RE",
+                    "url": "https://github.com/iBotPeaches/Apktool"
+                  }
+                ]
+              },
+              {
+                "name": "Steganography & Encoding",
+                "bookmarks": [
+                  {
+                    "name": "StegOnline - Steganography",
+                    "url": "https://georgeom.net/StegOnline/checklist"
+                  },
+                  {
+                    "name": "Aperi'Solve - Stego Toolkit",
+                    "url": "https://www.aperisolve.com/"
+                  },
+                  {
+                    "name": "dCode.fr - Cipher Identification",
+                    "url": "https://www.dcode.fr/identification-chiffrement"
+                  },
+                  {
+                    "name": "CyberChef - Encoding/Decoding",
+                    "url": "https://gchq.github.io/CyberChef/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Payload Generation & AV Evasion",
+            "bookmarks": [
+              {
+                "name": "Payload Generation",
+                "bookmarks": [
+                  {
+                    "name": "MSFvenom Cheat Sheet",
+                    "url": "https://github.com/security-cheatsheets/msfvenom-cheatsheet"
+                  },
+                  {
+                    "name": "Reverse Shell Generator",
+                    "url": "https://www.revshells.com/"
+                  },
+                  {
+                    "name": "Payload Generation - PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings"
+                  },
+                  {
+                    "name": "Offensive Payloads",
+                    "url": "https://github.com/InfoSecWarrior/Offensive-Payloads"
+                  },
+                  {
+                    "name": "Nishang - PowerShell for Pentest",
+                    "url": "https://github.com/samratashok/nishang"
+                  }
+                ]
+              },
+              {
+                "name": "AV & EDR Evasion",
+                "bookmarks": [
+                  {
+                    "name": "Veil Framework - AV Evasion",
+                    "url": "https://github.com/Veil-Framework/Veil"
+                  },
+                  {
+                    "name": "Shellter - PE Injector",
+                    "url": "https://www.shellterproject.com/"
+                  },
+                  {
+                    "name": "Donut - Shellcode Injector",
+                    "url": "https://github.com/TheWover/donut"
+                  },
+                  {
+                    "name": "PEzor - Packer/Loader",
+                    "url": "https://github.com/phra/PEzor"
+                  },
+                  {
+                    "name": "AMSI Bypass Techniques",
+                    "url": "https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell"
+                  },
+                  {
+                    "name": "Invoke-Obfuscation",
+                    "url": "https://github.com/danielbohannon/Invoke-Obfuscation"
+                  },
+                  {
+                    "name": "ScareCrow - EDR Bypass",
+                    "url": "https://github.com/optiv/ScareCrow"
+                  }
+                ]
+              },
+              {
+                "name": "Testing & Verification",
+                "bookmarks": [
+                  {
+                    "name": "Nodistribute - Safe File Scan",
+                    "url": "https://nodistribute.io/"
+                  },
+                  {
+                    "name": "VirusTotal",
+                    "url": "https://www.virustotal.com/"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "OSINT (Ops Support)",
+            "bookmarks": [
+              {
+                "name": "Target Profiling",
+                "bookmarks": [
+                  {
+                    "name": "OSINT Framework",
+                    "url": "https://osintframework.com/"
+                  },
+                  {
+                    "name": "IntelTechniques by Michael Bazzell",
+                    "url": "https://inteltechniques.com/"
+                  },
+                  {
+                    "name": "LinkedIn - Target Research",
+                    "url": "https://www.linkedin.com/"
+                  },
+                  {
+                    "name": "Pipl - People Search",
+                    "url": "https://pipl.com/"
+                  },
+                  {
+                    "name": "ZoomInfo",
+                    "url": "https://www.zoominfo.com/s/search"
+                  },
+                  {
+                    "name": "DataVis by OSINT Combine",
+                    "url": "https://osintcombine.tools/#"
+                  },
+                  {
+                    "name": "Bellingcat Investigation Toolkit",
+                    "url": "https://bellingcat.gitbook.io/toolkit"
+                  }
+                ]
+              },
+              {
+                "name": "Email & Username",
+                "bookmarks": [
+                  {
+                    "name": "Hunter.io - Email Finder",
+                    "url": "https://hunter.io/"
+                  },
+                  {
+                    "name": "Email Format Finder",
+                    "url": "https://www.email-format.com/"
+                  },
+                  {
+                    "name": "Email Reputation Check",
+                    "url": "https://emailrep.io/"
+                  },
+                  {
+                    "name": "WhatsMyName - Username Search",
+                    "url": "https://whatsmyname.app/"
+                  },
+                  {
+                    "name": "Instant Username Search",
+                    "url": "https://instantusername.com/#/"
+                  }
+                ]
+              },
+              {
+                "name": "Domain & Infrastructure",
+                "bookmarks": [
+                  {
+                    "name": "Whoxy - Reverse WHOIS",
+                    "url": "https://www.whoxy.com/"
+                  },
+                  {
+                    "name": "ViewDNS Reverse WHOIS",
+                    "url": "https://viewdns.info/reversewhois/"
+                  },
+                  {
+                    "name": "GrayhatWarfare - Cloud Storage",
+                    "url": "https://buckets.grayhatwarfare.com/"
+                  },
+                  {
+                    "name": "OpenPhish - Phishing Intelligence",
+                    "url": "https://openphish.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Face & Image Search",
+                "bookmarks": [
+                  {
+                    "name": "PimEyes - Face Search",
+                    "url": "https://pimeyes.com/en/blog/image-search-with-pimeyes-how-to-reverse-image-search"
+                  },
+                  {
+                    "name": "TinEye Reverse Image Search",
+                    "url": "https://tineye.com/"
+                  },
+                  {
+                    "name": "Yandex Images",
+                    "url": "https://yandex.com/images"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Cheat Sheets & Training",
+            "bookmarks": [
+              {
+                "name": "Core References",
+                "bookmarks": [
+                  {
+                    "name": "HackTricks",
+                    "url": "https://book.hacktricks.xyz/"
+                  },
+                  {
+                    "name": "GTFOBins",
+                    "url": "https://gtfobins.github.io/"
+                  },
+                  {
+                    "name": "LOLBAS",
+                    "url": "https://lolbas-project.github.io/"
+                  },
+                  {
+                    "name": "WADComs - AD Cheat Sheet",
+                    "url": "https://wadcoms.github.io/"
+                  },
+                  {
+                    "name": "PayloadsAllTheThings",
+                    "url": "https://github.com/swisskyrepo/PayloadsAllTheThings"
+                  },
+                  {
+                    "name": "Pentest Monkey Reverse Shell Cheat Sheet",
+                    "url": "https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet"
+                  },
+                  {
+                    "name": "OWASP Cheat Sheet Series",
+                    "url": "https://cheatsheetseries.owasp.org/"
+                  },
+                  {
+                    "name": "awesome-pentest-cheat-sheets",
+                    "url": "https://github.com/coreb1t/awesome-pentest-cheat-sheets"
+                  },
+                  {
+                    "name": "Pentest Cheat Sheets",
+                    "url": "https://github.com/Kitsun3Sec/Pentest-Cheat-Sheets"
+                  },
+                  {
+                    "name": "MITRE ATT&CK Framework",
+                    "url": "https://attack.mitre.org/"
+                  }
+                ]
+              },
+              {
+                "name": "Practice Labs",
+                "bookmarks": [
+                  {
+                    "name": "HackTheBox",
+                    "url": "https://www.hackthebox.com/"
+                  },
+                  {
+                    "name": "TryHackMe",
+                    "url": "https://tryhackme.com/"
+                  },
+                  {
+                    "name": "PentesterLab",
+                    "url": "https://pentesterlab.com/"
+                  },
+                  {
+                    "name": "PortSwigger Web Security Academy",
+                    "url": "https://portswigger.net/web-security"
+                  },
+                  {
+                    "name": "VulnHub",
+                    "url": "https://www.vulnhub.com/"
+                  }
+                ]
+              },
+              {
+                "name": "Tools & Distributions",
+                "bookmarks": [
+                  {
+                    "name": "Kali Linux",
+                    "url": "https://www.kali.org/"
+                  },
+                  {
+                    "name": "Kali Linux Tools Index",
+                    "url": "https://www.kali.org/tools/"
+                  },
+                  {
+                    "name": "Kali Docs",
+                    "url": "https://www.kali.org/docs/"
+                  },
+                  {
+                    "name": "Kali NetHunter",
+                    "url": "https://www.kali.org/kali-nethunter/"
+                  },
+                  {
+                    "name": "Kali Forums",
+                    "url": "https://forums.kali.org/"
+                  },
+                  {
+                    "name": "OffSec",
+                    "url": "https://www.offsec.com/"
+                  },
+                  {
+                    "name": "OffSec PEN-200 (OSCP)",
+                    "url": "https://www.offsec.com/"
+                  },
+                  {
+                    "name": "THC Hydra",
+                    "url": "https://github.com/vanhauser-thc/thc-hydra"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
