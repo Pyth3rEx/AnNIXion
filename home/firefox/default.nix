@@ -4,6 +4,7 @@
   imports = [
     ./redteam.nix
     ./osint.nix
+    ./theme.nix
   ];
 
   programs.firefox.enable = lib.mkDefault true;
