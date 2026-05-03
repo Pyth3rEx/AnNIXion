@@ -25,7 +25,7 @@ in
     };
     firefox-red = {
       name = "Firefox - Red Team";
-      icon = "/home/operator/.dotfiles/assets/icons/firefox-red.png";
+      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png";
       genericName = "Assault Browser";
       exec = ''firefox -P "Red Team" --no-remote'';
       terminal = false;
@@ -34,7 +34,7 @@ in
     };
     firefox-osint = { 
       name = "Firefox - OSINT";
-      icon = "/home/operator/.dotfiles/assets/icons/firefox-yellow.png";
+      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png";
       genericName = "Search Browser";
       exec = ''firefox -P "OSINT" --no-remote'';
       terminal = false;
@@ -140,7 +140,7 @@ in
           "browser.privatebrowsing.autostart" = true;
         };
         bookmarks ={
-          settings = builtins.fromJSON (builtins.readFile "/home/operator/.dotfiles/assets/tools/bookmarks-redteam.json");
+          settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-redteam.json");
           force = true;
         };
         extensions = {
@@ -204,7 +204,7 @@ in
           "browser.privatebrowsing.autostart" = true;
         };
         bookmarks = {
-          settings = builtins.fromJSON (builtins.readFile "/home/operator/.dotfiles/assets/tools/bookmarks-osint.json");
+          settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-osint.json");
           force = true;
         };
         extensions = {
