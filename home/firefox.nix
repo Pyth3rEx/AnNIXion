@@ -162,7 +162,7 @@ in
           ];
         };
       };
-      "OSINT" = {
+      "osint" = {
         id = 2;
         name = "OSINT";
         search = {
