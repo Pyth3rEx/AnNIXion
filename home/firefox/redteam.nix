@@ -13,6 +13,9 @@ in
   programs.firefox.profiles."redteam" = {
     id = 1;
     name = "Red Team";
+    userChrome = ''
+
+    '';
     search = {
       default = "ddg";
       privateDefault = "ddg";
