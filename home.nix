@@ -25,8 +25,8 @@ let
   };
 in {
   imports = [
-    ./home/firefox.nix
-  ]; 
+    ./home/firefox
+  ];
 
   # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
