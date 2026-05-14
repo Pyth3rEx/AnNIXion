@@ -36,46 +36,52 @@
   programs.firefox = {
     policies = {
       ExtensionSettings = {
+        "*" = {
+          private_browsing = true;
+          default_area = "menupanel";
+        };
+
         # ── Cookie Editor ──────────────────────────
         "cookie-editor@cgagnier.ca" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/cookie-editor/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
+          default_area = "menupanel";
         };
 
         # ── View Page Archive ──────────────────────
         "{6348c3b0-5a5b-11e9-b7df-ebcd13fc1ebb}" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/view-page-archive/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
         };
 
         # ── HackTools ──────────────────────────────
         "{f1423c11-a4e2-4709-a0f8-6d6a68c83d08}" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/hacktools/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
         };
 
         # ── Retire.js ──────────────────────────────
         "@retire.js" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/retire-js/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
         };
 
         # ── DotGit ─────────────────────────────────
         "{84cbda23-345f-4e74-9695-9a52b9599dc0}" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/dotgit/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
         };
 
         # ── Wappalyzer ─────────────────────────────
         "wappalyzer@crunchlabz.com" = {
           installation_mode = "force_installed";
           install_url = "https://addons.mozilla.org/firefox/downloads/latest/wappalyzer/latest.xpi";
-          private_browsing = false;
+          private_browsing = true;
         };
       };
     };

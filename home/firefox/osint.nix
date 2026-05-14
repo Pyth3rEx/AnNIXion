@@ -80,7 +80,7 @@ in
     extensions = {
       settings = {
         feedbroreader = {
-          force = true;
+          force = true; # Example option
         };
       };
       packages = with addons; [
