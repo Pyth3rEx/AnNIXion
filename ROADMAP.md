@@ -102,26 +102,29 @@ Goal: users can drop personal dotfiles into a `user/` folder that survives reins
 - [x] `user/configuration.nix` — optional system override, conditionally imported via `builtins.pathExists`
 - [x] All base options use `lib.mkDefault` (priority 1000) so user overrides win at normal priority — no `lib.mkForce` needed
 - [x] `user/examples/git.nix` — ready-to-use git identity and signing override
-- [x] `user/examples/zsh.nix` — welcome banner and recon aliases
+- [x] `user/examples/zsh.nix` — recon aliases and banner override example
 - [x] `user/README.md` — explains what can be overridden and how, with examples
 
 ---
 
-## Phase 7 — Firefox Profiles
+## Phase 7 — Firefox Profiles ✓
 
-Goal: Firefox ships with two pre-configured profiles selectable from launch.
+Goal: Firefox ships with three pre-configured profiles selectable from launch.
 
-- [ ] `modules/desktop/firefox.nix` — Firefox installed via Home Manager with policy config
-- [ ] `home/firefox/redteam-profile.nix`:
-  - HTTP proxy set to 127.0.0.1:8080 (Burp)
-  - DevTools enabled
-  - Extensions: FoxyProxy, Wappalyzer, HackTools
-- [ ] `home/firefox/osint-profile.nix`:
-  - ResistFingerprinting and related about:config flags
-  - Multi-Account Containers, Temporary Containers
-  - Extensions: uBlock Origin, Cookie AutoDelete, User-Agent Switcher
-  - SOCKS5 proxy config
-- [ ] Profile switcher or launcher shortcuts on the desktop
+> **Implemented.** Structure differs slightly from original plan — everything lives under `home/firefox/` rather than splitting between `modules/desktop/` and `home/firefox/`.
+
+- [x] `home/firefox/default.nix` — Firefox enable, force-installed policies, desktop launchers
+- [x] `home/firefox/redteam.nix` — Red Team profile: FoxyProxy, HackTools, Wappalyzer, Cookie Editor, Retire.js; search engines: Exploit-DB, CVE, NVD
+- [x] `home/firefox/osint.nix` — OSINT profile: NoScript, CanvasBlocker, User-Agent Switcher, Cookie AutoDelete; search engines: Shodan, Censys, Wayback Machine
+- [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, Social Searcher
+- [x] Desktop launchers for each profile via `xdg.desktopEntries`
+- [ ] HTTP proxy pre-configured (127.0.0.1:8080) in redteam profile settings
+- [ ] ResistFingerprinting flags wired in osint profile settings
+- [ ] Per-profile visual identity via custom `userChrome.css` (Nord dark base, neon accents) — each browser must be immediately distinguishable by its UI color at a glance:
+  - [ ] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar; technical area separator on FoxyProxy
+  - [ ] OSINT — neon amber `#ffd000`; technical area separator on developer button
+  - [ ] Puppet Master — neon green `#00e676`; 4 px container tab strip always visible; technical area separator on developer button
+- [ ] Developer button pinned to toolbar in all profiles; Firefox Account button removed from all profiles
 
 ---
 

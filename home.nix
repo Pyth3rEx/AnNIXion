@@ -25,8 +25,9 @@ let
   };
 in {
   imports = [
-    ./home/firefox.nix
-  ]; 
+    ./home/firefox
+    ./home/apps-menu.nix
+  ];
 
   # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
@@ -126,7 +127,7 @@ in {
   # ============================================================
   programs.git.settings = {
     enable = lib.mkDefault true;
-    userName = lib.mkDefault "CHANGME";
+    userName = lib.mkDefault "CHANGEME";
     userEmail = lib.mkDefault "your@email.com";
     extraConfig = lib.mkDefault {
       init.defaultBranch = "main";
@@ -152,12 +153,12 @@ in {
         size = 32;
       };
       iconTheme = "Slot-Nord-Dark-Colorize-Icons";
-      wallpaper = "/home/operator/.dotfiles/assets/wallpaper/dementor-harry-5120x2880-18680.png"; # Wallpaper from https://4kwallpapers.com/black-dark/dementor-harry-18680.html - Will credit the artist once I find out who it is
+      wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/dementor-harry-5120x2880-18680.png"; # https://4kwallpapers.com/black-dark/dementor-harry-18680.html
       wallpaperFillMode = "preserveAspectFit";
       wallpaperBackground.color = "#000000";
     };
 
-    kscreenlocker.appearance.wallpaper = "/home/operator/.dotfiles/assets/wallpaper/moon-planet-8k-7680x4320-87.jpg"; # Wallpaper from https://4kwallpapers.com/space/moon-planet-8k-87.html - Will credit the artist once I find out who it is
+    kscreenlocker.appearance.wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/moon-planet-8k-7680x4320-87.jpg"; # https://4kwallpapers.com/space/moon-planet-8k-87.html
 
     fonts = {
       general = {
@@ -178,11 +179,12 @@ in {
           # add the "icon" key to the "General" group for the widget in
           # ~/.config/plasma-org.kde.plasma.desktop-appletsrc.
           {
-            name = "org.kde.plasma.kickoff";
+            name = "org.kde.plasma.kicker";
             config = {
               General = {
-                icon = "nix-snowflake-white";
-                alphaSort = true;
+                icon            = "nix-snowflake-white";
+                showRecentApps  = false;
+                showRecentDocs  = false;
               };
             };
           }

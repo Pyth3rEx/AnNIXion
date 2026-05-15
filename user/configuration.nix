@@ -42,4 +42,21 @@
 
 {
   # Your overrides go here.
+
+  # Fixes an issue with UI => poweroff dosn't work (at least not on my system)
+  # Need to investigate
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (
+        action.id == "org.freedesktop.login1.power-off" ||
+        action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+        action.id == "org.freedesktop.login1.reboot" ||
+        action.id == "org.freedesktop.login1.reboot-multiple-sessions"
+      ) {
+        if (subject.isInGroup("wheel")) {
+          return polkit.Result.YES;
+        }
+      }
+    });
+  '';
 }

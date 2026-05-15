@@ -1,0 +1,180 @@
+<!DOCTYPE Menu PUBLIC '-//freedesktop//DTD Menu 1.0//EN' 'http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd'>
+
+<Menu>
+  <Name>Applications</Name>
+
+  <Layout>
+    <Menuname>CyberKillChain</Menuname>
+    <Menuname>OSINT</Menuname>
+    <Menuname>BlueTeam</Menuname>
+    <Menuname>Forensics</Menuname>
+    <Menuname>HardwarePhysical</Menuname>
+    <Merge type="menus"/>
+    <Merge type="files"/>
+  </Layout>
+
+  <Menu>
+    <Name>CyberKillChain</Name>
+    <Directory>cyberkillchain.directory</Directory>
+
+    <Menu>
+      <Name>Reconnaissance</Name>
+      <Directory>ckc-recon.directory</Directory>
+      <Include>
+        <Filename>nmap.desktop</Filename>
+        <Filename>gobuster.desktop</Filename>
+        <Filename>ffuf.desktop</Filename>
+        <Filename>dig.desktop</Filename>
+        <Filename>nslookup.desktop</Filename>
+        <Filename>aircrack-ng.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Weaponization</Name>
+      <Directory>ckc-weaponization.directory</Directory>
+      <Include>
+        <Filename>ghidra.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Delivery</Name>
+      <Directory>ckc-delivery.directory</Directory>
+      <Include>
+        <Filename>netcat.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Exploitation</Name>
+      <Directory>ckc-exploitation.directory</Directory>
+      <Include>
+        <Filename>burpsuite.desktop</Filename>
+        <Filename>metasploit.desktop</Filename>
+        <Filename>sqlmap.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Command and Control</Name>
+      <Directory>ckc-c2.directory</Directory>
+      <Include>
+        <Filename>netcat.desktop</Filename>
+        <Filename>metasploit.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Credential Access</Name>
+      <Directory>ckc-credentials.directory</Directory>
+      <Include>
+        <Filename>john.desktop</Filename>
+        <Filename>hashcat.desktop</Filename>
+        <Filename>hydra.desktop</Filename>
+      </Include>
+    </Menu>
+  </Menu>
+
+  <Menu>
+    <Name>OSINT</Name>
+    <Directory>osint.directory</Directory>
+
+    <Menu>
+      <Name>Infrastructure</Name>
+      <Directory>osint-infra.directory</Directory>
+      <Include>
+        <Filename>theharvester.desktop</Filename>
+        <Filename>whois.desktop</Filename>
+        <Filename>dig.desktop</Filename>
+        <Filename>nslookup.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Email / Contact</Name>
+      <Directory>osint-contact.directory</Directory>
+      <Include>
+        <Filename>theharvester.desktop</Filename>
+      </Include>
+    </Menu>
+  </Menu>
+
+  <Menu>
+    <Name>BlueTeam</Name>
+    <Directory>blueteam.directory</Directory>
+
+    <Menu>
+      <Name>Network Monitoring</Name>
+      <Directory>blueteam-network.directory</Directory>
+      <Include>
+        <Filename>wireshark.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Malware Analysis</Name>
+      <Directory>blueteam-malware.directory</Directory>
+      <Include>
+        <Filename>ghidra.desktop</Filename>
+      </Include>
+    </Menu>
+  </Menu>
+
+  <Menu>
+    <Name>Forensics</Name>
+    <Directory>forensics.directory</Directory>
+
+    <Menu>
+      <Name>Network Forensics</Name>
+      <Directory>forensics-network.directory</Directory>
+      <Include>
+        <Filename>wireshark.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Firmware / Metadata</Name>
+      <Directory>forensics-metadata.directory</Directory>
+      <Include>
+        <Filename>binwalk.desktop</Filename>
+      </Include>
+    </Menu>
+  </Menu>
+
+  <Menu>
+    <Name>HardwarePhysical</Name>
+    <Directory>hardwarephysical.directory</Directory>
+
+    <Menu>
+      <Name>RF / SDR</Name>
+      <Directory>hw-rf.directory</Directory>
+      <Include>
+        <Filename>hackrf.desktop</Filename>
+        <Filename>gqrx.desktop</Filename>
+        <Filename>gnuradio.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>WiFi / Bluetooth</Name>
+      <Directory>hw-wireless.directory</Directory>
+      <Include>
+        <Filename>aircrack-ng.desktop</Filename>
+      </Include>
+    </Menu>
+
+    <Menu>
+      <Name>Embedded / IoT</Name>
+      <Directory>hw-iot.directory</Directory>
+      <Include>
+        <Filename>binwalk.desktop</Filename>
+      </Include>
+    </Menu>
+  </Menu>
+
+  <Menu>
+    <Name>Help</Name>
+    <Deleted/>
+  </Menu>
+</Menu>

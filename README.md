@@ -8,10 +8,11 @@
 
 ## Overview
 
-AnNIXion is a NixOS-based security distribution designed for two audiences:
+AnNIXion is a NixOS-based security distribution designed for three audiences:
 
 - **Red teamers** — penetration testing, exploitation, network analysis, proxy interception
 - **OSINT & intelligence practitioners** — source gathering, identity compartmentalization, fingerprint evasion
+- **Persona operators** — sock puppet management, avatar lifecycle, cover maintenance, social platform presence
 
 The entire system — tools, desktop, configuration, user environment — is declared in code. No manual setup. No configuration drift. No "works on my machine."
 
@@ -46,11 +47,11 @@ AnNIXion is in active development. The following is implemented and functional:
 - Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
 - ZSH + tmux + xterm terminal environment
 - User override system — drop personal settings into `user/` without touching base config
+- Firefox three-profile setup — RedTeam, OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers (`home/firefox/`)
 
 The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 
 - Custom TUI installer
-- Firefox dual-profile setup (RedTeam / OSINT)
 - Full tool layer separation (RedTeam, OSINT, Privacy) as selectable profiles
 - Kernel hardening and MAC randomization
 - ISO build pipeline
@@ -105,8 +106,14 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 ├── flake.nix                    # Inputs, module wiring, conditional user imports
 ├── hardware-configuration.nix   # Auto-generated — do not edit manually
 ├── home.nix                     # Base user environment: shell, dev tools, KDE config
+├── home/
+│   └── firefox/
+│       ├── default.nix          # Firefox enable, policies, desktop launchers
+│       ├── redteam.nix          # Red Team profile — extensions and search engines
+│       ├── osint.nix            # OSINT profile — extensions and search engines
+│       └── puppet.nix           # Puppet Master profile — persona and avatar management
 ├── modules/
-│   ├── desktop.nix              # KDE Plasma 6, SDDM, X11, Firefox
+│   ├── desktop.nix              # KDE Plasma 6, SDDM, X11
 │   ├── xrdp.nix                 # Hyper-V Enhanced Session via vsock
 │   └── security-tools.nix      # Offensive, OSINT, and SDR packages
 └── user/                        # Your personal overrides — never committed upstream
@@ -127,17 +134,6 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 - Full disk encryption via LUKS2 with `disko`
 - Random Windows-style hostname at install time (e.g. `DESKTOP-K4MXR2J`)
 - Profile selection: RedTeam, OSINT, or both
-
-### Firefox — Two Profiles, Two Identities
-
-**RedTeam profile** — speed and visibility over discretion
-- Burp Suite proxy pre-configured (127.0.0.1:8080)
-- Extensions: FoxyProxy, Wappalyzer, HackTools
-
-**OSINT profile** — fingerprint evasion first
-- Canvas Blocker, ResistFingerprinting, Multi-Account Containers
-- Extensions: uBlock Origin, Cookie AutoDelete, User-Agent Switcher
-- SOCKS5/VPN-aware, per-container JavaScript control
 
 ### Tool Layers
 - **RedTeam**: nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec

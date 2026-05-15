@@ -1,0 +1,230 @@
+[
+  {
+    "name": "Toolbar",
+    "toolbar": true,
+    "bookmarks": [
+      {
+        "name": "Quick Access",
+        "bookmarks": [
+          { "name": "This Person Does Not Exist", "url": "https://thispersondoesnotexist.com/" },
+          { "name": "Fake Name Generator", "url": "https://www.fakenamegenerator.com/" },
+          { "name": "Namechk", "url": "https://namechk.com/" },
+          { "name": "10 Minute Mail", "url": "https://10minutemail.com/" },
+          { "name": "Proton Mail", "url": "https://proton.me/mail" },
+          { "name": "BrowserLeaks", "url": "https://browserleaks.com/" },
+          { "name": "Cover Your Tracks", "url": "https://coveryourtracks.eff.org/" },
+          { "name": "Have I Been Pwned", "url": "https://haveibeenpwned.com/" }
+        ]
+      },
+      {
+        "name": "Bookmarks",
+        "bookmarks": [
+          {
+            "name": "Persona Creation",
+            "bookmarks": [
+              {
+                "name": "Identity Generators",
+                "bookmarks": [
+                  { "name": "Fake Name Generator", "url": "https://www.fakenamegenerator.com/" },
+                  { "name": "Fake Person Generator", "url": "https://www.fakepersongenerator.com/Index/generate" },
+                  { "name": "RandomUser - Identity Generator", "url": "https://randomuser.me/" },
+                  { "name": "Elfqrin - Fake Identity", "url": "https://www.elfqrin.com/fakeid.php" },
+                  { "name": "Fake Address Generator", "url": "https://www.fakeaddressgenerator.com/" },
+                  { "name": "Behind the Name - Random Name", "url": "https://www.behindthename.com/random/" },
+                  { "name": "Random Street View", "url": "https://randomstreetview.com/" }
+                ]
+              },
+              {
+                "name": "AI Face & Photo Tools",
+                "bookmarks": [
+                  { "name": "This Person Does Not Exist", "url": "https://thispersondoesnotexist.com/" },
+                  { "name": "Generated Photos", "url": "https://generated.photos/" },
+                  { "name": "Artbreeder - Face Mixer", "url": "https://www.artbreeder.com/" },
+                  { "name": "Midjourney", "url": "https://www.midjourney.com/home" },
+                  { "name": "ImageFX - Google Labs", "url": "https://labs.google/fx/tools/image-fx" },
+                  { "name": "Adobe Firefly", "url": "https://firefly.adobe.com/" },
+                  { "name": "DeepSwap - Face Swap", "url": "https://www.deepswap.ai/" },
+                  { "name": "Remini - Photo Enhancer", "url": "https://app.remini.ai/" }
+                ]
+              },
+              {
+                "name": "Backstory & Bio Builders",
+                "bookmarks": [
+                  { "name": "ChatGPT", "url": "https://chatgpt.com/" },
+                  { "name": "Claude (Anthropic)", "url": "https://claude.ai/" },
+                  { "name": "Gemini (Google)", "url": "https://gemini.google.com/" },
+                  { "name": "Perplexity AI", "url": "https://www.perplexity.ai/" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Disposable Communications",
+            "bookmarks": [
+              {
+                "name": "Email Services",
+                "bookmarks": [
+                  { "name": "Proton Mail", "url": "https://proton.me/mail" },
+                  { "name": "Tutanota", "url": "https://tuta.com/" },
+                  { "name": "10 Minute Mail", "url": "https://10minutemail.com/" },
+                  { "name": "Guerrilla Mail", "url": "https://www.guerrillamail.com/" },
+                  { "name": "Temp Mail", "url": "https://temp-mail.org/" },
+                  { "name": "YOPmail - Disposable Inbox", "url": "https://yopmail.com/" },
+                  { "name": "MailDrop", "url": "https://maildrop.cc/" },
+                  { "name": "SimpleLogin - Email Alias", "url": "https://simplelogin.io/" },
+                  { "name": "AnonAddy - Email Forwarding", "url": "https://addy.io/" }
+                ]
+              },
+              {
+                "name": "Phone & SMS Services",
+                "bookmarks": [
+                  { "name": "Receive SMS Online - SMS24", "url": "https://sms24.me/" },
+                  { "name": "Receive-SMSS.com", "url": "https://receive-smss.com/" },
+                  { "name": "MyTrashMobile", "url": "https://www.mytrashmobile.com/numbers" },
+                  { "name": "TextNow - Virtual Number", "url": "https://www.textnow.com/" },
+                  { "name": "5SIM - Virtual Phone Numbers", "url": "https://5sim.net/" },
+                  { "name": "SMSPool - Activation Numbers", "url": "https://www.smspool.net/" },
+                  { "name": "Hushed - Temp Phone Number", "url": "https://hushed.com/" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Social Platforms",
+            "bookmarks": [
+              {
+                "name": "Western",
+                "bookmarks": [
+                  { "name": "Facebook", "url": "https://www.facebook.com/" },
+                  { "name": "Twitter / X", "url": "https://twitter.com/" },
+                  { "name": "Instagram", "url": "https://www.instagram.com/" },
+                  { "name": "LinkedIn", "url": "https://www.linkedin.com/" },
+                  { "name": "Reddit", "url": "https://www.reddit.com/" },
+                  { "name": "TikTok", "url": "https://www.tiktok.com/" },
+                  { "name": "Discord", "url": "https://discord.com/channels/@me" },
+                  { "name": "Telegram (Web)", "url": "https://web.telegram.org/" },
+                  { "name": "Bluesky", "url": "https://bsky.app/" },
+                  { "name": "Mastodon - Instance List", "url": "https://instances.social/" },
+                  { "name": "Pinterest", "url": "https://www.pinterest.com/" },
+                  { "name": "Quora", "url": "https://www.quora.com/" }
+                ]
+              },
+              {
+                "name": "Russian",
+                "bookmarks": [
+                  { "name": "VKontakte (VK)", "url": "https://vk.com/" },
+                  { "name": "OK.ru (Odnoklassniki)", "url": "https://ok.ru/" }
+                ]
+              },
+              {
+                "name": "Chinese",
+                "bookmarks": [
+                  { "name": "WeChat (Web)", "url": "https://web.wechat.com/" },
+                  { "name": "Weibo", "url": "https://www.weibo.com/" },
+                  { "name": "Douyin (TikTok CN)", "url": "https://www.douyin.com/" },
+                  { "name": "Baidu Tieba", "url": "https://tieba.baidu.com/" },
+                  { "name": "Bilibili", "url": "https://www.bilibili.com/" },
+                  { "name": "Zhihu - Chinese Quora", "url": "https://www.zhihu.com/" },
+                  { "name": "Xiaohongshu (RED)", "url": "https://www.xiaohongshu.com/" },
+                  { "name": "QQ (Web)", "url": "https://web.qq.com/" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Username & Presence",
+            "bookmarks": [
+              {
+                "name": "Availability Checkers",
+                "bookmarks": [
+                  { "name": "Namechk - Username Availability", "url": "https://namechk.com/" },
+                  { "name": "Instant Username Search", "url": "https://instantusername.com/#/" },
+                  { "name": "KnowEm - Username Check", "url": "https://knowem.com/" },
+                  { "name": "CheckUsernames", "url": "https://checkusernames.com/" }
+                ]
+              },
+              {
+                "name": "Cross-Platform Search",
+                "bookmarks": [
+                  { "name": "WhatsMyName - Username Hunt", "url": "https://whatsmyname.app/" },
+                  { "name": "Social Searcher - Multi-Platform", "url": "https://www.social-searcher.com/" },
+                  { "name": "Bot Sentinel - Credibility Check", "url": "https://botsentinel.com/" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "OPSEC & Cover Checking",
+            "bookmarks": [
+              {
+                "name": "Fingerprint & Leak Tests",
+                "bookmarks": [
+                  { "name": "BrowserLeaks - Full Suite", "url": "https://browserleaks.com/" },
+                  { "name": "Cover Your Tracks - EFF", "url": "https://coveryourtracks.eff.org/" },
+                  { "name": "IPLeak.net", "url": "https://ipleak.net/" },
+                  { "name": "Whoer - Anonymity Check", "url": "https://whoer.net/" },
+                  { "name": "DNS Leak Test", "url": "https://www.dnsleaktest.com/" },
+                  { "name": "WebRTC Leak Test", "url": "https://browserleaks.com/webrtc" },
+                  { "name": "Canvas Fingerprint Test", "url": "https://browserleaks.com/canvas" },
+                  { "name": "What Is My Browser", "url": "https://www.whatismybrowser.com/" }
+                ]
+              },
+              {
+                "name": "Persona Exposure Checks",
+                "bookmarks": [
+                  { "name": "Have I Been Pwned", "url": "https://haveibeenpwned.com/" },
+                  { "name": "DeHashed - Credential Search", "url": "https://dehashed.com/" },
+                  { "name": "IntelX - Intelligence Exchange", "url": "https://intelx.io/" },
+                  { "name": "BreachDirectory", "url": "https://breachdirectory.org/" }
+                ]
+              },
+              {
+                "name": "Proxy & Anonymity",
+                "bookmarks": [
+                  { "name": "Mullvad VPN", "url": "https://mullvad.net/" },
+                  { "name": "ProtonVPN", "url": "https://protonvpn.com/" },
+                  { "name": "Tor Project", "url": "https://www.torproject.org/" },
+                  { "name": "Proxynova - Proxy List", "url": "https://www.proxynova.com/proxy-server-list/" }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "AI Content Tools",
+            "bookmarks": [
+              {
+                "name": "Language Models",
+                "bookmarks": [
+                  { "name": "ChatGPT", "url": "https://chatgpt.com/" },
+                  { "name": "Claude (Anthropic)", "url": "https://claude.ai/" },
+                  { "name": "Gemini (Google)", "url": "https://gemini.google.com/" },
+                  { "name": "Grok", "url": "https://grok.com/" },
+                  { "name": "Perplexity AI", "url": "https://www.perplexity.ai/" },
+                  { "name": "Meta AI", "url": "https://www.meta.ai/" }
+                ]
+              },
+              {
+                "name": "Image Generation",
+                "bookmarks": [
+                  { "name": "Midjourney", "url": "https://www.midjourney.com/home" },
+                  { "name": "ImageFX - Google Labs", "url": "https://labs.google/fx/tools/image-fx" },
+                  { "name": "Image Creator - Microsoft", "url": "https://www.bing.com/images/create" },
+                  { "name": "Adobe Firefly", "url": "https://firefly.adobe.com/" }
+                ]
+              },
+              {
+                "name": "Translation",
+                "bookmarks": [
+                  { "name": "DeepL Translate", "url": "https://www.deepl.com/translator" },
+                  { "name": "Google Translate", "url": "https://translate.google.com/" },
+                  { "name": "Baidu Translate (CN)", "url": "https://fanyi.baidu.com/" },
+                  { "name": "Yandex Translate (RU)", "url": "https://translate.yandex.com/" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

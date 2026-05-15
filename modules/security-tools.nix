@@ -37,5 +37,12 @@
     hackrf         # HackRF tools
     gqrx           # SDR receiver GUI
     gnuradio       # SDR signal processing
+
+    # ── Post-Exploitation ─────────────────────────────────────
+    python313Packages.impacket       # Windows protocol post-exploitation suite
+
+    # ── Forensics ─────────────────────────────────────────────
+    volatility3    # memory forensics framework
+    autopsy        # disk & file forensics GUI
   ];
 }
