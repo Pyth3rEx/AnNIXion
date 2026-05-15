@@ -29,10 +29,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    shyfox = {
-      url = "github:Naezr/ShyFox";
-      flake = false;
-    };
   };
 
   outputs = { self, nixpkgs, home-manager, plasma-manager, firefox-addons, ... }@inputs:

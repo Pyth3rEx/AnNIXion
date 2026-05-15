@@ -120,10 +120,12 @@ Goal: Firefox ships with three pre-configured profiles selectable from launch.
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
 - [ ] HTTP proxy pre-configured (127.0.0.1:8080) in redteam profile settings
 - [ ] ResistFingerprinting flags wired in osint profile settings
-- [ ] Per-profile visual identity via ShyFox UI theming — each browser must be immediately distinguishable by its UI color at a glance:
-  - [ ] Red Team — black/red chrome
-  - [ ] OSINT — dark/yellow chrome
-  - [ ] Puppet Master — dark/green chrome
+- [ ] Per-profile visual identity via custom `userChrome.css` (Nord palette, cold/minimal) — each browser must be immediately distinguishable by its UI color at a glance:
+  - [ ] Red Team — Nord Aurora red (`#bf616a`) accent on tab line and nav-bar border
+  - [ ] OSINT — Nord Aurora yellow (`#ebcb8b`) accent on tab line and nav-bar border
+  - [ ] Puppet Master — Nord Aurora green (`#a3be8c`) accent + prominent container tab strip (4 px, always visible)
+- [ ] Developer tools button pinned to toolbar in all profiles (technical area, separated by a visual divider)
+- [ ] Firefox Account button removed from all profiles
 
 ---
 
