@@ -100,4 +100,19 @@ in
       ];
     };
   };
+
+  programs.firefox.policies.ExtensionSettings = with addons; {
+    "${ublock-origin.addonId}"              = { private_browsing = true; };
+    "${bitwarden.addonId}"                  = { private_browsing = true; };
+    "${privacy-badger.addonId}"             = { private_browsing = true; };
+    "${darkreader.addonId}"                 = { private_browsing = true; };
+    "${noscript.addonId}"                   = { private_browsing = true; };
+    "${single-file.addonId}"                = { private_browsing = true; };
+    "${multi-account-containers.addonId}"   = { private_browsing = true; };
+    "${temporary-containers-plus.addonId}"  = { private_browsing = true; };
+    "${cookie-autodelete.addonId}"          = { private_browsing = true; };
+    "${canvasblocker.addonId}"              = { private_browsing = true; };
+    "${user-agent-string-switcher.addonId}" = { private_browsing = true; };
+    "${feedbroreader.addonId}"              = { private_browsing = true; };
+  };
 }

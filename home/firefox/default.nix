@@ -43,8 +43,6 @@
 
         # ── Cookie Editor ──────────────────────────
         "cookie-editor@cgagnier.ca" = {
-          installation_mode = "force_installed";
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/cookie-editor/latest.xpi";
           private_browsing = true;
           default_area = "menupanel";
         };
@@ -58,8 +56,6 @@
 
         # ── HackTools ──────────────────────────────
         "{f1423c11-a4e2-4709-a0f8-6d6a68c83d08}" = {
-          installation_mode = "force_installed";
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/hacktools/latest.xpi";
           private_browsing = true;
         };
 

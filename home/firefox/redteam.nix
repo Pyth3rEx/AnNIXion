@@ -93,4 +93,15 @@ in
       ];
     };
   };
+
+  programs.firefox.policies.ExtensionSettings = with addons; {
+    "${ublock-origin.addonId}"      = { private_browsing = true; };
+    "${bitwarden.addonId}"          = { private_browsing = true; };
+    "${privacy-badger.addonId}"     = { private_browsing = true; };
+    "${darkreader.addonId}"         = { private_browsing = true; };
+    "${foxyproxy-standard.addonId}" = { private_browsing = true; };
+    "${single-file.addonId}"        = { private_browsing = true; };
+    "${hacktools.addonId}"          = { private_browsing = true; };
+    "${cookie-editor.addonId}"      = { private_browsing = true; };
+  };
 }
