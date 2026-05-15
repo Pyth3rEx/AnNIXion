@@ -109,17 +109,21 @@ Goal: users can drop personal dotfiles into a `user/` folder that survives reins
 
 ## Phase 7 — Firefox Profiles ✓
 
-Goal: Firefox ships with two pre-configured profiles selectable from launch.
+Goal: Firefox ships with three pre-configured profiles selectable from launch.
 
 > **Implemented.** Structure differs slightly from original plan — everything lives under `home/firefox/` rather than splitting between `modules/desktop/` and `home/firefox/`.
 
 - [x] `home/firefox/default.nix` — Firefox enable, force-installed policies, desktop launchers
 - [x] `home/firefox/redteam.nix` — Red Team profile: FoxyProxy, HackTools, Wappalyzer, Cookie Editor, Retire.js; search engines: Exploit-DB, CVE, NVD
-- [x] `home/firefox/osint.nix` — OSINT profile: NoScript, Multi-Account Containers, CanvasBlocker, User-Agent Switcher, Cookie AutoDelete; search engines: Shodan, Censys, Wayback Machine
+- [x] `home/firefox/osint.nix` — OSINT profile: NoScript, CanvasBlocker, User-Agent Switcher, Cookie AutoDelete; search engines: Shodan, Censys, Wayback Machine
+- [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, Social Searcher
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
 - [ ] HTTP proxy pre-configured (127.0.0.1:8080) in redteam profile settings
 - [ ] ResistFingerprinting flags wired in osint profile settings
-- [ ] Per-profile theming (ShyFox — black/red for RedTeam, yellow for OSINT)
+- [ ] Per-profile visual identity via ShyFox UI theming — each browser must be immediately distinguishable by its UI color at a glance:
+  - [ ] Red Team — black/red chrome
+  - [ ] OSINT — dark/yellow chrome
+  - [ ] Puppet Master — dark/green chrome
 
 ---
 

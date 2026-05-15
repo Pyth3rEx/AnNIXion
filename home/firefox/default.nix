@@ -4,6 +4,7 @@
   imports = [
     ./redteam.nix
     ./osint.nix
+    ./puppet.nix
   ];
 
   programs.firefox.enable = lib.mkDefault true;
@@ -27,6 +28,15 @@
       icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png";
       genericName = "Search Browser";
       exec = ''firefox -P "OSINT" --no-remote'';
+      terminal = false;
+      categories = [ "X-AnNIXion-Recon-OSINT" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
+      mimeType = [ "text/html" "text/xml" ];
+    };
+    firefox-puppet = {
+      name = "Firefox - Puppet Master";
+      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png";
+      genericName = "Persona Browser";
+      exec = ''firefox -P "Puppet Master" --no-remote'';
       terminal = false;
       categories = [ "X-AnNIXion-Recon-OSINT" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
       mimeType = [ "text/html" "text/xml" ];

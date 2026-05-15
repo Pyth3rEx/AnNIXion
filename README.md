@@ -8,10 +8,11 @@
 
 ## Overview
 
-AnNIXion is a NixOS-based security distribution designed for two audiences:
+AnNIXion is a NixOS-based security distribution designed for three audiences:
 
 - **Red teamers** — penetration testing, exploitation, network analysis, proxy interception
 - **OSINT & intelligence practitioners** — source gathering, identity compartmentalization, fingerprint evasion
+- **Persona operators** — sock puppet management, avatar lifecycle, cover maintenance, social platform presence
 
 The entire system — tools, desktop, configuration, user environment — is declared in code. No manual setup. No configuration drift. No "works on my machine."
 
@@ -46,7 +47,7 @@ AnNIXion is in active development. The following is implemented and functional:
 - Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
 - ZSH + tmux + xterm terminal environment
 - User override system — drop personal settings into `user/` without touching base config
-- Firefox dual-profile setup — RedTeam and OSINT profiles with dedicated extensions, search engines, and desktop launchers (`home/firefox/`)
+- Firefox three-profile setup — RedTeam, OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers (`home/firefox/`)
 
 The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 
@@ -109,7 +110,8 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 │   └── firefox/
 │       ├── default.nix          # Firefox enable, policies, desktop launchers
 │       ├── redteam.nix          # Red Team profile — extensions and search engines
-│       └── osint.nix            # OSINT profile — extensions and search engines
+│       ├── osint.nix            # OSINT profile — extensions and search engines
+│       └── puppet.nix           # Puppet Master profile — persona and avatar management
 ├── modules/
 │   ├── desktop.nix              # KDE Plasma 6, SDDM, X11
 │   ├── xrdp.nix                 # Hyper-V Enhanced Session via vsock

@@ -10,9 +10,9 @@ let
   };
 in
 {
-  programs.firefox.profiles."osint" = {
-    id = 2;
-    name = "OSINT";
+  programs.firefox.profiles."puppet" = {
+    id = 3;
+    name = "Puppet Master";
     search = {
       default = "ddg";
       privateDefault = "ddg";
@@ -31,31 +31,38 @@ in
           definedAliases = [ "@np" ];
         };
 
-        nixos-wiki = {
-          name = "NixOS Wiki";
-          urls = [{ template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; }];
-          iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
-          definedAliases = [ "@nw" ];
+        yandex = {
+          name = "Yandex";
+          urls = [{ template = "https://yandex.com/search/?text={searchTerms}"; }];
+          iconMapObj."16" = "https://yandex.com/favicon.ico";
+          definedAliases = [ "@ya" ];
         };
 
-        shodan = {
-          name = "Shodan";
-          urls = [{ template = "https://www.shodan.io/search?query={searchTerms}"; }];
-          iconMapObj."16" = "https://www.shodan.io/favicon.ico";
-          definedAliases = [ "@sh" ];
+        yandex-images = {
+          name = "Yandex Images";
+          urls = [{ template = "https://yandex.com/images/search?text={searchTerms}"; }];
+          iconMapObj."16" = "https://yandex.com/favicon.ico";
+          definedAliases = [ "@yai" ];
         };
 
-        censys = {
-          name = "Censys";
-          urls = [{ template = "https://search.censys.io/search?resource=hosts&q={searchTerms}"; }];
-          definedAliases = [ "@cs" ];
+        baidu = {
+          name = "Baidu";
+          urls = [{ template = "https://www.baidu.com/s?wd={searchTerms}"; }];
+          iconMapObj."16" = "https://www.baidu.com/favicon.ico";
+          definedAliases = [ "@bd" ];
         };
 
-        wayback = {
-          name = "Wayback Machine";
-          urls = [{ template = "https://web.archive.org/web/*/{searchTerms}"; }];
-          iconMapObj."16" = "https://archive.org/favicon.ico";
-          definedAliases = [ "@wb" ];
+        baidu-images = {
+          name = "Baidu Images";
+          urls = [{ template = "https://image.baidu.com/search/index?tn=baiduimage&word={searchTerms}"; }];
+          iconMapObj."16" = "https://www.baidu.com/favicon.ico";
+          definedAliases = [ "@bdi" ];
+        };
+
+        social-searcher = {
+          name = "Social Searcher";
+          urls = [{ template = "https://www.social-searcher.com/social-buzz/?q={searchTerms}"; }];
+          definedAliases = [ "@ss" ];
         };
 
         bing.metaData.hidden = true;
@@ -63,37 +70,33 @@ in
       };
       order = [
         "ddg"
-        "shodan"
-        "censys"
-        "wayback"
+        "yandex"
+        "baidu"
+        "social-searcher"
         "google"
       ];
     };
     settings = {
       "extensions.autoDisableScopes" = 0;
-      "browser.privatebrowsing.autostart" = true;
+      # No privatebrowsing.autostart — containers require a regular session
     };
     bookmarks = {
-      settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-osint.json");
+      settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-puppet.json");
       force = true;
     };
     extensions = {
-      settings = {
-        feedbroreader = {
-          force = true; # Example option
-        };
-      };
       packages = with addons; [
         ublock-origin
         bitwarden
         privacy-badger
         darkreader
-        noscript
-        single-file
-        cookie-autodelete
         canvasblocker
         user-agent-string-switcher
-        feedbroreader
+        cookie-autodelete
+        multi-account-containers
+        temporary-containers-plus
+        single-file
+        noscript
         # full list: gitlab.com/rycee/nur-expressions/-/tree/master/pkgs/firefox-addons
       ];
     };
@@ -104,11 +107,10 @@ in
     "${bitwarden.addonId}"                  = { private_browsing = true; };
     "${privacy-badger.addonId}"             = { private_browsing = true; };
     "${darkreader.addonId}"                 = { private_browsing = true; };
-    "${noscript.addonId}"                   = { private_browsing = true; };
-    "${single-file.addonId}"                = { private_browsing = true; };
-    "${cookie-autodelete.addonId}"          = { private_browsing = true; };
     "${canvasblocker.addonId}"              = { private_browsing = true; };
     "${user-agent-string-switcher.addonId}" = { private_browsing = true; };
-    "${feedbroreader.addonId}"              = { private_browsing = true; };
+    "${cookie-autodelete.addonId}"          = { private_browsing = true; };
+    "${single-file.addonId}"                = { private_browsing = true; };
+    "${noscript.addonId}"                   = { private_browsing = true; };
   };
 }
