@@ -56,6 +56,8 @@ let
       border-top: 2px solid var(--ann-accent) !important;
       /* Neon bleed — accent glow bleeds down into the page */
       box-shadow: 0 2px 10px var(--ann-glow) !important;
+      /* Required so ::before separators on child buttons aren't clipped */
+      overflow: visible !important;
     }
 
     /* ── Tabs ────────────────────────────────────────────────────── */
@@ -106,10 +108,24 @@ let
     }
 
     /* ── Technical area — left separator marks the section start ─── */
+    /* border-inline-start is swallowed by toolbarbutton styling;
+       a ::before pseudo-element positioned just outside the button
+       is the reliable way to draw a vertical separator in Firefox chrome. */
     ${techAnchor} {
-      border-inline-start: 1px solid var(--ann-nord3) !important;
-      margin-inline-start: 6px !important;
-      padding-inline-start: 4px !important;
+      position: relative !important;
+      margin-inline-start: 10px !important;
+    }
+
+    ${techAnchor}::before {
+      content: "" !important;
+      display: block !important;
+      position: absolute !important;
+      inset-inline-start: -6px !important;
+      top: 15% !important;
+      height: 70% !important;
+      width: 1px !important;
+      background-color: var(--ann-nord3) !important;
+      pointer-events: none !important;
     }
   '';
 
