@@ -8,6 +8,7 @@ let
     inherit buildMozillaXpiAddon;
     inherit (pkgs) fetchurl lib stdenv;
   };
+  burnedLand = import ./burned-land.nix { inherit pkgs; };
 in
 {
   programs.firefox.profiles."osint" = {
@@ -94,6 +95,7 @@ in
         canvasblocker
         user-agent-string-switcher
         feedbroreader
+        burnedLand
         # full list: gitlab.com/rycee/nur-expressions/-/tree/master/pkgs/firefox-addons
       ];
     };
@@ -110,5 +112,6 @@ in
     "${canvasblocker.addonId}"              = { private_browsing = true; };
     "${user-agent-string-switcher.addonId}" = { private_browsing = true; };
     "${feedbroreader.addonId}"              = { private_browsing = true; };
+    "${burnedLand.addonId}"                 = { private_browsing = true; };
   };
 }

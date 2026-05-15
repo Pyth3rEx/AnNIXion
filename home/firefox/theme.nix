@@ -9,6 +9,8 @@ let
     inherit (pkgs) fetchurl lib stdenv;
   };
 
+  burnedLand = import ./burned-land.nix { inherit pkgs; };
+
   # Firefox browser-action widget ID convention: "<addonId>-browser-action"
   widget = addon: "${addon.addonId}-browser-action";
 
@@ -159,10 +161,11 @@ in
   };
 
   # ── OSINT — neon amber (#ffd000) ─────────────────────────────────
-  programs.firefox.profiles."osint".settings   = makeSettings [];
+  # Burned Land button pinned first in the technical area.
+  programs.firefox.profiles."osint".settings   = makeSettings [ (widget burnedLand) ];
   programs.firefox.profiles."osint".userChrome = nordCSS {
     accent     = "#ffd000";
-    techAnchor = "#developer-button";
+    techAnchor = cssId burnedLand;
   };
 
   # ── Puppet Master — neon green (#00e676) ─────────────────────────
