@@ -5,6 +5,7 @@
     ./redteam.nix
     ./osint.nix
     ./puppet.nix
+    ./theme.nix
   ];
 
   programs.firefox.enable = lib.mkDefault true;
