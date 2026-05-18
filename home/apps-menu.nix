@@ -28,7 +28,7 @@ in {
           <Directory>annixion.directory</Directory>
 
           <Menu>
-            <Name>1. Reconnaissance</Name>
+            <Name>01. Reconnaissance</Name>
             <Directory>annixion-1-recon.directory</Directory>
             <Menu>
               <Name>Passive OSINT</Name>
@@ -48,7 +48,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>2. Weaponization</Name>
+            <Name>02. Weaponization</Name>
             <Directory>annixion-2-weapon.directory</Directory>
             <Menu>
               <Name>Disassembly</Name>
@@ -63,7 +63,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>3. Delivery</Name>
+            <Name>03. Delivery</Name>
             <Directory>annixion-3-delivery.directory</Directory>
             <Menu>
               <Name>Web Proxy</Name>
@@ -78,7 +78,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>4. Exploitation</Name>
+            <Name>04. Exploitation</Name>
             <Directory>annixion-4-exploit.directory</Directory>
             <Menu>
               <Name>Frameworks</Name>
@@ -98,7 +98,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>5. Installation</Name>
+            <Name>05. Installation</Name>
             <Directory>annixion-5-install.directory</Directory>
             <Menu>
               <Name>Tunneling &amp; Shells</Name>
@@ -108,7 +108,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>6. C2</Name>
+            <Name>06. C2</Name>
             <Directory>annixion-6-c2.directory</Directory>
             <Menu>
               <Name>Frameworks</Name>
@@ -118,7 +118,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>7. Post-Exploitation</Name>
+            <Name>07. Post-Exploitation</Name>
             <Directory>annixion-7-postex.directory</Directory>
             <Menu>
               <Name>Lateral Movement</Name>
@@ -128,7 +128,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>8. Forensics</Name>
+            <Name>08. Forensics</Name>
             <Directory>annixion-8-forensics.directory</Directory>
             <Menu>
               <Name>Memory Analysis</Name>
@@ -143,7 +143,7 @@ in {
           </Menu>
 
           <Menu>
-            <Name>9. Reverse Engineering</Name>
+            <Name>09. Reverse Engineering</Name>
             <Directory>annixion-9-re.directory</Directory>
             <Menu>
               <Name>Disassemblers</Name>
