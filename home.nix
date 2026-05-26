@@ -182,7 +182,7 @@ in {
             name = "org.kde.plasma.kicker";
             config = {
               General = {
-                icon            = "nix-snowflake-white";
+                icon            = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
                 showRecentApps  = false;
                 showRecentDocs  = false;
               };
