@@ -26,6 +26,7 @@ let
 in {
   imports = [
     ./home/firefox
+    ./home/vscodium.nix
     ./home/apps-menu.nix
     ./home/control-center.nix
   ];
@@ -55,7 +56,6 @@ in {
     zsh            # better shell than bash
 
     # ── Development ───────────────────────────────────────────
-    vscode
     gh             # GitHub CLI
     github-desktop # Github GUI
     python3
