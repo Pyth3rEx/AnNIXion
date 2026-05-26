@@ -106,6 +106,22 @@ in {
     };
 
     initContent = ''
+      # ── Key bindings ──────────────────────────────────────────────────────
+      bindkey "^[[1;5C" forward-word         # Ctrl+Right — jump word forward
+      bindkey "^[[1;5D" backward-word        # Ctrl+Left  — jump word back
+      bindkey "^H"      backward-kill-word   # Ctrl+Bksp  — delete word back
+      bindkey "^[[3;5~" kill-word            # Ctrl+Del   — delete word forward
+      bindkey "^[[3~"   delete-char          # Delete     — delete char forward
+      bindkey "^[[H"    beginning-of-line    # Home
+      bindkey "^[[F"    end-of-line          # End
+
+      # Up/Down: search history by the prefix already typed
+      autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+      zle -N up-line-or-beginning-search
+      zle -N down-line-or-beginning-search
+      bindkey "^[[A" up-line-or-beginning-search    # Up
+      bindkey "^[[B" down-line-or-beginning-search  # Down
+
       # ── AnNIXion banner ───────────────────────────────────────────────────
       echo ""
       echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
