@@ -49,10 +49,18 @@ let
 
       case "$CHOICE" in
         wifi)
-          [ "$WIFI" = "enabled" ] && nmcli radio wifi off || nmcli radio wifi on
+          if [ "$WIFI" = "enabled" ]; then
+            nmcli radio wifi off
+          else
+            nmcli radio wifi on
+          fi
           ;;
         bt)
-          [ "$BT" = "on" ] && bluetoothctl power off || bluetoothctl power on
+          if [ "$BT" = "on" ]; then
+            bluetoothctl power off
+          else
+            bluetoothctl power on
+          fi
           ;;
         killswitch)
           kdialog \
