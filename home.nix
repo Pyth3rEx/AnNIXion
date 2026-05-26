@@ -26,7 +26,9 @@ let
 in {
   imports = [
     ./home/firefox
+    ./home/vscodium.nix
     ./home/apps-menu.nix
+    ./home/control-center.nix
   ];
 
   # Home Manager needs to know your username and home directory.
@@ -54,7 +56,6 @@ in {
     zsh            # better shell than bash
 
     # ── Development ───────────────────────────────────────────
-    vscode
     gh             # GitHub CLI
     github-desktop # Github GUI
     python3
@@ -163,7 +164,7 @@ in {
     # ── Global astetics ──────────────────────────────────────
     workspace = lib.mkDefault {
       clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
-      # lookAndFeel = "org.kde.breezedark.desktop";
+      lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
         theme = "Nordzy-cursors";
         size = 32;
@@ -184,29 +185,57 @@ in {
     };
 
     panels = [
-      # Windows-like panel at the bottom
+
+      # ── Single top panel ──────────────────────────────────────────────────
+      # Layout (left → right):
+      #   [vol] [net] [BT] ┃ [window title] [app menu] [tasks] ── [music] [clock] [tray] [kickoff]
       {
-        location = "right";
+        location = "top";
         screen = 0;
+        height = 32;
+        opacity = "adaptive";
         widgets = [
-          # We can configure the widgets by adding the name and config
-          # attributes. For example to add the the kickoff widget and set the
-          # icon to "nix-snowflake-white" use the below configuration. This will
-          # add the "icon" key to the "General" group for the widget in
-          # ~/.config/plasma-org.kde.plasma.desktop-appletsrc.
+
+          # ── Control center (left) ──────────────────────────────────────
+          "org.kde.plasma.volume"
+          "org.kde.plasma.networkmanagement"
+          "org.kde.plasma.bluetooth"
+          "org.kde.plasma.marginsseparator"
+
+          # ── Window info & app menu ────────────────────────────────────
           {
-            name = "org.kde.plasma.kicker";
-            config = {
-              General = {
-                icon            = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-                showRecentApps  = false;
-                showRecentDocs  = false;
+            applicationTitleBar = {
+              behavior.activeTaskSource = "activeTask";
+              layout = {
+                elements              = [ "windowTitle" ];
+                horizontalAlignment   = "left";
+                showDisabledElements  = "deactivated";
+                verticalAlignment     = "center";
+              };
+              overrideForMaximized.enable = false;
+              titleReplacements = [
+                {
+                  type          = "regexp";
+                  originalTitle = "^Brave Web Browser$";
+                  newTitle      = "Brave";
+                }
+                {
+                  type          = "regexp";
+                  originalTitle = ''\\bDolphin\\b'';
+                  newTitle      = "File manager";
+                }
+              ];
+              windowTitle = {
+                font = { bold = false; fit = "fixedSize"; size = 12; };
+                hideEmptyTitle = true;
+                margins = { bottom = 0; left = 10; right = 5; top = 0; };
+                source = "appName";
               };
             };
           }
-          # Adding configuration to the widgets can also for example be used to
-          # pin apps to the task-manager, which this example illustrates by
-          # pinning dolphin and konsole to the task-manager by default with widget-specific options.
+          "org.kde.plasma.appmenu"
+
+          # ── Task manager ──────────────────────────────────────────────
           {
             iconTasks = {
               launchers = [
@@ -215,17 +244,26 @@ in {
               ];
             };
           }
-          # If no configuration is needed, specifying only the name of the
-          # widget will add them with the default configuration.
-          "org.kde.plasma.marginsseparator"
-          # If you need configuration for your widget, instead of specifying the
-          # the keys and values directly using the config attribute as shown
-          # above, plasma-manager also provides some higher-level interfaces for
-          # configuring the widgets. See modules/widgets for supported widgets
-          # and options for these widgets. The widgets below shows two examples
-          # of usage, one where we add a digital clock, setting 12h time and
-          # first day of the week to Sunday and another adding a systray with
-          # some modifications in which entries to show.
+
+          # ── Flexible space ────────────────────────────────────────────
+          "org.kde.plasma.panelspacer"
+
+          # ── Music / status / clock / tray ─────────────────────────────
+          {
+            plasmusicToolbar = {
+              panelIcon = {
+                albumCover = { useAsIcon = false; radius = 8; };
+                icon = "view-media-track";
+              };
+              playbackSource = "auto";
+              musicControls.showPlaybackControls = true;
+              songText = {
+                displayInSeparateLines = true;
+                maximumWidth = 640;
+                scrolling = { behavior = "alwaysScroll"; speed = 3; };
+              };
+            };
+          }
           {
             digitalClock = {
               calendar.firstDayOfWeek = "monday";
@@ -234,95 +272,28 @@ in {
           }
           {
             systemTray.items = {
-              # We explicitly show bluetooth and battery
-              shown = [
-                "org.kde.plasma.battery"
-                "org.kde.plasma.bluetooth"
-              ];
-              # And explicitly hide networkmanagement and volume
+              shown  = [ "org.kde.plasma.battery" ];
               hidden = [
                 "org.kde.plasma.networkmanagement"
+                "org.kde.plasma.bluetooth"
                 "org.kde.plasma.volume"
               ];
             };
           }
-        ];
-        hiding = "autohide";
-        opacity = "adaptive";
-      }
-      # Application name, Global menu and Song information and playback controls at the top
-      {
-        location = "top";
-        screen = 0;
-        height = 26;
-        widgets = [
+
+          # ── Kickoff — far right edge ───────────────────────────────────
           {
-            applicationTitleBar = {
-              behavior = {
-                activeTaskSource = "activeTask";
-              };
-              layout = {
-                elements = [ "windowTitle" ];
-                horizontalAlignment = "left";
-                showDisabledElements = "deactivated";
-                verticalAlignment = "center";
-              };
-              overrideForMaximized.enable = false;
-              titleReplacements = [
-                {
-                  type = "regexp";
-                  originalTitle = "^Brave Web Browser$";
-                  newTitle = "Brave";
-                }
-                {
-                  type = "regexp";
-                  originalTitle = ''\\bDolphin\\b'';
-                  newTitle = "File manager";
-                }
-              ];
-              windowTitle = {
-                font = {
-                  bold = false;
-                  fit = "fixedSize";
-                  size = 12;
-                };
-                hideEmptyTitle = true;
-                margins = {
-                  bottom = 0;
-                  left = 10;
-                  right = 5;
-                  top = 0;
-                };
-                source = "appName";
-              };
+            name = "org.kde.plasma.kickoff";
+            config.General = {
+              icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+              showRecentApps = false;
+              showRecentDocs = false;
             };
           }
-          "org.kde.plasma.appmenu"
-          "org.kde.plasma.panelspacer"
-          {
-            plasmusicToolbar = {
-              panelIcon = {
-                albumCover = {
-                  useAsIcon = false;
-                  radius = 8;
-                };
-                icon = "view-media-track";
-              };
-              playbackSource = "auto";
-              musicControls.showPlaybackControls = true;
-              songText = {
-                displayInSeparateLines = true;
-                maximumWidth = 640;
-                scrolling = {
-                  behavior = "alwaysScroll";
-                  speed = 3;
-                };
-              };
-            };
-          }
+
         ];
-        opacity = "adaptive";
       }
+
     ];
 
 
@@ -330,6 +301,10 @@ in {
     shortcuts = lib.mkDefault {
       # KRunner — your app launcher (like wofi/rofi)
       "org.kde.krunner.desktop"."_launch" = [ "Alt+Space" "Alt+F2" ];
+
+      # Kickoff — Meta+F1 via kglobalaccel (bare Meta handled by
+      # ModifierOnlyShortcuts in configFile below; both are needed)
+      "org.kde.plasma.kickoff.desktop"."_launch" = [ "Meta+F1" ];
 
       # KWin window management
       kwin = {
@@ -382,6 +357,11 @@ in {
       # Dark theme
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
+
+      # Meta key dispatch — handled by the annixion-meta-key systemd service
+      # (see home/control-center.nix). Single press → control center,
+      # double press (< 400 ms) → kickoff.
+      "kwinrc"."ModifierOnlyShortcuts"."Meta" = "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
 
       # Krohnkite tiling settings
       "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
