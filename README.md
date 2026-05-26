@@ -26,11 +26,11 @@ AnNIXion is different in kind, not just degree. The name comes from *annexion* �
 
 | Property | What it means in practice |
 |---|---|
-| Your environment is code | The entire system — tools, desktop, shell, shortcuts — lives in text files you own and version |
-| No drift | Two operators deploying the same config get the same machine. No exceptions. |
-| Reversible by default | Every change is a new generation. Break something, boot the previous state in seconds. |
-| Composable layers | RedTeam, OSINT, and Privacy tooling are separate modules. Load what the operation requires. |
-| Auditable supply chain | Pinned dependencies, lockfile-tracked. You know exactly what is running and where it came from. |
+| **Your environment is code** | The entire system — tools, desktop, shell, shortcuts — lives in text files you own and version |
+| **No drift** | Two operators deploying the same config get the same machine. No exceptions. |
+| **Reversible by default** | Every change is a new generation. Break something, boot the previous state in seconds. |
+| **Composable layers** | RedTeam, OSINT, and Privacy tooling are separate modules. Load what the operation requires. |
+| **Auditable supply chain** | Pinned dependencies, lockfile-tracked. You know exactly what is running and where it came from. |
 
 You do not configure AnNIXion. You declare it — and it becomes exactly what you declared.
 
@@ -38,64 +38,84 @@ You do not configure AnNIXion. You declare it — and it becomes exactly what yo
 
 ## Current State
 
-AnNIXion is in active development. The following is implemented and functional:
+AnNIXion is in **active development**. The following is implemented and functional:
 
-- NixOS flake with Home Manager and plasma-manager integration
-- Modular config structure — desktop, xrdp, shell, and security tools each in their own module
-- KDE Plasma 6 desktop (X11) with Krohnkite tiling and Breeze Dark theme
-- Hyper-V Enhanced Session over vsock (xrdp)
-- Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
-- ZSH + tmux + xterm terminal environment
-- User override system — drop personal settings into `user/` without touching base config
-- Firefox three-profile setup — RedTeam, OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers (`home/firefox/`)
+- ✅ NixOS flake with Home Manager and plasma-manager integration
+- ✅ Modular config structure — desktop, xrdp, shell, and security tools each in their own module
+- ✅ KDE Plasma 6 desktop (X11) with Krohnkite tiling and Breeze Dark theme
+- ✅ Hyper-V Enhanced Session over vsock (xrdp)
+- ✅ Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
+- ✅ ZSH + tmux + xterm terminal environment
+- ✅ User override system — drop personal settings into `user/` without touching base config
+- ✅ Firefox three-profile setup — RedTeam, OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers
+- ✅ VS Code development environment module with Nix IDE extension
 
 The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
 
-- Custom TUI installer
-- Full tool layer separation (RedTeam, OSINT, Privacy) as selectable profiles
-- Kernel hardening and MAC randomization
-- ISO build pipeline
+- TUI installer with profile selection
+- Full tool layer separation (RedTeam, OSINT, Privacy) as independently selectable modules
+- Kernel hardening and system-level privacy defaults
+- ISO build pipeline with automated releases
 
 ---
 
-## Installation
+## Quick Start
 
-> ⚠️ No automated installer yet. Manual setup required.
+### Prerequisites
 
-**Prerequisites:** A NixOS installation with flakes enabled.
+- A **NixOS installation** with flakes enabled
+- Git
+
+### Installation
+
+> ⚠️ **Note:** Automated installer is under development. For now, manual setup is required.
+
+**1. Enable flakes** (if not already enabled):
 
 ```nix
-# /etc/nixos/configuration.nix  (your current NixOS install, before deploying AnNIXion)
+# /etc/nixos/configuration.nix
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
 ```
 
-**Deploy:**
+**2. Clone and deploy:**
 
 ```bash
+# Clone the repository to your home directory
 git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
 cd ~/.dotfiles
 
-# Copy over your hardware config
+# Copy your hardware configuration
 cp /etc/nixos/hardware-configuration.nix ./hardware-configuration.nix
 
-# Add to git so rebuild stops yelling - carefull not to commit
+# Track it in git (required for flakes, but don't commit it upstream)
 git add ./hardware-configuration.nix -f
 
-# Update flake inputs
+# Update flake inputs to latest versions
 nix flake update
 
-# Apply system + user config in one shot | You'll be able to user "rebuild" simply after first install
+# Apply the complete configuration (system + user, one command)
 sudo nixos-rebuild switch --flake .#AnNIXion --impure
 ```
 
-**Hyper-V users:** Enhanced Session requires vsock support. Run this on the Windows host before connecting:
+**3. First rebuild alias:**
+
+After the initial install succeeds, you can use the `rebuild` alias:
+
+```bash
+rebuild   # Shorthand for: sudo nixos-rebuild switch --flake .#AnNIXion
+```
+
+### Hyper-V Enhanced Session Setup
+
+If deploying on Hyper-V, enable Enhanced Session support on the Windows host:
 
 ```powershell
+# Run on the Windows host
 Set-VM -VMName "AnNIXion" -EnhancedSessionTransportType HvSocket
 Set-VMHost -EnableEnhancedSessionMode $true
 ```
 
-Then fully shut down the VM and reconnect from Hyper-V Manager.
+Then fully shut down the VM and reconnect from Hyper-V Manager. The desktop will now run over Enhanced Session with full clipboard, audio, and dynamic resolution support.
 
 ---
 
@@ -103,49 +123,121 @@ Then fully shut down the VM and reconnect from Hyper-V Manager.
 
 ```
 .
-├── flake.nix                    # Inputs, module wiring, conditional user imports
-├── hardware-configuration.nix   # Auto-generated — do not edit manually
-├── home.nix                     # Base user environment: shell, dev tools, KDE config
+├── flake.nix                      # Flake inputs, outputs, system config wiring
+├── flake.lock                     # Locked dependency versions (commit this)
+├── hardware-configuration.nix     # Auto-generated per-machine — do not edit manually
+│
+├── home.nix                       # Base user environment: shell, dev tools, KDE, Firefox
 ├── home/
 │   └── firefox/
-│       ├── default.nix          # Firefox enable, policies, desktop launchers
-│       ├── redteam.nix          # Red Team profile — extensions and search engines
-│       ├── osint.nix            # OSINT profile — extensions and search engines
-│       └── puppet.nix           # Puppet Master profile — persona and avatar management
+│       ├── default.nix            # Firefox enable, policies, desktop launchers
+│       ├── redteam.nix            # Red Team profile: FoxyProxy, HackTools, Wappalyzer
+│       ├── osint.nix              # OSINT profile: extensions for investigations
+│       └── puppet.nix             # Puppet Master profile: persona & container mgmt
+│
 ├── modules/
-│   ├── desktop.nix              # KDE Plasma 6, SDDM, X11
-│   ├── xrdp.nix                 # Hyper-V Enhanced Session via vsock
-│   └── security-tools.nix      # Offensive, OSINT, and SDR packages
-└── user/                        # Your personal overrides — never committed upstream
-    ├── configuration.nix        # System-level overrides (hostname, timezone, groups…)
-    ├── home.nix                 # User-environment overrides (git, aliases, packages…)
+│   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
+│   ├── xrdp.nix                   # Hyper-V Enhanced Session via vsock
+│   ├── security-tools.nix         # Offensive, OSINT, and SDR packages
+│   └── vscode.nix                 # VS Code with Nix IDE and dev dependencies
+│
+└── user/                          # Your personal overrides — never committed
+    ├── configuration.nix          # System-level overrides
+    ├── home.nix                   # User-environment overrides
     ├── examples/
-    │   ├── git.nix              # Example: git identity and signing config
-    │   └── zsh.nix              # Example: welcome banner and recon aliases
-    └── README.md                # How the override system works
+    │   ├── git.nix                # Example: git identity and signing config
+    │   └── zsh.nix                # Example: welcome banner and aliases
+    └── README.md                  # How the override system works
 ```
+
+---
+
+## Customization
+
+### User Overrides
+
+All base config options use `lib.mkDefault`, meaning your settings in `user/` automatically take precedence. No `lib.mkForce` needed.
+
+**Get started immediately:**
+
+1. **Set your git identity** — uncomment the git example in `user/home.nix`:
+   ```nix
+   imports = [ ./examples/git.nix ];
+   ```
+
+2. **Add a welcome banner** — uncomment the zsh example:
+   ```nix
+   imports = [ ./examples/zsh.nix ];
+   ```
+
+3. **Apply changes:**
+   ```bash
+   rebuild
+   ```
+
+See `user/README.md` for the full override system documentation.
+
+### Firefox Profiles
+
+Three Firefox profiles launch from the desktop:
+
+- **Red Team** — FoxyProxy, HackTools, Wappalyzer, Retire.js; search engines for exploits and CVEs
+- **OSINT** — NoScript, CanvasBlocker, User-Agent Switcher; search engines for Shodan, Censys, Wayback Machine
+- **Puppet Master** — Multi-Account Containers, Temporary Containers; search engines for Yandex, Baidu, social platforms
+
+Each profile has its own isolated cookies, cache, and extensions. Click the desktop launcher for the profile you need.
+
+---
+
+## Development Setup
+
+### Nix IDE for VS Code
+
+A complete VS Code module with Nix language support is included:
+
+- **Language Server:** `nil` with intelligent code completion and diagnostics
+- **Formatting:** Auto-format on save with proper 2-space indentation
+- **Linting:** Real-time error detection with `statix` and `deadnix`
+- **Extensions:** GitLens, YAML, TOML support included
+
+To enable in your `user/home.nix`:
+
+```nix
+imports = [ ../modules/vscode.nix ];
+```
+
+Then rebuild and open VS Code.
 
 ---
 
 ## Planned Features
 
-### Installer
-- Custom TUI installer (`whiptail`) — no GUI required
-- Full disk encryption via LUKS2 with `disko`
-- Random Windows-style hostname at install time (e.g. `DESKTOP-K4MXR2J`)
-- Profile selection: RedTeam, OSINT, or both
+See [ROADMAP.md](ROADMAP.md) for the complete development roadmap, organized by phase.
 
-### Tool Layers
-- **RedTeam**: nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec
-- **OSINT**: theHarvester, maltego, spiderfoot, sherlock, holehe, recon-ng, ExifTool
-- **Privacy**: Tor, Proxychains-ng, Mullvad, ProtonVPN, MAC randomization
+**Upcoming highlights:**
 
-### Hardening
-- Kernel hardening parameters (sysctl)
-- MAC address randomization on all interfaces
-- Minimal running services by default
+- **Phase 3:** Interactive TUI installer with profile selection
+- **Phase 8:** Separate, independently-selectable tool modules (RedTeam, OSINT, Privacy, SDR)
+- **Phase 10:** System-level hardening, kernel parameters, MAC randomization
+- **Phase 11:** ISO releases, installation verification, contribution guidelines
 
 ---
 
-> For authorized security testing, research, and educational use only.
-> Obtain explicit written permission before conducting any assessment.
+## Support & Contribution
+
+- **Issues:** Report bugs or request features on GitHub
+- **Contributing:** Guidelines coming in Phase 11
+- **Documentation:** See `user/README.md` for customization and overrides
+
+---
+
+## Legal & Disclaimer
+
+> **For authorized security testing, research, and educational use only.**
+>
+> AnNIXion is a tool. Like any tool, it can be misused. You are responsible for:
+> - Obtaining explicit written permission before conducting any security assessment
+> - Understanding and complying with all applicable laws and regulations in your jurisdiction
+> - Using this distribution ethically and responsibly
+>
+> The authors assume no liability for misuse.
