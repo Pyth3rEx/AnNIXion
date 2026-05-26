@@ -184,73 +184,8 @@ in {
     };
 
     panels = [
-      # Windows-like panel at the bottom
-      {
-        location = "right";
-        screen = 0;
-        widgets = [
-          # We can configure the widgets by adding the name and config
-          # attributes. For example to add the the kickoff widget and set the
-          # icon to "nix-snowflake-white" use the below configuration. This will
-          # add the "icon" key to the "General" group for the widget in
-          # ~/.config/plasma-org.kde.plasma.desktop-appletsrc.
-          {
-            name = "org.kde.plasma.kicker";
-            config = {
-              General = {
-                icon            = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-                showRecentApps  = false;
-                showRecentDocs  = false;
-              };
-            };
-          }
-          # Adding configuration to the widgets can also for example be used to
-          # pin apps to the task-manager, which this example illustrates by
-          # pinning dolphin and konsole to the task-manager by default with widget-specific options.
-          {
-            iconTasks = {
-              launchers = [
-                "applications:org.kde.dolphin.desktop"
-                "applications:org.kde.konsole.desktop"
-              ];
-            };
-          }
-          # If no configuration is needed, specifying only the name of the
-          # widget will add them with the default configuration.
-          "org.kde.plasma.marginsseparator"
-          # If you need configuration for your widget, instead of specifying the
-          # the keys and values directly using the config attribute as shown
-          # above, plasma-manager also provides some higher-level interfaces for
-          # configuring the widgets. See modules/widgets for supported widgets
-          # and options for these widgets. The widgets below shows two examples
-          # of usage, one where we add a digital clock, setting 12h time and
-          # first day of the week to Sunday and another adding a systray with
-          # some modifications in which entries to show.
-          {
-            digitalClock = {
-              calendar.firstDayOfWeek = "monday";
-              time.format = "24h";
-            };
-          }
-          {
-            systemTray.items = {
-              # We explicitly show bluetooth and battery
-              shown = [
-                "org.kde.plasma.battery"
-                "org.kde.plasma.bluetooth"
-              ];
-              # And explicitly hide networkmanagement and volume
-              hidden = [
-                "org.kde.plasma.networkmanagement"
-                "org.kde.plasma.volume"
-              ];
-            };
-          }
-        ];
-        hiding = "autohide";
-        opacity = "adaptive";
-      }
-      # Application name, Global menu and Song information and playback controls at the top
+
+      # ── Top bar: window title, global menu, music ─────────────────────
       {
         location = "top";
         screen = 0;
@@ -323,6 +258,62 @@ in {
         ];
         opacity = "adaptive";
       }
+
+      # ── Bottom taskbar: default kickoff, pinned apps, clock, tray ─────
+      {
+        location = "bottom";
+        screen = 0;
+        widgets = [
+          "org.kde.plasma.kickoff"
+          {
+            iconTasks = {
+              launchers = [
+                "applications:org.kde.dolphin.desktop"
+                "applications:org.kde.konsole.desktop"
+              ];
+            };
+          }
+          "org.kde.plasma.panelspacer"
+          {
+            digitalClock = {
+              calendar.firstDayOfWeek = "monday";
+              time.format = "24h";
+            };
+          }
+          {
+            systemTray.items = {
+              shown = [ "org.kde.plasma.battery" ];
+              hidden = [
+                "org.kde.plasma.networkmanagement"
+                "org.kde.plasma.bluetooth"
+                "org.kde.plasma.volume"
+              ];
+            };
+          }
+        ];
+        hiding = "autohide";
+        opacity = "adaptive";
+      }
+
+      # ── Control center: quick controls, right edge, centered ───────────
+      # Slides in on mouse approach. Single Meta key opens kickoff (start
+      # menu) via ModifierOnlyShortcuts below. True single/double-Win
+      # distinction requires a KWin script — future work.
+      {
+        location = "right";
+        screen = 0;
+        alignment = "center";
+        lengthMode = "fit";
+        hiding = "autohide";
+        opacity = "adaptive";
+        widgets = [
+          "org.kde.plasma.mediacontroller"
+          "org.kde.plasma.volume"
+          "org.kde.plasma.networkmanagement"
+          "org.kde.plasma.bluetooth"
+        ];
+      }
+
     ];
 
 
@@ -382,6 +373,11 @@ in {
       # Dark theme
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
+
+      # Single Meta press opens kickoff (the bottom taskbar launcher).
+      # Double-press for start menu vs single-press for control center
+      # requires a KWin script — to be added in a follow-up.
+      "kwinrc"."ModifierOnlyShortcuts"."Meta" = "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu,[]";
 
       # Krohnkite tiling settings
       "kwinrc"."Script-krohnkite"."enableTileLayout" = true;

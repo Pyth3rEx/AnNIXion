@@ -23,171 +23,173 @@ in {
         "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
       <Menu>
         <Name>Applications</Name>
+
+        <!-- ── Kill-chain phases at root ──────────────────────────────── -->
+
         <Menu>
-          <Name>AnNIXion</Name>
-          <Directory>annixion.directory</Directory>
-
+          <Name>01. Reconnaissance</Name>
+          <Directory>annixion-1-recon.directory</Directory>
           <Menu>
-            <Name>01. Reconnaissance</Name>
-            <Directory>annixion-1-recon.directory</Directory>
-            <Menu>
-              <Name>Passive OSINT</Name>
-              <Directory>annixion-1-recon-osint.directory</Directory>
-              <Include><Category>X-AnNIXion-Recon-OSINT</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Active Scanning</Name>
-              <Directory>annixion-1-recon-scanning.directory</Directory>
-              <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>RF / Signal Intel</Name>
-              <Directory>annixion-1-recon-rf.directory</Directory>
-              <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
-            </Menu>
+            <Name>Passive OSINT</Name>
+            <Directory>annixion-1-recon-osint.directory</Directory>
+            <Include><Category>X-AnNIXion-Recon-OSINT</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>02. Weaponization</Name>
-            <Directory>annixion-2-weapon.directory</Directory>
-            <Menu>
-              <Name>Disassembly</Name>
-              <Directory>annixion-2-weapon-disasm.directory</Directory>
-              <Include><Category>X-AnNIXion-Weapon-Disasm</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Firmware Analysis</Name>
-              <Directory>annixion-2-weapon-firmware.directory</Directory>
-              <Include><Category>X-AnNIXion-Weapon-Firmware</Category></Include>
-            </Menu>
+            <Name>Active Scanning</Name>
+            <Directory>annixion-1-recon-scanning.directory</Directory>
+            <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>03. Delivery</Name>
-            <Directory>annixion-3-delivery.directory</Directory>
-            <Menu>
-              <Name>Web Proxy</Name>
-              <Directory>annixion-3-delivery-proxy.directory</Directory>
-              <Include><Category>X-AnNIXion-Delivery-Proxy</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Web Injection</Name>
-              <Directory>annixion-3-delivery-injection.directory</Directory>
-              <Include><Category>X-AnNIXion-Delivery-Injection</Category></Include>
-            </Menu>
+            <Name>RF / Signal Intel</Name>
+            <Directory>annixion-1-recon-rf.directory</Directory>
+            <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
           </Menu>
+        </Menu>
 
+        <Menu>
+          <Name>02. Weaponization</Name>
+          <Directory>annixion-2-weapon.directory</Directory>
           <Menu>
-            <Name>04. Exploitation</Name>
-            <Directory>annixion-4-exploit.directory</Directory>
-            <Menu>
-              <Name>Frameworks</Name>
-              <Directory>annixion-4-exploit-frameworks.directory</Directory>
-              <Include><Category>X-AnNIXion-Exploit-Frameworks</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Credential Attacks</Name>
-              <Directory>annixion-4-exploit-creds.directory</Directory>
-              <Include><Category>X-AnNIXion-Exploit-Creds</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Wireless</Name>
-              <Directory>annixion-4-exploit-wireless.directory</Directory>
-              <Include><Category>X-AnNIXion-Exploit-Wireless</Category></Include>
-            </Menu>
+            <Name>Disassembly</Name>
+            <Directory>annixion-2-weapon-disasm.directory</Directory>
+            <Include><Category>X-AnNIXion-Weapon-Disasm</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>05. Installation</Name>
-            <Directory>annixion-5-install.directory</Directory>
-            <Menu>
-              <Name>Tunneling &amp; Shells</Name>
-              <Directory>annixion-5-install-tunneling.directory</Directory>
-              <Include><Category>X-AnNIXion-Install-Tunneling</Category></Include>
-            </Menu>
+            <Name>Firmware Analysis</Name>
+            <Directory>annixion-2-weapon-firmware.directory</Directory>
+            <Include><Category>X-AnNIXion-Weapon-Firmware</Category></Include>
           </Menu>
+        </Menu>
 
+        <Menu>
+          <Name>03. Delivery</Name>
+          <Directory>annixion-3-delivery.directory</Directory>
           <Menu>
-            <Name>06. C2</Name>
-            <Directory>annixion-6-c2.directory</Directory>
-            <Menu>
-              <Name>Frameworks</Name>
-              <Directory>annixion-6-c2-frameworks.directory</Directory>
-              <Include><Category>X-AnNIXion-C2-Frameworks</Category></Include>
-            </Menu>
+            <Name>Web Proxy</Name>
+            <Directory>annixion-3-delivery-proxy.directory</Directory>
+            <Include><Category>X-AnNIXion-Delivery-Proxy</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>07. Post-Exploitation</Name>
-            <Directory>annixion-7-postex.directory</Directory>
-            <Menu>
-              <Name>Lateral Movement</Name>
-              <Directory>annixion-7-postex-lateral.directory</Directory>
-              <Include><Category>X-AnNIXion-PostEx-Lateral</Category></Include>
-            </Menu>
+            <Name>Web Injection</Name>
+            <Directory>annixion-3-delivery-injection.directory</Directory>
+            <Include><Category>X-AnNIXion-Delivery-Injection</Category></Include>
           </Menu>
+        </Menu>
 
+        <Menu>
+          <Name>04. Exploitation</Name>
+          <Directory>annixion-4-exploit.directory</Directory>
           <Menu>
-            <Name>08. Forensics</Name>
-            <Directory>annixion-8-forensics.directory</Directory>
-            <Menu>
-              <Name>Memory Analysis</Name>
-              <Directory>annixion-8-forensics-memory.directory</Directory>
-              <Include><Category>X-AnNIXion-Forensics-Memory</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Disk Analysis</Name>
-              <Directory>annixion-8-forensics-disk.directory</Directory>
-              <Include><Category>X-AnNIXion-Forensics-Disk</Category></Include>
-            </Menu>
+            <Name>Frameworks</Name>
+            <Directory>annixion-4-exploit-frameworks.directory</Directory>
+            <Include><Category>X-AnNIXion-Exploit-Frameworks</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>09. Reverse Engineering</Name>
-            <Directory>annixion-9-re.directory</Directory>
-            <Menu>
-              <Name>Disassemblers</Name>
-              <Directory>annixion-9-re-disasm.directory</Directory>
-              <Include><Category>X-AnNIXion-RE-Disasm</Category></Include>
-            </Menu>
-            <Menu>
-              <Name>Firmware</Name>
-              <Directory>annixion-9-re-firmware.directory</Directory>
-              <Include><Category>X-AnNIXion-RE-Firmware</Category></Include>
-            </Menu>
+            <Name>Credential Attacks</Name>
+            <Directory>annixion-4-exploit-creds.directory</Directory>
+            <Include><Category>X-AnNIXion-Exploit-Creds</Category></Include>
           </Menu>
-
           <Menu>
-            <Name>10. Sniffing &amp; Analysis</Name>
-            <Directory>annixion-10-sniffing.directory</Directory>
-            <Include><Category>X-AnNIXion-Sniffing</Category></Include>
+            <Name>Wireless</Name>
+            <Directory>annixion-4-exploit-wireless.directory</Directory>
+            <Include><Category>X-AnNIXion-Exploit-Wireless</Category></Include>
           </Menu>
+        </Menu>
 
+        <Menu>
+          <Name>05. Installation</Name>
+          <Directory>annixion-5-install.directory</Directory>
+          <Menu>
+            <Name>Tunneling &amp; Shells</Name>
+            <Directory>annixion-5-install-tunneling.directory</Directory>
+            <Include><Category>X-AnNIXion-Install-Tunneling</Category></Include>
+          </Menu>
+        </Menu>
+
+        <Menu>
+          <Name>06. C2</Name>
+          <Directory>annixion-6-c2.directory</Directory>
+          <Menu>
+            <Name>Frameworks</Name>
+            <Directory>annixion-6-c2-frameworks.directory</Directory>
+            <Include><Category>X-AnNIXion-C2-Frameworks</Category></Include>
+          </Menu>
+        </Menu>
+
+        <Menu>
+          <Name>07. Post-Exploitation</Name>
+          <Directory>annixion-7-postex.directory</Directory>
+          <Menu>
+            <Name>Lateral Movement</Name>
+            <Directory>annixion-7-postex-lateral.directory</Directory>
+            <Include><Category>X-AnNIXion-PostEx-Lateral</Category></Include>
+          </Menu>
+        </Menu>
+
+        <Menu>
+          <Name>08. Forensics</Name>
+          <Directory>annixion-8-forensics.directory</Directory>
+          <Menu>
+            <Name>Memory Analysis</Name>
+            <Directory>annixion-8-forensics-memory.directory</Directory>
+            <Include><Category>X-AnNIXion-Forensics-Memory</Category></Include>
+          </Menu>
+          <Menu>
+            <Name>Disk Analysis</Name>
+            <Directory>annixion-8-forensics-disk.directory</Directory>
+            <Include><Category>X-AnNIXion-Forensics-Disk</Category></Include>
+          </Menu>
+        </Menu>
+
+        <Menu>
+          <Name>09. Reverse Engineering</Name>
+          <Directory>annixion-9-re.directory</Directory>
+          <Menu>
+            <Name>Disassemblers</Name>
+            <Directory>annixion-9-re-disasm.directory</Directory>
+            <Include><Category>X-AnNIXion-RE-Disasm</Category></Include>
+          </Menu>
+          <Menu>
+            <Name>Firmware</Name>
+            <Directory>annixion-9-re-firmware.directory</Directory>
+            <Include><Category>X-AnNIXion-RE-Firmware</Category></Include>
+          </Menu>
+        </Menu>
+
+        <Menu>
+          <Name>10. Sniffing &amp; Analysis</Name>
+          <Directory>annixion-10-sniffing.directory</Directory>
+          <Include><Category>X-AnNIXion-Sniffing</Category></Include>
+        </Menu>
+
+        <!-- ── Misc tools ──────────────────────────────────────────────── -->
+
+        <Menu>
+          <Name>Tools</Name>
+          <Directory>annixion-tools.directory</Directory>
           <Menu>
             <Name>Internet</Name>
             <Directory>annixion-internet.directory</Directory>
             <Include><Category>X-AnNIXion-Internet</Category></Include>
           </Menu>
-
           <Menu>
             <Name>Development</Name>
             <Directory>annixion-dev.directory</Directory>
             <Include><Category>X-AnNIXion-Dev</Category></Include>
           </Menu>
-
           <Menu>
             <Name>Utilities</Name>
             <Directory>annixion-utils.directory</Directory>
             <Include><Category>X-AnNIXion-Utils</Category></Include>
           </Menu>
-
-          <Menu>
-            <Name>System</Name>
-            <Directory>annixion-system.directory</Directory>
-            <Include><Category>X-AnNIXion-System</Category></Include>
-          </Menu>
-
         </Menu>
+
+        <Menu>
+          <Name>System</Name>
+          <Directory>annixion-system.directory</Directory>
+          <Include><Category>X-AnNIXion-System</Category></Include>
+        </Menu>
+
       </Menu>
     '';
   };
@@ -237,6 +239,7 @@ in {
 
     "desktop-directories/annixion-10-sniffing.directory".text          = dir "10. Sniffing & Analysis"  "network-transmit-receive";
 
+    "desktop-directories/annixion-tools.directory".text                 = dir "Tools"                    "applications-other";
     "desktop-directories/annixion-internet.directory".text             = dir "Internet"                 "applications-internet";
     "desktop-directories/annixion-dev.directory".text                  = dir "Development"              "applications-development";
     "desktop-directories/annixion-utils.directory".text                = dir "Utilities"                "applications-utilities";
