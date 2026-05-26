@@ -153,12 +153,12 @@ in {
         size = 32;
       };
       iconTheme = "Slot-Nord-Dark-Colorize-Icons";
-      wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/dementor-harry-5120x2880-18680.png"; # https://4kwallpapers.com/black-dark/dementor-harry-18680.html
+      wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/wallpaper_1.png";
       wallpaperFillMode = "preserveAspectFit";
       wallpaperBackground.color = "#000000";
     };
 
-    kscreenlocker.appearance.wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/moon-planet-8k-7680x4320-87.jpg"; # https://4kwallpapers.com/space/moon-planet-8k-87.html
+    kscreenlocker.appearance.wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/wallpaper_2.png";
 
     fonts = {
       general = {
