@@ -186,96 +186,56 @@ in {
 
     panels = [
 
-      # ── Top bar: window title, global menu, music ─────────────────────
+      # ── Single top panel ──────────────────────────────────────────────────
+      # Layout (left → right):
+      #   [vol] [net] [BT] ┃ [window title] [app menu] [tasks] ── [music] [clock] [tray] [kickoff]
       {
         location = "top";
         screen = 0;
-        height = 26;
+        height = 32;
+        opacity = "adaptive";
         widgets = [
+
+          # ── Control center (left) ──────────────────────────────────────
+          "org.kde.plasma.volume"
+          "org.kde.plasma.networkmanagement"
+          "org.kde.plasma.bluetooth"
+          "org.kde.plasma.marginsseparator"
+
+          # ── Window info & app menu ────────────────────────────────────
           {
             applicationTitleBar = {
-              behavior = {
-                activeTaskSource = "activeTask";
-              };
+              behavior.activeTaskSource = "activeTask";
               layout = {
-                elements = [ "windowTitle" ];
-                horizontalAlignment = "left";
-                showDisabledElements = "deactivated";
-                verticalAlignment = "center";
+                elements              = [ "windowTitle" ];
+                horizontalAlignment   = "left";
+                showDisabledElements  = "deactivated";
+                verticalAlignment     = "center";
               };
               overrideForMaximized.enable = false;
               titleReplacements = [
                 {
-                  type = "regexp";
+                  type          = "regexp";
                   originalTitle = "^Brave Web Browser$";
-                  newTitle = "Brave";
+                  newTitle      = "Brave";
                 }
                 {
-                  type = "regexp";
+                  type          = "regexp";
                   originalTitle = ''\\bDolphin\\b'';
-                  newTitle = "File manager";
+                  newTitle      = "File manager";
                 }
               ];
               windowTitle = {
-                font = {
-                  bold = false;
-                  fit = "fixedSize";
-                  size = 12;
-                };
+                font = { bold = false; fit = "fixedSize"; size = 12; };
                 hideEmptyTitle = true;
-                margins = {
-                  bottom = 0;
-                  left = 10;
-                  right = 5;
-                  top = 0;
-                };
+                margins = { bottom = 0; left = 10; right = 5; top = 0; };
                 source = "appName";
               };
             };
           }
           "org.kde.plasma.appmenu"
-          "org.kde.plasma.panelspacer"
-          {
-            plasmusicToolbar = {
-              panelIcon = {
-                albumCover = {
-                  useAsIcon = false;
-                  radius = 8;
-                };
-                icon = "view-media-track";
-              };
-              playbackSource = "auto";
-              musicControls.showPlaybackControls = true;
-              songText = {
-                displayInSeparateLines = true;
-                maximumWidth = 640;
-                scrolling = {
-                  behavior = "alwaysScroll";
-                  speed = 3;
-                };
-              };
-            };
-          }
-        ];
-        opacity = "adaptive";
-      }
 
-      # ── Right panel: kickoff, tasks │ control center │ clock, tray ─────────
-      # Two autohide panels on the same edge fight each other, so the control
-      # center is embedded here — it sits between the separator and the clock,
-      # which lands it in the physical middle of the panel.
-      {
-        location = "right";
-        screen = 0;
-        widgets = [
-          {
-            name = "org.kde.plasma.kickoff";
-            config.General = {
-              icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-              showRecentApps = false;
-              showRecentDocs = false;
-            };
-          }
+          # ── Task manager ──────────────────────────────────────────────
           {
             iconTasks = {
               launchers = [
@@ -284,13 +244,26 @@ in {
               ];
             };
           }
-          "org.kde.plasma.marginsseparator"
-          # ── Control center ────────────────────────────────────────────────
-          "org.kde.plasma.volume"
-          "org.kde.plasma.networkmanagement"
-          "org.kde.plasma.bluetooth"
-          # ─────────────────────────────────────────────────────────────────
+
+          # ── Flexible space ────────────────────────────────────────────
           "org.kde.plasma.panelspacer"
+
+          # ── Music / status / clock / tray ─────────────────────────────
+          {
+            plasmusicToolbar = {
+              panelIcon = {
+                albumCover = { useAsIcon = false; radius = 8; };
+                icon = "view-media-track";
+              };
+              playbackSource = "auto";
+              musicControls.showPlaybackControls = true;
+              songText = {
+                displayInSeparateLines = true;
+                maximumWidth = 640;
+                scrolling = { behavior = "alwaysScroll"; speed = 3; };
+              };
+            };
+          }
           {
             digitalClock = {
               calendar.firstDayOfWeek = "monday";
@@ -299,7 +272,7 @@ in {
           }
           {
             systemTray.items = {
-              shown = [ "org.kde.plasma.battery" ];
+              shown  = [ "org.kde.plasma.battery" ];
               hidden = [
                 "org.kde.plasma.networkmanagement"
                 "org.kde.plasma.bluetooth"
@@ -307,9 +280,18 @@ in {
               ];
             };
           }
+
+          # ── Kickoff — far right edge ───────────────────────────────────
+          {
+            name = "org.kde.plasma.kickoff";
+            config.General = {
+              icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+              showRecentApps = false;
+              showRecentDocs = false;
+            };
+          }
+
         ];
-        hiding = "dodgewindows";
-        opacity = "adaptive";
       }
 
     ];
