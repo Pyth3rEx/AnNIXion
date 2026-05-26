@@ -259,7 +259,10 @@ in {
         opacity = "adaptive";
       }
 
-      # ── Right taskbar: kickoff (AnNIXion icon), pinned apps, clock, tray ─
+      # ── Right panel: kickoff, tasks │ control center │ clock, tray ─────────
+      # Two autohide panels on the same edge fight each other, so the control
+      # center is embedded here — it sits between the separator and the clock,
+      # which lands it in the physical middle of the panel.
       {
         location = "right";
         screen = 0;
@@ -270,7 +273,6 @@ in {
               icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
               showRecentApps = false;
               showRecentDocs = false;
-              applicationsDisplay = 0;  # grid view — shows icons prominently
             };
           }
           {
@@ -282,6 +284,13 @@ in {
             };
           }
           "org.kde.plasma.marginsseparator"
+          # ── Control center ────────────────────────────────────────────────
+          "org.kde.plasma.mediacontroller"
+          "org.kde.plasma.volume"
+          "org.kde.plasma.networkmanagement"
+          "org.kde.plasma.bluetooth"
+          # ─────────────────────────────────────────────────────────────────
+          "org.kde.plasma.panelspacer"
           {
             digitalClock = {
               calendar.firstDayOfWeek = "monday";
@@ -301,25 +310,6 @@ in {
         ];
         hiding = "autohide";
         opacity = "adaptive";
-      }
-
-      # ── Control center: quick controls, right edge, centered ───────────
-      # Slides in on mouse approach. Single Meta key opens kickoff (start
-      # menu) via ModifierOnlyShortcuts below. True single/double-Win
-      # distinction requires a KWin script — future work.
-      {
-        location = "right";
-        screen = 0;
-        alignment = "center";
-        lengthMode = "fit";
-        hiding = "autohide";
-        opacity = "adaptive";
-        widgets = [
-          "org.kde.plasma.mediacontroller"
-          "org.kde.plasma.volume"
-          "org.kde.plasma.networkmanagement"
-          "org.kde.plasma.bluetooth"
-        ];
       }
 
     ];

@@ -259,6 +259,7 @@ in {
     annixion-theharvester = {
       name        = "theHarvester";
       genericName = "OSINT Harvester";
+      icon        = "system-search";
       exec        = termHold "theHarvester";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-OSINT" ];
@@ -267,6 +268,7 @@ in {
     annixion-whois = {
       name        = "Whois";
       genericName = "Domain Lookup";
+      icon        = "network-wired";
       exec        = termHold "whois";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-OSINT" ];
@@ -274,6 +276,7 @@ in {
     annixion-dig = {
       name        = "dig";
       genericName = "DNS Lookup";
+      icon        = "network-wired";
       exec        = termHold "dig";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-OSINT" ];
@@ -283,6 +286,7 @@ in {
     annixion-nmap = {
       name        = "Nmap";
       genericName = "Network Scanner";
+      icon        = "network-wired";
       exec        = termHold "nmap";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-Scanning" ];
@@ -291,6 +295,7 @@ in {
     annixion-gobuster = {
       name        = "Gobuster";
       genericName = "Directory Brute Forcer";
+      icon        = "folder-remote";
       exec        = termHold "gobuster";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-Scanning" ];
@@ -299,6 +304,7 @@ in {
     annixion-ffuf = {
       name        = "ffuf";
       genericName = "Web Fuzzer";
+      icon        = "folder-remote";
       exec        = termHold "ffuf";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-Scanning" ];
@@ -318,6 +324,7 @@ in {
     annixion-gnuradio = {
       name        = "GNU Radio Companion";
       genericName = "SDR Signal Processing";
+      icon        = "audio-input-microphone";
       exec        = "gnuradio-companion";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-RF" ];
@@ -326,6 +333,7 @@ in {
     annixion-hackrf = {
       name        = "HackRF Tools";
       genericName = "HackRF Utilities";
+      icon        = "audio-input-microphone";
       exec        = termHold "hackrf_info";
       terminal    = false;
       categories  = [ "X-AnNIXion-Recon-RF" ];
@@ -348,6 +356,7 @@ in {
     annixion-binwalk = {
       name        = "Binwalk";
       genericName = "Firmware Analyzer";
+      icon        = "media-removable";
       exec        = termHold "binwalk";
       terminal    = false;
       categories  = [ "X-AnNIXion-Weapon-Firmware" "X-AnNIXion-RE-Firmware" ];
@@ -358,6 +367,7 @@ in {
     annixion-burpsuite = {
       name        = "Burp Suite";
       genericName = "Web App Security Proxy";
+      icon        = "burpsuite";
       exec        = "burpsuite";
       terminal    = false;
       categories  = [ "X-AnNIXion-Delivery-Proxy" ];
@@ -370,6 +380,7 @@ in {
     annixion-sqlmap = {
       name        = "sqlmap";
       genericName = "SQL Injection Tool";
+      icon        = "dialog-warning";
       exec        = termHold "sqlmap";
       terminal    = false;
       categories  = [ "X-AnNIXion-Delivery-Injection" ];
@@ -380,6 +391,7 @@ in {
     annixion-metasploit = {
       name        = "Metasploit";
       genericName = "Exploitation & C2 Framework";
+      icon        = "security-high";
       exec        = term "msfconsole";
       terminal    = false;
       categories  = [ "X-AnNIXion-Exploit-Frameworks" "X-AnNIXion-C2-Frameworks" ];
@@ -390,6 +402,7 @@ in {
     annixion-john = {
       name        = "John the Ripper";
       genericName = "Password Cracker";
+      icon        = "dialog-password";
       exec        = termHold "john";
       terminal    = false;
       categories  = [ "X-AnNIXion-Exploit-Creds" ];
@@ -398,6 +411,7 @@ in {
     annixion-hashcat = {
       name        = "Hashcat";
       genericName = "GPU Password Cracker";
+      icon        = "dialog-password";
       exec        = termHold "hashcat";
       terminal    = false;
       categories  = [ "X-AnNIXion-Exploit-Creds" ];
@@ -406,6 +420,7 @@ in {
     annixion-hydra = {
       name        = "Hydra";
       genericName = "Network Login Brute Forcer";
+      icon        = "dialog-password";
       exec        = termHold "hydra";
       terminal    = false;
       categories  = [ "X-AnNIXion-Exploit-Creds" ];
@@ -416,6 +431,7 @@ in {
     annixion-aircrack = {
       name        = "Aircrack-ng";
       genericName = "WiFi Security Auditing";
+      icon        = "network-wireless";
       exec        = termHold "aircrack-ng";
       terminal    = false;
       categories  = [ "X-AnNIXion-Exploit-Wireless" ];
@@ -426,6 +442,7 @@ in {
     annixion-netcat = {
       name        = "Netcat";
       genericName = "Network Swiss Army Knife";
+      icon        = "network-transmit-receive";
       exec        = term "nc";
       terminal    = false;
       categories  = [ "X-AnNIXion-Install-Tunneling" "X-AnNIXion-Sniffing" ];
@@ -439,6 +456,7 @@ in {
     annixion-impacket = {
       name        = "Impacket";
       genericName = "Windows Post-Exploitation Suite";
+      icon        = "network-server";
       exec        = "konsole";
       terminal    = false;
       categories  = [ "X-AnNIXion-PostEx-Lateral" ];
@@ -449,6 +467,7 @@ in {
     annixion-volatility = {
       name        = "Volatility 3";
       genericName = "Memory Forensics";
+      icon        = "drive-harddisk";
       exec        = term "vol";
       terminal    = false;
       categories  = [ "X-AnNIXion-Forensics-Memory" ];
@@ -459,6 +478,7 @@ in {
     annixion-autopsy = {
       name        = "Autopsy";
       genericName = "Digital Forensics Platform";
+      icon        = "drive-harddisk";
       exec        = "autopsy";
       terminal    = false;
       categories  = [ "X-AnNIXion-Forensics-Disk" ];
@@ -491,6 +511,7 @@ in {
     annixion-github-desktop = {
       name        = "GitHub Desktop";
       genericName = "Git GUI";
+      icon        = "github-desktop";
       exec        = "github-desktop";
       terminal    = false;
       categories  = [ "X-AnNIXion-Dev" ];
@@ -498,6 +519,7 @@ in {
     annixion-gh = {
       name        = "GitHub CLI";
       genericName = "Git CLI";
+      icon        = "utilities-terminal";
       exec        = term "gh";
       terminal    = false;
       categories  = [ "X-AnNIXion-Dev" ];
