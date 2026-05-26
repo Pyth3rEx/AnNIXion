@@ -27,6 +27,7 @@ in {
   imports = [
     ./home/firefox
     ./home/apps-menu.nix
+    ./home/control-center.nix
   ];
 
   # Home Manager needs to know your username and home directory.
@@ -375,10 +376,10 @@ in {
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
 
-      # Single Meta press opens kickoff (the bottom taskbar launcher).
-      # Double-press for start menu vs single-press for control center
-      # requires a KWin script — to be added in a follow-up.
-      "kwinrc"."ModifierOnlyShortcuts"."Meta" = "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu,[]";
+      # Meta key dispatch — handled by the annixion-meta-key systemd service
+      # (see home/control-center.nix). Single press → control center,
+      # double press (< 400 ms) → kickoff.
+      "kwinrc"."ModifierOnlyShortcuts"."Meta" = "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
 
       # Krohnkite tiling settings
       "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
