@@ -285,7 +285,6 @@ in {
           }
           "org.kde.plasma.marginsseparator"
           # ── Control center ────────────────────────────────────────────────
-          "org.kde.plasma.mediacontroller"
           "org.kde.plasma.volume"
           "org.kde.plasma.networkmanagement"
           "org.kde.plasma.bluetooth"
