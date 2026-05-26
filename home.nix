@@ -308,7 +308,7 @@ in {
             };
           }
         ];
-        hiding = "autohide";
+        hiding = "dodgewindows";
         opacity = "adaptive";
       }
 
