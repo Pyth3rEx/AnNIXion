@@ -259,12 +259,20 @@ in {
         opacity = "adaptive";
       }
 
-      # ── Bottom taskbar: default kickoff, pinned apps, clock, tray ─────
+      # ── Right taskbar: kickoff (AnNIXion icon), pinned apps, clock, tray ─
       {
-        location = "bottom";
+        location = "right";
         screen = 0;
         widgets = [
-          "org.kde.plasma.kickoff"
+          {
+            name = "org.kde.plasma.kickoff";
+            config.General = {
+              icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+              showRecentApps = false;
+              showRecentDocs = false;
+              applicationsDisplay = 0;  # grid view — shows icons prominently
+            };
+          }
           {
             iconTasks = {
               launchers = [
@@ -273,7 +281,7 @@ in {
               ];
             };
           }
-          "org.kde.plasma.panelspacer"
+          "org.kde.plasma.marginsseparator"
           {
             digitalClock = {
               calendar.firstDayOfWeek = "monday";
@@ -321,6 +329,10 @@ in {
     shortcuts = lib.mkDefault {
       # KRunner — your app launcher (like wofi/rofi)
       "org.kde.krunner.desktop"."_launch" = [ "Alt+Space" "Alt+F2" ];
+
+      # Kickoff — Meta+F1 via kglobalaccel (bare Meta handled by
+      # ModifierOnlyShortcuts in configFile below; both are needed)
+      "org.kde.plasma.kickoff.desktop"."_launch" = [ "Meta+F1" ];
 
       # KWin window management
       kwin = {
