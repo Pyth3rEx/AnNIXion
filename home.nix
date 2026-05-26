@@ -164,7 +164,7 @@ in {
     # ── Global astetics ──────────────────────────────────────
     workspace = lib.mkDefault {
       clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
-      # lookAndFeel = "org.kde.breezedark.desktop";
+      lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
         theme = "Nordzy-cursors";
         size = 32;
