@@ -176,6 +176,7 @@
                   networkmanagerapplet
                   openvpn
                   wireguard-tools
+                  libsForQt5.kservice
                 ];
 
                 # ============================================================
