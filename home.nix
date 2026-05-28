@@ -111,7 +111,7 @@ in
       gs = "git status";
       gp = "git push";
       gl = "git pull";
-      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure";
+      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
 
       # Networking
       ip_out = "curl -s https://ifconfig.me && echo";
