@@ -6,7 +6,13 @@
 # Every option uses lib.mkDefault (priority 1000). That means anything
 # you put in user/home.nix at normal priority (100) automatically wins
 # without needing lib.mkForce.
-{ inputs, config, lib, pkgs, ... }:
+{
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   SlotIcons = pkgs.stdenvNoCC.mkDerivation {
@@ -23,7 +29,8 @@ let
       cp -r "Slot Icons Themes/." $out/share/icons
     '';
   };
-in {
+in
+{
   imports = [
     ./home/firefox
     ./home/vscodium.nix
@@ -53,39 +60,47 @@ in {
   # and are now system-wide packages.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
-    zsh            # better shell than bash
+    zsh # better shell than bash
 
     # ── Development ───────────────────────────────────────────
-    gh             # GitHub CLI
+    gh # GitHub CLI
     github-desktop # Github GUI
     python3
     python3Packages.pip
 
     # ── Utilities ─────────────────────────────────────────────
-    ripgrep        # fast grep (rg)
-    fd             # fast find
-    bat            # cat with syntax highlighting
-    fzf            # fuzzy finder
-    jq             # JSON processor
+    ripgrep # fast grep (rg)
+    fd # fast find
+    bat # cat with syntax highlighting
+    fzf # fuzzy finder
+    jq # JSON processor
     unzip
     p7zip
+    file
+    # inetutils # Collection of common network programs
+    lftp
+    git
+    wget
+    curl
+    htop
+    tree
 
     # ── STYLES ────────────────────────────────────────────────
     # ── Fonts ─────────────────────────────────────────────────
-    nerd-fonts.jetbrains-mono  # terminal font with icons
+    nerd-fonts.jetbrains-mono # terminal font with icons
     nerd-fonts.fira-code
     # ── Icons ─────────────────────────────────────────────────
     SlotIcons
     # ── Cursors ───────────────────────────────────────────────
     nordzy-cursor-theme
   ];
-  
+
   programs.zsh = {
     enable = lib.mkDefault true;
-    autosuggestion.enable = lib.mkDefault true;      # suggests commands as you type
-    syntaxHighlighting.enable = lib.mkDefault true;  # colors valid/invalid commands
+    autosuggestion.enable = lib.mkDefault true; # suggests commands as you type
+    syntaxHighlighting.enable = lib.mkDefault true; # colors valid/invalid commands
     enableCompletion = lib.mkDefault true;
-    autocd = lib.mkDefault true;                     # Automaticaly enter into a directory if typed directly in the shell
+    autocd = lib.mkDefault true; # Automaticaly enter into a directory if typed directly in the shell
 
     # Your shell aliases
     shellAliases = {
@@ -96,14 +111,18 @@ in {
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure";
 
       # Networking
-      myip      = "curl -s https://ifconfig.me && echo";
-      localip   = "ip -4 addr show scope global | awk '/inet/{print $2}'";
-      
+      ip_out = "curl -s https://ifconfig.me && echo";
+      ip_local = "ip -4 addr show scope global | awk '/inet/{print $2}'";
+
       # Quick edit of your configs
-      enix  = "kate ~/.dotfiles/flake.nix";
-      emod  = "kate ~/.dotfiles/modules/";
+      enix = "kate ~/.dotfiles/flake.nix";
+      emod = "kate ~/.dotfiles/modules/";
       euser = "kate ~/.dotfiles/user/";
       ehome = "kate ~/.dotfiles/home.nix";
+
+      # Tools
+      ftp = "lftp";
+      cat = "bat";
     };
 
     initContent = ''
@@ -207,28 +226,37 @@ in {
             applicationTitleBar = {
               behavior.activeTaskSource = "activeTask";
               layout = {
-                elements              = [ "windowTitle" ];
-                horizontalAlignment   = "left";
-                showDisabledElements  = "deactivated";
-                verticalAlignment     = "center";
+                elements = [ "windowTitle" ];
+                horizontalAlignment = "left";
+                showDisabledElements = "deactivated";
+                verticalAlignment = "center";
               };
               overrideForMaximized.enable = false;
               titleReplacements = [
                 {
-                  type          = "regexp";
+                  type = "regexp";
                   originalTitle = "^Brave Web Browser$";
-                  newTitle      = "Brave";
+                  newTitle = "Brave";
                 }
                 {
-                  type          = "regexp";
+                  type = "regexp";
                   originalTitle = ''\\bDolphin\\b'';
-                  newTitle      = "File manager";
+                  newTitle = "File manager";
                 }
               ];
               windowTitle = {
-                font = { bold = false; fit = "fixedSize"; size = 12; };
+                font = {
+                  bold = false;
+                  fit = "fixedSize";
+                  size = 12;
+                };
                 hideEmptyTitle = true;
-                margins = { bottom = 0; left = 10; right = 5; top = 0; };
+                margins = {
+                  bottom = 0;
+                  left = 10;
+                  right = 5;
+                  top = 0;
+                };
                 source = "appName";
               };
             };
@@ -252,7 +280,10 @@ in {
           {
             plasmusicToolbar = {
               panelIcon = {
-                albumCover = { useAsIcon = false; radius = 8; };
+                albumCover = {
+                  useAsIcon = false;
+                  radius = 8;
+                };
                 icon = "view-media-track";
               };
               playbackSource = "auto";
@@ -260,7 +291,10 @@ in {
               songText = {
                 displayInSeparateLines = true;
                 maximumWidth = 640;
-                scrolling = { behavior = "alwaysScroll"; speed = 3; };
+                scrolling = {
+                  behavior = "alwaysScroll";
+                  speed = 3;
+                };
               };
             };
           }
@@ -272,7 +306,7 @@ in {
           }
           {
             systemTray.items = {
-              shown  = [ "org.kde.plasma.battery" ];
+              shown = [ "org.kde.plasma.battery" ];
               hidden = [
                 "org.kde.plasma.networkmanagement"
                 "org.kde.plasma.bluetooth"
@@ -285,7 +319,7 @@ in {
           {
             name = "org.kde.plasma.kickoff";
             config.General = {
-              icon           = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+              icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
               showRecentApps = false;
               showRecentDocs = false;
             };
@@ -296,11 +330,13 @@ in {
 
     ];
 
-
     # ── Global shortcuts ──────────────────────────────────────
     shortcuts = lib.mkDefault {
       # KRunner — your app launcher (like wofi/rofi)
-      "org.kde.krunner.desktop"."_launch" = [ "Alt+Space" "Alt+F2" ];
+      "org.kde.krunner.desktop"."_launch" = [
+        "Alt+Space"
+        "Alt+F2"
+      ];
 
       # Kickoff — Meta+F1 via kglobalaccel (bare Meta handled by
       # ModifierOnlyShortcuts in configFile below; both are needed)
@@ -361,7 +397,8 @@ in {
       # Meta key dispatch — handled by the annixion-meta-key systemd service
       # (see home/control-center.nix). Single press → control center,
       # double press (< 400 ms) → kickoff.
-      "kwinrc"."ModifierOnlyShortcuts"."Meta" = "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
+      "kwinrc"."ModifierOnlyShortcuts"."Meta" =
+        "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
 
       # Krohnkite tiling settings
       "kwinrc"."Script-krohnkite"."enableTileLayout" = true;

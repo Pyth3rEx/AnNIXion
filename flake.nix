@@ -172,16 +172,10 @@
                 nixpkgs.config.allowUnfree = lib.mkDefault true;
 
                 environment.systemPackages = with pkgs; [
-                  git
-                  wget
-                  curl
-                  htop
-                  tree
                   networkmanager
                   networkmanagerapplet
                   openvpn
                   wireguard-tools
-                  file
                 ];
 
                 # ============================================================
