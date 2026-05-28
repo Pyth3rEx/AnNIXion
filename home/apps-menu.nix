@@ -188,6 +188,11 @@ in
             <Directory>annixion-utils.directory</Directory>
             <Include><Category>X-AnNIXion-Utils</Category></Include>
           </Menu>
+          <Menu>
+            <Name>Productivity</Name>
+            <Directory>annixion-productivity.directory</Directory>
+            <Include><Category>X-AnNIXion-Productivity</Category></Include>
+          </Menu>
         </Menu>
 
         <Menu>
@@ -266,6 +271,7 @@ in
     "desktop-directories/annixion-tools.directory".text = dir "Tools" "applications-other";
     "desktop-directories/annixion-internet.directory".text = dir "Internet" "applications-internet";
     "desktop-directories/annixion-dev.directory".text = dir "Development" "applications-development";
+    "desktop-directories/annixion-productivity.directory".text = dir "Productivity" "applications-office";
     "desktop-directories/annixion-utils.directory".text = dir "Utilities" "applications-utilities";
     "desktop-directories/annixion-system.directory".text = dir "System" "applications-system";
   };
@@ -521,7 +527,7 @@ in
       comment = "GUI frontend for The Sleuth Kit disk forensics";
     };
 
-    # ── 10. Sniffing & Analysis ───────────────────────────────────────────
+    # ── 10. Sniffing & Analysis ───────────────���───────────────────────────
     annixion-wireshark = {
       name = "Wireshark";
       genericName = "Packet Analyzer";
@@ -560,6 +566,17 @@ in
       exec = term "gh";
       terminal = false;
       categories = [ "X-AnNIXion-Dev" ];
+    };
+
+    # ── Productivity ──────────────────────────────────────────────────────
+    annixion-obsidian = {
+      name = "Obsidian";
+      genericName = "Note-Taking & Knowledge Base";
+      icon = "obsidian";
+      exec = "obsidian";
+      terminal = false;
+      categories = [ "X-AnNIXion-Productivity" ];
+      comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
 
     # ── Utilities ─────────────────────────────────────────────────────────
