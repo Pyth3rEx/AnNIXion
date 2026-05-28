@@ -85,6 +85,9 @@ in
     htop
     tree
 
+    # ── Productivity ──────────────────────────────────────────
+    obsidian # Note-taking and knowledge management
+
     # ── STYLES ────────────────────────────────────────────────
     # ── Fonts ─────────────────────────────────────────────────
     nerd-fonts.jetbrains-mono # terminal font with icons
