@@ -112,7 +112,7 @@ in
       gp = "git push";
       gl = "git pull";
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
-      update = 'nix flake update --flake "$HOME/.dotfiles"'
+      update = "nix flake update --flake '$HOME/.dotfiles'";
 
       # Networking
       ip_out = "curl -s https://ifconfig.me && echo";
