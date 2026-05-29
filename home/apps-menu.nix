@@ -35,131 +35,157 @@ in
         <Menu>
           <Name>01. Reconnaissance</Name>
           <Directory>annixion-1-recon.directory</Directory>
+
           <Menu>
             <Name>Passive OSINT</Name>
             <Directory>annixion-1-recon-osint.directory</Directory>
             <Include><Category>X-AnNIXion-Recon-OSINT</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Active Scanning</Name>
             <Directory>annixion-1-recon-scanning.directory</Directory>
             <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
           </Menu>
+
           <Menu>
             <Name>RF / Signal Intel</Name>
             <Directory>annixion-1-recon-rf.directory</Directory>
             <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>02. Weaponization</Name>
           <Directory>annixion-2-weapon.directory</Directory>
+
           <Menu>
             <Name>Disassembly</Name>
             <Directory>annixion-2-weapon-disasm.directory</Directory>
             <Include><Category>X-AnNIXion-Weapon-Disasm</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Firmware Analysis</Name>
             <Directory>annixion-2-weapon-firmware.directory</Directory>
             <Include><Category>X-AnNIXion-Weapon-Firmware</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>03. Delivery</Name>
           <Directory>annixion-3-delivery.directory</Directory>
+
           <Menu>
             <Name>Web Proxy</Name>
             <Directory>annixion-3-delivery-proxy.directory</Directory>
             <Include><Category>X-AnNIXion-Delivery-Proxy</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Web Injection</Name>
             <Directory>annixion-3-delivery-injection.directory</Directory>
             <Include><Category>X-AnNIXion-Delivery-Injection</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>04. Exploitation</Name>
           <Directory>annixion-4-exploit.directory</Directory>
+
           <Menu>
             <Name>Frameworks</Name>
             <Directory>annixion-4-exploit-frameworks.directory</Directory>
             <Include><Category>X-AnNIXion-Exploit-Frameworks</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Credential Attacks</Name>
             <Directory>annixion-4-exploit-creds.directory</Directory>
             <Include><Category>X-AnNIXion-Exploit-Creds</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Wireless</Name>
             <Directory>annixion-4-exploit-wireless.directory</Directory>
             <Include><Category>X-AnNIXion-Exploit-Wireless</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>05. Installation</Name>
           <Directory>annixion-5-install.directory</Directory>
+
           <Menu>
             <Name>Tunneling &amp; Shells</Name>
             <Directory>annixion-5-install-tunneling.directory</Directory>
             <Include><Category>X-AnNIXion-Install-Tunneling</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>06. C2</Name>
           <Directory>annixion-6-c2.directory</Directory>
+
           <Menu>
             <Name>Frameworks</Name>
             <Directory>annixion-6-c2-frameworks.directory</Directory>
             <Include><Category>X-AnNIXion-C2-Frameworks</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>07. Post-Exploitation</Name>
           <Directory>annixion-7-postex.directory</Directory>
+
           <Menu>
             <Name>Lateral Movement</Name>
             <Directory>annixion-7-postex-lateral.directory</Directory>
             <Include><Category>X-AnNIXion-PostEx-Lateral</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>08. Forensics</Name>
           <Directory>annixion-8-forensics.directory</Directory>
+
           <Menu>
             <Name>Memory Analysis</Name>
             <Directory>annixion-8-forensics-memory.directory</Directory>
             <Include><Category>X-AnNIXion-Forensics-Memory</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Disk Analysis</Name>
             <Directory>annixion-8-forensics-disk.directory</Directory>
             <Include><Category>X-AnNIXion-Forensics-Disk</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
           <Name>09. Reverse Engineering</Name>
           <Directory>annixion-9-re.directory</Directory>
+
           <Menu>
             <Name>Disassemblers</Name>
             <Directory>annixion-9-re-disasm.directory</Directory>
             <Include><Category>X-AnNIXion-RE-Disasm</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Firmware</Name>
             <Directory>annixion-9-re-firmware.directory</Directory>
             <Include><Category>X-AnNIXion-RE-Firmware</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
@@ -173,26 +199,31 @@ in
         <Menu>
           <Name>Tools</Name>
           <Directory>annixion-tools.directory</Directory>
+
           <Menu>
             <Name>Internet</Name>
             <Directory>annixion-internet.directory</Directory>
             <Include><Category>X-AnNIXion-Internet</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Development</Name>
             <Directory>annixion-dev.directory</Directory>
             <Include><Category>X-AnNIXion-Dev</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Utilities</Name>
             <Directory>annixion-utils.directory</Directory>
             <Include><Category>X-AnNIXion-Utils</Category></Include>
           </Menu>
+
           <Menu>
             <Name>Productivity</Name>
             <Directory>annixion-productivity.directory</Directory>
             <Include><Category>X-AnNIXion-Productivity</Category></Include>
           </Menu>
+
         </Menu>
 
         <Menu>
@@ -371,7 +402,6 @@ in
     };
 
     # ── 2. Weaponization — Disassembly ────────────────────────────────────
-    # ghidra and binwalk also appear in 9. Reverse Engineering via dual categories
     annixion-ghidra = {
       name = "Ghidra";
       genericName = "Reverse Engineering Suite";
@@ -409,8 +439,6 @@ in
       categories = [ "X-AnNIXion-Delivery-Proxy" ];
       comment = "Web application security testing platform";
     };
-    # firefox-red and firefox-osint are defined in home/firefox/default.nix
-    # with their AnNIXion categories set there.
 
     # ── 3. Delivery — Web Injection ───────────────────────────────────────
     annixion-sqlmap = {
@@ -491,9 +519,6 @@ in
       comment = "TCP/IP networking — listeners, pivots, file transfers";
     };
 
-    # ── 6. C2 — Frameworks ────────────────────────────────────────────────
-    # Metasploit appears here via its dual categories (see 4. Exploitation above)
-
     # ── 7. Post-Exploitation — Lateral Movement ───────────────────────────
     annixion-impacket = {
       name = "Impacket";
@@ -516,7 +541,7 @@ in
       comment = "Memory acquisition and forensics framework";
     };
 
-    # ── 8. Forensics — Disk Analysis ──────────────────────────────────────
+    # ── 8. Forensics — Disk Analysis ──────���───────────────────────────────
     annixion-autopsy = {
       name = "Autopsy";
       genericName = "Digital Forensics Platform";
@@ -527,7 +552,7 @@ in
       comment = "GUI frontend for The Sleuth Kit disk forensics";
     };
 
-    # ── 10. Sniffing & Analysis ───────────────���───────────────────────────
+    # ── 10. Sniffing & Analysis ───────────────────────────────────────────
     annixion-wireshark = {
       name = "Wireshark";
       genericName = "Packet Analyzer";
@@ -537,9 +562,6 @@ in
       categories = [ "X-AnNIXion-Sniffing" ];
       comment = "Network protocol capture and analysis";
     };
-
-    # ── Internet ──────────────────────────────────────────────────────────
-    # (firefox-red and firefox-osint — defined in home/firefox/default.nix)
 
     # ── Development ───────────────────────────────────────────────────────
     annixion-vscodium = {
@@ -579,7 +601,7 @@ in
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
 
-    # ── Utilities ─────────────────────────────────────────────────────────
+    # ── Utilities ──────────────────────────────────────────────���──────────
     annixion-kate = {
       name = "Kate";
       genericName = "Text Editor";
