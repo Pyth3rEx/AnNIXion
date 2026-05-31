@@ -17,22 +17,23 @@ let
 in
 {
 
-  # Rebuild the KDE service/menu cache after every HM activation.
-  # Running it here (after writeBoundary) guarantees all .directory and
-  # .desktop files are on disk before kbuildsycoca6 reads them.
-  # Without this, KDE's inotify watcher triggers kbuildsycoca6 mid-activation
-  # (before .directory files are written), causing "parent menu does not exist".
+  # Rebuild both KDE service caches after every HM activation.
+  # writeBoundary guarantees all .directory and .desktop files are on disk first.
+  # kbuildsycoca5 is the Qt5 cache (triggered automatically by KDE's file watcher);
+  # kbuildsycoca6 is the Qt6/Plasma 6 cache used by the actual desktop.
   home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
+    $DRY_RUN_CMD ${pkgs.libsForQt5.kservice}/bin/kbuildsycoca5 --noincremental 2>/dev/null || true
   '';
 
   # ============================================================
   # XDG MENU — KILL CHAIN STRUCTURE
-  # Merged into the system Applications menu at:
-  #   ~/.config/menus/applications-merged/annixion.menu
+  # Written directly as the user applications.menu so it is always
+  # picked up by kbuildsycoca regardless of whether the system
+  # applications.menu includes <MergeDir>applications-merged</MergeDir>.
   # ============================================================
 
-  home.file.".config/menus/applications-merged/annixion.menu" = lib.mkDefault {
+  home.file.".config/menus/applications.menu" = lib.mkDefault {
     text = ''
       <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
         "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
