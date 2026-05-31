@@ -112,6 +112,7 @@ in
       gp = "git push";
       gl = "git pull";
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
+      upgrade = "nix flake update --flake '$HOME/.dotfiles' && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
       update = "nix flake update --flake '$HOME/.dotfiles'";
 
       # Networking
@@ -183,6 +184,10 @@ in
 
   programs.plasma = {
     enable = lib.mkDefault true;
+    # Force plasma-manager to overwrite KDE config files on every rebuild.
+    # Without this, KDE's own writes to kwinrc/kdeglobals etc. survive the
+    # rebuild on old installs and the declared state is silently ignored.
+    overrideConfig = lib.mkDefault true;
 
     # ── Global astetics ──────────────────────────────────────
     workspace = lib.mkDefault {

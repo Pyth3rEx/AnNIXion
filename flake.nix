@@ -63,6 +63,10 @@
             {
               home-manager.useGlobalPkgs = true; # share system pkgs
               home-manager.useUserPackages = true; # install to user profile
+              # Back up any file HM wants to write that already exists on disk.
+              # Without this, HM aborts if a file exists but wasn't created by HM
+              # (e.g. KDE wrote it, or a previous partial activation left it).
+              home-manager.backupFileExtension = "backup";
               # Give Home Manager access to the plasma-manager module
               home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
 
