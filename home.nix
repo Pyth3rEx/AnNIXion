@@ -115,8 +115,8 @@ in
       # upgrade — update all flake inputs (nixpkgs, packages) then rebuild
       # update  — update inputs only, no rebuild (check what changed before committing)
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
-      upgrade = "nix flake update --flake '$HOME/.dotfiles' && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
-      update = "nix flake update --flake '$HOME/.dotfiles'";
+      upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
+      update = "nix flake update --flake ~/.dotfiles";
 
       # Networking
       ip_out = "curl -s https://ifconfig.me && echo";
