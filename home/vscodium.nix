@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.vscodium;  # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
 
-    extensions = with pkgs.vscode-extensions; [
+    profiles.default.extensions = with pkgs.vscode-extensions; [
       # Nix Language Support
       jnoortheen.nix-ide
       
@@ -19,7 +19,7 @@
       redhat.vscode-yaml
     ];
 
-    userSettings = {
+    profiles.default.userSettings = {
       # Nix IDE Configuration
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nil";
