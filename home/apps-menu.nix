@@ -302,7 +302,8 @@ in
     "desktop-directories/annixion-tools.directory".text = dir "Tools" "applications-other";
     "desktop-directories/annixion-internet.directory".text = dir "Internet" "applications-internet";
     "desktop-directories/annixion-dev.directory".text = dir "Development" "applications-development";
-    "desktop-directories/annixion-productivity.directory".text = dir "Productivity" "applications-office";
+    "desktop-directories/annixion-productivity.directory".text =
+      dir "Productivity" "applications-office";
     "desktop-directories/annixion-utils.directory".text = dir "Utilities" "applications-utilities";
     "desktop-directories/annixion-system.directory".text = dir "System" "applications-system";
   };
@@ -341,6 +342,15 @@ in
       exec = termHold "dig";
       terminal = false;
       categories = [ "X-AnNIXion-Recon-OSINT" ];
+    };
+    annixion-whatweb = {
+      name = "WhatWeb";
+      genericName = "Web Recon";
+      icon = "folder-remote";
+      exec = termHold "whatweb";
+      terminal = false;
+      categories = [ "X-AnNIXion-Recon-Scanning" ];
+      comment = "Fast web fuzzer";
     };
 
     # ── 1. Reconnaissance — Active Scanning ───────────────────────────────

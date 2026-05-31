@@ -27,6 +27,7 @@
     aircrack-ng    # WiFi security auditing
     binwalk        # firmware analysis
     ghidra         # reverse engineering / disassembler
+    whatweb        # web recon
 
     # ── OSINT ─────────────────────────────────────────────────
     theharvester   # email/domain/IP OSINT
