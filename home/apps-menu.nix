@@ -350,7 +350,7 @@ in
       exec = termHold "whatweb";
       terminal = false;
       categories = [ "X-AnNIXion-Recon-Scanning" ];
-      comment = "Fast web fuzzer";
+      comment = "Web server fingerprinting and technology detection";
     };
 
     # ── 1. Reconnaissance — Active Scanning ───────────────────────────────
@@ -551,7 +551,7 @@ in
       comment = "Memory acquisition and forensics framework";
     };
 
-    # ── 8. Forensics — Disk Analysis ──────���───────────────────────────────
+    # ── 8. Forensics — Disk Analysis ──────────────────────────────────────
     annixion-autopsy = {
       name = "Autopsy";
       genericName = "Digital Forensics Platform";

@@ -13,7 +13,7 @@
 #   two presses within 400 ms → kickoff, otherwise → control center.
 #
 # The control center is a kdialog menu that toggles WiFi, BT,
-# and will eventually host the network killswitch and VPN controls.
+# and hosts the network killswitch. VPN controls are planned.
 # ============================================================
 
 let

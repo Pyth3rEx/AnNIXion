@@ -97,12 +97,14 @@ nix flake update
 sudo nixos-rebuild switch --flake .#AnNIXion --impure
 ```
 
-**3. First rebuild alias:**
+**3. Shell aliases:**
 
-After the initial install succeeds, you can use the `rebuild` alias:
+After the initial install succeeds, three aliases are available:
 
 ```bash
-rebuild   # Shorthand for: sudo nixos-rebuild switch --flake .#AnNIXion
+rebuild   # Apply current config — same package versions, no input updates
+upgrade   # Update all flake inputs (nixpkgs, packages) then rebuild
+update    # Update flake inputs only, without rebuilding
 ```
 
 ### Hyper-V Enhanced Session Setup

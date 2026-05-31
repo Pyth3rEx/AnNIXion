@@ -43,8 +43,8 @@
 {
   # Your overrides go here.
 
-  # Fixes an issue with UI => poweroff dosn't work (at least not on my system)
-  # Need to investigate
+  # Polkit rule: allow wheel group to power off and reboot without a password prompt.
+  # Without this, shutdown/reboot from the KDE session silently fails.
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
       if (

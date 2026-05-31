@@ -111,6 +111,9 @@ in
       gs = "git status";
       gp = "git push";
       gl = "git pull";
+      # rebuild — apply current config (same pinned versions, no input bump)
+      # upgrade — update all flake inputs (nixpkgs, packages) then rebuild
+      # update  — update inputs only, no rebuild (check what changed before committing)
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
       upgrade = "nix flake update --flake '$HOME/.dotfiles' && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
       update = "nix flake update --flake '$HOME/.dotfiles'";
@@ -166,6 +169,7 @@ in
   # ============================================================
   # GIT
   # ============================================================
+  # Override userName/userEmail in user/home.nix (see user/examples/git.nix).
   programs.git.settings = {
     enable = lib.mkDefault true;
     userName = lib.mkDefault "CHANGEME";
