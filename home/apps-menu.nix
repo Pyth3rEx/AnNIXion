@@ -17,6 +17,15 @@ let
 in
 {
 
+  # Rebuild the KDE service/menu cache after every HM activation.
+  # Running it here (after writeBoundary) guarantees all .directory and
+  # .desktop files are on disk before kbuildsycoca6 reads them.
+  # Without this, KDE's inotify watcher triggers kbuildsycoca6 mid-activation
+  # (before .directory files are written), causing "parent menu does not exist".
+  home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
+  '';
+
   # ============================================================
   # XDG MENU — KILL CHAIN STRUCTURE
   # Merged into the system Applications menu at:

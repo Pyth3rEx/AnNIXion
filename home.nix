@@ -111,11 +111,11 @@ in
       gs = "git status";
       gp = "git push";
       gl = "git pull";
-      # rebuild — apply current config (same pinned versions, no input bump)
+      # rebuild — apply current config (same pinned versions, no input bump); kbuildsycoca6 runs via home.activation automatically
       # upgrade — update all flake inputs (nixpkgs, packages) then rebuild
       # update  — update inputs only, no rebuild (check what changed before committing)
-      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
-      upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca5";
+      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
+      upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
       update = "nix flake update --flake ~/.dotfiles";
 
       # Networking
