@@ -73,6 +73,12 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+      "network.proxy.type" = 1;
+      "network.proxy.socks" = "127.0.0.1";
+      "network.proxy.socks_port" = 1080;
+      "network.proxy.socks_version" = 5;
+      "network.proxy.socks_remote_dns" = true;
+      "network.proxy.failover_direct" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-osint.json");

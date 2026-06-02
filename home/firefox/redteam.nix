@@ -71,6 +71,7 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+      "network.proxy.failover_direct" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-redteam.json");
@@ -91,6 +92,27 @@ in
     };
   };
 
+  home.activation.generateBurpCA = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    CERT_DIR="${config.home.homeDirectory}/.dotfiles/assets/certs"
+    CERT_PEM="$CERT_DIR/burp-ca.pem"
+
+    if [ ! -f "$CERT_PEM" ]; then
+      mkdir -p "$CERT_DIR"
+      ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:2048 \
+        -keyout "$CERT_DIR/burp-ca.key" \
+        -out "$CERT_PEM" \
+        -days 3650 -nodes \
+        -subj "/CN=AnNIXion Burp CA/O=AnNIXion" 2>/dev/null
+      ${pkgs.openssl}/bin/openssl x509 -in "$CERT_PEM" -outform DER \
+        -out "$CERT_DIR/burp-ca.der"
+      chmod 600 "$CERT_DIR/burp-ca.key"
+    fi
+  '';
+
+  programs.firefox.policies.Certificates.Install = [
+    "${config.home.homeDirectory}/.dotfiles/assets/certs/burp-ca.pem"
+  ];
+
   programs.firefox.policies.ExtensionSettings = with addons; {
     "${ublock-origin.addonId}"      = { private_browsing = true; };
     "${bitwarden.addonId}"          = { private_browsing = true; };
@@ -100,5 +122,38 @@ in
     "${single-file.addonId}"        = { private_browsing = true; };
     "${hacktools.addonId}"          = { private_browsing = true; };
     "${cookie-editor.addonId}"      = { private_browsing = true; };
+  };
+
+  programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
+    mode = "127.0.0.1:8080";
+    sync = false;
+    autoBackup = false;
+    passthrough = "";
+    theme = "";
+    container = {};
+    commands = {
+      setProxy = "";
+      setTabProxy = "";
+      includeHost = "";
+      excludeHost = "";
+    };
+    data = [{
+      active = true;
+      title = "Burpsuite";
+      type = "http";
+      hostname = "127.0.0.1";
+      port = "8080";
+      username = "";
+      password = "";
+      cc = "";
+      city = "";
+      color = "#b22222";
+      pac = "";
+      pacString = "";
+      proxyDNS = true;
+      include = [];
+      exclude = [];
+      tabProxy = [];
+    }];
   };
 }
