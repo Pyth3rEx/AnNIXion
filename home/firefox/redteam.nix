@@ -102,7 +102,10 @@ in
         -keyout "$CERT_DIR/burp-ca.key" \
         -out "$CERT_PEM" \
         -days 3650 -nodes \
-        -subj "/CN=AnNIXion Burp CA/O=AnNIXion" 2>/dev/null
+        -subj "/CN=AnNIXion Burp CA/O=AnNIXion" \
+        -addext "basicConstraints=critical,CA:TRUE" \
+        -addext "keyUsage=critical,keyCertSign,cRLSign" \
+        -addext "subjectKeyIdentifier=hash" 2>/dev/null
       ${pkgs.openssl}/bin/openssl x509 -in "$CERT_PEM" -outform DER \
         -out "$CERT_DIR/burp-ca.der"
       ${pkgs.openssl}/bin/openssl pkcs8 -topk8 -nocrypt \
