@@ -121,11 +121,13 @@ Rationale:
 **Goal:** Firefox ships with three pre-configured profiles selectable from launch.
 
 - [x] `home/firefox/default.nix` — Firefox enable, force-installed policies, desktop launchers
+- [x] `home/firefox/untrusted.nix` — Unsafe Browser profile (id 0, isDefault): direct connection, uBlock only; replaces empty default profile
 - [x] `home/firefox/redteam.nix` — Red Team profile: FoxyProxy, HackTools, Wappalyzer, Cookie Editor, Retire.js; search engines: Exploit-DB, CVE, NVD
 - [x] `home/firefox/osint.nix` — OSINT profile: NoScript, CanvasBlocker, User-Agent Switcher, Cookie AutoDelete; search engines: Shodan, Censys, Wayback Machine
 - [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, social search
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
-- [ ] HTTP proxy pre-configured (127.0.0.1:8080) in RedTeam profile settings
+- [x] FoxyProxy pre-configured via managed storage (`3rdparty` policy) to route all RedTeam traffic through Burp Suite (127.0.0.1:8080); `failover_direct = false` blocks leaks if Burp is down
+- [x] VPN enforcement in OSINT and Puppet profiles: SOCKS5 placeholder at 127.0.0.1:1080, DNS through proxy, `failover_direct = false` — connections fail until VPN is running
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [ ] Per-profile custom `userChrome.css` for immediate visual distinction:
   - [ ] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar

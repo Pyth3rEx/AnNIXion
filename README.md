@@ -47,7 +47,7 @@ AnNIXion is in **active development**. The following is implemented and function
 - ✅ Offensive, OSINT, and SDR tooling declared in `modules/security-tools.nix`
 - ✅ ZSH + tmux + xterm terminal environment
 - ✅ User override system — drop personal settings into `user/` without touching base config
-- ✅ Firefox three-profile setup — RedTeam, OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers
+- ✅ Firefox four-profile setup — Unsafe Browser, RedTeam (Burp proxy enforced), OSINT, and Puppet Master profiles with dedicated extensions, search engines, and desktop launchers
 - ✅ VS Code development environment module with Nix IDE extension
 
 The following is planned and tracked in [ROADMAP.md](ROADMAP.md):
@@ -133,9 +133,10 @@ Then fully shut down the VM and reconnect from Hyper-V Manager. The desktop will
 ├── home/
 │   └── firefox/
 │       ├── default.nix            # Firefox enable, policies, desktop launchers
-│       ├── redteam.nix            # Red Team profile: FoxyProxy, HackTools, Wappalyzer
-│       ├── osint.nix              # OSINT profile: extensions for investigations
-│       └── puppet.nix             # Puppet Master profile: persona & container mgmt
+│       ├── untrusted.nix          # Unsafe Browser profile: direct connection, uBlock only
+│       ├── redteam.nix            # Red Team profile: FoxyProxy → Burp, HackTools, Wappalyzer
+│       ├── osint.nix              # OSINT profile: VPN-enforced, extensions for investigations
+│       └── puppet.nix             # Puppet Master profile: VPN-enforced, persona & container mgmt
 │
 ├── modules/
 │   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
@@ -181,11 +182,12 @@ See `user/README.md` for the full override system documentation.
 
 ### Firefox Profiles
 
-Three Firefox profiles launch from the desktop:
+Four Firefox profiles launch from the desktop:
 
-- **Red Team** — FoxyProxy, HackTools, Wappalyzer, Retire.js; search engines for exploits and CVEs
-- **OSINT** — NoScript, CanvasBlocker, User-Agent Switcher; search engines for Shodan, Censys, Wayback Machine
-- **Puppet Master** — Multi-Account Containers, Temporary Containers; search engines for Yandex, Baidu, social platforms
+- **Unsafe Browser** — Direct connection, no proxy, uBlock only. Use for captive portals or clearnet sessions. Bare `firefox` with no `-P` flag opens this profile.
+- **Red Team** — FoxyProxy pre-configured to route all traffic through Burp Suite (127.0.0.1:8080). Falls back to blocked (no direct leak) if Burp is not running.
+- **OSINT** — All traffic enforced through VPN (SOCKS5 at 127.0.0.1:1080). NoScript, CanvasBlocker, User-Agent Switcher; search engines for Shodan, Censys, Wayback Machine.
+- **Puppet Master** — All traffic enforced through VPN (SOCKS5 at 127.0.0.1:1080). Multi-Account Containers, Temporary Containers; search engines for Yandex, Baidu, social platforms.
 
 Each profile has its own isolated cookies, cache, and extensions. Click the desktop launcher for the profile you need.
 
