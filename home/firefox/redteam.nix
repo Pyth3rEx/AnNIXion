@@ -92,29 +92,6 @@ in
     };
   };
 
-  home.activation.generateBurpCA = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    CERT_DIR="${config.home.homeDirectory}/.dotfiles/assets/certs"
-    CERT_PEM="$CERT_DIR/burp-ca.pem"
-
-    if [ ! -f "$CERT_PEM" ]; then
-      mkdir -p "$CERT_DIR"
-      ${pkgs.openssl}/bin/openssl req -x509 -newkey rsa:2048 \
-        -keyout "$CERT_DIR/burp-ca.key" \
-        -out "$CERT_PEM" \
-        -days 3650 -nodes \
-        -subj "/CN=AnNIXion Burp CA/O=AnNIXion" \
-        -addext "basicConstraints=critical,CA:TRUE" \
-        -addext "keyUsage=critical,keyCertSign,cRLSign" \
-        -addext "subjectKeyIdentifier=hash" 2>/dev/null
-      ${pkgs.openssl}/bin/openssl x509 -in "$CERT_PEM" -outform DER \
-        -out "$CERT_DIR/burp-ca.der"
-      ${pkgs.openssl}/bin/openssl pkcs8 -topk8 -nocrypt \
-        -in "$CERT_DIR/burp-ca.key" -inform PEM \
-        -out "$CERT_DIR/burp-ca-key.der" -outform DER
-      chmod 600 "$CERT_DIR/burp-ca.key" "$CERT_DIR/burp-ca-key.der"
-    fi
-  '';
-
   programs.firefox.policies.Certificates.Install = [
     "${config.home.homeDirectory}/.dotfiles/assets/certs/burp-ca.pem"
   ];

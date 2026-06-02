@@ -28,22 +28,16 @@ FoxyProxy is pre-loaded with the Burp proxy and set to intercept all traffic. No
 
 ### SSL interception — Burp CA certificate
 
-A CA certificate is generated automatically on first `rebuild` and placed in `~/.dotfiles/assets/certs/`:
+Burp signs intercepted HTTPS traffic with its own CA (PortSwigger CA). Firefox needs to trust that cert. Run this once per machine after starting Burp:
 
-| File | Purpose |
-|---|---|
-| `burp-ca.pem` | Firefox trusts this automatically via enterprise policy |
-| `burp-ca.der` | Certificate in DER format — for Burp import |
-| `burp-ca.key` | Private key (PEM) — keep this safe, do not commit |
-| `burp-ca-key.der` | Private key in DER/PKCS8 format — for Burp import |
+```bash
+burp-ca    # fetches Burp's CA from the running proxy, saves to ~/.dotfiles/assets/certs/
+rebuild    # Firefox picks it up via enterprise policy
+```
 
-**One-time Burp import** (required once per machine):
+Burp must be running on `127.0.0.1:8080` when you run `burp-ca`. After that, the cert is stable — it only needs to be re-run if Burp's data directory is wiped and it regenerates its CA.
 
-`Proxy > Proxy settings > Import / export CA certificate` → **Import** → select **"Certificate and private key in DER format"**
-- Certificate: `~/.dotfiles/assets/certs/burp-ca.der`
-- Private key: `~/.dotfiles/assets/certs/burp-ca-key.der`
-
-Until this is done, Firefox will show a "PortSwigger CA" error on HTTPS sites — Burp is intercepting but signing with its own CA, not yours.
+> The cert file is machine-specific and excluded from git via `.gitignore`.
 
 After import, Burp uses the same CA as Firefox. HTTPS interception works without certificate warnings.
 
