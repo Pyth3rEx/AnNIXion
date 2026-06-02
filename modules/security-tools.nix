@@ -13,6 +13,7 @@
   environment.systemPackages = with pkgs; [
 
     # ── Offensive Security ────────────────────────────────────
+    openssl        # TLS/crypto toolkit — cert generation, inspection, conversion
     nmap           # network scanner
     netcat-gnu     # networking swiss army knife
     wireshark      # packet capture & analysis
