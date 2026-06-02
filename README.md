@@ -191,6 +191,33 @@ Four Firefox profiles launch from the desktop:
 
 Each profile has its own isolated cookies, cache, and extensions. Click the desktop launcher for the profile you need.
 
+#### Red Team — before you browse
+
+The Red Team profile routes **all traffic through Burp Suite**. If Burp is not running, the browser will refuse to connect — this is intentional.
+
+1. Start Burp Suite
+2. Confirm the proxy listener is active: `Proxy > Proxy settings > Proxy listeners` — it must be bound to `127.0.0.1:8080`
+3. Launch **Firefox - Red Team** from the desktop
+
+FoxyProxy is pre-loaded with the Burp proxy and set to intercept mode. No manual configuration needed.
+
+> **SSL interception:** To intercept HTTPS traffic, import Burp's CA certificate into Firefox once:
+> `Proxy > Proxy settings > Import / export CA certificate` → export DER → convert to PEM → place in `~/.dotfiles/assets/certs/burp-ca.pem` and wire it into `programs.firefox.policies.Certificates.Install`.
+
+#### OSINT & Puppet Master — before you browse
+
+Both profiles enforce all traffic through a **SOCKS5 proxy at `127.0.0.1:1080`**. If nothing is listening on that port, the browser will refuse to connect.
+
+The expected setup is a VPN client that exposes a local SOCKS5 interface. Common examples:
+
+| VPN / Tool | Default SOCKS5 address |
+|---|---|
+| Mullvad (SOCKS5 proxy) | `127.0.0.1:1080` |
+| Tor (system daemon) | `127.0.0.1:9050` — update the port in `osint.nix` and `puppet.nix` |
+| ProxyChains / custom | whatever port your config declares |
+
+Once you have a VPN set up, update the `network.proxy.socks_port` pref in both `home/firefox/osint.nix` and `home/firefox/puppet.nix` to match, then `rebuild`.
+
 ---
 
 ## Development Setup
