@@ -72,6 +72,28 @@ in
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
       "network.proxy.failover_direct" = false;
+
+      # ── WebRTC + geolocation ───────────────────────────────────
+      "media.peerconnection.enabled" = false;
+      "geo.enabled"                  = false;
+
+      # ── No speculative requests during testing ─────────────────
+      "network.dns.disablePrefetch"               = true;
+      "network.prefetch-next"                     = false;
+      "network.predictor.enabled"                 = false;
+      "network.http.speculative-parallel-limit"   = 0;
+
+      # ── Telemetry ─────────────────────────────────────────────
+      "datareporting.healthreport.uploadEnabled"   = false;
+      "datareporting.policy.dataSubmissionEnabled" = false;
+      "toolkit.telemetry.unified"                  = false;
+      "browser.ping-centre.telemetry"              = false;
+
+      # ── Storage ───────────────────────────────────────────────
+      "signon.rememberSignons"          = false;
+      "browser.formfill.enable"         = false;
+      "media.autoplay.default"          = 5;
+      "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-redteam.json");
