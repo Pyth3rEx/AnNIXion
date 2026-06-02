@@ -71,6 +71,7 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+      "network.proxy.failover_direct" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-redteam.json");
@@ -100,5 +101,38 @@ in
     "${single-file.addonId}"        = { private_browsing = true; };
     "${hacktools.addonId}"          = { private_browsing = true; };
     "${cookie-editor.addonId}"      = { private_browsing = true; };
+  };
+
+  programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
+    mode = "127.0.0.1:8080";
+    sync = false;
+    autoBackup = false;
+    passthrough = "";
+    theme = "";
+    container = {};
+    commands = {
+      setProxy = "";
+      setTabProxy = "";
+      includeHost = "";
+      excludeHost = "";
+    };
+    data = [{
+      active = true;
+      title = "Burpsuite";
+      type = "http";
+      hostname = "127.0.0.1";
+      port = "8080";
+      username = "";
+      password = "";
+      cc = "";
+      city = "";
+      color = "#b22222";
+      pac = "";
+      pacString = "";
+      proxyDNS = true;
+      include = [];
+      exclude = [];
+      tabProxy = [];
+    }];
   };
 }
