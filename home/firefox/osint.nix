@@ -73,6 +73,52 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+      "network.proxy.type"              = 1;
+      "network.proxy.socks"             = "127.0.0.1";
+      "network.proxy.socks_port"        = 1080;
+      "network.proxy.socks_version"     = 5;
+      "network.proxy.socks_remote_dns"  = true;
+      "network.proxy.failover_direct"   = false;
+
+      # ── HTTPS only ────────────────────────────────────────────
+      "dom.security.https_only_mode"              = true;
+      "dom.security.https_only_mode_ever_enabled" = true;
+
+      # ── Fingerprinting — targeted only (RFP conflicts with UA switcher) ──
+      "privacy.fingerprintingProtection"               = true;
+      "privacy.trackingprotection.enabled"             = true;
+      "privacy.trackingprotection.socialtracking.enabled"   = true;
+      "privacy.trackingprotection.fingerprinting.enabled"   = true;
+      "privacy.trackingprotection.cryptomining.enabled"     = true;
+
+      # ── Cookie isolation (Total Cookie Protection) ─────────────
+      "network.cookie.cookieBehavior" = 5;
+
+      # ── WebRTC + geolocation ───────────────────────────────────
+      "media.peerconnection.enabled" = false;
+      "geo.enabled"                  = false;
+
+      # ── No speculative requests ────────────────────────────────
+      "network.dns.disablePrefetch"             = true;
+      "network.prefetch-next"                   = false;
+      "network.predictor.enabled"               = false;
+      "network.http.speculative-parallel-limit" = 0;
+
+      # ── Safe browsing ──────────────────────────────────────────
+      "browser.safebrowsing.malware.enabled"  = true;
+      "browser.safebrowsing.phishing.enabled" = true;
+
+      # ── Telemetry ─────────────────────────────────────────────
+      "datareporting.healthreport.uploadEnabled"   = false;
+      "datareporting.policy.dataSubmissionEnabled" = false;
+      "toolkit.telemetry.unified"                  = false;
+      "browser.ping-centre.telemetry"              = false;
+
+      # ── Storage ───────────────────────────────────────────────
+      "signon.rememberSignons"          = false;
+      "browser.formfill.enable"         = false;
+      "media.autoplay.default"          = 5;
+      "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-osint.json");

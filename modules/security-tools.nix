@@ -13,10 +13,30 @@
   environment.systemPackages = with pkgs; [
 
     # ── Offensive Security ────────────────────────────────────
+    openssl        # TLS/crypto toolkit — cert generation, inspection, conversion
     nmap           # network scanner
     netcat-gnu     # networking swiss army knife
     wireshark      # packet capture & analysis
     burpsuite      # web app pentesting proxy
+    (pkgs.writeShellApplication {
+      name = "burp-ca";
+      runtimeInputs = [ pkgs.curl pkgs.openssl ];
+      text = ''
+        CERT_DIR="$HOME/.dotfiles/assets/certs"
+        CERT_OUT="$CERT_DIR/burp-ca.pem"
+
+        if ! curl -sf http://127.0.0.1:8080/cert -o /tmp/burp-ca.der; then
+          echo "error: Burp proxy not running on 127.0.0.1:8080" >&2
+          exit 1
+        fi
+
+        mkdir -p "$CERT_DIR"
+        openssl x509 -inform der -in /tmp/burp-ca.der -out "$CERT_OUT"
+        rm -f /tmp/burp-ca.der
+        echo "saved to $CERT_OUT"
+        echo "run 'rebuild' to apply to Firefox"
+      '';
+    })
     metasploit     # exploitation framework
     sqlmap         # SQL injection tool
     gobuster       # directory/DNS brute forcer

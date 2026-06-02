@@ -71,6 +71,29 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+      "network.proxy.failover_direct" = false;
+
+      # ── WebRTC + geolocation ───────────────────────────────────
+      "media.peerconnection.enabled" = false;
+      "geo.enabled"                  = false;
+
+      # ── No speculative requests during testing ─────────────────
+      "network.dns.disablePrefetch"               = true;
+      "network.prefetch-next"                     = false;
+      "network.predictor.enabled"                 = false;
+      "network.http.speculative-parallel-limit"   = 0;
+
+      # ── Telemetry ─────────────────────────────────────────────
+      "datareporting.healthreport.uploadEnabled"   = false;
+      "datareporting.policy.dataSubmissionEnabled" = false;
+      "toolkit.telemetry.unified"                  = false;
+      "browser.ping-centre.telemetry"              = false;
+
+      # ── Storage ───────────────────────────────────────────────
+      "signon.rememberSignons"          = false;
+      "browser.formfill.enable"         = false;
+      "media.autoplay.default"          = 5;
+      "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
       settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-redteam.json");
@@ -91,6 +114,10 @@ in
     };
   };
 
+  programs.firefox.policies.Certificates.Install = [
+    "${config.home.homeDirectory}/.dotfiles/assets/certs/burp-ca.pem"
+  ];
+
   programs.firefox.policies.ExtensionSettings = with addons; {
     "${ublock-origin.addonId}"      = { private_browsing = true; };
     "${bitwarden.addonId}"          = { private_browsing = true; };
@@ -100,5 +127,38 @@ in
     "${single-file.addonId}"        = { private_browsing = true; };
     "${hacktools.addonId}"          = { private_browsing = true; };
     "${cookie-editor.addonId}"      = { private_browsing = true; };
+  };
+
+  programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
+    mode = "127.0.0.1:8080";
+    sync = false;
+    autoBackup = false;
+    passthrough = "";
+    theme = "";
+    container = {};
+    commands = {
+      setProxy = "";
+      setTabProxy = "";
+      includeHost = "";
+      excludeHost = "";
+    };
+    data = [{
+      active = true;
+      title = "Burpsuite";
+      type = "http";
+      hostname = "127.0.0.1";
+      port = "8080";
+      username = "";
+      password = "";
+      cc = "";
+      city = "";
+      color = "#b22222";
+      pac = "";
+      pacString = "";
+      proxyDNS = true;
+      include = [];
+      exclude = [];
+      tabProxy = [];
+    }];
   };
 }

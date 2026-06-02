@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./untrusted.nix
     ./redteam.nix
     ./osint.nix
     ./puppet.nix
@@ -14,6 +15,15 @@
     firefox = {
       name = "Firefox";
       noDisplay = true;
+    };
+    firefox-untrusted = {
+      name = "Firefox - Unsafe Browser";
+      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png";
+      genericName = "Unsafe Browser";
+      exec = ''firefox -P "Unsafe Browser" --no-remote'';
+      terminal = false;
+      categories = [ "X-AnNIXion-Internet" "Network" "WebBrowser" ];
+      mimeType = [ "text/html" "text/xml" ];
     };
     firefox-red = {
       name = "Firefox - Red Team";
@@ -91,11 +101,6 @@
           private_browsing = true;
         };
       };
-    };
-    profiles."default" = {
-      isDefault = true;
-      id = 0;
-      name = "Default";
     };
   };
 }
