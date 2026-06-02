@@ -34,13 +34,16 @@ A CA certificate is generated automatically on first `rebuild` and placed in `~/
 |---|---|
 | `burp-ca.pem` | Firefox trusts this automatically via enterprise policy |
 | `burp-ca.der` | Certificate in DER format — for Burp import |
-| `burp-ca.key` | Private key — for Burp import |
+| `burp-ca.key` | Private key (PEM) — keep this safe, do not commit |
+| `burp-ca-key.der` | Private key in DER/PKCS8 format — for Burp import |
 
 **One-time Burp import** (required once per machine):
 
-`Proxy > Proxy settings > Import / export CA certificate` → **Import**
+`Proxy > Proxy settings > Import / export CA certificate` → **Import** → select **"Certificate and private key in DER format"**
 - Certificate: `~/.dotfiles/assets/certs/burp-ca.der`
-- Private key: `~/.dotfiles/assets/certs/burp-ca.key`
+- Private key: `~/.dotfiles/assets/certs/burp-ca-key.der`
+
+Until this is done, Firefox will show a "PortSwigger CA" error on HTTPS sites — Burp is intercepting but signing with its own CA, not yours.
 
 After import, Burp uses the same CA as Firefox. HTTPS interception works without certificate warnings.
 

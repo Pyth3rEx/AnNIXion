@@ -105,7 +105,10 @@ in
         -subj "/CN=AnNIXion Burp CA/O=AnNIXion" 2>/dev/null
       ${pkgs.openssl}/bin/openssl x509 -in "$CERT_PEM" -outform DER \
         -out "$CERT_DIR/burp-ca.der"
-      chmod 600 "$CERT_DIR/burp-ca.key"
+      ${pkgs.openssl}/bin/openssl pkcs8 -topk8 -nocrypt \
+        -in "$CERT_DIR/burp-ca.key" -inform PEM \
+        -out "$CERT_DIR/burp-ca-key.der" -outform DER
+      chmod 600 "$CERT_DIR/burp-ca.key" "$CERT_DIR/burp-ca-key.der"
     fi
   '';
 
