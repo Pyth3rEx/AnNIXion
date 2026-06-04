@@ -22,6 +22,7 @@
     kdePackages.kcalc          # calculator
     kdePackages.filelight      # disk usage visualizer
     kdePackages.kwalletmanager
+    onlyoffice-desktopeditors  # Office suite
   ];
 
   # Default applications
