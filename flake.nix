@@ -55,6 +55,7 @@
             ./modules/desktop.nix
             ./modules/xrdp.nix
             ./modules/security-tools.nix
+            ./modules/burpsuite.nix
 
             # ── Wire Home Manager into the NixOS build ───────────
             # "nixos-rebuild switch" handles both system AND user config
