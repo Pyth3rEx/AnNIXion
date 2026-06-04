@@ -7,6 +7,9 @@
   # Installed system-wide (environment.systemPackages) so these tools
   # are available to all users and before any user session starts.
   #
+  # Burp Suite is now in a separate module (modules/burpsuite.nix)
+  # with Community/Pro toggle in user/configuration.nix.
+  #
   # Unfree packages (burpsuite, metasploit) require
   # nixpkgs.config.allowUnfree = true, which is set in flake.nix.
 
@@ -17,26 +20,7 @@
     nmap           # network scanner
     netcat-gnu     # networking swiss army knife
     wireshark      # packet capture & analysis
-    burpsuite      # web app pentesting proxy
-    (pkgs.writeShellApplication {
-      name = "burp-ca";
-      runtimeInputs = [ pkgs.curl pkgs.openssl ];
-      text = ''
-        CERT_DIR="$HOME/.dotfiles/assets/certs"
-        CERT_OUT="$CERT_DIR/burp-ca.pem"
-
-        if ! curl -sf http://127.0.0.1:8080/cert -o /tmp/burp-ca.der; then
-          echo "error: Burp proxy not running on 127.0.0.1:8080" >&2
-          exit 1
-        fi
-
-        mkdir -p "$CERT_DIR"
-        openssl x509 -inform der -in /tmp/burp-ca.der -out "$CERT_OUT"
-        rm -f /tmp/burp-ca.der
-        echo "saved to $CERT_OUT"
-        echo "run 'rebuild' to apply to Firefox"
-      '';
-    })
+    # burpsuite is now in modules/burpsuite.nix with Pro/Community toggle
     metasploit     # exploitation framework
     sqlmap         # SQL injection tool
     gobuster       # directory/DNS brute forcer
