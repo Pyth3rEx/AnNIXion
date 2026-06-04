@@ -1,5 +1,5 @@
 # user/configuration.nix
-# ─────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────[...]
 # SYSTEM-LEVEL OVERRIDES
 #
 # Put your personal system settings here. This file is imported by flake.nix
@@ -37,11 +37,22 @@
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;
 #
-# ─────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────[...]
 { config, lib, pkgs, ... }:
 
 {
   # Your overrides go here.
+
+  # ============================================================
+  # BURP SUITE EDITION
+  # ============================================================
+  # Default: Community edition (free, from nixpkgs)
+  # Set to true to use Professional edition (requires valid license)
+  #
+  # For Professional licensing setup, see:
+  #   https://deepwiki.com/xiv3r/Burpsuite-Professional/2.4-nixos-installation
+  #
+  enableBurpPro = lib.mkDefault false;
 
   # Polkit rule: allow wheel group to power off and reboot without a password prompt.
   # Without this, shutdown/reboot from the KDE session silently fails.
