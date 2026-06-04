@@ -18,13 +18,19 @@
 #   • Changes to tmux, xterm appearance, KDE shortcuts
 #   • Any Home Manager option: https://nix-community.github.io/home-manager/options.xhtml
 # ─────────────────────────────────────────────────────────────────────────────
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
     # Uncomment to activate — edit each file to fill in your own values.
-    # ./examples/git.nix    # sets your git name, email, and signing key
-    # ./examples/zsh.nix    # adds a welcome banner and recon aliases
+    # ./examples/git.nix       # sets your git name, email, and signing key
+    # ./examples/zsh.nix       # adds a welcome banner and recon aliases
+    # ./examples/burpsuite.nix # Installs the professional version of burpsuite
   ];
 
   # Your own overrides go below this line.
