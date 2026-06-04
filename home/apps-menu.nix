@@ -449,7 +449,7 @@ in
       comment = "Firmware analysis and extraction";
     };
 
-    # ── 3. Delivery — Web Proxy ───────────────────────────────────────────
+    # ── 3. Delivery — Web Proxy ──────────────────────────────────────────��
     annixion-burpsuite = {
       name = "Burp Suite";
       genericName = "Web App Security Proxy";
@@ -620,8 +620,17 @@ in
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
+    annixion-onlyoffice = {
+      name = "OnlyOffice";
+      genericName = "Office Suite";
+      icon = "text-editor";
+      exec = "soffice";
+      terminal = false;
+      categories = [ "X-AnNIXion-Productivity" ];
+      comment = "Open and edit Microsoft Office documents";
+    };
 
-    # ── Utilities ──────────────────────────────────────────────���──────────
+    # ── Utilities ──────────────────────────────────────────────────────────
     annixion-kate = {
       name = "Kate";
       genericName = "Text Editor";
@@ -655,7 +664,7 @@ in
       categories = [ "X-AnNIXion-Utils" ];
     };
 
-    # ── System ────────────────────────────────────────────────────────────
+    # ── System ──────────────────────────────────────────────────────────────
     annixion-konsole = {
       name = "Konsole";
       genericName = "Terminal Emulator";
