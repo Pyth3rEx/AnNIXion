@@ -335,7 +335,7 @@ in
             config.General = {
               icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
               showRecentApps = false;
-              showRecentDocs = false;re
+              showRecentDocs = false;
               # Full-screen menu settings
               maxRecentApps = 0;
               favoriteAppsDisplay = 9; # Show more apps in grid
