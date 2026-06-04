@@ -620,15 +620,6 @@ in
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
-    annixion-onlyoffice = {
-      name = "OnlyOffice";
-      genericName = "Office Suite";
-      icon = "text-editor";
-      exec = "soffice";
-      terminal = false;
-      categories = [ "X-AnNIXion-Productivity" ];
-      comment = "Open and edit Microsoft Office documents";
-    };
 
     # ── Utilities ──────────────────────────────────────────────────────────
     annixion-kate = {
