@@ -84,7 +84,13 @@ environment.systemPackages = with pkgs; [ docker ];
 
 # Add yourself to a group
 users.users.operator.extraGroups = [ "wheel" "networkmanager" "docker" ];
+
+# Burp Suite edition toggle (default: Community)
+enableBurpPro = true;  # set to true to use Professional (requires license)
 ```
+
+For Burp Suite Professional licensing setup, see:
+<https://deepwiki.com/xiv3r/Burpsuite-Professional/2.4-nixos-installation>
 
 Full option list: <https://nixos.org/manual/nixos/stable/options>
 
