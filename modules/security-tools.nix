@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # ============================================================
@@ -13,14 +18,17 @@
   environment.systemPackages = with pkgs; [
 
     # ── Offensive Security ────────────────────────────────────
-    openssl        # TLS/crypto toolkit — cert generation, inspection, conversion
-    nmap           # network scanner
-    netcat-gnu     # networking swiss army knife
-    wireshark      # packet capture & analysis
-    burpsuite      # web app pentesting proxy
+    openssl # TLS/crypto toolkit — cert generation, inspection, conversion
+    nmap # network scanner
+    netcat-gnu # networking swiss army knife
+    wireshark # packet capture & analysis
+    burpsuite # web app pentesting proxy
     (pkgs.writeShellApplication {
       name = "burp-ca";
-      runtimeInputs = [ pkgs.curl pkgs.openssl ];
+      runtimeInputs = [
+        pkgs.curl
+        pkgs.openssl
+      ];
       text = ''
         CERT_DIR="$HOME/.dotfiles/assets/certs"
         CERT_OUT="$CERT_DIR/burp-ca.pem"
@@ -37,33 +45,34 @@
         echo "run 'rebuild' to apply to Firefox"
       '';
     })
-    metasploit     # exploitation framework
-    sqlmap         # SQL injection tool
-    gobuster       # directory/DNS brute forcer
-    ffuf           # fast web fuzzer
-    john           # password cracker
-    hashcat        # GPU password cracker
-    hydra          # network login brute forcer
-    aircrack-ng    # WiFi security auditing
-    binwalk        # firmware analysis
-    ghidra         # reverse engineering / disassembler
-    whatweb        # web recon
+    metasploit # exploitation framework
+    sqlmap # SQL injection tool
+    gobuster # directory/DNS brute forcer
+    ffuf # fast web fuzzer
+    john # password cracker
+    hashcat # GPU password cracker
+    hydra # network login brute forcer
+    aircrack-ng # WiFi security auditing
+    binwalk # firmware analysis
+    ghidra # reverse engineering / disassembler
+    whatweb # web recon
+    seclists # wordlists
 
     # ── OSINT ─────────────────────────────────────────────────
-    theharvester   # email/domain/IP OSINT
+    theharvester # email/domain/IP OSINT
     whois
-    dnsutils       # dig, nslookup
+    dnsutils # dig, nslookup
 
     # ── SDR / RF (your HackRF etc.) ───────────────────────────
-    hackrf         # HackRF tools
-    gqrx           # SDR receiver GUI
-    gnuradio       # SDR signal processing
+    hackrf # HackRF tools
+    gqrx # SDR receiver GUI
+    gnuradio # SDR signal processing
 
     # ── Post-Exploitation ─────────────────────────────────────
-    python313Packages.impacket       # Windows protocol post-exploitation suite
+    python313Packages.impacket # Windows protocol post-exploitation suite
 
     # ── Forensics ─────────────────────────────────────────────
-    volatility3    # memory forensics framework
-    autopsy        # disk & file forensics GUI
+    volatility3 # memory forensics framework
+    autopsy # disk & file forensics GUI
   ];
 }

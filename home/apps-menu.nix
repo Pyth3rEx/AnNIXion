@@ -513,6 +513,15 @@ in
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Online network service brute-forcing";
     };
+    annixion-seclists = {
+      name = "SecLists";
+      genericName = "Curated Wordlists";
+      icon = "dialog-password";
+      exec = termHold "seclists -h";
+      terminal = false;
+      categories = [ "X-AnNIXion-Exploit-Creds" ];
+      comment = "Curated list of wordlists for dictionary attacks";
+    };
 
     # ── 4. Exploitation — Wireless ────────────────────────────────────────
     annixion-aircrack = {
