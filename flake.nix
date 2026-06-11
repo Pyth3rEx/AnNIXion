@@ -183,6 +183,9 @@
                   libsForQt5.kservice
                 ];
 
+                # makes /etc/hosts writable
+                environment.etc.hosts.mode = "0700";
+
                 # ============================================================
                 # SSH — useful fallback if xrdp has issues
                 # ============================================================
