@@ -131,6 +131,13 @@ in
       # Tools
       ftp = "lftp";
       cat = "bat";
+      seclists = ''
+        sh -c "
+          SECLISTS_PATH=\"\''${SECLISTS_PATH:-/run/current-system/sw/share/wordlists/seclists/}\" &&
+          printf \"=== Seclists Explorer ===\n\n%s\n\nThis is the Seclists wordlists directory (read-only in Nix store). Listing top-level folders:\n\n\" \"\$SECLISTS_PATH\" &&
+          ls -la --group-directories-first \"\$SECLISTS_PATH\" 2>/dev/null | awk '/^d/ {print}'
+        "
+      '';
     };
 
     initContent = ''

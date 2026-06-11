@@ -517,7 +517,7 @@ in
       name = "SecLists";
       genericName = "Curated Wordlists";
       icon = "dialog-password";
-      exec = termHold "seclists -h";
+      exec = termHold "seclists";
       terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Curated list of wordlists for dictionary attacks";
