@@ -79,6 +79,7 @@ in
     file
     inetutils # Collection of common network programs
     wirelesstools # iwconfig
+    net-tools
     lftp
     git
     wget
