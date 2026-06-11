@@ -77,7 +77,8 @@ in
     unzip
     p7zip
     file
-    # inetutils # Collection of common network programs
+    inetutils # Collection of common network programs
+    wirelesstools # iwconfig
     lftp
     git
     wget
