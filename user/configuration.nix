@@ -38,7 +38,12 @@
 #   services.openssh.enable = false;
 #
 # ─────────────────────────────────────────────────────────────────────────────
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Your overrides go here.
@@ -59,4 +64,8 @@
       }
     });
   '';
+
+  imports = [
+    # ./examples/hackthebox.nix # HTB Networking & DNS helper for AnNIXion
+  ];
 }

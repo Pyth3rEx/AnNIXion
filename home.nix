@@ -80,6 +80,7 @@ in
     inetutils # Collection of common network programs
     wirelesstools # iwconfig
     net-tools
+    dnsmasq
     lftp
     git
     wget
