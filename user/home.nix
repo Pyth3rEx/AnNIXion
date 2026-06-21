@@ -31,7 +31,6 @@
     # ./examples/git.nix        # sets your git name, email, and signing key
     # ./examples/zsh.nix        # adds a welcome banner and recon aliases
     # ./examples/burpsuite.nix  # Installs the professional version of burpsuite\
-    # ./../modules/vscode.nix   # Installs the NixOS dev env for vscode
   ];
 
   # Your own overrides go below this line.

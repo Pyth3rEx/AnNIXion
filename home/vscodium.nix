@@ -3,15 +3,15 @@
 {
   programs.vscode = {
     enable = true;
-    package = pkgs.vscodium;  # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
+    package = pkgs.vscodium; # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
 
-    profiles.default.extensions = with pkgs.vscode-extensions; [
+    extensions = with pkgs.vscode-extensions; [
       # Nix Language Support
       jnoortheen.nix-ide
-      
+
       # Additional useful extensions for Nix development
       mkhl.direnv
-      
+
       # General development tools
       eamodio.gitlens
       ms-vscode.makefile-tools
@@ -19,12 +19,12 @@
       redhat.vscode-yaml
     ];
 
-    profiles.default.userSettings = {
+    userSettings = {
       # Nix IDE Configuration
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nil";
       "nix.linting.enabled" = true;
-      
+
       # Editor settings
       "[nix]" = {
         "editor.defaultFormatter" = "jnoortheen.nix-ide";
@@ -55,12 +55,12 @@
     nix-your-shell
     nix-zsh-completions
     nixpkgs-fmt
-    statix  # Linter for Nix
-    deadnix  # Find unused code in Nix files
-    
+    statix # Linter for Nix
+    deadnix # Find unused code in Nix files
+
     # Language servers
-    nil  # Nix language server (used by nix-ide)
-    
+    nil # Nix language server (used by nix-ide)
+
     # Additional development tools
     git
     direnv
