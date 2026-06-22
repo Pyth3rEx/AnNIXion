@@ -34,6 +34,7 @@ in
   imports = [
     ./home/firefox
     ./home/vscodium.nix
+    ./home/only-office.nix
     ./home/apps-menu.nix
     ./home/control-center.nix
   ];
@@ -94,8 +95,15 @@ in
 
     # ── STYLES ────────────────────────────────────────────────
     # ── Fonts ─────────────────────────────────────────────────
+    kdePackages.fcitx5-qt # Fcitx5 Qt integration
+
     nerd-fonts.jetbrains-mono # terminal font with icons
     nerd-fonts.fira-code
+
+    noto-fonts # Non-english char fonts
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-color-emoji
     # ── Icons ─────────────────────────────────────────────────
     SlotIcons
     # ── Cursors ───────────────────────────────────────────────
@@ -105,12 +113,28 @@ in
   services = {
     gpg-agent = {
       enable = true;
-      pinentryPackage = pkgs.pinentry-qt;
+      pinentry.package = pkgs.pinentry-qt;
       defaultCacheTtl = 1800;
       maxCacheTtl = 7200;
       enableSshSupport = true;
     };
   };
+
+  home.activation.onlyofficeFonts = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.local/share/fonts"
+
+    cp -rf ${pkgs.noto-fonts}/share/fonts/* \
+      "$HOME/.local/share/fonts/" 2>/dev/null || true
+
+    cp -rf ${pkgs.noto-fonts-cjk-sans}/share/fonts/* \
+      "$HOME/.local/share/fonts/" 2>/dev/null || true
+
+    cp -rf ${pkgs.noto-fonts-cjk-serif}/share/fonts/* \
+      "$HOME/.local/share/fonts/" 2>/dev/null || true
+
+    cp -rf ${pkgs.noto-fonts-color-emoji}/share/fonts/* \
+      "$HOME/.local/share/fonts/" 2>/dev/null || true
+  '';
 
   programs = {
     gpg = {
