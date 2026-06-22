@@ -9,7 +9,7 @@
 # ── Quick start ──────────────────────────────────────────────────────────────
 # 1. Uncomment the example imports below to activate them.
 # 2. Edit the values inside each example file (git name, email, etc.).
-# 3. Run: sudo nixos-rebuild switch --flake .#AnNIXion
+# 3. Run: $ rebuild
 #
 # ── What belongs here ────────────────────────────────────────────────────────
 #   • Your real git name and email
