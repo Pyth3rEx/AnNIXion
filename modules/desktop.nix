@@ -1,10 +1,15 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # ============================================================
   # DISPLAY & DESKTOP — KDE PLASMA 6 (X11)
   # ============================================================
-    
+
   # X11 display server — KDE runs on top of this.
   services.xserver.enable = lib.mkDefault true;
 
@@ -17,12 +22,11 @@
 
   # KDE extras that aren't pulled in automatically
   environment.systemPackages = with pkgs; [
-    kdePackages.kate           # KDE text editor
-    kdePackages.ark            # archive manager
-    kdePackages.kcalc          # calculator
-    kdePackages.filelight      # disk usage visualizer
+    kdePackages.kate # KDE text editor
+    kdePackages.ark # archive manager
+    kdePackages.kcalc # calculator
+    kdePackages.filelight # disk usage visualizer
     kdePackages.kwalletmanager
-    onlyoffice-desktopeditors  # Office suite
   ];
 
   # Default applications
