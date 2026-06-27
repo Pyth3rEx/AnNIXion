@@ -20,7 +20,12 @@ in
   # Rebuild the KDE service cache after every HM activation.
   # writeBoundary guarantees all .directory and .desktop files are on disk first.
   home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
+    # kbuildsycoca6 must see the HM profile's share directory so it indexes
+    # the annixion-* desktop files installed there. The activation environment
+    # (running during nixos-rebuild) does not load the full login XDG_DATA_DIRS,
+    # so we inject the two relevant paths explicitly.
+    $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/operator/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
+      ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
   '';
 
   # ============================================================
