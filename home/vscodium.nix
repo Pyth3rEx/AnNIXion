@@ -55,7 +55,7 @@
     # Nix tooling
     nix-your-shell
     nix-zsh-completions
-    nixpkgs-fmt
+    nixfmt-rfc-style
     statix # Linter for Nix
     deadnix # Find unused code in Nix files
 
