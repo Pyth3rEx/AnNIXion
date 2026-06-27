@@ -248,7 +248,7 @@ in
   # Written to ~/.local/share/desktop-directories/
   # ============================================================
 
-  xdg.dataFile = lib.mkDefault {
+  xdg.dataFile = {
     "desktop-directories/annixion.directory".text = dir "AnNIXion" "security-high";
 
     "desktop-directories/annixion-1-recon.directory".text = dir "1. Reconnaissance" "system-search";
@@ -322,7 +322,7 @@ in
   # menu via their X-AnNIXion-* categories.
   # ============================================================
 
-  xdg.desktopEntries = lib.mkDefault {
+  xdg.desktopEntries = {
 
     # ── 1. Reconnaissance — Passive OSINT ─────────────────────────────────
     annixion-theharvester = {
