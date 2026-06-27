@@ -385,12 +385,10 @@ in
                 showRecentApps = false;
                 showRecentDocs = false;
                 maxRecentApps = 0;
-                favoriteAppsDisplay = 9;
-                width = 960;
-                height = 1080;
-                # 0 = by name (flat list, Plasma 6 new default)
-                # 1 = by category (reads our XDG menu tree)
-                applicationsDisplay = 1;
+                compactMode = true;
+                switchCategoriesOnHover = true;
+                paneSwap = true;       # sidebar on the right
+                favoritesDisplay = 1;  # 0 = grid, 1 = list
               };
             }
 
