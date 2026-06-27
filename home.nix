@@ -29,6 +29,44 @@ let
       cp -r "Slot Icons Themes/." $out/share/icons
     '';
   };
+
+  # Tiled Menu — Windows-10-style start menu that reads the XDG applications
+  # menu tree, so our kill-chain categories appear as the left-side column.
+  # Installed into ~/.nix-profile/share/plasma/plasmoids/ which is in
+  # XDG_DATA_DIRS, so Plasma picks it up automatically.
+  #
+  # Hash: run the following on the NixOS machine to get the correct value,
+  # then replace lib.fakeHash below:
+  #   nix-prefetch-github Zren plasma-applet-tiledmenu --rev main
+  TiledMenu = pkgs.stdenvNoCC.mkDerivation {
+    pname = "plasma-applet-tiledmenu";
+    version = "unstable";
+    src = pkgs.fetchFromGitHub {
+      owner = "Zren";
+      repo = "plasma-applet-tiledmenu";
+      rev = "master";
+      hash = "sha256-noWH4bRyB/7v2K8jbj8ZD+5klUt4zOWiFZCEVdNmDL4=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      dest=$out/share/plasma/plasmoids/com.github.zren.tiledmenu
+      mkdir -p "$out/share/plasma/plasmoids"
+
+      echo "=== TiledMenu source root: $(pwd) ===" >&2
+      ls -la >&2
+
+      # cp -rT: treat dest as the final path (not a parent dir) — avoids the
+      # "copy dir INTO dest" ambiguity of plain "cp -r . dest/"
+      cp -rT . "$dest"
+
+      if ! [ -f "$dest/metadata.json" ]; then
+        echo "ERROR: metadata.json missing after install — source was empty or wrong layout" >&2
+        exit 1
+      fi
+      runHook postInstall
+    '';
+  };
 in
 {
   imports = [
@@ -108,6 +146,9 @@ in
     SlotIcons
     # ── Cursors ───────────────────────────────────────────────
     nordzy-cursor-theme
+
+    # ── Plasma widgets ────────────────────────────────────────
+    TiledMenu
   ];
 
   services = {
@@ -134,6 +175,45 @@ in
 
     cp -rf ${pkgs.noto-fonts-color-emoji}/share/fonts/* \
       "$HOME/.local/share/fonts/" 2>/dev/null || true
+  '';
+
+  # Copy TiledMenu into ~/.local/share/plasma/plasmoids/ — the canonical
+  # user-level plasmoid path that Plasma scans at session start.
+  home.activation.installTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    _tm="$HOME/.local/share/plasma/plasmoids/com.github.zren.tiledmenu"
+    $DRY_RUN_CMD rm -rf "$_tm"
+    $DRY_RUN_CMD mkdir -p "$HOME/.local/share/plasma/plasmoids"
+    $DRY_RUN_CMD cp -rL \
+      "${TiledMenu}/share/plasma/plasmoids/com.github.zren.tiledmenu" \
+      "$_tm"
+  '';
+
+  # Write kwinrc keys that KWin resets at runtime (plasma-manager configFile
+  # is overwritten by KWin's own session-state writes each logout).
+  # kwriteconfig6 writes directly to ~/.config/kwinrc before plasmashell
+  # restarts, so KWin picks them up on the next load.
+  home.activation.configureKwin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -n "''${DISPLAY:-}" ]; then
+      # Bare Meta → activateLauncherMenu → TiledMenu
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group ModifierOnlyShortcuts --key Meta \
+        "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
+      # 4 virtual desktops
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Number 4
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Rows 1
+    fi
+  '';
+
+  # Restart plasmashell after rebuild — depends on both widget install and
+  # kwinrc being written so KWin loads with the correct config.
+  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" ] ''
+    if [ -n "''${DISPLAY:-}" ]; then
+      ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
+        > /dev/null 2>&1 &
+      disown 2>/dev/null || true
+    fi
   '';
 
   programs = {
@@ -376,19 +456,11 @@ in
               };
             }
 
-            # ── Kicker — far right edge ────────────────────────────────────
-            # Classic cascading tree launcher — reads our XDG applications.menu
-            # and shows the full AnNIXion kill-chain category tree.
-            # Unlike Kickoff, Kicker never dropped XDG menu tree support.
-            {
-              name = "org.kde.plasma.kicker";
-              config.General = {
-                icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-                showRecentApps = false;
-                showRecentDocs = false;
-                showRecentContacts = false;
-              };
-            }
+            # ── Tiled Menu — far right edge ───────────────────────────────
+            # Installed via home.activation.installTiledMenu (cp into
+            # ~/.local/share/plasma/plasmoids/). Plain string here so
+            # plasma-manager doesn't try to parse unknown widget config.
+            "com.github.zren.tiledmenu"
 
           ];
         }
@@ -403,9 +475,9 @@ in
           "Alt+F2"
         ];
 
-        # Kicker — Meta+F1 via kglobalaccel (bare Meta handled by
+        # Tiled Menu — Meta+F1 via kglobalaccel (bare Meta handled by
         # ModifierOnlyShortcuts in configFile below; both are needed)
-        "org.kde.plasma.kicker.desktop"."_launch" = [ "Meta+F1" ];
+        "com.github.zren.tiledmenu.desktop"."_launch" = [ "Meta+F1" ];
 
         # KWin window management
         kwin = {
@@ -459,11 +531,11 @@ in
         "kdeglobals"."General"."ColorScheme" = "BreezeDark";
         "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
 
-        # Meta key dispatch — handled by the annixion-meta-key systemd service
-        # (see home/control-center.nix). Single press → control center,
-        # double press (< 400 ms) → kickoff.
+        # Bare Meta → activateLauncherMenu → TiledMenu toggles open/closed.
+        # TiledMenu registers as an Application Launcher applet, so plasmashell
+        # targets it when this D-Bus method is called.
         "kwinrc"."ModifierOnlyShortcuts"."Meta" =
-          "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
+          "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu";
 
         # Krohnkite tiling settings
         "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
