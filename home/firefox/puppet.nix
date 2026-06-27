@@ -127,7 +127,7 @@ in
       "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
-      settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-puppet.json");
+      settings = builtins.fromJSON (builtins.readFile ../../assets/tools/bookmarks-puppet.json);
       force = true;
     };
     extensions = {
