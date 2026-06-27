@@ -376,20 +376,14 @@ in
               };
             }
 
-            # ── Kickoff — far right edge ───────────────────────────────────
-            # Full-screen start menu configuration
+            # ── Application Menu — far right edge ─────────────────────────
+            # Classic cascading menu that reads our XDG applications.menu
+            # directly, showing the full AnNIXion kill-chain category tree.
+            # Kickoff (org.kde.plasma.kickoff) dropped XDG menu tree support
+            # in Plasma 6.2+; applauncher is the widget that still reads it.
             {
-              name = "org.kde.plasma.kickoff";
-              config.General = {
-                icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-                showRecentApps = false;
-                showRecentDocs = false;
-                maxRecentApps = 0;
-                compactMode = true;
-                switchCategoriesOnHover = true;
-                paneSwap = true;       # sidebar on the right
-                favoritesDisplay = 1;  # 0 = grid, 1 = list
-              };
+              name = "org.kde.plasma.applauncher";
+              config.General.icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
             }
 
           ];
@@ -405,9 +399,9 @@ in
           "Alt+F2"
         ];
 
-        # Kickoff — Meta+F1 via kglobalaccel (bare Meta handled by
+        # Application Menu — Meta+F1 via kglobalaccel (bare Meta handled by
         # ModifierOnlyShortcuts in configFile below; both are needed)
-        "org.kde.plasma.kickoff.desktop"."_launch" = [ "Meta+F1" ];
+        "org.kde.plasma.applauncher.desktop"."_launch" = [ "Meta+F1" ];
 
         # KWin window management
         kwin = {
