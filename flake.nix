@@ -180,7 +180,7 @@
                   networkmanagerapplet
                   openvpn
                   wireguard-tools
-                  libsForQt5.kservice
+                  kdePackages.kservice
                 ];
 
                 # makes /etc/hosts writable
