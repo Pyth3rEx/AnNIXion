@@ -77,6 +77,12 @@ in
   # Declare icons symlink so KDE sees them
   xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
 
+  # Symlink TiledMenu into ~/.local/share/plasma/plasmoids/ so Plasma
+  # discovers it at session start without relying on XDG_DATA_DIRS scanning
+  # of ~/.nix-profile (which can race with session initialisation).
+  home.file.".local/share/plasma/plasmoids/com.github.zren.tiledmenu".source =
+    "${TiledMenu}/share/plasma/plasmoids/com.github.zren.tiledmenu";
+
   # ============================================================
   # USER PACKAGES
   # ============================================================
@@ -501,11 +507,11 @@ in
         "kdeglobals"."General"."ColorScheme" = "BreezeDark";
         "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
 
-        # Meta key dispatch — handled by the annixion-meta-key systemd service
-        # (see home/control-center.nix). Single press → control center,
-        # double press (< 400 ms) → kickoff.
+        # Bare Meta → activateLauncherMenu → TiledMenu toggles open/closed.
+        # TiledMenu registers as an Application Launcher applet, so plasmashell
+        # targets it when this D-Bus method is called.
         "kwinrc"."ModifierOnlyShortcuts"."Meta" =
-          "org.annixion.MetaKey,/MetaKey,org.annixion.MetaKey,Press";
+          "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu";
 
         # Krohnkite tiling settings
         "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
