@@ -44,8 +44,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "Zren";
       repo = "plasma-applet-tiledmenu";
-      rev = "main";
-      hash = "sha256-pQpattmS9VmO3ZIQUFn66az8GSmB4IvYhTTCFn6SUmo=";
+      rev = "master";
+      hash = lib.fakeHash;
     };
     dontBuild = true;
     installPhase = ''
