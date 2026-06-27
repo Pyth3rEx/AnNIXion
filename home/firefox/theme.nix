@@ -172,10 +172,13 @@ in
   };
 
   # ── OSINT — neon amber (#ffd000) ─────────────────────────────────
+  # Disabled: addon removed. Kept as reference for the cssId anchor pattern.
+  /*
   programs.firefox.profiles."osint".userChrome = nordCSS {
     accent     = "#ffd000";
-    techAnchor = cssId;
+    techAnchor = cssId addons.someAddon;   # apply cssId to a pinned addon
   };
+  */
 
   # ── Puppet Master — neon green (#00e676) ─────────────────────────
   programs.firefox.profiles."puppet".settings   = makeSettings [];
