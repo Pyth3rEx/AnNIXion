@@ -40,7 +40,22 @@
         eval $(${pkgs.dbus}/bin/dbus-launch --sh-syntax --exit-with-session)
       fi
 
-      # Required for Plasma to find its components
+      # Tell Plasma and Qt this is a pure X11 session.
+      # In NixOS 26.05, Plasma 6 is Wayland-first: Qt auto-detects the
+      # platform and KDE components check for a Wayland compositor at
+      # startup. Inside an xrdp session there is no compositor, so anything
+      # that tries Wayland hangs indefinitely waiting for a socket.
+      #
+      # unset WAYLAND_DISPLAY — clears any value inherited from the system
+      #   environment (e.g. a previous local Wayland session) so nothing
+      #   accidentally tries to connect to a stale compositor socket.
+      #
+      # QT_QPA_PLATFORM=xcb — overrides Qt 6's auto-detection, which now
+      #   prefers "wayland" when Wayland libraries are present. Forces the
+      #   X11 (xcb) backend unconditionally for this session.
+      unset WAYLAND_DISPLAY
+      export QT_QPA_PLATFORM=xcb
+
       export XDG_SESSION_TYPE=x11
       export DESKTOP_SESSION=plasma
       export XDG_CURRENT_DESKTOP=KDE
