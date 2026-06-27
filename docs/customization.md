@@ -34,19 +34,14 @@ See `user/README.md` for the full override system documentation.
 
 ## Development environment
 
-A VS Code module with full Nix language support is available:
+VSCodium ships as part of the base user environment (`home/vscodium.nix`) with full Nix language support out of the box:
 
 - **Language server:** `nil` — code completion and diagnostics
-- **Formatting:** Auto-format on save, 2-space indentation
+- **Formatting:** `nixfmt-rfc-style` — auto-format on save, 2-space indentation
 - **Linting:** Real-time error detection with `statix` and `deadnix`
+- **direnv:** Automatic environment loading via `nix-direnv`
 
-Enable it in `user/home.nix`:
-
-```nix
-imports = [ ../modules/vscode.nix ];
-```
-
-Then `rebuild` and open VS Code.
+No manual activation needed — it is included by default. Open VSCodium after the first `rebuild`.
 
 ---
 

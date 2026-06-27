@@ -30,7 +30,8 @@ user/
 ├── home.nix              user-environment overrides (shell, git, apps…)
 └── examples/
     ├── git.nix           ready-to-use git identity override
-    └── zsh.nix           welcome banner + recon aliases
+    ├── zsh.nix           welcome banner + recon aliases
+    └── hackthebox.nix    HTB networking helper (dnsmasq, addTheBox, vpnTheBox)
 ```
 
 ---
