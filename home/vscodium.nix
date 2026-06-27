@@ -44,7 +44,7 @@
         "gitlens.codeLens.enabled" = true;
 
         # Terminal settings
-        "terminal.integrated.defaultProfile.linux" = "bash";
+        "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.fontFamily" = "monospace";
       };
     };
@@ -62,10 +62,6 @@
     # Language servers
     nil # Nix language server (used by nix-ide)
 
-    # Additional development tools
-    git
-    direnv
-    nix-direnv
   ];
 
   # Optional: Add direnv integration for automatic environment loading
