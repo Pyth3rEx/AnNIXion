@@ -7,17 +7,39 @@
 
 {
   # ============================================================
-  # DISPLAY & DESKTOP — KDE PLASMA 6 (X11)
+  # DISPLAY & DESKTOP — KDE PLASMA 6 (X11 default, Wayland available)
   # ============================================================
+  # AnNIXion is designed to run both on bare metal and inside Hyper-V.
+  # Both sessions are available at the SDDM login screen; X11 is the
+  # default for two reasons:
+  #
+  #   1. Hyper-V Enhanced Session runs over xrdp, which has no Wayland
+  #      backend. Without X11, you lose clipboard, audio, dynamic
+  #      resolution, and USB redirection — the session becomes unusable.
+  #
+  #   2. X11 works on bare metal too, so the out-of-the-box experience
+  #      is consistent across both deployment contexts.
+  #
+  # If you are on bare metal and prefer Wayland, override the default
+  # session in user/configuration.nix:
+  #
+  #   services.displayManager.defaultSession = "plasmawayland";
+  #
+  # SDDM remembers your last session choice per user, so you only need
+  # to switch once at the login screen — it will stick on the next boot.
 
-  # X11 display server — KDE runs on top of this.
+  # X11 display server. Required for the default session and for xrdp.
   services.xserver.enable = lib.mkDefault true;
 
-  # SDDM is KDE's login screen. It's the one that knows how to
-  # launch a proper Plasma session for both local and xrdp use.
+  # SDDM login manager — supports both X11 and Wayland Plasma sessions.
   services.displayManager.sddm.enable = lib.mkDefault true;
 
-  # KDE Plasma 6 — the full desktop environment.
+  # Default to the X11 Plasma session ("plasma").
+  # The Wayland session ("plasmawayland") is still listed in SDDM and
+  # fully usable — this only controls what SDDM pre-selects on first boot.
+  services.displayManager.defaultSession = lib.mkDefault "plasma";
+
+  # KDE Plasma 6 — enables both the X11 and Wayland session entries.
   services.desktopManager.plasma6.enable = lib.mkDefault true;
 
   # KDE extras that aren't pulled in automatically
