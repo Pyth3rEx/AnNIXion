@@ -49,8 +49,22 @@ let
     };
     dontBuild = true;
     installPhase = ''
-      mkdir -p $out/share/plasma/plasmoids/com.github.zren.tiledmenu
-      cp -r ./. $out/share/plasma/plasmoids/com.github.zren.tiledmenu/
+      runHook preInstall
+      dest=$out/share/plasma/plasmoids/com.github.zren.tiledmenu
+      mkdir -p "$out/share/plasma/plasmoids"
+
+      echo "=== TiledMenu source root: $(pwd) ===" >&2
+      ls -la >&2
+
+      # cp -rT: treat dest as the final path (not a parent dir) — avoids the
+      # "copy dir INTO dest" ambiguity of plain "cp -r . dest/"
+      cp -rT . "$dest"
+
+      if ! [ -f "$dest/metadata.json" ]; then
+        echo "ERROR: metadata.json missing after install — source was empty or wrong layout" >&2
+        exit 1
+      fi
+      runHook postInstall
     '';
   };
 in
@@ -165,8 +179,6 @@ in
 
   # Copy TiledMenu into ~/.local/share/plasma/plasmoids/ — the canonical
   # user-level plasmoid path that Plasma scans at session start.
-  # home.file symlinks don't work here because cp into a read-only store
-  # symlink target would fail; we need a real directory Plasma can own.
   home.activation.installTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     _tm="$HOME/.local/share/plasma/plasmoids/com.github.zren.tiledmenu"
     $DRY_RUN_CMD rm -rf "$_tm"
@@ -176,9 +188,27 @@ in
       "$_tm"
   '';
 
-  # Restart plasmashell after rebuild so the new panel config and widget
-  # are picked up without requiring a manual logout/login.
-  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" ] ''
+  # Write kwinrc keys that KWin resets at runtime (plasma-manager configFile
+  # is overwritten by KWin's own session-state writes each logout).
+  # kwriteconfig6 writes directly to ~/.config/kwinrc before plasmashell
+  # restarts, so KWin picks them up on the next load.
+  home.activation.configureKwin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -n "''${DISPLAY:-}" ]; then
+      # Bare Meta → activateLauncherMenu → TiledMenu
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group ModifierOnlyShortcuts --key Meta \
+        "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
+      # 4 virtual desktops
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Number 4
+      $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Rows 1
+    fi
+  '';
+
+  # Restart plasmashell after rebuild — depends on both widget install and
+  # kwinrc being written so KWin loads with the correct config.
+  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" ] ''
     if [ -n "''${DISPLAY:-}" ]; then
       ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
         > /dev/null 2>&1 &

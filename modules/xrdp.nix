@@ -76,6 +76,16 @@
       export DESKTOP_SESSION=plasma
       export XDG_CURRENT_DESKTOP=KDE
 
+      # KWin rewrites kwinrc on session exit, stomping plasma-manager's config.
+      # Re-apply the keys we care about on every session start, before Plasma loads.
+      ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group ModifierOnlyShortcuts --key Meta \
+        "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
+      ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Number 4
+      ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
+        --file kwinrc --group Desktops --key Rows 1
+
       exec ${pkgs.kdePackages.plasma-workspace}/bin/startplasma-x11
     ''}";
   };
