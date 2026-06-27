@@ -29,6 +29,30 @@ let
       cp -r "Slot Icons Themes/." $out/share/icons
     '';
   };
+
+  # Tiled Menu — Windows-10-style start menu that reads the XDG applications
+  # menu tree, so our kill-chain categories appear as the left-side column.
+  # Installed into ~/.nix-profile/share/plasma/plasmoids/ which is in
+  # XDG_DATA_DIRS, so Plasma picks it up automatically.
+  #
+  # Hash: run the following on the NixOS machine to get the correct value,
+  # then replace lib.fakeHash below:
+  #   nix-prefetch-github Zren plasma-applet-tiledmenu --rev main
+  TiledMenu = pkgs.stdenvNoCC.mkDerivation {
+    pname = "plasma-applet-tiledmenu";
+    version = "unstable";
+    src = pkgs.fetchFromGitHub {
+      owner = "Zren";
+      repo = "plasma-applet-tiledmenu";
+      rev = "main";
+      hash = "sha256-pQpattmS9VmO3ZIQUFn66az8GSmB4IvYhTTCFn6SUmo=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/share/plasma/plasmoids/com.github.zren.tiledmenu
+      cp -r ./. $out/share/plasma/plasmoids/com.github.zren.tiledmenu/
+    '';
+  };
 in
 {
   imports = [
@@ -108,6 +132,9 @@ in
     SlotIcons
     # ── Cursors ───────────────────────────────────────────────
     nordzy-cursor-theme
+
+    # ── Plasma widgets ────────────────────────────────────────
+    TiledMenu
   ];
 
   services = {
@@ -376,17 +403,32 @@ in
               };
             }
 
-            # ── Kicker — far right edge ────────────────────────────────────
-            # Classic cascading tree launcher — reads our XDG applications.menu
-            # and shows the full AnNIXion kill-chain category tree.
-            # Unlike Kickoff, Kicker never dropped XDG menu tree support.
+            # ── Tiled Menu — far right edge ───────────────────────────────
+            # Windows-10-style cascading menu. Unlike Kickoff/Kicker in
+            # Plasma 6, it reads the full XDG applications.menu tree, so
+            # the kill-chain categories appear in the left column.
+            # Layout configured for a bottom-right button: search on top,
+            # category column on the left, app tiles on the right.
             {
-              name = "org.kde.plasma.kicker";
+              name = "com.github.zren.tiledmenu";
               config.General = {
-                icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+                # Launcher icon
+                customButtonIcon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
+                useCustomButtonIcon = true;
+
+                # Show our XDG kill-chain categories in the left column
+                showCategories = true;
+
+                # Disable "recent" clutter — we want the category tree
+                showFrequentApps = false;
                 showRecentApps = false;
-                showRecentDocs = false;
-                showRecentContacts = false;
+
+                # Tile grid: 2 rows × 4 columns of pinned tiles
+                numTiles = 8;
+                tilesPerRow = 4;
+
+                # Search bar stays at the top (default, stated explicitly)
+                searchBarMaxWidth = 0;
               };
             }
 
@@ -403,9 +445,9 @@ in
           "Alt+F2"
         ];
 
-        # Kicker — Meta+F1 via kglobalaccel (bare Meta handled by
+        # Tiled Menu — Meta+F1 via kglobalaccel (bare Meta handled by
         # ModifierOnlyShortcuts in configFile below; both are needed)
-        "org.kde.plasma.kicker.desktop"."_launch" = [ "Meta+F1" ];
+        "com.github.zren.tiledmenu.desktop"."_launch" = [ "Meta+F1" ];
 
         # KWin window management
         kwin = {
