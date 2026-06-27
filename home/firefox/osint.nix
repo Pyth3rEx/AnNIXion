@@ -121,7 +121,7 @@ in
       "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
-      settings = builtins.fromJSON (builtins.readFile "${config.home.homeDirectory}/.dotfiles/assets/tools/bookmarks-osint.json");
+      settings = builtins.fromJSON (builtins.readFile ../../assets/tools/bookmarks-osint.json);
       force = true;
     };
     extensions = {
