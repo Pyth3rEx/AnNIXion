@@ -45,7 +45,7 @@ in
 
   # Like system.stateVersion — do not change this ever.
   # It records the Home Manager version you first activated with.
-  home.stateVersion = "25.11";
+  home.stateVersion = "26.05";
 
   # Let Home Manager manage itself.
   programs.home-manager.enable = lib.mkDefault true;
