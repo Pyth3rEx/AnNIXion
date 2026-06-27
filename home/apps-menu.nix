@@ -513,7 +513,7 @@ in
     annixion-seclists = {
       name = "SecLists";
       genericName = "Curated Wordlists";
-      icon = "dialog-password";
+      icon = "folder-documents";
       exec = termHold "seclists";
       terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
@@ -560,7 +560,7 @@ in
     annixion-volatility = {
       name = "Volatility 3";
       genericName = "Memory Forensics";
-      icon = "drive-harddisk";
+      icon = "media-flash";
       exec = term "vol";
       terminal = false;
       categories = [ "X-AnNIXion-Forensics-Memory" ];
@@ -626,6 +626,15 @@ in
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
+    annixion-onlyoffice = {
+      name = "OnlyOffice";
+      genericName = "Office Suite";
+      icon = "onlyoffice-desktopeditors";
+      exec = "onlyoffice-desktopeditors";
+      terminal = false;
+      categories = [ "X-AnNIXion-Productivity" ];
+      comment = "Office productivity suite — documents, spreadsheets, presentations";
+    };
 
     # ── Utilities ──────────────────────────────────────────────────────────
     annixion-kate = {
@@ -660,6 +669,15 @@ in
       terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
     };
+    annixion-kleopatra = {
+      name = "Kleopatra";
+      genericName = "PGP & Certificate Manager";
+      icon = "kleopatra";
+      exec = "kleopatra";
+      terminal = false;
+      categories = [ "X-AnNIXion-Utils" ];
+      comment = "OpenPGP and X.509 certificate management";
+    };
 
     # ── System ──────────────────────────────────────────────────────────────
     annixion-konsole = {
@@ -685,6 +703,24 @@ in
       exec = "systemsettings";
       terminal = false;
       categories = [ "X-AnNIXion-System" ];
+    };
+    annixion-kwalletmanager = {
+      name = "KWallet Manager";
+      genericName = "Credential Store";
+      icon = "kwalletmanager";
+      exec = "kwalletmanager";
+      terminal = false;
+      categories = [ "X-AnNIXion-System" ];
+      comment = "Manage stored passwords and secrets";
+    };
+    annixion-htop = {
+      name = "htop";
+      genericName = "System Monitor";
+      icon = "utilities-system-monitor";
+      exec = term "htop";
+      terminal = false;
+      categories = [ "X-AnNIXion-System" ];
+      comment = "Interactive process viewer";
     };
 
   };
