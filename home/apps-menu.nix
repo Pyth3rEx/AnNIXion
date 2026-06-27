@@ -17,13 +17,10 @@ let
 in
 {
 
-  # Rebuild both KDE service caches after every HM activation.
+  # Rebuild the KDE service cache after every HM activation.
   # writeBoundary guarantees all .directory and .desktop files are on disk first.
-  # kbuildsycoca5 is the Qt5 cache (triggered automatically by KDE's file watcher);
-  # kbuildsycoca6 is the Qt6/Plasma 6 cache used by the actual desktop.
   home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
-    $DRY_RUN_CMD ${pkgs.libsForQt5.kservice}/bin/kbuildsycoca5 --noincremental 2>/dev/null || true
   '';
 
   # ============================================================
