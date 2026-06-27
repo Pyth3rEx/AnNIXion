@@ -272,15 +272,15 @@ in
     if [ ! -f "$_plasmarc" ]; then
       echo "plasma config not found" >> "$_log"
     else
-      _section=$(awk '/^\[/ { sec=$0 } /^plugin=com\.github\.zren\.tiledmenu$/ { print sec; exit }' "$_plasmarc")
+      _section=$(${pkgs.gawk}/bin/awk '/^\[/ { sec=$0 } /^plugin=com\.github\.zren\.tiledmenu$/ { print sec; exit }' "$_plasmarc")
       echo "section: $_section" >> "$_log"
 
       if [ -z "$_section" ]; then
         echo "TiledMenu applet not found; plugins present:" >> "$_log"
-        grep "^plugin=" "$_plasmarc" >> "$_log" 2>&1
+        ${pkgs.gnugrep}/bin/grep "^plugin=" "$_plasmarc" >> "$_log" 2>&1
       else
-        _c=$(echo "$_section" | sed 's/.*\[Containments\]\[\([0-9]*\)\].*/\1/')
-        _a=$(echo "$_section" | sed 's/.*\[Applets\]\[\([0-9]*\)\].*/\1/')
+        _c=$(echo "$_section" | ${pkgs.gnused}/bin/sed 's/.*\[Containments\]\[\([0-9]*\)\].*/\1/')
+        _a=$(echo "$_section" | ${pkgs.gnused}/bin/sed 's/.*\[Applets\]\[\([0-9]*\)\].*/\1/')
         echo "containment=$_c applet=$_a" >> "$_log"
 
         if [ -n "$_c" ] && [ "$_c" != "$_section" ] && [ -n "$_a" ] && [ "$_a" != "$_section" ]; then
