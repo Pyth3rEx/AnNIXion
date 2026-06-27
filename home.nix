@@ -384,11 +384,13 @@ in
                 icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
                 showRecentApps = false;
                 showRecentDocs = false;
-                # Full-screen menu settings
                 maxRecentApps = 0;
-                favoriteAppsDisplay = 9; # Show more apps in grid
-                width = 960; # Full-height menu width
-                height = 1080; # Full screen height
+                favoriteAppsDisplay = 9;
+                width = 960;
+                height = 1080;
+                # 0 = by name (flat list, Plasma 6 new default)
+                # 1 = by category (reads our XDG menu tree)
+                applicationsDisplay = 1;
               };
             }
 
