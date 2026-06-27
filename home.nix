@@ -234,11 +234,13 @@ in
   # user-level plasmoid path that Plasma scans at session start.
   home.activation.installTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     _tm="$HOME/.local/share/plasma/plasmoids/com.github.zren.tiledmenu"
+    [ -d "$_tm" ] && $DRY_RUN_CMD chmod -R u+w "$_tm"
     $DRY_RUN_CMD rm -rf "$_tm"
     $DRY_RUN_CMD mkdir -p "$HOME/.local/share/plasma/plasmoids"
     $DRY_RUN_CMD cp -rL \
       "${TiledMenu}/share/plasma/plasmoids/com.github.zren.tiledmenu" \
       "$_tm"
+    $DRY_RUN_CMD chmod -R u+w "$_tm"
   '';
 
   # Write kwinrc keys that KWin resets at runtime (plasma-manager configFile
