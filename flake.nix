@@ -42,6 +42,7 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
       nixosConfigurations = {
@@ -213,6 +214,11 @@
           ]
           ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
         };
+      };
+
+      checks.${system} = {
+        boot = pkgs.nixosTest (import ./tests/boot.nix);
+        security-tools = pkgs.nixosTest (import ./tests/security-tools.nix);
       };
     };
 }
