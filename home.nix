@@ -447,9 +447,18 @@ in
 
             # ── Tiled Menu — far right edge ───────────────────────────────
             # Installed via home.activation.installTiledMenu (cp into
-            # ~/.local/share/plasma/plasmoids/). Plain string here so
-            # plasma-manager doesn't try to parse unknown widget config.
-            "com.github.zren.tiledmenu"
+            # ~/.local/share/plasma/plasmoids/).
+            {
+              name = "com.github.zren.tiledmenu";
+              config.General = {
+                # Show the kill-chain category tree (left column) instead of
+                # the default flat alphabetical list.
+                defaultAppListView = "Categories";
+                # Sidebar icons: terminal, files, settings
+                sidebarShortcuts = "org.kde.konsole.desktop,org.kde.dolphin.desktop,systemsettings.desktop";
+                showRecentApps = "false";
+              };
+            }
 
           ];
         }
