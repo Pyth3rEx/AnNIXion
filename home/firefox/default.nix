@@ -11,47 +11,57 @@
 
   programs.firefox.enable = lib.mkDefault true;
 
-  xdg.desktopEntries = lib.mkDefault {
-    firefox = {
-      name = "Firefox";
-      noDisplay = true;
-    };
-    firefox-untrusted = {
-      name = "Firefox - Unsafe Browser";
-      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png";
-      genericName = "Unsafe Browser";
-      exec = ''firefox -P "Unsafe Browser" --no-remote'';
-      terminal = false;
-      categories = [ "X-AnNIXion-Internet" "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" ];
-    };
-    firefox-red = {
-      name = "Firefox - Red Team";
-      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png";
-      genericName = "Assault Browser";
-      exec = ''firefox -P "Red Team" --no-remote'';
-      terminal = false;
-      categories = [ "X-AnNIXion-Delivery-Proxy" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" ];
-    };
-    firefox-osint = {
-      name = "Firefox - OSINT";
-      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png";
-      genericName = "Search Browser";
-      exec = ''firefox -P "OSINT" --no-remote'';
-      terminal = false;
-      categories = [ "X-AnNIXion-Recon-OSINT" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" ];
-    };
-    firefox-puppet = {
-      name = "Firefox - Puppet Master";
-      icon = "${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png";
-      genericName = "Persona Browser";
-      exec = ''firefox -P "Puppet Master" --no-remote'';
-      terminal = false;
-      categories = [ "X-AnNIXion-Recon-OSINT" "X-AnNIXion-Internet" "Network" "WebBrowser" ];
-      mimeType = [ "text/html" "text/xml" ];
-    };
+  home.file = {
+    ".local/share/applications/firefox.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Firefox
+      NoDisplay=true
+    '';
+    ".local/share/applications/firefox-untrusted.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Firefox - Unsafe Browser
+      GenericName=Unsafe Browser
+      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png
+      Exec=firefox -P "Unsafe Browser" --no-remote
+      Terminal=false
+      Categories=X-AnNIXion-Internet;Network;WebBrowser;
+      MimeType=text/html;text/xml;
+    '';
+    ".local/share/applications/firefox-red.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Firefox - Red Team
+      GenericName=Assault Browser
+      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
+      Exec=firefox -P "Red Team" --no-remote
+      Terminal=false
+      Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
+      MimeType=text/html;text/xml;
+    '';
+    ".local/share/applications/firefox-osint.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Firefox - OSINT
+      GenericName=Search Browser
+      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
+      Exec=firefox -P "OSINT" --no-remote
+      Terminal=false
+      Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
+      MimeType=text/html;text/xml;
+    '';
+    ".local/share/applications/firefox-puppet.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Firefox - Puppet Master
+      GenericName=Persona Browser
+      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
+      Exec=firefox -P "Puppet Master" --no-remote
+      Terminal=false
+      Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
+      MimeType=text/html;text/xml;
+    '';
   };
 
   programs.firefox = {

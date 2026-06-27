@@ -8,442 +8,199 @@
 let
   term = cmd: "konsole -e ${cmd}";
   termHold = cmd: ''konsole -e bash -c "${cmd}; exec bash"'';
+
   dir = name: icon: ''
     [Desktop Entry]
     Name=${name}
     Type=Directory
     Icon=${icon}
   '';
-in
-{
 
-  # Rebuild the KDE service cache after every HM activation.
-  # writeBoundary guarantees all .directory and .desktop files are on disk first.
-  home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    # kbuildsycoca6 must see the HM profile's share directory so it indexes
-    # the annixion-* desktop files installed there. The activation environment
-    # (running during nixos-rebuild) does not load the full login XDG_DATA_DIRS,
-    # so we inject the two relevant paths explicitly.
-    $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/operator/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
-      ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
-  '';
+  # Generate .desktop file text.
+  # xdg.desktopEntries in HM 26.05 installs files into the HM profile
+  # (/etc/profiles/per-user/operator/share/applications/) rather than
+  # ~/.local/share/applications/. kbuildsycoca6 does not reliably index
+  # that path, so categories never appear. We write raw .desktop text via
+  # home.file instead, which is proven to land in ~/.local/share/.
+  de =
+    {
+      name,
+      exec,
+      icon,
+      categories,
+      genericName ? null,
+      comment ? null,
+      mimeType ? null,
+      noDisplay ? false,
+    }:
+    lib.concatStringsSep "\n" (
+      [ "[Desktop Entry]" "Type=Application" "Name=${name}" ]
+      ++ lib.optional (genericName != null) "GenericName=${genericName}"
+      ++ [
+        "Icon=${icon}"
+        "Exec=${exec}"
+        "Terminal=false"
+        "Categories=${lib.concatStringsSep ";" categories};"
+      ]
+      ++ lib.optional (comment != null) "Comment=${comment}"
+      ++ lib.optional (mimeType != null) "MimeType=${lib.concatStringsSep ";" mimeType};"
+      ++ lib.optional noDisplay "NoDisplay=true"
+    )
+    + "\n";
 
-  # ============================================================
-  # XDG MENU — KILL CHAIN STRUCTURE
-  # Written directly as the user applications.menu so it is always
-  # picked up by kbuildsycoca regardless of whether the system
-  # applications.menu includes <MergeDir>applications-merged</MergeDir>.
-  # ============================================================
+  # ── Directory label & icon files ─────────────────────────────────────────
+  directories = {
+    "annixion.directory" = dir "AnNIXion" "security-high";
 
-  home.file.".config/menus/applications.menu" = lib.mkDefault {
-    text = ''
-      <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
-        "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
-      <Menu>
-        <Name>Applications</Name>
+    "annixion-1-recon.directory" = dir "1. Reconnaissance" "system-search";
+    "annixion-1-recon-osint.directory" = dir "Passive OSINT" "applications-internet";
+    "annixion-1-recon-scanning.directory" = dir "Active Scanning" "network-wired";
+    "annixion-1-recon-rf.directory" = dir "RF / Signal Intel" "audio-input-microphone";
 
-        <!-- ── Kill-chain phases at root ──────────────────────────────── -->
+    "annixion-2-weapon.directory" = dir "2. Weaponization" "package-x-generic";
+    "annixion-2-weapon-disasm.directory" = dir "Disassembly" "applications-engineering";
+    "annixion-2-weapon-firmware.directory" = dir "Firmware Analysis" "drive-harddisk";
 
-        <Menu>
-          <Name>01. Reconnaissance</Name>
-          <Directory>annixion-1-recon.directory</Directory>
+    "annixion-3-delivery.directory" = dir "3. Delivery" "mail-send";
+    "annixion-3-delivery-proxy.directory" = dir "Web Proxy" "network-proxy";
+    "annixion-3-delivery-injection.directory" = dir "Web Injection" "emblem-important";
 
-          <Menu>
-            <Name>Passive OSINT</Name>
-            <Directory>annixion-1-recon-osint.directory</Directory>
-            <Include><Category>X-AnNIXion-Recon-OSINT</Category></Include>
-          </Menu>
+    "annixion-4-exploit.directory" = dir "4. Exploitation" "dialog-warning";
+    "annixion-4-exploit-frameworks.directory" = dir "Frameworks" "applications-development";
+    "annixion-4-exploit-creds.directory" = dir "Credential Attacks" "dialog-password";
+    "annixion-4-exploit-wireless.directory" = dir "Wireless" "network-wireless";
 
-          <Menu>
-            <Name>Active Scanning</Name>
-            <Directory>annixion-1-recon-scanning.directory</Directory>
-            <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
-          </Menu>
+    "annixion-5-install.directory" = dir "5. Installation" "system-run";
+    "annixion-5-install-tunneling.directory" = dir "Tunneling & Shells" "utilities-terminal";
 
-          <Menu>
-            <Name>RF / Signal Intel</Name>
-            <Directory>annixion-1-recon-rf.directory</Directory>
-            <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
-          </Menu>
+    "annixion-6-c2.directory" = dir "6. C2" "network-server";
+    "annixion-6-c2-frameworks.directory" = dir "Frameworks" "applications-development";
 
-        </Menu>
+    "annixion-7-postex.directory" = dir "7. Post-Exploitation" "emblem-system";
+    "annixion-7-postex-lateral.directory" = dir "Lateral Movement" "network-workgroup";
 
-        <Menu>
-          <Name>02. Weaponization</Name>
-          <Directory>annixion-2-weapon.directory</Directory>
+    "annixion-8-forensics.directory" = dir "8. Forensics" "system-file-manager";
+    "annixion-8-forensics-memory.directory" = dir "Memory Analysis" "media-flash";
+    "annixion-8-forensics-disk.directory" = dir "Disk Analysis" "drive-harddisk";
 
-          <Menu>
-            <Name>Disassembly</Name>
-            <Directory>annixion-2-weapon-disasm.directory</Directory>
-            <Include><Category>X-AnNIXion-Weapon-Disasm</Category></Include>
-          </Menu>
+    "annixion-9-re.directory" = dir "9. Reverse Engineering" "applications-engineering";
+    "annixion-9-re-disasm.directory" = dir "Disassemblers" "applications-engineering";
+    "annixion-9-re-firmware.directory" = dir "Firmware" "drive-harddisk";
 
-          <Menu>
-            <Name>Firmware Analysis</Name>
-            <Directory>annixion-2-weapon-firmware.directory</Directory>
-            <Include><Category>X-AnNIXion-Weapon-Firmware</Category></Include>
-          </Menu>
+    "annixion-10-sniffing.directory" = dir "10. Sniffing & Analysis" "network-transmit-receive";
 
-        </Menu>
-
-        <Menu>
-          <Name>03. Delivery</Name>
-          <Directory>annixion-3-delivery.directory</Directory>
-
-          <Menu>
-            <Name>Web Proxy</Name>
-            <Directory>annixion-3-delivery-proxy.directory</Directory>
-            <Include><Category>X-AnNIXion-Delivery-Proxy</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Web Injection</Name>
-            <Directory>annixion-3-delivery-injection.directory</Directory>
-            <Include><Category>X-AnNIXion-Delivery-Injection</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>04. Exploitation</Name>
-          <Directory>annixion-4-exploit.directory</Directory>
-
-          <Menu>
-            <Name>Frameworks</Name>
-            <Directory>annixion-4-exploit-frameworks.directory</Directory>
-            <Include><Category>X-AnNIXion-Exploit-Frameworks</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Credential Attacks</Name>
-            <Directory>annixion-4-exploit-creds.directory</Directory>
-            <Include><Category>X-AnNIXion-Exploit-Creds</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Wireless</Name>
-            <Directory>annixion-4-exploit-wireless.directory</Directory>
-            <Include><Category>X-AnNIXion-Exploit-Wireless</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>05. Installation</Name>
-          <Directory>annixion-5-install.directory</Directory>
-
-          <Menu>
-            <Name>Tunneling &amp; Shells</Name>
-            <Directory>annixion-5-install-tunneling.directory</Directory>
-            <Include><Category>X-AnNIXion-Install-Tunneling</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>06. C2</Name>
-          <Directory>annixion-6-c2.directory</Directory>
-
-          <Menu>
-            <Name>Frameworks</Name>
-            <Directory>annixion-6-c2-frameworks.directory</Directory>
-            <Include><Category>X-AnNIXion-C2-Frameworks</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>07. Post-Exploitation</Name>
-          <Directory>annixion-7-postex.directory</Directory>
-
-          <Menu>
-            <Name>Lateral Movement</Name>
-            <Directory>annixion-7-postex-lateral.directory</Directory>
-            <Include><Category>X-AnNIXion-PostEx-Lateral</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>08. Forensics</Name>
-          <Directory>annixion-8-forensics.directory</Directory>
-
-          <Menu>
-            <Name>Memory Analysis</Name>
-            <Directory>annixion-8-forensics-memory.directory</Directory>
-            <Include><Category>X-AnNIXion-Forensics-Memory</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Disk Analysis</Name>
-            <Directory>annixion-8-forensics-disk.directory</Directory>
-            <Include><Category>X-AnNIXion-Forensics-Disk</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>09. Reverse Engineering</Name>
-          <Directory>annixion-9-re.directory</Directory>
-
-          <Menu>
-            <Name>Disassemblers</Name>
-            <Directory>annixion-9-re-disasm.directory</Directory>
-            <Include><Category>X-AnNIXion-RE-Disasm</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Firmware</Name>
-            <Directory>annixion-9-re-firmware.directory</Directory>
-            <Include><Category>X-AnNIXion-RE-Firmware</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>10. Sniffing &amp; Analysis</Name>
-          <Directory>annixion-10-sniffing.directory</Directory>
-          <Include><Category>X-AnNIXion-Sniffing</Category></Include>
-        </Menu>
-
-        <!-- ── Misc tools ──────────────────────────────────────────────── -->
-
-        <Menu>
-          <Name>Tools</Name>
-          <Directory>annixion-tools.directory</Directory>
-
-          <Menu>
-            <Name>Internet</Name>
-            <Directory>annixion-internet.directory</Directory>
-            <Include><Category>X-AnNIXion-Internet</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Development</Name>
-            <Directory>annixion-dev.directory</Directory>
-            <Include><Category>X-AnNIXion-Dev</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Utilities</Name>
-            <Directory>annixion-utils.directory</Directory>
-            <Include><Category>X-AnNIXion-Utils</Category></Include>
-          </Menu>
-
-          <Menu>
-            <Name>Productivity</Name>
-            <Directory>annixion-productivity.directory</Directory>
-            <Include><Category>X-AnNIXion-Productivity</Category></Include>
-          </Menu>
-
-        </Menu>
-
-        <Menu>
-          <Name>System</Name>
-          <Directory>annixion-system.directory</Directory>
-          <Include><Category>X-AnNIXion-System</Category></Include>
-        </Menu>
-
-      </Menu>
-    '';
+    "annixion-tools.directory" = dir "Tools" "applications-other";
+    "annixion-internet.directory" = dir "Internet" "applications-internet";
+    "annixion-dev.directory" = dir "Development" "applications-development";
+    "annixion-productivity.directory" = dir "Productivity" "applications-office";
+    "annixion-utils.directory" = dir "Utilities" "applications-utilities";
+    "annixion-system.directory" = dir "System" "applications-system";
   };
 
-  # ============================================================
-  # DIRECTORY FILES — category labels & icons
-  # Written to ~/.local/share/desktop-directories/
-  # ============================================================
+  # ── Desktop entries ───────────────────────────────────────────────────────
+  desktopEntries = {
 
-  xdg.dataFile = {
-    "desktop-directories/annixion.directory".text = dir "AnNIXion" "security-high";
-
-    "desktop-directories/annixion-1-recon.directory".text = dir "1. Reconnaissance" "system-search";
-    "desktop-directories/annixion-1-recon-osint.directory".text =
-      dir "Passive OSINT" "applications-internet";
-    "desktop-directories/annixion-1-recon-scanning.directory".text =
-      dir "Active Scanning" "network-wired";
-    "desktop-directories/annixion-1-recon-rf.directory".text =
-      dir "RF / Signal Intel" "audio-input-microphone";
-
-    "desktop-directories/annixion-2-weapon.directory".text = dir "2. Weaponization" "package-x-generic";
-    "desktop-directories/annixion-2-weapon-disasm.directory".text =
-      dir "Disassembly" "applications-engineering";
-    "desktop-directories/annixion-2-weapon-firmware.directory".text =
-      dir "Firmware Analysis" "drive-harddisk";
-
-    "desktop-directories/annixion-3-delivery.directory".text = dir "3. Delivery" "mail-send";
-    "desktop-directories/annixion-3-delivery-proxy.directory".text = dir "Web Proxy" "network-proxy";
-    "desktop-directories/annixion-3-delivery-injection.directory".text =
-      dir "Web Injection" "emblem-important";
-
-    "desktop-directories/annixion-4-exploit.directory".text = dir "4. Exploitation" "dialog-warning";
-    "desktop-directories/annixion-4-exploit-frameworks.directory".text =
-      dir "Frameworks" "applications-development";
-    "desktop-directories/annixion-4-exploit-creds.directory".text =
-      dir "Credential Attacks" "dialog-password";
-    "desktop-directories/annixion-4-exploit-wireless.directory".text =
-      dir "Wireless" "network-wireless";
-
-    "desktop-directories/annixion-5-install.directory".text = dir "5. Installation" "system-run";
-    "desktop-directories/annixion-5-install-tunneling.directory".text =
-      dir "Tunneling & Shells" "utilities-terminal";
-
-    "desktop-directories/annixion-6-c2.directory".text = dir "6. C2" "network-server";
-    "desktop-directories/annixion-6-c2-frameworks.directory".text =
-      dir "Frameworks" "applications-development";
-
-    "desktop-directories/annixion-7-postex.directory".text = dir "7. Post-Exploitation" "emblem-system";
-    "desktop-directories/annixion-7-postex-lateral.directory".text =
-      dir "Lateral Movement" "network-workgroup";
-
-    "desktop-directories/annixion-8-forensics.directory".text =
-      dir "8. Forensics" "system-file-manager";
-    "desktop-directories/annixion-8-forensics-memory.directory".text =
-      dir "Memory Analysis" "media-flash";
-    "desktop-directories/annixion-8-forensics-disk.directory".text =
-      dir "Disk Analysis" "drive-harddisk";
-
-    "desktop-directories/annixion-9-re.directory".text =
-      dir "9. Reverse Engineering" "applications-engineering";
-    "desktop-directories/annixion-9-re-disasm.directory".text =
-      dir "Disassemblers" "applications-engineering";
-    "desktop-directories/annixion-9-re-firmware.directory".text = dir "Firmware" "drive-harddisk";
-
-    "desktop-directories/annixion-10-sniffing.directory".text =
-      dir "10. Sniffing & Analysis" "network-transmit-receive";
-
-    "desktop-directories/annixion-tools.directory".text = dir "Tools" "applications-other";
-    "desktop-directories/annixion-internet.directory".text = dir "Internet" "applications-internet";
-    "desktop-directories/annixion-dev.directory".text = dir "Development" "applications-development";
-    "desktop-directories/annixion-productivity.directory".text =
-      dir "Productivity" "applications-office";
-    "desktop-directories/annixion-utils.directory".text = dir "Utilities" "applications-utilities";
-    "desktop-directories/annixion-system.directory".text = dir "System" "applications-system";
-  };
-
-  # ============================================================
-  # DESKTOP ENTRIES
-  # All entries use the annixion- prefix to avoid colliding with
-  # system-provided .desktop files. Tools appear in the AnNIXion
-  # menu via their X-AnNIXion-* categories.
-  # ============================================================
-
-  xdg.desktopEntries = {
-
-    # ── 1. Reconnaissance — Passive OSINT ─────────────────────────────────
-    annixion-theharvester = {
+    # ── 1. Reconnaissance — Passive OSINT ───────────────────────────────────
+    "annixion-theharvester" = de {
       name = "theHarvester";
       genericName = "OSINT Harvester";
       icon = "system-search";
       exec = termHold "theHarvester";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-OSINT" ];
       comment = "Email, domain and IP intelligence gathering";
     };
-    annixion-whois = {
+    "annixion-whois" = de {
       name = "Whois";
       genericName = "Domain Lookup";
       icon = "network-wired";
       exec = termHold "whois";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-OSINT" ];
     };
-    annixion-dig = {
+    "annixion-dig" = de {
       name = "dig";
       genericName = "DNS Lookup";
       icon = "network-wired";
       exec = termHold "dig";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-OSINT" ];
     };
-    annixion-whatweb = {
+    "annixion-whatweb" = de {
       name = "WhatWeb";
       genericName = "Web Recon";
       icon = "folder-remote";
       exec = termHold "whatweb";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Web server fingerprinting and technology detection";
     };
 
-    # ── 1. Reconnaissance — Active Scanning ───────────────────────────────
-    annixion-nmap = {
+    # ── 1. Reconnaissance — Active Scanning ──────────────────────────────────
+    "annixion-nmap" = de {
       name = "Nmap";
       genericName = "Network Scanner";
       icon = "network-wired";
       exec = termHold "nmap";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Network exploration and security auditing";
     };
-    annixion-gobuster = {
+    "annixion-gobuster" = de {
       name = "Gobuster";
       genericName = "Directory Brute Forcer";
       icon = "folder-remote";
       exec = termHold "gobuster";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Directory, DNS and virtual host brute-forcing";
     };
-    annixion-ffuf = {
+    "annixion-ffuf" = de {
       name = "ffuf";
       genericName = "Web Fuzzer";
       icon = "folder-remote";
       exec = termHold "ffuf";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Fast web fuzzer";
     };
 
-    # ── 1. Reconnaissance — RF / Signal Intel ─────────────────────────────
-    annixion-gqrx = {
+    # ── 1. Reconnaissance — RF / Signal Intel ────────────────────────────────
+    "annixion-gqrx" = de {
       name = "Gqrx";
       genericName = "SDR Receiver";
       icon = "gqrx";
       exec = "gqrx";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "Software defined radio receiver";
     };
-    annixion-gnuradio = {
+    "annixion-gnuradio" = de {
       name = "GNU Radio Companion";
       genericName = "SDR Signal Processing";
       icon = "audio-input-microphone";
       exec = "gnuradio-companion";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "SDR flow-graph signal processing toolkit";
     };
-    annixion-hackrf = {
+    "annixion-hackrf" = de {
       name = "HackRF Tools";
       genericName = "HackRF Utilities";
       icon = "audio-input-microphone";
       exec = termHold "hackrf_info";
-      terminal = false;
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "HackRF hardware interface and diagnostics";
     };
 
-    # ── 2. Weaponization — Disassembly ────────────────────────────────────
-    annixion-ghidra = {
+    # ── 2. Weaponization ─────────────────────────────────────────────────────
+    "annixion-ghidra" = de {
       name = "Ghidra";
       genericName = "Reverse Engineering Suite";
       icon = "ghidra";
       exec = "ghidra";
-      terminal = false;
       categories = [
         "X-AnNIXion-Weapon-Disasm"
         "X-AnNIXion-RE-Disasm"
       ];
       comment = "NSA software reverse engineering framework";
     };
-
-    # ── 2. Weaponization — Firmware Analysis ──────────────────────────────
-    annixion-binwalk = {
+    "annixion-binwalk" = de {
       name = "Binwalk";
       genericName = "Firmware Analyzer";
       icon = "media-removable";
       exec = termHold "binwalk";
-      terminal = false;
       categories = [
         "X-AnNIXion-Weapon-Firmware"
         "X-AnNIXion-RE-Firmware"
@@ -451,98 +208,83 @@ in
       comment = "Firmware analysis and extraction";
     };
 
-    # ── 3. Delivery — Web Proxy ──────────────────────────────────────────��
-    annixion-burpsuite = {
+    # ── 3. Delivery ───────────────────────────────────────────────────────────
+    "annixion-burpsuite" = de {
       name = "Burp Suite";
       genericName = "Web App Security Proxy";
       icon = "burpsuite";
       exec = "burpsuite";
-      terminal = false;
       categories = [ "X-AnNIXion-Delivery-Proxy" ];
       comment = "Web application security testing platform";
     };
-
-    # ── 3. Delivery — Web Injection ───────────────────────────────────────
-    annixion-sqlmap = {
+    "annixion-sqlmap" = de {
       name = "sqlmap";
       genericName = "SQL Injection Tool";
       icon = "dialog-warning";
       exec = termHold "sqlmap";
-      terminal = false;
       categories = [ "X-AnNIXion-Delivery-Injection" ];
       comment = "Automatic SQL injection and database takeover";
     };
 
-    # ── 4. Exploitation — Frameworks ──────────────────────────────────────
-    annixion-metasploit = {
+    # ── 4. Exploitation ───────────────────────────────────────────────────────
+    "annixion-metasploit" = de {
       name = "Metasploit";
       genericName = "Exploitation & C2 Framework";
       icon = "security-high";
       exec = term "msfconsole";
-      terminal = false;
       categories = [
         "X-AnNIXion-Exploit-Frameworks"
         "X-AnNIXion-C2-Frameworks"
       ];
       comment = "Penetration testing, exploitation and C2 via Meterpreter";
     };
-
-    # ── 4. Exploitation — Credential Attacks ──────────────────────────────
-    annixion-john = {
+    "annixion-john" = de {
       name = "John the Ripper";
       genericName = "Password Cracker";
       icon = "dialog-password";
       exec = termHold "john";
-      terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Offline password cracking tool";
     };
-    annixion-hashcat = {
+    "annixion-hashcat" = de {
       name = "Hashcat";
       genericName = "GPU Password Cracker";
       icon = "dialog-password";
       exec = termHold "hashcat";
-      terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Advanced GPU-accelerated password recovery";
     };
-    annixion-hydra = {
+    "annixion-hydra" = de {
       name = "Hydra";
       genericName = "Network Login Brute Forcer";
       icon = "dialog-password";
       exec = termHold "hydra";
-      terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Online network service brute-forcing";
     };
-    annixion-seclists = {
+    "annixion-seclists" = de {
       name = "SecLists";
       genericName = "Curated Wordlists";
       icon = "folder-documents";
       exec = termHold "seclists";
-      terminal = false;
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Curated list of wordlists for dictionary attacks";
     };
-
-    # ── 4. Exploitation — Wireless ────────────────────────────────────────
-    annixion-aircrack = {
+    "annixion-aircrack" = de {
       name = "Aircrack-ng";
       genericName = "WiFi Security Auditing";
       icon = "network-wireless";
       exec = termHold "aircrack-ng";
-      terminal = false;
       categories = [ "X-AnNIXion-Exploit-Wireless" ];
       comment = "802.11 WEP and WPA/WPA2 cracking suite";
     };
 
-    # ── 5. Installation — Tunneling & Shells ──────────────────────────────
-    annixion-netcat = {
+    # ── 5. Installation ───────────────────────────────────────────────────────
+    "annixion-netcat" = de {
       name = "Netcat";
       genericName = "Network Swiss Army Knife";
       icon = "network-transmit-receive";
       exec = term "nc";
-      terminal = false;
       categories = [
         "X-AnNIXion-Install-Tunneling"
         "X-AnNIXion-Sniffing"
@@ -550,183 +292,366 @@ in
       comment = "TCP/IP networking — listeners, pivots, file transfers";
     };
 
-    # ── 7. Post-Exploitation — Lateral Movement ───────────────────────────
-    annixion-impacket = {
+    # ── 7. Post-Exploitation ──────────────────────────────────────────────────
+    "annixion-impacket" = de {
       name = "Impacket";
       genericName = "Windows Post-Exploitation Suite";
       icon = "network-server";
       exec = "konsole";
-      terminal = false;
       categories = [ "X-AnNIXion-PostEx-Lateral" ];
       comment = "Python tools for Windows protocols — run impacket-<tool>";
     };
 
-    # ── 8. Forensics — Memory Analysis ────────────────────────────────────
-    annixion-volatility = {
+    # ── 8. Forensics ──────────────────────────────────────────────────────────
+    "annixion-volatility" = de {
       name = "Volatility 3";
       genericName = "Memory Forensics";
       icon = "media-flash";
       exec = term "vol";
-      terminal = false;
       categories = [ "X-AnNIXion-Forensics-Memory" ];
       comment = "Memory acquisition and forensics framework";
     };
-
-    # ── 8. Forensics — Disk Analysis ──────────────────────────────────────
-    annixion-autopsy = {
+    "annixion-autopsy" = de {
       name = "Autopsy";
       genericName = "Digital Forensics Platform";
       icon = "drive-harddisk";
       exec = "autopsy";
-      terminal = false;
       categories = [ "X-AnNIXion-Forensics-Disk" ];
       comment = "GUI frontend for The Sleuth Kit disk forensics";
     };
 
-    # ── 10. Sniffing & Analysis ───────────────────────────────────────────
-    annixion-wireshark = {
+    # ── 10. Sniffing & Analysis ───────────────────────────────────────────────
+    "annixion-wireshark" = de {
       name = "Wireshark";
       genericName = "Packet Analyzer";
       icon = "wireshark";
       exec = "wireshark";
-      terminal = false;
       categories = [ "X-AnNIXion-Sniffing" ];
       comment = "Network protocol capture and analysis";
     };
 
-    # ── Development ───────────────────────────────────────────────────────
-    annixion-vscodium = {
+    # ── Development ────────────────────────────────────────────────────────────
+    "annixion-vscodium" = de {
       name = "VSCodium";
       genericName = "Text Editor";
       icon = "codium";
       exec = "codium";
-      terminal = false;
       categories = [ "X-AnNIXion-Dev" ];
       comment = "Code Editing. Redefined.";
     };
-    annixion-github-desktop = {
+    "annixion-github-desktop" = de {
       name = "GitHub Desktop";
       genericName = "Git GUI";
       icon = "github-desktop";
       exec = "github-desktop";
-      terminal = false;
       categories = [ "X-AnNIXion-Dev" ];
     };
-    annixion-gh = {
+    "annixion-gh" = de {
       name = "GitHub CLI";
       genericName = "Git CLI";
       icon = "utilities-terminal";
       exec = term "gh";
-      terminal = false;
       categories = [ "X-AnNIXion-Dev" ];
     };
 
-    # ── Productivity ──────────────────────────────────────────────────────
-    annixion-obsidian = {
+    # ── Productivity ───────────────────────────────────────────────────────────
+    "annixion-obsidian" = de {
       name = "Obsidian";
       genericName = "Note-Taking & Knowledge Base";
       icon = "obsidian";
       exec = "obsidian";
-      terminal = false;
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
     };
-    annixion-onlyoffice = {
+    "annixion-onlyoffice" = de {
       name = "OnlyOffice";
       genericName = "Office Suite";
       icon = "onlyoffice-desktopeditors";
       exec = "onlyoffice-desktopeditors";
-      terminal = false;
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Office productivity suite — documents, spreadsheets, presentations";
     };
 
-    # ── Utilities ──────────────────────────────────────────────────────────
-    annixion-kate = {
+    # ── Utilities ──────────────────────────────────────────────────────────────
+    "annixion-kate" = de {
       name = "Kate";
       genericName = "Text Editor";
       icon = "kate";
       exec = "kate";
-      terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
     };
-    annixion-ark = {
+    "annixion-ark" = de {
       name = "Ark";
       genericName = "Archive Manager";
       icon = "ark";
       exec = "ark";
-      terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
     };
-    annixion-kcalc = {
+    "annixion-kcalc" = de {
       name = "KCalc";
       genericName = "Calculator";
       icon = "kcalc";
       exec = "kcalc";
-      terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
     };
-    annixion-filelight = {
+    "annixion-filelight" = de {
       name = "Filelight";
       genericName = "Disk Usage Analyzer";
       icon = "filelight";
       exec = "filelight";
-      terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
     };
-    annixion-kleopatra = {
+    "annixion-kleopatra" = de {
       name = "Kleopatra";
       genericName = "PGP & Certificate Manager";
       icon = "kleopatra";
       exec = "kleopatra";
-      terminal = false;
       categories = [ "X-AnNIXion-Utils" ];
       comment = "OpenPGP and X.509 certificate management";
     };
 
-    # ── System ──────────────────────────────────────────────────────────────
-    annixion-konsole = {
+    # ── System ─────────────────────────────────────────────────────────────────
+    "annixion-konsole" = de {
       name = "Konsole";
       genericName = "Terminal Emulator";
       icon = "utilities-terminal";
       exec = "konsole";
-      terminal = false;
       categories = [ "X-AnNIXion-System" ];
     };
-    annixion-dolphin = {
+    "annixion-dolphin" = de {
       name = "Dolphin";
       genericName = "File Manager";
       icon = "system-file-manager";
       exec = "dolphin";
-      terminal = false;
       categories = [ "X-AnNIXion-System" ];
     };
-    annixion-systemsettings = {
+    "annixion-systemsettings" = de {
       name = "System Settings";
       genericName = "System Configuration";
       icon = "preferences-system";
       exec = "systemsettings";
-      terminal = false;
       categories = [ "X-AnNIXion-System" ];
     };
-    annixion-kwalletmanager = {
+    "annixion-kwalletmanager" = de {
       name = "KWallet Manager";
       genericName = "Credential Store";
       icon = "kwalletmanager";
       exec = "kwalletmanager";
-      terminal = false;
       categories = [ "X-AnNIXion-System" ];
       comment = "Manage stored passwords and secrets";
     };
-    annixion-htop = {
+    "annixion-htop" = de {
       name = "htop";
       genericName = "System Monitor";
       icon = "utilities-system-monitor";
       exec = term "htop";
-      terminal = false;
       categories = [ "X-AnNIXion-System" ];
       comment = "Interactive process viewer";
     };
-
   };
+
+in
+{
+  # Rebuild the KDE service cache after every HM activation.
+  # writeBoundary guarantees all files are on disk first.
+  home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/operator/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
+      ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
+  '';
+
+  # All menu files written via home.file so they land in ~/.local/share/
+  # and ~/.config/ — paths kbuildsycoca6 always indexes.
+  home.file =
+    # XDG menu — defines the kill-chain category tree
+    {
+      ".config/menus/applications.menu" = lib.mkDefault {
+        text = ''
+          <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+            "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+          <Menu>
+            <Name>Applications</Name>
+
+            <!-- ── Kill-chain phases at root ──────────────────────────────── -->
+
+            <Menu>
+              <Name>01. Reconnaissance</Name>
+              <Directory>annixion-1-recon.directory</Directory>
+              <Menu>
+                <Name>Passive OSINT</Name>
+                <Directory>annixion-1-recon-osint.directory</Directory>
+                <Include><Category>X-AnNIXion-Recon-OSINT</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Active Scanning</Name>
+                <Directory>annixion-1-recon-scanning.directory</Directory>
+                <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>RF / Signal Intel</Name>
+                <Directory>annixion-1-recon-rf.directory</Directory>
+                <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>02. Weaponization</Name>
+              <Directory>annixion-2-weapon.directory</Directory>
+              <Menu>
+                <Name>Disassembly</Name>
+                <Directory>annixion-2-weapon-disasm.directory</Directory>
+                <Include><Category>X-AnNIXion-Weapon-Disasm</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Firmware Analysis</Name>
+                <Directory>annixion-2-weapon-firmware.directory</Directory>
+                <Include><Category>X-AnNIXion-Weapon-Firmware</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>03. Delivery</Name>
+              <Directory>annixion-3-delivery.directory</Directory>
+              <Menu>
+                <Name>Web Proxy</Name>
+                <Directory>annixion-3-delivery-proxy.directory</Directory>
+                <Include><Category>X-AnNIXion-Delivery-Proxy</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Web Injection</Name>
+                <Directory>annixion-3-delivery-injection.directory</Directory>
+                <Include><Category>X-AnNIXion-Delivery-Injection</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>04. Exploitation</Name>
+              <Directory>annixion-4-exploit.directory</Directory>
+              <Menu>
+                <Name>Frameworks</Name>
+                <Directory>annixion-4-exploit-frameworks.directory</Directory>
+                <Include><Category>X-AnNIXion-Exploit-Frameworks</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Credential Attacks</Name>
+                <Directory>annixion-4-exploit-creds.directory</Directory>
+                <Include><Category>X-AnNIXion-Exploit-Creds</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Wireless</Name>
+                <Directory>annixion-4-exploit-wireless.directory</Directory>
+                <Include><Category>X-AnNIXion-Exploit-Wireless</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>05. Installation</Name>
+              <Directory>annixion-5-install.directory</Directory>
+              <Menu>
+                <Name>Tunneling &amp; Shells</Name>
+                <Directory>annixion-5-install-tunneling.directory</Directory>
+                <Include><Category>X-AnNIXion-Install-Tunneling</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>06. C2</Name>
+              <Directory>annixion-6-c2.directory</Directory>
+              <Menu>
+                <Name>Frameworks</Name>
+                <Directory>annixion-6-c2-frameworks.directory</Directory>
+                <Include><Category>X-AnNIXion-C2-Frameworks</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>07. Post-Exploitation</Name>
+              <Directory>annixion-7-postex.directory</Directory>
+              <Menu>
+                <Name>Lateral Movement</Name>
+                <Directory>annixion-7-postex-lateral.directory</Directory>
+                <Include><Category>X-AnNIXion-PostEx-Lateral</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>08. Forensics</Name>
+              <Directory>annixion-8-forensics.directory</Directory>
+              <Menu>
+                <Name>Memory Analysis</Name>
+                <Directory>annixion-8-forensics-memory.directory</Directory>
+                <Include><Category>X-AnNIXion-Forensics-Memory</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Disk Analysis</Name>
+                <Directory>annixion-8-forensics-disk.directory</Directory>
+                <Include><Category>X-AnNIXion-Forensics-Disk</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>09. Reverse Engineering</Name>
+              <Directory>annixion-9-re.directory</Directory>
+              <Menu>
+                <Name>Disassemblers</Name>
+                <Directory>annixion-9-re-disasm.directory</Directory>
+                <Include><Category>X-AnNIXion-RE-Disasm</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Firmware</Name>
+                <Directory>annixion-9-re-firmware.directory</Directory>
+                <Include><Category>X-AnNIXion-RE-Firmware</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>10. Sniffing &amp; Analysis</Name>
+              <Directory>annixion-10-sniffing.directory</Directory>
+              <Include><Category>X-AnNIXion-Sniffing</Category></Include>
+            </Menu>
+
+            <!-- ── Misc tools ──────────────────────────────────────────────── -->
+
+            <Menu>
+              <Name>Tools</Name>
+              <Directory>annixion-tools.directory</Directory>
+              <Menu>
+                <Name>Internet</Name>
+                <Directory>annixion-internet.directory</Directory>
+                <Include><Category>X-AnNIXion-Internet</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Development</Name>
+                <Directory>annixion-dev.directory</Directory>
+                <Include><Category>X-AnNIXion-Dev</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Utilities</Name>
+                <Directory>annixion-utils.directory</Directory>
+                <Include><Category>X-AnNIXion-Utils</Category></Include>
+              </Menu>
+              <Menu>
+                <Name>Productivity</Name>
+                <Directory>annixion-productivity.directory</Directory>
+                <Include><Category>X-AnNIXion-Productivity</Category></Include>
+              </Menu>
+            </Menu>
+
+            <Menu>
+              <Name>System</Name>
+              <Directory>annixion-system.directory</Directory>
+              <Include><Category>X-AnNIXion-System</Category></Include>
+            </Menu>
+
+          </Menu>
+        '';
+      };
+    }
+    # .directory files → ~/.local/share/desktop-directories/
+    // lib.mapAttrs' (
+      n: t: lib.nameValuePair ".local/share/desktop-directories/${n}" { text = t; }
+    ) directories
+    # .desktop files → ~/.local/share/applications/
+    // lib.mapAttrs' (
+      n: t: lib.nameValuePair ".local/share/applications/${n}.desktop" { text = t; }
+    ) desktopEntries;
 }
