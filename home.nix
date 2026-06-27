@@ -77,12 +77,6 @@ in
   # Declare icons symlink so KDE sees them
   xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
 
-  # Symlink TiledMenu into ~/.local/share/plasma/plasmoids/ so Plasma
-  # discovers it at session start without relying on XDG_DATA_DIRS scanning
-  # of ~/.nix-profile (which can race with session initialisation).
-  home.file.".local/share/plasma/plasmoids/com.github.zren.tiledmenu".source =
-    "${TiledMenu}/share/plasma/plasmoids/com.github.zren.tiledmenu";
-
   # ============================================================
   # USER PACKAGES
   # ============================================================
@@ -167,6 +161,29 @@ in
 
     cp -rf ${pkgs.noto-fonts-color-emoji}/share/fonts/* \
       "$HOME/.local/share/fonts/" 2>/dev/null || true
+  '';
+
+  # Copy TiledMenu into ~/.local/share/plasma/plasmoids/ — the canonical
+  # user-level plasmoid path that Plasma scans at session start.
+  # home.file symlinks don't work here because cp into a read-only store
+  # symlink target would fail; we need a real directory Plasma can own.
+  home.activation.installTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    _tm="$HOME/.local/share/plasma/plasmoids/com.github.zren.tiledmenu"
+    $DRY_RUN_CMD rm -rf "$_tm"
+    $DRY_RUN_CMD mkdir -p "$HOME/.local/share/plasma/plasmoids"
+    $DRY_RUN_CMD cp -rL \
+      "${TiledMenu}/share/plasma/plasmoids/com.github.zren.tiledmenu" \
+      "$_tm"
+  '';
+
+  # Restart plasmashell after rebuild so the new panel config and widget
+  # are picked up without requiring a manual logout/login.
+  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" ] ''
+    if [ -n "''${DISPLAY:-}" ]; then
+      ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
+        > /dev/null 2>&1 &
+      disown 2>/dev/null || true
+    fi
   '';
 
   programs = {
@@ -410,33 +427,10 @@ in
             }
 
             # ── Tiled Menu — far right edge ───────────────────────────────
-            # Windows-10-style cascading menu. Unlike Kickoff/Kicker in
-            # Plasma 6, it reads the full XDG applications.menu tree, so
-            # the kill-chain categories appear in the left column.
-            # Layout configured for a bottom-right button: search on top,
-            # category column on the left, app tiles on the right.
-            {
-              name = "com.github.zren.tiledmenu";
-              config.General = {
-                # Launcher icon
-                customButtonIcon = "${config.home.homeDirectory}/.dotfiles/assets/icons/AnNIXion.png";
-                useCustomButtonIcon = true;
-
-                # Show our XDG kill-chain categories in the left column
-                showCategories = true;
-
-                # Disable "recent" clutter — we want the category tree
-                showFrequentApps = false;
-                showRecentApps = false;
-
-                # Tile grid: 2 rows × 4 columns of pinned tiles
-                numTiles = 8;
-                tilesPerRow = 4;
-
-                # Search bar stays at the top (default, stated explicitly)
-                searchBarMaxWidth = 0;
-              };
-            }
+            # Installed via home.activation.installTiledMenu (cp into
+            # ~/.local/share/plasma/plasmoids/). Plain string here so
+            # plasma-manager doesn't try to parse unknown widget config.
+            "com.github.zren.tiledmenu"
 
           ];
         }
