@@ -44,7 +44,7 @@ jobs:
             fileSystems."/boot" = {
               device = "/dev/disk/by-label/boot";
               fsType = "vfat";
-              flags = [ "umask=0077" ];
+              options = [ "umask=0077" ];
             };
             swapDevices = [];
             nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
