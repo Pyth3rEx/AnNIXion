@@ -60,7 +60,6 @@ in
     wget
     curl
     vim
-    nmtui
   ];
 
   system.stateVersion = "26.05";
