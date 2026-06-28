@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
@@ -71,3 +72,80 @@ jobs:
             .#checks.x86_64-linux.boot \
             .#checks.x86_64-linux.security-tools \
             --print-build-logs --no-link
+
+  iso:
+    name: Build ISO
+    runs-on: ubuntu-latest
+    needs: check
+    permissions:
+      contents: write
+    timeout-minutes: 180
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # AnNIXion-iso doesn't use hardware-configuration.nix, but nix build
+      # evaluates the whole flake, including nixosConfigurations.AnNIXion.
+      - name: Stub hardware configuration
+        run: |
+          cat > hardware-configuration.nix << 'EOF'
+          { modulesPath, lib, ... }:
+          {
+            imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+            boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
+            boot.initrd.kernelModules = [];
+            boot.kernelModules = [];
+            boot.extraModulePackages = [];
+            fileSystems."/" = { device = "/dev/disk/by-label/nixos"; fsType = "ext4"; };
+            fileSystems."/boot" = {
+              device = "/dev/disk/by-label/boot";
+              fsType = "vfat";
+              options = [ "umask=0077" ];
+            };
+            swapDevices = [];
+            nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+          }
+          EOF
+
+      - name: Build ISO
+        run: |
+          nix build .#packages.x86_64-linux.iso \
+            --print-build-logs \
+            --out-link result-iso
+
+      # On PRs: upload as a downloadable artifact so you can test the ISO
+      # locally before merging. Find it under Actions → your run → Artifacts.
+      - name: Upload ISO artifact (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AnNIXion-iso
+          path: result-iso/iso/AnNIXion-*.iso
+          retention-days: 7
+
+      # On merge to main: tag and publish a GitHub Release.
+      - name: Generate release tag
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: tag
+        run: |
+          echo "tag=v$(date +%Y.%m.%d)-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            --title "AnNIXion ${{ steps.tag.outputs.tag }}" \
+            --notes "Built from commit \`${{ github.sha }}\`.
+
+          **Live credentials:** \`operator\` / \`operator\`
+          Flash the ISO to a USB drive with Balena Etcher or \`dd\`, boot, and use the desktop installer." \
+            result-iso/iso/AnNIXion-*.iso

@@ -46,7 +46,19 @@
       pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
     in
     {
+      packages.${system}.iso =
+        nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+
       nixosConfigurations = {
+        AnNIXion-iso = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-plasma6.nix"
+            ./iso.nix
+          ];
+        };
+
         AnNIXion = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
