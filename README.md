@@ -6,6 +6,7 @@
 
 **The environment for operators who refuse to wing it.**
 
+[![Version](https://img.shields.io/github/v/release/Pyth3rEx/AnNIXion?style=flat-square&label=version&color=crimson)](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
 [![NixOS](https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/flakes-enabled-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
 [![CI](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml/badge.svg)](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml)
@@ -107,6 +108,16 @@ Every profile launches isolated — separate cookies, cache, extensions, and pro
 
 ## Quick start
 
+**Fresh install (no NixOS required):**
+
+1. Download the latest ISO from [Releases](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
+2. Flash to USB with [Rufus](https://rufus.ie) (Windows) or `dd` (Linux/macOS)
+3. Boot — auto-logs in as `operator`
+4. Connect: `nmtui`
+5. Install: `annixion-install`
+
+**On existing NixOS:**
+
 ```bash
 git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
 cp /etc/nixos/hardware-configuration.nix ~/.dotfiles/
@@ -135,6 +146,7 @@ Full guide including Hyper-V Enhanced Session setup → [docs/installation.md](d
 
 Active development. Functional and deployable today.
 
+`✔` Bootable ISO with guided bash installer (`annixion-install`)  
 `✔` NixOS flake · Home Manager · plasma-manager  
 `✔` KDE Plasma 6 · Krohnkite tiling · Breeze Dark  
 `✔` Hyper-V Enhanced Session (vsock)  
@@ -142,8 +154,9 @@ Active development. Functional and deployable today.
 `✔` Offensive, OSINT, and SDR tooling declared in a single module  
 `✔` ZSH + tmux environment  
 `✔` User override system  
+`✔` CI/CD — flake eval, VM tests, ISO build + size gate, versioned releases  
 
-`○` TUI installer · Full disk encryption · ISO build pipeline · Kernel hardening
+`○` Full disk encryption · TUI installer · Kernel hardening
 
 See [docs/roadmap.md](docs/roadmap.md) for the full picture.
 
