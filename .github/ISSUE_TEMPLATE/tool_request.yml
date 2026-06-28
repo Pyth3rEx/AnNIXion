@@ -1,0 +1,90 @@
+name: Tool Request
+description: Request a security tool, OSINT utility, or SDR package to be added to AnNIXion.
+title: "[Tool]: "
+labels: ["tool-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check [nixpkgs search](https://search.nixos.org/packages) before filing — if the tool is in nixpkgs, adding it is usually a one-liner.
+
+  - type: input
+    id: tool_name
+    attributes:
+      label: Tool name
+      placeholder: crackmapexec
+    validations:
+      required: true
+
+  - type: input
+    id: nixpkgs
+    attributes:
+      label: nixpkgs package name (if known)
+      placeholder: "crackmapexec  or  not in nixpkgs"
+    validations:
+      required: false
+
+  - type: input
+    id: upstream
+    attributes:
+      label: Upstream URL
+      placeholder: https://github.com/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case
+      description: What does this tool do and which operator workflow does it support?
+      placeholder: |
+        CrackMapExec is a post-exploitation tool for Windows/AD environments. It belongs in the RedTeam layer alongside impacket for lateral movement and credential testing.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Offensive / Red Team
+        - OSINT / Recon
+        - SDR / RF
+        - Privacy / Anonymity
+        - Forensics / Reverse Engineering
+        - Networking / Wireless
+        - Post-exploitation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: nixpkgs_status
+    attributes:
+      label: nixpkgs availability
+      options:
+        - In nixpkgs — stable channel
+        - In nixpkgs — unstable only
+        - Not in nixpkgs — needs a custom derivation
+        - Not in nixpkgs — available as a flake
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Packaging notes
+      description: Known build issues, required patches, unfree license, or runtime dependencies worth calling out.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this tool has not already been requested.
+          required: true
+        - label: I have a legitimate offensive security, OSINT, or research use case for this tool.
+          required: true
