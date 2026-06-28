@@ -133,6 +133,18 @@ jobs:
             --print-build-logs \
             --out-link result-iso
 
+      - name: Locate ISO
+        id: iso
+        run: |
+          ISO=$(find result-iso/ -name "*.iso" -type f | head -1)
+          if [ -z "$ISO" ]; then
+            echo "::error::No .iso file found under result-iso/ — directory contents:"
+            find result-iso/ -type f
+            exit 1
+          fi
+          echo "path=$ISO" >> "$GITHUB_OUTPUT"
+          echo "Found ISO: $ISO"
+
       - name: Read version
         id: version
         run: echo "tag=v$(cat VERSION)" >> "$GITHUB_OUTPUT"
@@ -144,7 +156,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: AnNIXion-${{ steps.version.outputs.tag }}
-          path: result-iso/iso/AnNIXion-*.iso
+          path: ${{ steps.iso.outputs.path }}
           retention-days: 7
 
       # On merge to main: publish a GitHub Release if this version tag doesn't
@@ -164,5 +176,5 @@ jobs:
 
           **Live credentials:** \`operator\` / \`operator\`
           Flash the ISO to a USB drive with Balena Etcher or \`dd\`, boot, and use the desktop installer." \
-              result-iso/iso/AnNIXion-*.iso
+              "${{ steps.iso.outputs.path }}"
           fi
