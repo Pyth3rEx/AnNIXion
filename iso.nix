@@ -3,16 +3,13 @@ let
   version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);
 in
 {
-  imports = [
-    ./modules/desktop.nix
-  ];
+  imports = [];
 
   # ── ISO image metadata ──────────────────────────────────────────
   isoImage.isoBaseName = lib.mkForce "AnNIXion";
   isoImage.isoName     = lib.mkForce "AnNIXion-${version}.iso";
   isoImage.volumeID    = lib.mkForce "ANNIXION";
-  # zstd gives a better size/speed tradeoff than the default xz
-  isoImage.squashfsCompression = "zstd -Xcompression-level 6";
+  isoImage.squashfsCompression = "xz -Xdict-size 100%";
 
   nixpkgs.config.allowUnfree = true;
 
