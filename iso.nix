@@ -4,7 +4,6 @@ let
 in
 {
   imports = [
-    ./modules/security-tools.nix
     ./modules/desktop.nix
   ];
 
