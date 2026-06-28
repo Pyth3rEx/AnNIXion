@@ -43,6 +43,7 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
     in
     {
       nixosConfigurations = {
@@ -218,7 +219,7 @@
 
       checks.${system} = {
         boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
-        security-tools = pkgs.testers.nixosTest (import ./tests/security-tools.nix);
+        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
       };
     };
 }
