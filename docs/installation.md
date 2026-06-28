@@ -1,20 +1,61 @@
 # Installation
 
-## Prerequisites
-
-- A **NixOS installation** with flakes enabled
-- Git
-
-Enable flakes if not already:
-
-```nix
-# /etc/nixos/configuration.nix
-nix.settings.experimental-features = [ "nix-command" "flakes" ];
-```
+Two paths depending on your starting point.
 
 ---
 
-## Install
+## Option A — Fresh install from ISO (recommended)
+
+No prior NixOS required. Boot the live ISO and run the guided installer.
+
+### 1. Download the ISO
+
+Grab the latest `AnNIXion-vX.Y.Z.iso` from the [Releases](https://github.com/Pyth3rEx/AnNIXion/releases) page.
+
+### 2. Flash to USB
+
+```bash
+# Linux / macOS
+sudo dd if=AnNIXion-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
+```
+
+Or use [Balena Etcher](https://etcher.balena.io) on Windows.
+
+### 3. Boot
+
+Boot the USB. The system auto-logs in as `operator` and drops you at a shell.
+
+### 4. Connect to the internet
+
+```bash
+nmtui    # text UI for NetworkManager — connect to WiFi or configure ethernet
+```
+
+### 5. Install
+
+```bash
+annixion-install
+```
+
+The script will:
+
+1. List available disks
+2. Ask which disk to install on
+3. Ask for confirmation before wiping
+4. Partition GPT: 512 MiB ESP + remaining root
+5. Format ESP as FAT32, root as ext4
+6. Clone the AnNIXion config to `/mnt/etc/nixos`
+7. Generate `hardware-configuration.nix` for your machine
+8. Run `nixos-install --flake /mnt/etc/nixos#AnNIXion`
+9. Offer to reboot
+
+> **Note:** Security tools (Metasploit, Ghidra, etc.) are large. Expect 30–60 min on a slow connection.
+
+---
+
+## Option B — Install on existing NixOS
+
+If you already have NixOS with flakes enabled:
 
 ```bash
 # Clone to your home directory
@@ -34,6 +75,13 @@ nix flake update
 sudo nixos-rebuild switch --flake .#AnNIXion --impure
 ```
 
+Enable flakes first if not already:
+
+```nix
+# /etc/nixos/configuration.nix
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+```
+
 After the first successful build, three shell aliases are available:
 
 | Alias | What it does |
@@ -49,7 +97,12 @@ After the first successful build, three shell aliases are available:
 ```
 .
 ├── flake.nix                      # Flake inputs, outputs, system config wiring
+├── iso.nix                        # Minimal installer ISO configuration
 ├── hardware-configuration.nix     # Auto-generated per-machine — do not edit
+├── VERSION                        # Semantic version — bumped on every PR to main
+│
+├── scripts/
+│   └── annixion-install           # Guided bash installer (bundled into the ISO)
 │
 ├── home.nix                       # Base user environment
 ├── home/
@@ -59,8 +112,7 @@ After the first successful build, three shell aliases are available:
 │   │   ├── redteam.nix            # Red Team profile: Burp proxy, FoxyProxy, HackTools
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
-│   │   ├── theme.nix              # Per-profile Nord CSS and toolbar layouts
-│   │   └── burned-land.nix        # Built-in session-wipe extension
+│   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
 │   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
 │   ├── only-office.nix            # OnlyOffice document editor
 │   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries
@@ -70,6 +122,10 @@ After the first successful build, three shell aliases are available:
 │   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
 │   ├── xrdp.nix                   # Hyper-V Enhanced Session via vsock
 │   └── security-tools.nix         # Offensive, OSINT, and SDR packages
+│
+├── tests/
+│   ├── boot.nix                   # VM test: system boots, services start
+│   └── security-tools.nix         # VM test: all tools are present
 │
 ├── user/                          # Personal overrides — never committed upstream
 │   ├── configuration.nix

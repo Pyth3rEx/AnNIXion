@@ -37,7 +37,7 @@ See `user/README.md` for the full override system documentation.
 VSCodium ships as part of the base user environment (`home/vscodium.nix`) with full Nix language support out of the box:
 
 - **Language server:** `nil` — code completion and diagnostics
-- **Formatting:** `nixfmt-rfc-style` — auto-format on save, 2-space indentation
+- **Formatting:** `nixfmt` — auto-format on save, 2-space indentation
 - **Linting:** Real-time error detection with `statix` and `deadnix`
 - **direnv:** Automatic environment loading via `nix-direnv`
 
@@ -50,3 +50,19 @@ No manual activation needed — it is included by default. Open VSCodium after t
 System packages are declared in `modules/security-tools.nix`. Add any nixpkgs package to the `environment.systemPackages` list and rebuild.
 
 For tools not in nixpkgs, add a derivation under `overlays/` (see [docs/roadmap.md](roadmap.md) Phase 9).
+
+---
+
+## Versioning
+
+Every PR to `main` must bump the `VERSION` file. CI enforces this and fails the build if the version has not changed.
+
+Follow semantic versioning:
+
+| Change type | Example |
+|---|---|
+| Bug fix / small tweak | `0.1.0` → `0.1.1` |
+| New feature | `0.1.1` → `0.2.0` |
+| Breaking change | `0.2.0` → `1.0.0` |
+
+The ISO filename and GitHub release tag are derived from this file automatically.

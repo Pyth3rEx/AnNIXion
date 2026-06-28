@@ -91,11 +91,16 @@ jobs:
         run: |
           MAIN_VERSION=$(git show origin/main:VERSION 2>/dev/null || echo "0.0.0")
           CURRENT_VERSION=$(cat VERSION)
-          if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
-            echo "::error file=VERSION::VERSION is still $CURRENT_VERSION — bump it before merging (patch: x.y.Z, minor: x.Y.0, major: X.0.0)."
+          if [ -z "$CURRENT_VERSION" ]; then
+            echo "::error file=VERSION::VERSION file is empty."
             exit 1
           fi
-          echo "Version bumped: $MAIN_VERSION → $CURRENT_VERSION"
+          if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
+            echo "::error file=VERSION::VERSION is still ${CURRENT_VERSION} — bump it before merging."
+            echo "::error file=VERSION::  patch → x.y.Z   minor → x.Y.0   major → X.0.0"
+            exit 1
+          fi
+          echo "Version bumped: ${MAIN_VERSION} → ${CURRENT_VERSION}"
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -138,12 +143,26 @@ jobs:
         run: |
           ISO=$(find result-iso/ -name "*.iso" -type f | head -1)
           if [ -z "$ISO" ]; then
-            echo "::error::No .iso file found under result-iso/ — directory contents:"
-            find result-iso/ -type f
+            echo "::error file=iso.nix::No .iso file found under result-iso/. Build may have failed silently."
+            echo "Directory contents:"
+            find result-iso/ -type f || echo "(empty)"
             exit 1
           fi
           echo "path=$ISO" >> "$GITHUB_OUTPUT"
-          echo "Found ISO: $ISO"
+          echo "Found ISO: $ISO ($(du -sh "$ISO" | cut -f1))"
+
+      - name: Check ISO size
+        run: |
+          ISO="${{ steps.iso.outputs.path }}"
+          MAX_MB=1900
+          MAX_BYTES=$((MAX_MB * 1024 * 1024))
+          ISO_BYTES=$(stat -c%s "$ISO")
+          ISO_MB=$((ISO_BYTES / 1024 / 1024))
+          if [ "$ISO_BYTES" -gt "$MAX_BYTES" ]; then
+            echo "::error file=iso.nix::ISO is ${ISO_MB} MB — exceeds the ${MAX_MB} MB GitHub release limit. Remove packages from iso.nix to reduce size."
+            exit 1
+          fi
+          echo "ISO size: ${ISO_MB} MB / ${MAX_MB} MB limit ✓"
 
       - name: Read version
         id: version

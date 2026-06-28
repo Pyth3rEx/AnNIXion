@@ -11,8 +11,9 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] `flake.nix` with inputs: `nixpkgs`, `home-manager`, `plasma-manager`
 - [x] `configuration.nix` — locale, timezone, basic kernel params
 - [x] Base system configuration functional
-- [ ] `modules/iso.nix` — formal ISO build target, boots to shell
-- [ ] ISO builds with `nix build .#nixosConfigurations.annixion-iso.config.system.build.isoImage`
+- [x] `iso.nix` — minimal ISO build target, boots to shell with auto-login
+- [x] ISO builds with `nix build .#packages.x86_64-linux.iso`
+- [x] ISO size gate in CI — fails if ISO exceeds 1900 MB (GitHub release limit)
 
 ---
 
@@ -26,22 +27,21 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 ---
 
-## Phase 3 — TUI Installer
+## Phase 3 — Installer ✓ (basic) / In Progress (full)
 
 **Goal:** Running `annixion-install` from the live ISO walks through the full setup interactively.
 
-- [ ] `installer/annixion-install.sh` — whiptail-based TUI with clean UX
-- [ ] Prompts:
-  - Disk selection with confirmation
-  - Encryption passphrase (confirm entry)
-  - Hostname (pre-filled with random Windows-style: `DESKTOP-XXXXXXX`)
-  - Username and password
-  - Timezone (searchable list)
-  - Profile selection (RedTeam, OSINT, Privacy — multi-select)
-- [ ] Hostname generator: cryptographically random `DESKTOP-XXXXXXX` / `LAPTOP-XXXXXXX` format
-- [ ] Profile selection writes feature flags into the generated flake config
-- [ ] Calls `disko` for partitioning then `nixos-install --flake` to finalize
-- [ ] Post-install: script available in the live environment as `annixion-install`
+- [x] `scripts/annixion-install` — guided bash installer bundled into the ISO
+- [x] Disk selection with confirmation
+- [x] GPT partitioning: ESP + root
+- [x] Formats, mounts, clones config, generates hardware config, runs `nixos-install`
+- [x] Installer available in live session as `annixion-install`
+- [ ] Whiptail TUI for disk selection and options (currently plain readline prompts)
+- [ ] Encryption passphrase prompt (depends on Phase 2 disko integration)
+- [ ] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
+- [ ] Username and password prompt
+- [ ] Timezone selection (searchable list)
+- [ ] Profile selection (RedTeam, OSINT, Privacy — multi-select)
 - [ ] Error handling: graceful rollback on failed partitioning or install
 
 ---
@@ -131,7 +131,7 @@ Rationale:
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
   - [x] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar
-  - [x] OSINT — neon amber `#ffd000`; Burned Land pinned to toolbar
+  - [x] OSINT — neon amber `#ffd000`
   - [x] Puppet Master — neon green `#00e676`; container tab strip always visible
 - [x] Developer button pinned to toolbar in all profiles
 - [x] Firefox Account sign-in button hidden from all profiles
@@ -142,11 +142,11 @@ Rationale:
 
 **Goal:** Complete Nix development setup without leaving NixOS.
 
-- [x] VS Code module with Nix IDE extension (`modules/vscode.nix`)
+- [x] VSCodium module with Nix IDE extension (`home/vscodium.nix`)
 - [x] Language server (`nil`) configured with auto-format and linting
-- [x] Development dependencies: `nixfmt-rfc-style`, `statix`, `deadnix`
+- [x] Development dependencies: `nixfmt`, `statix`, `deadnix`
 - [x] `direnv` integration via `programs.direnv` and `nix-direnv`
-- [ ] Git integration in VS Code (GitLens, commit signing)
+- [ ] Git integration in VSCodium (GitLens, commit signing)
 - [ ] Neovim + Tree-sitter alternative module (optional)
 
 ---
@@ -202,18 +202,18 @@ Rationale:
 
 ---
 
-## Phase 11 — Polish and Documentation
+## Phase 11 — Polish and Documentation ✓ (partial)
 
 **Goal:** Someone who has never used NixOS can follow the README and get a working install.
 
 - [ ] ISO tested on real hardware (at least one machine type)
-- [ ] README install instructions verified end-to-end
+- [x] Install instructions cover both ISO and existing-NixOS paths
 - [ ] CONTRIBUTING.md for people who want to add tools or profiles
 - [ ] SECURITY.md documenting hardening decisions and what is not hardened
 - [ ] FAQ.md addressing common setup questions
-- [ ] Versioned releases with tagged ISOs (v1.0, v1.1, etc.)
-- [ ] Release notes for each version
-- [ ] GitHub Actions CI to verify flake builds without errors
+- [x] Versioned releases with tagged ISOs (semantic versioning via `VERSION` file)
+- [ ] Release notes per version
+- [x] GitHub Actions CI — flake eval, system closure build, VM tests, ISO build + size gate, release publish
 
 ---
 
@@ -221,7 +221,7 @@ Rationale:
 
 - Wayland session support once xrdp Wayland backend matures
 - Hyprland as an optional power-user layer (declared via Home Manager, opt-in)
-- Calamares GUI installer as an alternative to the TUI installer
+- Calamares GUI installer as an alternative to the bash installer
 - ARM64 / Raspberry Pi image target
 - Mullvad kill-switch integration at the NixOS firewall level
 - Auto-updating tool definitions via flake inputs and pinned tool versions
