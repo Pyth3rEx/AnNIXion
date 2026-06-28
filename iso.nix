@@ -1,4 +1,7 @@
 { lib, pkgs, ... }:
+let
+  version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);
+in
 {
   imports = [
     ./modules/security-tools.nix
@@ -7,6 +10,7 @@
 
   # ── ISO image metadata ──────────────────────────────────────────
   isoImage.isoBaseName = lib.mkForce "AnNIXion";
+  isoImage.isoName     = lib.mkForce "AnNIXion-${version}.iso";
   isoImage.volumeID    = lib.mkForce "ANNIXION";
   # zstd gives a better size/speed tradeoff than the default xz
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";

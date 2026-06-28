@@ -83,6 +83,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Require version bump (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          MAIN_VERSION=$(git show origin/main:VERSION)
+          CURRENT_VERSION=$(cat VERSION)
+          if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
+            echo "::error file=VERSION::VERSION is still $CURRENT_VERSION — bump it before merging (patch: x.y.Z, minor: x.Y.0, major: X.0.0)."
+            exit 1
+          fi
+          echo "Version bumped: $MAIN_VERSION → $CURRENT_VERSION"
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -120,32 +133,36 @@ jobs:
             --print-build-logs \
             --out-link result-iso
 
+      - name: Read version
+        id: version
+        run: echo "tag=v$(cat VERSION)" >> "$GITHUB_OUTPUT"
+
       # On PRs: upload as a downloadable artifact so you can test the ISO
-      # locally before merging. Find it under Actions → your run → Artifacts.
+      # before merging. Find it under Actions → your run → Artifacts.
       - name: Upload ISO artifact (PR)
         if: github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
-          name: AnNIXion-iso
+          name: AnNIXion-${{ steps.version.outputs.tag }}
           path: result-iso/iso/AnNIXion-*.iso
           retention-days: 7
 
-      # On merge to main: tag and publish a GitHub Release.
-      - name: Generate release tag
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        id: tag
-        run: |
-          echo "tag=v$(date +%Y.%m.%d)-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-
+      # On merge to main: publish a GitHub Release if this version tag doesn't
+      # exist yet. Merges that don't bump VERSION are silently skipped.
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ steps.tag.outputs.tag }}" \
-            --title "AnNIXion ${{ steps.tag.outputs.tag }}" \
-            --notes "Built from commit \`${{ github.sha }}\`.
+          TAG="${{ steps.version.outputs.tag }}"
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "Release $TAG already exists — bump VERSION to publish a new release."
+          else
+            gh release create "$TAG" \
+              --title "AnNIXion $TAG" \
+              --notes "Built from commit \`${{ github.sha }}\`.
 
           **Live credentials:** \`operator\` / \`operator\`
           Flash the ISO to a USB drive with Balena Etcher or \`dd\`, boot, and use the desktop installer." \
-            result-iso/iso/AnNIXion-*.iso
+              result-iso/iso/AnNIXion-*.iso
+          fi
