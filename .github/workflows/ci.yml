@@ -89,7 +89,7 @@ jobs:
       - name: Require version bump (PR)
         if: github.event_name == 'pull_request'
         run: |
-          MAIN_VERSION=$(git show origin/main:VERSION)
+          MAIN_VERSION=$(git show origin/main:VERSION 2>/dev/null || echo "0.0.0")
           CURRENT_VERSION=$(cat VERSION)
           if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
             echo "::error file=VERSION::VERSION is still $CURRENT_VERSION — bump it before merging (patch: x.y.Z, minor: x.Y.0, major: X.0.0)."
