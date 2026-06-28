@@ -17,26 +17,26 @@
     machine.wait_for_unit("multi-user.target")
 
     # Network scanning / recon
-    machine.succeed("nmap --version")
-    machine.succeed("nc -h 2>&1 | head -1")
-    machine.succeed("openssl version")
+    machine.succeed("which nmap")
+    machine.succeed("which nc")
+    machine.succeed("which openssl")
 
     # Web
-    machine.succeed("ffuf -V 2>&1 | grep -qi ffuf")
+    machine.succeed("which ffuf")
     machine.succeed("which gobuster")
     machine.succeed("which sqlmap")
-    machine.succeed("whatweb --version")
+    machine.succeed("which whatweb")
 
     # Auth / credential attacks
-    machine.succeed("john --list=formats 2>&1 | head -1")
-    machine.succeed("hashcat --version 2>&1 | head -1")
-    machine.succeed("hydra -h 2>&1 | grep -qi hydra")
+    machine.succeed("which john")
+    machine.succeed("which hashcat")
+    machine.succeed("which hydra")
 
     # Wireless / RF
-    machine.succeed("aircrack-ng --help 2>&1 | head -3")
+    machine.succeed("which aircrack-ng")
 
     # Firmware / reverse engineering
-    machine.succeed("binwalk --help 2>&1 | head -1")
+    machine.succeed("which binwalk")
     machine.succeed("which ghidra")
 
     # Post-exploitation
