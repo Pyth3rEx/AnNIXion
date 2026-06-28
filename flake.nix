@@ -42,6 +42,8 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
     in
     {
       nixosConfigurations = {
@@ -213,6 +215,11 @@
           ]
           ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
         };
+      };
+
+      checks.${system} = {
+        boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
+        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
       };
     };
 }

@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    name: Nix CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # Required for nixosTest to run QEMU VMs at acceptable speed
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # hardware-configuration.nix is gitignored (machine-specific).
+      # CI uses a minimal QEMU-guest stub so the flake evaluates cleanly.
+      - name: Stub hardware configuration
+        run: |
+          cat > hardware-configuration.nix << 'EOF'
+          { modulesPath, lib, ... }:
+          {
+            imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
+            boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
+            boot.initrd.kernelModules = [];
+            boot.kernelModules = [];
+            boot.extraModulePackages = [];
+            fileSystems."/" = { device = "/dev/disk/by-label/nixos"; fsType = "ext4"; };
+            fileSystems."/boot" = {
+              device = "/dev/disk/by-label/boot";
+              fsType = "vfat";
+              options = [ "umask=0077" ];
+            };
+            swapDevices = [];
+            nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+          }
+          EOF
+
+      # L1 — flake evaluation: catches syntax errors, bad option types,
+      # undefined references. --no-build keeps this step fast.
+      - name: "[L1] Flake evaluation"
+        run: nix flake check --no-build
+
+      # L2 — full system closure: proves every package in the config
+      # resolves and all modules compose without conflicts.
+      - name: "[L2] System closure build"
+        run: |
+          nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel \
+            --print-build-logs --no-link
+
+      # L3 — VM tests: boot + service behaviour, security tool presence.
+      # Runs in QEMU via the NixOS test framework.
+      - name: "[L3] VM tests"
+        run: |
+          nix build \
+            .#checks.x86_64-linux.boot \
+            .#checks.x86_64-linux.security-tools \
+            --print-build-logs --no-link
