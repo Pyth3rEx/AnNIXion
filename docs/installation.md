@@ -53,25 +53,31 @@ After the first successful build, three shell aliases are available:
 │
 ├── home.nix                       # Base user environment
 ├── home/
-│   └── firefox/
-│       ├── default.nix            # Firefox enable, policies, desktop launchers
-│       ├── untrusted.nix          # Unsafe Browser profile (clearnet, id 0)
-│       ├── redteam.nix            # Red Team profile: Burp proxy, FoxyProxy, HackTools
-│       ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
-│       └── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
+│   ├── firefox/
+│   │   ├── default.nix            # Firefox enable, policies, desktop launchers
+│   │   ├── untrusted.nix          # Unsafe Browser profile (clearnet, id 0)
+│   │   ├── redteam.nix            # Red Team profile: Burp proxy, FoxyProxy, HackTools
+│   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
+│   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
+│   │   ├── theme.nix              # Per-profile Nord CSS and toolbar layouts
+│   │   └── burned-land.nix        # Built-in session-wipe extension
+│   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
+│   ├── only-office.nix            # OnlyOffice document editor
+│   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries
+│   └── control-center.nix         # Meta key handler and AnNIXion control center
 │
 ├── modules/
 │   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
 │   ├── xrdp.nix                   # Hyper-V Enhanced Session via vsock
-│   ├── security-tools.nix         # Offensive, OSINT, and SDR packages
-│   └── vscode.nix                 # VS Code with Nix IDE
+│   └── security-tools.nix         # Offensive, OSINT, and SDR packages
 │
 ├── user/                          # Personal overrides — never committed upstream
 │   ├── configuration.nix
 │   ├── home.nix
 │   └── examples/
 │       ├── git.nix
-│       └── zsh.nix
+│       ├── zsh.nix
+│       └── hackthebox.nix
 │
 └── docs/                          # Extended documentation
 ```

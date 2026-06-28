@@ -4,7 +4,7 @@
 
   inputs = {
     # Main nixpkgs — your system packages come from here
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     # NUR — Nix User Repository, a collection of community-maintained packages.
     nur.url = "github:nix-community/NUR";
@@ -12,7 +12,7 @@
     # Home Manager — declares your user environment (dotfiles,
     # shortcuts, apps) in Nix. Follows the same nixpkgs version.
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -42,9 +42,23 @@
     }@inputs:
     let
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
     in
     {
+      packages.${system}.iso =
+        self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+
       nixosConfigurations = {
+        AnNIXion-iso = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [
+            "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma6.nix"
+            ./iso.nix
+          ];
+        };
+
         AnNIXion = nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = { inherit inputs; };
@@ -180,7 +194,7 @@
                   networkmanagerapplet
                   openvpn
                   wireguard-tools
-                  libsForQt5.kservice
+                  kdePackages.kservice
                 ];
 
                 # makes /etc/hosts writable
@@ -213,6 +227,11 @@
           ]
           ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
         };
+      };
+
+      checks.${system} = {
+        boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
+        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
       };
     };
 }

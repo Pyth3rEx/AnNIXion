@@ -51,7 +51,7 @@
     ffuf # fast web fuzzer
     john # password cracker
     hashcat # GPU password cracker
-    hydra # network login brute forcer
+    thc-hydra # network login brute forcer
     aircrack-ng # WiFi security auditing
     binwalk # firmware analysis
     ghidra # reverse engineering / disassembler

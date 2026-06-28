@@ -57,7 +57,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] `nix.gc` — automatic weekly cleanup of old generations
 - [x] `modules/` — modular structure: desktop, xrdp, shell, security-tools
 - [ ] `modules/base/users.nix` — user management as a standalone module
-- [ ] Additional shell environment: `direnv` integration with `.envrc` examples
+- [x] Additional shell environment: `direnv` integration via `programs.direnv` and `nix-direnv`
 
 ---
 
@@ -79,9 +79,9 @@ Rationale:
 - [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
 - [x] Breeze Dark theme set as default
 - [x] 4 virtual desktops preconfigured
-- [ ] Theming pass — neutral professional appearance, not default KDE blue
-- [ ] Application launcher and taskbar layout declared in Nix
-- [ ] Custom wallpaper and visual identity pass
+- [x] Theming pass — Breeze Dark, Slot Nord Dark icons, Nordzy cursor, JetBrains Mono
+- [x] Application launcher and taskbar layout declared in Nix
+- [x] Custom wallpaper and visual identity pass
 
 ---
 
@@ -129,12 +129,12 @@ Rationale:
 - [x] FoxyProxy pre-configured via managed storage (`3rdparty` policy) to route all RedTeam traffic through Burp Suite (127.0.0.1:8080); `failover_direct = false` blocks leaks if Burp is down
 - [x] VPN enforcement in OSINT and Puppet profiles: SOCKS5 placeholder at 127.0.0.1:1080, DNS through proxy, `failover_direct = false` — connections fail until VPN is running
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
-- [ ] Per-profile custom `userChrome.css` for immediate visual distinction:
-  - [ ] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar
-  - [ ] OSINT — neon amber `#ffd000`; developer tools area separator
-  - [ ] Puppet Master — neon green `#00e676`; container tab strip always visible
-- [ ] Developer button pinned to toolbar in all profiles
-- [ ] Firefox Account sign-in button hidden from all profiles
+- [x] Per-profile custom `userChrome.css` for immediate visual distinction:
+  - [x] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar
+  - [x] OSINT — neon amber `#ffd000`; Burned Land pinned to toolbar
+  - [x] Puppet Master — neon green `#00e676`; container tab strip always visible
+- [x] Developer button pinned to toolbar in all profiles
+- [x] Firefox Account sign-in button hidden from all profiles
 
 ---
 
@@ -144,7 +144,8 @@ Rationale:
 
 - [x] VS Code module with Nix IDE extension (`modules/vscode.nix`)
 - [x] Language server (`nil`) configured with auto-format and linting
-- [x] Development dependencies: `nixpkgs-fmt`, `statix`, `deadnix`, `direnv`
+- [x] Development dependencies: `nixfmt-rfc-style`, `statix`, `deadnix`
+- [x] `direnv` integration via `programs.direnv` and `nix-direnv`
 - [ ] Git integration in VS Code (GitLens, commit signing)
 - [ ] Neovim + Tree-sitter alternative module (optional)
 

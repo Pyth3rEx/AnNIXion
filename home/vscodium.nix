@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  programs.vscode = {
+  programs.vscodium = {
     enable = true;
     package = pkgs.vscodium; # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
 
@@ -44,7 +44,7 @@
         "gitlens.codeLens.enabled" = true;
 
         # Terminal settings
-        "terminal.integrated.defaultProfile.linux" = "bash";
+        "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.fontFamily" = "monospace";
       };
     };
@@ -55,17 +55,13 @@
     # Nix tooling
     nix-your-shell
     nix-zsh-completions
-    nixpkgs-fmt
+    nixfmt
     statix # Linter for Nix
     deadnix # Find unused code in Nix files
 
     # Language servers
     nil # Nix language server (used by nix-ide)
 
-    # Additional development tools
-    git
-    direnv
-    nix-direnv
   ];
 
   # Optional: Add direnv integration for automatic environment loading

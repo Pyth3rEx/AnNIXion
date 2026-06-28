@@ -6,8 +6,9 @@
 
 **The environment for operators who refuse to wing it.**
 
-[![NixOS](https://img.shields.io/badge/NixOS-25.11-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
+[![NixOS](https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/flakes-enabled-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
+[![CI](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml/badge.svg)](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml)
 [![Platform](https://img.shields.io/badge/platform-x86__64--linux-lightgrey?style=flat-square&logo=linux&logoColor=white)](https://github.com/Pyth3rEx/AnNIXion)
 [![Stars](https://img.shields.io/github/stars/Pyth3rEx/AnNIXion?style=flat-square&color=yellow&logo=github)](https://github.com/Pyth3rEx/AnNIXion/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/Pyth3rEx/AnNIXion?style=flat-square&logo=github)](https://github.com/Pyth3rEx/AnNIXion/commits/main)
