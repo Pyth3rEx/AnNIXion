@@ -1,0 +1,49 @@
+name: Documentation
+description: Missing, wrong, or unclear documentation.
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Missing — something is not documented at all
+        - Incorrect — documented behaviour doesn't match reality
+        - Unclear — documented but hard to follow
+        - Outdated — correct at some point, no longer accurate
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: File or section
+      placeholder: "docs/installation.md — Hyper-V section  or  README — Quick start"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What's wrong or missing?
+      placeholder: |
+        The Quick Start section still shows the old `git clone` flow as the only option. It doesn't mention the ISO installer at all.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix or content
+      description: Optional — paste corrected text or describe what should be there.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true

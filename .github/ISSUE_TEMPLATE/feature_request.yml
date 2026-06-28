@@ -1,0 +1,76 @@
+name: Feature Request
+description: Propose a new capability, workflow, or system-level improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tool additions have their own template. Use this for everything else — new modules, workflow improvements, installer features, desktop changes, etc.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the gap or friction. What can't you do today, or what takes too many steps?
+      placeholder: |
+        Setting up VPN enforcement in the OSINT profile requires editing two files manually every install...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should it work? If you have a Nix implementation in mind, paste it here.
+      placeholder: |
+        Add a `vpn.socksPort` option in `user/configuration.nix` that propagates to both Firefox profiles automatically.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else did you consider? Why is your proposal better?
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Installer / ISO
+        - Desktop / UX
+        - Firefox profiles
+        - User override system
+        - Security posture / hardening
+        - Hyper-V / xrdp
+        - CI/CD pipeline
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Estimated effort (your guess)
+      options:
+        - Small — a few lines in an existing module
+        - Medium — new module or significant config change
+        - Large — new flake input, cross-module coordination, or new phase
+        - Unknown
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: This is not a security tool addition (use the Tool Request template for that).
+          required: true

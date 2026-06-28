@@ -1,0 +1,93 @@
+name: Bug Report
+description: Something is broken — config errors, tools crashing, build failures.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: check that you're on the latest commit and that `nix flake update && rebuild` doesn't resolve it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Clear description of the bug. Include exact error output if available.
+      placeholder: |
+        Running `rebuild` fails with:
+        error: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      placeholder: It should have rebuilt successfully.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `rebuild`
+        2. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Flake / Nix build
+        - ISO / installer
+        - Desktop (KDE / SDDM)
+        - Firefox profiles
+        - Security tools
+        - Hyper-V / xrdp
+        - CI/CD pipeline
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: nixos_version
+    attributes:
+      label: NixOS version
+      placeholder: "nixos-rebuild --version  →  NixOS 26.05"
+    validations:
+      required: false
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit / release
+      placeholder: "git rev-parse --short HEAD  →  abc1234  or  v0.1.0"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: deploy
+    attributes:
+      label: Deployment type
+      options:
+        - Bare metal
+        - Hyper-V Enhanced Session
+        - Other VM / hypervisor
+        - ISO live session
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I am on the latest commit of the target branch.
+          required: true
