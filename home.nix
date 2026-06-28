@@ -91,10 +91,6 @@ let
   tileModelFile = pkgs.writeText "tiledmenu-tilemodel.json"
     (builtins.toJSON (generateTileModel tileGroups));
 
-  # Base64-encode at build time so plasma-manager can inline it directly.
-  tileModelBase64 = builtins.readFile (pkgs.runCommand "tiledmenu-b64" { } ''
-    ${pkgs.coreutils}/bin/base64 --wrap=0 ${tileModelFile} > $out
-  '');
 
   TiledMenu = pkgs.stdenvNoCC.mkDerivation {
     pname = "plasma-applet-tiledmenu";
@@ -567,7 +563,6 @@ in
                 showRecentApps = "false";
                 icon = "${./assets/icons/AnNIXion.png}";
                 fixedPanelIcon = "true";
-                tileModel = tileModelBase64;
               };
             }
 
