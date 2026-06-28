@@ -4,8 +4,6 @@
   nodes.machine = { pkgs, lib, ... }: {
     imports = [ ../modules/security-tools.nix ];
 
-    nixpkgs.config.allowUnfree = true;
-
     users.users.operator = {
       isNormalUser = true;
       password = "test";
