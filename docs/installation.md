@@ -19,7 +19,7 @@ Grab the latest `AnNIXion-vX.Y.Z.iso` from the [Releases](https://github.com/Pyt
 sudo dd if=AnNIXion-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
-Or use [Balena Etcher](https://etcher.balena.io) on Windows.
+Or use [Rufus](https://rufus.ie) on Windows.
 
 ### 3. Boot
 
