@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  programs.vscode = {
+  programs.vscodium = {
     enable = true;
     package = pkgs.vscodium; # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
 
@@ -55,7 +55,7 @@
     # Nix tooling
     nix-your-shell
     nix-zsh-completions
-    nixfmt-rfc-style
+    nixfmt
     statix # Linter for Nix
     deadnix # Find unused code in Nix files
 
