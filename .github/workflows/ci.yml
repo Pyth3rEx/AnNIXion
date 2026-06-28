@@ -178,24 +178,44 @@ jobs:
           path: ${{ steps.iso.outputs.path }}
           retention-days: 7
 
-      # On merge to main: publish a GitHub Release if this version tag doesn't
-      # exist yet. Merges that don't bump VERSION are silently skipped.
+      # On merge to main: read the merged PR body as the changelog, then
+      # publish a GitHub Release. Skipped if this tag already exists.
+      - name: Read PR changelog
+        id: changelog
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
+            --jq '.[0].body // ""')
+          if [ -z "$BODY" ]; then
+            BODY="_No changelog provided._"
+            echo "::warning::No merged PR found for this commit — release notes will be empty."
+          fi
+          {
+            echo "body<<__EOF__"
+            echo "$BODY"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          ISO="${{ steps.iso.outputs.path }}"
 
           if gh release view "$TAG" > /dev/null 2>&1; then
             echo "Release $TAG already exists — bump VERSION to publish a new release."
-          else
-            gh release create "$TAG" \
-              --title "AnNIXion $TAG" \
-              --notes "Built from commit \`${{ github.sha }}\`.
-
-          **Live credentials:** \`operator\` / \`operator\`
-          Flash the ISO to a USB drive with Balena Etcher or \`dd\`, boot, and use the desktop installer." \
-              "${{ steps.iso.outputs.path }}"
+            exit 0
           fi
+
+          gh release create "$TAG" \
+            --title "AnNIXion $TAG" \
+            --notes "${{ steps.changelog.outputs.body }}
+
+---
+**Live credentials:** \`operator\` / \`operator\`
+Flash the ISO with Rufus (Windows) or \`dd\` (Linux/macOS), boot, run \`annixion-install\`.
+Built from commit \`${{ github.sha }}\`." \
+            "${{ steps.iso.outputs.path }}"
