@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, ... }: # pkgs used by environment.systemPackages below
 let
   version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);
 in
@@ -39,7 +39,6 @@ in
     isNormalUser = true;
     password     = "operator";
     extraGroups  = [ "wheel" "networkmanager" "video" "input" ];
-    shell        = pkgs.zsh;
   };
 
   # Auto-login into the live desktop — no password prompt on first boot.
