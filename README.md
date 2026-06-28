@@ -6,11 +6,12 @@
 
 **The environment for operators who refuse to wing it.**
 
-[![Version](https://img.shields.io/github/v/release/Pyth3rEx/AnNIXion?style=flat-square&label=version&color=crimson)](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
+[![Version](https://img.shields.io/github/v/release/Pyth3rEx/AnNIXion?style=flat-square&label=version&color=crimson&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHhSURBVDhPY2AYNOD///9sMPZ8e3uOJAYG3iRhYd5QBgaQOCO6Yub58+evBLHPnDlju27Bgt1Lp0zZMrO6uiKWgcE+lYPDPpuTUyqUgYEZrqm+vp5p27Ztafv27/989NSplbuOHQu78/jxrkePH7+qbG0VhSpjsmdg4IBrggLG1vb24vnNze9m5Ob+r/D0/N/o7v5xQ0/P7zxd3Zt1rq6Pw1lZY8M4OYPjODjswDrOnDnD+vr1a6nb27c73D579k69urqfLwODTzgDg9Xu2bPzumNi3jdFRa3KZGU1TuPgkEvn5JQGa3z//r3B9+/fr/z9+fP/8vz8l+EMDBV5XFxeIDl+BgbFShaWjcXs7OvTBQTqgrm5tRlgfvz//z/Tly9fUr98/fpy67p1D6ucnAJh7l+9cOHkjtxcqxAGBss0Li6PFC4un2Jubh2YPMP7z58dPr17Z7tr1666A5s2Pb91+fLGR3fu7Du5e/f1/sLCw3VeXukTOTisujk5zTs5OGzhGmFg3549K69cuPD/2O7dyy/s3z/h69evt5YvXNhsxcmZYcfJ6efMzR3uycXliaLp2JUrQgf37l28qKencWl//wJ5BgaD00eOTNzc358UyMDgGsjFJRnMza0HcjKKRroAAKQ5wEmRULDtAAAAAElFTkSuQmCC)](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
 [![NixOS](https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/flakes-enabled-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
-[![CI](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml/badge.svg)](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml)
 [![Platform](https://img.shields.io/badge/platform-x86__64--linux-lightgrey?style=flat-square&logo=linux&logoColor=white)](https://github.com/Pyth3rEx/AnNIXion)
+<br>
+[![CI](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml/badge.svg)](https://github.com/Pyth3rEx/AnNIXion/actions/workflows/ci.yml)
 [![Stars](https://img.shields.io/github/stars/Pyth3rEx/AnNIXion?style=flat-square&color=yellow&logo=github)](https://github.com/Pyth3rEx/AnNIXion/stargazers)
 [![Last Commit](https://img.shields.io/github/last-commit/Pyth3rEx/AnNIXion?style=flat-square&logo=github)](https://github.com/Pyth3rEx/AnNIXion/commits/main)
 [![License](https://img.shields.io/github/license/Pyth3rEx/AnNIXion?style=flat-square)](LICENSE)
