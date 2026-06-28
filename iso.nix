@@ -1,11 +1,12 @@
-{ lib, pkgs, ... }: # pkgs used by environment.systemPackages below
+{ lib, pkgs, ... }:
 let
   version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);
+
+  installScript = pkgs.writeShellScriptBin "annixion-install"
+    (builtins.readFile ./scripts/annixion-install);
 in
 {
-  imports = [];
-
-  # ── ISO image metadata ──────────────────────────────────────────
+  # ── ISO image metadata ──────────────────────────────────────────────────
   isoImage.isoBaseName = lib.mkForce "AnNIXion";
   isoImage.isoName     = lib.mkForce "AnNIXion-${version}.iso";
   isoImage.volumeID    = lib.mkForce "ANNIXION";
@@ -21,37 +22,46 @@ in
   time.timeZone      = lib.mkDefault "Europe/Paris";
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-  services.pipewire = {
-    enable           = lib.mkDefault true;
-    alsa.enable      = lib.mkDefault true;
-    alsa.support32Bit = lib.mkDefault true;
-    pulse.enable     = lib.mkDefault true;
-  };
-
-  # ── Live session user ───────────────────────────────────────────
-  # Credentials are operator / operator — shown on the desktop wallpaper
-  # via the installation CD module's default messaging.
+  # ── Live user — auto-login to shell ────────────────────────────────────
   users.users.operator = {
     isNormalUser = true;
     password     = "operator";
     extraGroups  = [ "wheel" "networkmanager" "video" "input" ];
   };
 
-  # Auto-login into the live desktop — no password prompt on first boot.
-  services.displayManager.autoLogin.enable = lib.mkForce true;
-  services.displayManager.autoLogin.user   = lib.mkForce "operator";
+  services.getty.autologinUser = lib.mkForce "operator";
 
-  # Passwordless sudo for the live session; the installed system will
-  # restore the normal password requirement via configuration.nix.
   security.sudo.wheelNeedsPassword = lib.mkForce false;
 
+  # ── Greet the user and hint at the installer ───────────────────────────
+  users.users.operator.packages = [ pkgs.figlet ];
+  environment.interactiveShellInit = ''
+    if [ "$(tty)" = "/dev/tty1" ]; then
+      echo ""
+      echo "  Welcome to AnNIXion ${version}"
+      echo ""
+      echo "  Run  annixion-install  to install AnNIXion onto this machine."
+      echo "  Network is managed by NetworkManager — use  nmtui  to connect."
+      echo ""
+    fi
+  '';
+
+  # ── Packages available in the live session ─────────────────────────────
   environment.systemPackages = with pkgs; [
+    installScript
+    git
+    parted
+    dosfstools   # mkfs.fat
+    e2fsprogs    # mkfs.ext4
     networkmanager
     networkmanagerapplet
-    git
+    pciutils
+    usbutils
     wget
     curl
+    vim
+    nmtui
   ];
 
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.11";
 }
