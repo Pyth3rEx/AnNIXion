@@ -217,8 +217,8 @@
       };
 
       checks.${system} = {
-        boot = pkgs.nixosTest (import ./tests/boot.nix);
-        security-tools = pkgs.nixosTest (import ./tests/security-tools.nix);
+        boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
+        security-tools = pkgs.testers.nixosTest (import ./tests/security-tools.nix);
       };
     };
 }
