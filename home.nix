@@ -34,63 +34,126 @@ let
   # Each entry becomes a group header + 2×2 app tiles arranged 3 per row.
   # Apps reference the .desktop file IDs written by apps-menu.nix.
   tileGroups = [
-    { label = "01. Reconnaissance"; apps = [
-      "annixion-theharvester" "annixion-whois" "annixion-dig" "annixion-whatweb"
-      "annixion-nmap" "annixion-gobuster" "annixion-ffuf"
-      "annixion-gqrx" "annixion-gnuradio" "annixion-hackrf"
-    ]; }
-    { label = "02. Weaponization"; apps = [
-      "annixion-ghidra" "annixion-binwalk"
-    ]; }
-    { label = "03. Delivery"; apps = [
-      "annixion-burpsuite" "annixion-sqlmap"
-    ]; }
-    { label = "04. Exploitation"; apps = [
-      "annixion-metasploit" "annixion-john" "annixion-hashcat"
-      "annixion-hydra" "annixion-seclists" "annixion-aircrack"
-    ]; }
-    { label = "05. Installation & C2"; apps = [
-      "annixion-netcat"
-    ]; }
-    { label = "06. Post-Exploitation"; apps = [
-      "annixion-impacket"
-    ]; }
-    { label = "07. Forensics & RE"; apps = [
-      "annixion-volatility" "annixion-autopsy" "annixion-wireshark"
-    ]; }
-    { label = "Tools"; apps = [
-      "annixion-vscodium" "annixion-github-desktop"
-      "annixion-obsidian" "annixion-onlyoffice"
-    ]; }
-    { label = "System"; apps = [
-      "annixion-konsole" "annixion-dolphin" "annixion-systemsettings"
-      "annixion-kleopatra" "annixion-htop"
-    ]; }
+    {
+      label = "01. Reconnaissance";
+      apps = [
+        "annixion-theharvester"
+        "annixion-whois"
+        "annixion-dig"
+        "annixion-whatweb"
+        "annixion-nmap"
+        "annixion-gobuster"
+        "annixion-ffuf"
+        "annixion-gqrx"
+        "annixion-gnuradio"
+        "annixion-hackrf"
+      ];
+    }
+    {
+      label = "02. Weaponization";
+      apps = [
+        "annixion-ghidra"
+        "annixion-binwalk"
+      ];
+    }
+    {
+      label = "03. Delivery";
+      apps = [
+        "annixion-burpsuite"
+        "annixion-sqlmap"
+      ];
+    }
+    {
+      label = "04. Exploitation";
+      apps = [
+        "annixion-metasploit"
+        "annixion-john"
+        "annixion-hashcat"
+        "annixion-hydra"
+        "annixion-seclists"
+        "annixion-aircrack"
+      ];
+    }
+    {
+      label = "05. Installation & C2";
+      apps = [
+        "annixion-netcat"
+      ];
+    }
+    {
+      label = "06. Post-Exploitation";
+      apps = [
+        "annixion-impacket"
+      ];
+    }
+    {
+      label = "07. Forensics & RE";
+      apps = [
+        "annixion-volatility"
+        "annixion-autopsy"
+        "annixion-wireshark"
+      ];
+    }
+    {
+      label = "Tools";
+      apps = [
+        "annixion-vscodium"
+        "annixion-github-desktop"
+        "annixion-obsidian"
+        "annixion-onlyoffice"
+      ];
+    }
+    {
+      label = "System";
+      apps = [
+        "annixion-konsole"
+        "annixion-dolphin"
+        "annixion-systemsettings"
+        "annixion-kleopatra"
+        "annixion-htop"
+      ];
+    }
   ];
 
-  generateTileModel = groups:
+  generateTileModel =
+    groups:
     let
-      foldGroup = acc: group:
+      foldGroup =
+        acc: group:
         let
           n = builtins.length group.apps;
           numRows = if n == 0 then 0 else (n + 2) / 3;
-          groupTile = { tileType = "group"; label = group.label; url = ""; x = 0; y = acc.y; w = 6; h = 1; };
+          groupTile = {
+            tileType = "group";
+            label = group.label;
+            url = "";
+            x = 0;
+            y = acc.y;
+            w = 6;
+            h = 1;
+          };
           appTiles = lib.imap0 (i: app: {
             url = "${app}.desktop";
             x = (lib.mod i 3) * 2;
             y = acc.y + 1 + (i / 3) * 2;
-            w = 2; h = 2;
+            w = 2;
+            h = 2;
           }) group.apps;
-        in {
+        in
+        {
           tiles = acc.tiles ++ [ groupTile ] ++ appTiles;
           y = acc.y + 1 + numRows * 2;
         };
-      result = builtins.foldl' foldGroup { tiles = []; y = 0; } groups;
-    in result.tiles;
+      result = builtins.foldl' foldGroup {
+        tiles = [ ];
+        y = 0;
+      } groups;
+    in
+    result.tiles;
 
-  tileModelFile = pkgs.writeText "tiledmenu-tilemodel.json"
-    (builtins.toJSON (generateTileModel tileGroups));
-
+  tileModelFile = pkgs.writeText "tiledmenu-tilemodel.json" (
+    builtins.toJSON (generateTileModel tileGroups)
+  );
 
   TiledMenu = pkgs.stdenvNoCC.mkDerivation {
     pname = "plasma-applet-tiledmenu";
@@ -175,6 +238,7 @@ in
     curl
     htop
     tree
+    yubikey-personalization # Yubikey toolset
 
     # ── Productivity ──────────────────────────────────────────
     obsidian # Note-taking and knowledge management*
@@ -304,13 +368,15 @@ in
 
   # Restart plasmashell after rebuild — depends on both widget install and
   # kwinrc being written so KWin loads with the correct config.
-  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" "configureTiledMenu" ] ''
-    if [ -n "''${DISPLAY:-}" ]; then
-      ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
-        > /dev/null 2>&1 &
-      disown 2>/dev/null || true
-    fi
-  '';
+  home.activation.restartPlasmashell =
+    lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" "configureTiledMenu" ]
+      ''
+        if [ -n "''${DISPLAY:-}" ]; then
+          ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
+            > /dev/null 2>&1 &
+          disown 2>/dev/null || true
+        fi
+      '';
 
   programs = {
     gpg = {
