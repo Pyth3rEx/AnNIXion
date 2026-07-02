@@ -66,6 +66,6 @@
   '';
 
   imports = [
-    # ./examples/hackthebox.nix # HTB Networking & DNS helper for AnNIXion
+    ./examples/hackthebox.nix # HTB Networking & DNS helper for AnNIXion
   ];
 }
