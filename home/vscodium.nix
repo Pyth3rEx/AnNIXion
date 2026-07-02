@@ -18,6 +18,9 @@
         ms-vscode.makefile-tools
         tamasfe.even-better-toml
         redhat.vscode-yaml
+
+        # Specific dev tools
+        sanjulaganepola.github-local-actions
       ];
       userSettings = {
         # Nix IDE Configuration
