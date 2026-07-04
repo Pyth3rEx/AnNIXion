@@ -182,12 +182,14 @@ let
 in
 {
   imports = [
+    # Directories
     ./home/firefox
     ./home/plasma.nix
     ./home/vscodium.nix
     ./home/only-office.nix
     ./home/apps-menu.nix
     ./home/control-center.nix
+    ./home/fastfetch.nix
     ./home/zsh.nix
   ];
 
