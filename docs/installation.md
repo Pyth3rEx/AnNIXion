@@ -90,6 +90,8 @@ After the first successful build, three shell aliases are available:
 | `upgrade` | Update all flake inputs then rebuild |
 | `update` | Update flake inputs only, no rebuild |
 
+See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
+
 ---
 
 ## Repository structure
@@ -113,6 +115,7 @@ After the first successful build, three shell aliases are available:
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
+│   ├── zsh.nix                    # ZSH config: oh-my-zsh, oh-my-posh, aliases, plugins
 │   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
 │   ├── only-office.nix            # OnlyOffice document editor
 │   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries

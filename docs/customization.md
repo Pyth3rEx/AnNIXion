@@ -16,7 +16,7 @@ imports = [ ./examples/git.nix ];
 
 Then fill in `user/examples/git.nix` with your details.
 
-**Add a welcome banner** — uncomment the ZSH example:
+**Add or override ZSH settings** — uncomment the ZSH example:
 
 ```nix
 imports = [ ./examples/zsh.nix ];
@@ -29,6 +29,12 @@ rebuild
 ```
 
 See `user/README.md` for the full override system documentation.
+
+---
+
+## Shell environment
+
+ZSH configuration lives entirely in `home/zsh.nix`. See [docs/zsh.md](zsh.md) for the full shortcut and alias reference, and [docs/tools.md](tools.md) for enhanced CLI tools included in the environment.
 
 ---
 

@@ -1,0 +1,213 @@
+# ZSH Reference
+
+AnNIXion ships a fully configured ZSH environment. All configuration lives in `home/zsh.nix`.
+
+---
+
+## Prompt — oh-my-posh
+
+Two-line powerline-style prompt with a neon red / dark grey palette.
+
+```
+  user @ HOST    ~/path/to/dir    ⎇ main  ●2  +1  ↑3        42c  ⏱ 5s  ✗ 1  14:32:07
+❯
+```
+
+| Segment | When shown | Meaning |
+|---|---|---|
+| `user @ HOST` | Always | Username and hostname. Flips to `☠ ROOT` on red bg when root |
+| `~/path` | Always | Current directory, shortened to 4 levels. `~` for home |
+| `⎇ branch` | Inside a git repo | Branch or commit SHA |
+| `●N` | Staged changes | N files staged |
+| `+N` | Working changes | N modified/untracked files |
+| `↑N` / `↓N` | Ahead/behind remote | Commits ahead or behind |
+| `⚑N` | Stash entries | N stash entries |
+| `Nc` (right) | After every command | Character count of the last command |
+| `⏱ Xs` (right) | Command ran > 3 s | Execution time, rounded |
+| `✗ N` (right) | Non-zero exit | Exit code of the last command |
+| `HH:MM:SS` (right) | Always | Current time |
+
+---
+
+## Key Bindings
+
+### Navigation
+
+| Key | Action |
+|---|---|
+| `Ctrl+Right` | Jump one word forward |
+| `Ctrl+Left` | Jump one word backward |
+| `Home` | Jump to start of line |
+| `End` | Jump to end of line |
+| `Delete` | Delete character under cursor |
+| `Ctrl+Backspace` | Delete word to the left |
+| `Ctrl+Delete` | Delete word to the right |
+
+### History
+
+| Key | Action |
+|---|---|
+| `↑` / `↓` | History search matching the current prefix |
+| `Ctrl+R` | **fzf interactive history search** with live preview |
+
+### Files and Directories
+
+| Key | Action |
+|---|---|
+| `Ctrl+T` | fzf file picker — inserts selected path at cursor |
+| `Alt+C` | fzf directory picker — cd into selected directory |
+| `Alt+←` | Go back in directory history (`dirhistory`) |
+| `Alt+→` | Go forward in directory history (`dirhistory`) |
+
+### Convenience
+
+| Key | Action |
+|---|---|
+| `ESC ESC` | Prepend `sudo` to the current or previous command |
+| `Enter` (empty line) | Show `git status` in a repo, `ls` elsewhere (`magic-enter`) |
+| `Tab` | **fzf-tab** completion popup — searchable, live preview |
+
+---
+
+## Aliases — System
+
+| Alias | Expands to |
+|---|---|
+| `ll` | `ls -la` |
+| `grep` | `grep --color=auto` |
+| `cat` | `bat` (syntax-highlighted pager) |
+
+## Aliases — NixOS
+
+| Alias | What it does |
+|---|---|
+| `rebuild` | `sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure` |
+| `upgrade` | Update all flake inputs, then rebuild |
+| `update` | Update flake inputs only (no rebuild) |
+| `enix` | Open `flake.nix` in Kate |
+| `emod` | Open `modules/` in Kate |
+| `euser` | Open `user/` in Kate |
+| `ehome` | Open `home.nix` in Kate |
+| `ezsh` | Open `home/zsh.nix` in Kate |
+
+## Aliases — Git
+
+| Alias | Expands to |
+|---|---|
+| `gs` | `git status` |
+| `gp` | `git push` |
+| `gl` | `git pull` |
+
+## Aliases — Network / OSINT
+
+| Alias | What it does |
+|---|---|
+| `ip_out` | External IP address (via ifconfig.me) |
+| `ip_local` | Local IPv4 addresses with prefix lengths |
+| `myip` | Formatted table of all non-loopback interfaces |
+| `ports` | `ss -tulnp` — listening TCP/UDP ports with process names |
+| `vpn` | Detect active VPN interfaces (tun, wg, vpn prefix) |
+
+## Aliases — Tools
+
+| Alias | Expands to |
+|---|---|
+| `ftp` | `lftp` |
+| `hex` | `xxd` |
+| `b64e` | `base64` |
+| `b64d` | `base64 -d` |
+| `hashfile` | `sha256sum` |
+| `serve` | `python3 -m http.server` (quick HTTP file server on port 8000) |
+| `seclists` | Browse the SecLists wordlist directory |
+
+---
+
+## oh-my-zsh Plugin Commands
+
+### git plugin
+
+Common aliases — for the full list run `alias | grep ^g`.
+
+| Alias | Expands to |
+|---|---|
+| `gst` | `git status` |
+| `gco` | `git checkout` |
+| `gcb` | `git checkout -b` |
+| `gaa` | `git add --all` |
+| `gcmsg` | `git commit -m` |
+| `glo` | `git log --oneline --decorate` |
+| `gd` | `git diff` |
+| `gf` | `git fetch` |
+
+### history plugin
+
+| Command | What it does |
+|---|---|
+| `h` | Full history |
+| `hs <term>` | grep history (case-sensitive) |
+| `hsi <term>` | grep history (case-insensitive) |
+
+### extract plugin
+
+```bash
+x archive.tar.gz      # extract any archive format with one command
+x file.zip
+x dump.7z
+```
+
+### nmap plugin
+
+| Alias | Nmap flags |
+|---|---|
+| `nmap_open_ports` | Quick TCP scan of open ports |
+| `nmap_full_udp` | Full UDP scan |
+| `nmap_check_for_vulns` | NSE vuln scripts |
+| `nmap_full_with_scripts` | All ports + default scripts |
+| `nmap_os` | OS detection |
+
+### urltools plugin
+
+```bash
+urlencode "hello world & more"    # → hello+world+%26+more
+urldecode "hello+world+%26+more"  # → hello world & more
+```
+
+### jsontools plugin
+
+```bash
+curl -s api/endpoint | pp_json     # pretty-print JSON
+echo '{"a":1}' | is_json           # returns 0 if valid JSON
+```
+
+### rsync plugin
+
+| Alias | What it does |
+|---|---|
+| `rsync-copy` | `rsync -avz --progress` |
+| `rsync-move` | `rsync -avz --progress --remove-source-files` |
+
+---
+
+## zoxide (directory jumper)
+
+zoxide tracks visited directories and ranks them by frecency.
+
+```bash
+z proj          # jump to the most-visited directory matching "proj"
+zi              # interactive picker — fzf over your full jump history
+z -             # go to the previous directory
+```
+
+The `cd` command still works normally. zoxide learns from every `cd` you run.
+
+---
+
+## Startup Banner
+
+Each new terminal session prints the AnNIXion ASCII banner followed by:
+
+- Hostname, current date/time, kernel version
+- All global IPv4 addresses — VPN interfaces highlighted in green
+
+The banner is defined at the end of `initContent` in `home/zsh.nix`.
+To override it per-machine without touching the shared config, use `user/examples/zsh.nix`.
