@@ -31,6 +31,10 @@
         "history"          # h = history  hs = grep history  hsi = case-insensitive
         "nmap"             # nmap shortcuts: nmap_open_ports, nmap_full_udp, nmap_os …
         "rsync"            # rsync-copy / rsync-move with progress bar
+        "urltools"         # urlencode / urldecode — encode payloads, decode responses
+        "jsontools"        # pp_json, is_json, json_grep — parse curl/API output
+        "dirhistory"       # Alt+← / Alt+→ — walk backward/forward through cd history
+        "magic-enter"      # Enter on empty prompt → git status in repo, ls elsewhere
         # "z" removed — replaced by programs.zoxide above (smarter + zi picker)
       ];
     };
