@@ -12,8 +12,23 @@
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;      # grey inline suggestions as you type
-    syntaxHighlighting.enable = true;  # red = invalid, green = valid command
+    syntaxHighlighting.enable = true;  # see mkOrder 1190 below for fast-syntax-highlighting
     enableCompletion = true;
+
+    # ── External plugins from nixpkgs ────────────────────────────────────────
+    plugins = [
+      # Reminds you of existing aliases after typing a full command
+      {
+        name = "you-should-use";
+        src = "${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use";
+      }
+      # Auto-closes brackets and quotes while typing; useful for payload crafting
+      {
+        name = "zsh-autopair";
+        src = "${pkgs.zsh-autopair}/share/zsh/zsh-autopair";
+        file = "autopair.zsh";
+      }
+    ];
     autocd = true;                     # type a directory name to cd into it
 
     # ── oh-my-zsh framework ─────────────────────────────────────────────────
