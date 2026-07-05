@@ -21,6 +21,7 @@
 
         # Specific dev tools
         sanjulaganepola.github-local-actions
+        timonwong.shellcheck
       ];
       userSettings = {
         # Nix IDE Configuration
@@ -49,6 +50,9 @@
         # Terminal settings
         "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.fontFamily" = "monospace";
+
+        # Task runner settings
+        "task.allowAutomaticTasks" = "on";
       };
     };
   };
