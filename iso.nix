@@ -9,10 +9,12 @@ let
 in
 {
   # ── ISO image metadata ──────────────────────────────────────────────────
-  isoImage.isoBaseName = lib.mkForce "AnNIXion";
-  isoImage.isoName = lib.mkForce "AnNIXion-${version}.iso";
-  isoImage.volumeID = lib.mkForce "ANNIXION";
-  isoImage.squashfsCompression = "xz -Xdict-size 100%";
+  isoImage = {
+    isoBaseName = lib.mkForce "AnNIXion";
+    isoName = lib.mkForce "AnNIXion-${version}.iso";
+    volumeID = lib.mkForce "ANNIXION";
+    squashfsCompression = "xz -Xdict-size 100%";
+  };
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [

@@ -14,18 +14,20 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 {
-  programs.git.settings.userName = "Your Name";
-  programs.git.settings.userEmail = "you@example.com";
+  programs.git.settings = {
+    userName = "Your Name";
+    userEmail = "you@example.com";
 
-  programs.git.settings.extraConfig = {
-    init.defaultBranch = "main";
-    pull.rebase = false;
+    extraConfig = {
+      init.defaultBranch = "main";
+      pull.rebase = false;
 
-    # Useful for security work — always verify what you're pushing
-    push.default = "current";
+      # Useful for security work — always verify what you're pushing
+      push.default = "current";
 
-    # Nicer diffs
-    diff.colorMoved = "zebra";
+      # Nicer diffs
+      diff.colorMoved = "zebra";
+    };
   };
 
   # ── Optional: GPG commit signing ──────────────────────────────────────────

@@ -8,7 +8,7 @@
 
 let
   repoRoot = inputs.firefox-addons.sourceInfo.outPath;
-  libMozilla = import "${repoRoot}/lib/mozilla.nix" { lib = pkgs.lib; };
+  libMozilla = import "${repoRoot}/lib/mozilla.nix" { inherit (pkgs) lib; };
   buildMozillaXpiAddon = libMozilla.mkBuildMozillaXpiAddon { inherit (pkgs) fetchurl stdenv; };
   addons = import "${inputs.firefox-addons}" {
     inherit buildMozillaXpiAddon;
