@@ -86,6 +86,13 @@
 
     # ── Shell init content ───────────────────────────────────────────────────
     initContent = lib.mkMerge [
+      # fzf-tab at 1150 — must load after oh-my-zsh runs compinit (1100)
+      # Replaces the default completion menu with an fzf popup.
+      # Tab on `kill ` fuzzes running processes; tab on `ssh ` fuzzes known hosts.
+      (lib.mkOrder 1150 ''
+        source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+      '')
+
       # Key bindings at 1200 — after oh-my-zsh loads at 1100
       (lib.mkOrder 1200 ''
         bindkey "^[[1;5C" forward-word          # Ctrl+Right  jump word forward
