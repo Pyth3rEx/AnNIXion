@@ -225,7 +225,7 @@ in
     ripgrep # fast grep (rg)
     fd # fast find
     bat # cat with syntax highlighting
-    fzf # fuzzy finder
+    # fzf is managed by programs.fzf in home/zsh.nix
     jq # JSON processor
     unzip
     p7zip

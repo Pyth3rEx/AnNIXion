@@ -142,6 +142,17 @@
   };
 
   # ───────────────────────────────────────────────────────────────────────────
+  # fzf — fuzzy finder with full ZSH widget integration
+  #   Ctrl+R  interactive history search with preview
+  #   Ctrl+T  fuzzy file picker inserted at cursor
+  #   Alt+C   fuzzy cd into any subdirectory
+  # ───────────────────────────────────────────────────────────────────────────
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # ───────────────────────────────────────────────────────────────────────────
   # oh-my-posh — AnNIXion red-team prompt
   #
   # Palette: neon red (#ff0033) on black/grey — no orange.
