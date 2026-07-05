@@ -33,7 +33,7 @@ in
         redhat.vscode-yaml
 
         # CI/CD tools
-        github-local-actions  # run GitHub Actions workflows locally (requires act + Docker)
+        github-local-actions # run GitHub Actions workflows locally (requires act + Docker)
         timonwong.shellcheck
       ];
       userSettings = {

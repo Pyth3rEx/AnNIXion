@@ -34,7 +34,11 @@ let
       noDisplay ? false,
     }:
     lib.concatStringsSep "\n" (
-      [ "[Desktop Entry]" "Type=Application" "Name=${name}" ]
+      [
+        "[Desktop Entry]"
+        "Type=Application"
+        "Name=${name}"
+      ]
       ++ lib.optional (genericName != null) "GenericName=${genericName}"
       ++ [
         "Icon=${icon}"
