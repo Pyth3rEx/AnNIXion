@@ -77,27 +77,29 @@
             # in one command — no separate "home-manager switch" step needed.
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true; # share system pkgs
-              home-manager.useUserPackages = true; # install to user profile
-              # Back up any file HM wants to write that already exists on disk.
-              # Without this, HM aborts if a file exists but wasn't created by HM
-              # (e.g. KDE wrote it, or a previous partial activation left it).
-              home-manager.backupFileExtension = "backup";
-              # Give Home Manager access to the plasma-manager module
-              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+              home-manager = {
+                useGlobalPkgs = true; # share system pkgs
+                useUserPackages = true; # install to user profile
+                # Back up any file HM wants to write that already exists on disk.
+                # Without this, HM aborts if a file exists but wasn't created by HM
+                # (e.g. KDE wrote it, or a previous partial activation left it).
+                backupFileExtension = "backup";
+                # Give Home Manager access to the plasma-manager module
+                sharedModules = [ plasma-manager.homeModules.plasma-manager ];
 
-              # Extra arguments to Home Manager modules
-              home-manager.extraSpecialArgs = { inherit inputs; };
+                # Extra arguments to Home Manager modules
+                extraSpecialArgs = { inherit inputs; };
 
-              # Merge home.nix with user/home.nix (if it exists).
-              # home.nix uses lib.mkDefault throughout (priority 1000).
-              # user/home.nix uses normal priority (100) and therefore wins
-              # automatically — no lib.mkForce needed in your overrides.
-              home-manager.users.operator = {
-                imports = [
-                  ./home.nix
-                ]
-                ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
+                # Merge home.nix with user/home.nix (if it exists).
+                # home.nix uses lib.mkDefault throughout (priority 1000).
+                # user/home.nix uses normal priority (100) and therefore wins
+                # automatically — no lib.mkForce needed in your overrides.
+                users.operator = {
+                  imports = [
+                    ./home.nix
+                  ]
+                  ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
+                };
               };
             }
 
@@ -123,11 +125,13 @@
                 # ============================================================
                 # NETWORKING
                 # ============================================================
-                networking.hostName = lib.mkDefault "AnNIXion";
-                networking.networkmanager.enable = lib.mkDefault true;
-                networking.networkmanager.plugins = with pkgs; [
-                  networkmanager-openvpn
-                ];
+                networking = {
+                  hostName = lib.mkDefault "AnNIXion";
+                  networkmanager.enable = lib.mkDefault true;
+                  networkmanager.plugins = with pkgs; [
+                    networkmanager-openvpn
+                  ];
+                };
 
                 # ============================================================
                 # NIX SETTINGS
