@@ -1,8 +1,14 @@
-{ inputs, config, lib, pkgs, ... }:
+{
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   repoRoot = inputs.firefox-addons.sourceInfo.outPath;
-  libMozilla = import "${repoRoot}/lib/mozilla.nix" { lib = pkgs.lib; };
+  libMozilla = import "${repoRoot}/lib/mozilla.nix" { inherit (pkgs) lib; };
   buildMozillaXpiAddon = libMozilla.mkBuildMozillaXpiAddon { inherit (pkgs) fetchurl stdenv; };
   addons = import "${inputs.firefox-addons}" {
     inherit buildMozillaXpiAddon;
@@ -20,40 +26,48 @@ in
       engines = {
         nix-packages = {
           name = "Nix Packages";
-          urls = [{
-            template = "https://search.nixos.org/packages";
-            params = [
-              { name = "type"; value = "packages"; }
-              { name = "query"; value = "{searchTerms}"; }
-            ];
-          }];
+          urls = [
+            {
+              template = "https://search.nixos.org/packages";
+              params = [
+                {
+                  name = "type";
+                  value = "packages";
+                }
+                {
+                  name = "query";
+                  value = "{searchTerms}";
+                }
+              ];
+            }
+          ];
           icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
           definedAliases = [ "@np" ];
         };
 
         nixos-wiki = {
           name = "NixOS Wiki";
-          urls = [{ template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; }];
+          urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];
           iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
           definedAliases = [ "@nw" ];
         };
 
         exploit-db = {
           name = "Exploit-DB";
-          urls = [{ template = "https://www.exploit-db.com/search?q={searchTerms}"; }];
+          urls = [ { template = "https://www.exploit-db.com/search?q={searchTerms}"; } ];
           iconMapObj."16" = "https://www.exploit-db.com/favicon.ico";
           definedAliases = [ "@edb" ];
         };
 
         cve = {
           name = "CVE Search";
-          urls = [{ template = "https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword={searchTerms}"; }];
+          urls = [ { template = "https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword={searchTerms}"; } ];
           definedAliases = [ "@cve" ];
         };
 
         nvd = {
           name = "NVD";
-          urls = [{ template = "https://nvd.nist.gov/vuln/search/results?query={searchTerms}"; }];
+          urls = [ { template = "https://nvd.nist.gov/vuln/search/results?query={searchTerms}"; } ];
           definedAliases = [ "@nvd" ];
         };
 
@@ -75,24 +89,24 @@ in
 
       # ── WebRTC + geolocation ───────────────────────────────────
       "media.peerconnection.enabled" = false;
-      "geo.enabled"                  = false;
+      "geo.enabled" = false;
 
       # ── No speculative requests during testing ─────────────────
-      "network.dns.disablePrefetch"               = true;
-      "network.prefetch-next"                     = false;
-      "network.predictor.enabled"                 = false;
-      "network.http.speculative-parallel-limit"   = 0;
+      "network.dns.disablePrefetch" = true;
+      "network.prefetch-next" = false;
+      "network.predictor.enabled" = false;
+      "network.http.speculative-parallel-limit" = 0;
 
       # ── Telemetry ─────────────────────────────────────────────
-      "datareporting.healthreport.uploadEnabled"   = false;
+      "datareporting.healthreport.uploadEnabled" = false;
       "datareporting.policy.dataSubmissionEnabled" = false;
-      "toolkit.telemetry.unified"                  = false;
-      "browser.ping-centre.telemetry"              = false;
+      "toolkit.telemetry.unified" = false;
+      "browser.ping-centre.telemetry" = false;
 
       # ── Storage ───────────────────────────────────────────────
-      "signon.rememberSignons"          = false;
-      "browser.formfill.enable"         = false;
-      "media.autoplay.default"          = 5;
+      "signon.rememberSignons" = false;
+      "browser.formfill.enable" = false;
+      "media.autoplay.default" = 5;
       "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
@@ -119,14 +133,30 @@ in
   ];
 
   programs.firefox.policies.ExtensionSettings = with addons; {
-    "${ublock-origin.addonId}"      = { private_browsing = true; };
-    "${bitwarden.addonId}"          = { private_browsing = true; };
-    "${privacy-badger.addonId}"     = { private_browsing = true; };
-    "${darkreader.addonId}"         = { private_browsing = true; };
-    "${foxyproxy-standard.addonId}" = { private_browsing = true; };
-    "${single-file.addonId}"        = { private_browsing = true; };
-    "${hacktools.addonId}"          = { private_browsing = true; };
-    "${cookie-editor.addonId}"      = { private_browsing = true; };
+    "${ublock-origin.addonId}" = {
+      private_browsing = true;
+    };
+    "${bitwarden.addonId}" = {
+      private_browsing = true;
+    };
+    "${privacy-badger.addonId}" = {
+      private_browsing = true;
+    };
+    "${darkreader.addonId}" = {
+      private_browsing = true;
+    };
+    "${foxyproxy-standard.addonId}" = {
+      private_browsing = true;
+    };
+    "${single-file.addonId}" = {
+      private_browsing = true;
+    };
+    "${hacktools.addonId}" = {
+      private_browsing = true;
+    };
+    "${cookie-editor.addonId}" = {
+      private_browsing = true;
+    };
   };
 
   programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
@@ -135,30 +165,32 @@ in
     autoBackup = false;
     passthrough = "";
     theme = "";
-    container = {};
+    container = { };
     commands = {
       setProxy = "";
       setTabProxy = "";
       includeHost = "";
       excludeHost = "";
     };
-    data = [{
-      active = true;
-      title = "Burpsuite";
-      type = "http";
-      hostname = "127.0.0.1";
-      port = "8080";
-      username = "";
-      password = "";
-      cc = "";
-      city = "";
-      color = "#b22222";
-      pac = "";
-      pacString = "";
-      proxyDNS = true;
-      include = [];
-      exclude = [];
-      tabProxy = [];
-    }];
+    data = [
+      {
+        active = true;
+        title = "Burpsuite";
+        type = "http";
+        hostname = "127.0.0.1";
+        port = "8080";
+        username = "";
+        password = "";
+        cc = "";
+        city = "";
+        color = "#b22222";
+        pac = "";
+        pacString = "";
+        proxyDNS = true;
+        include = [ ];
+        exclude = [ ];
+        tabProxy = [ ];
+      }
+    ];
   };
 }

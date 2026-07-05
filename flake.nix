@@ -43,11 +43,13 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
+      pkgsUnfree = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
-      packages.${system}.iso =
-        self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+      packages.${system}.iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
 
       nixosConfigurations = {
         AnNIXion-iso = nixpkgs.lib.nixosSystem {
@@ -75,27 +77,29 @@
             # in one command — no separate "home-manager switch" step needed.
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true; # share system pkgs
-              home-manager.useUserPackages = true; # install to user profile
-              # Back up any file HM wants to write that already exists on disk.
-              # Without this, HM aborts if a file exists but wasn't created by HM
-              # (e.g. KDE wrote it, or a previous partial activation left it).
-              home-manager.backupFileExtension = "backup";
-              # Give Home Manager access to the plasma-manager module
-              home-manager.sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+              home-manager = {
+                useGlobalPkgs = true; # share system pkgs
+                useUserPackages = true; # install to user profile
+                # Back up any file HM wants to write that already exists on disk.
+                # Without this, HM aborts if a file exists but wasn't created by HM
+                # (e.g. KDE wrote it, or a previous partial activation left it).
+                backupFileExtension = "backup";
+                # Give Home Manager access to the plasma-manager module
+                sharedModules = [ plasma-manager.homeModules.plasma-manager ];
 
-              # Extra arguments to Home Manager modules
-              home-manager.extraSpecialArgs = { inherit inputs; };
+                # Extra arguments to Home Manager modules
+                extraSpecialArgs = { inherit inputs; };
 
-              # Merge home.nix with user/home.nix (if it exists).
-              # home.nix uses lib.mkDefault throughout (priority 1000).
-              # user/home.nix uses normal priority (100) and therefore wins
-              # automatically — no lib.mkForce needed in your overrides.
-              home-manager.users.operator = {
-                imports = [
-                  ./home.nix
-                ]
-                ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
+                # Merge home.nix with user/home.nix (if it exists).
+                # home.nix uses lib.mkDefault throughout (priority 1000).
+                # user/home.nix uses normal priority (100) and therefore wins
+                # automatically — no lib.mkForce needed in your overrides.
+                users.operator = {
+                  imports = [
+                    ./home.nix
+                  ]
+                  ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
+                };
               };
             }
 
@@ -121,11 +125,13 @@
                 # ============================================================
                 # NETWORKING
                 # ============================================================
-                networking.hostName = lib.mkDefault "AnNIXion";
-                networking.networkmanager.enable = lib.mkDefault true;
-                networking.networkmanager.plugins = with pkgs; [
-                  networkmanager-openvpn
-                ];
+                networking = {
+                  hostName = lib.mkDefault "AnNIXion";
+                  networkmanager.enable = lib.mkDefault true;
+                  networkmanager.plugins = with pkgs; [
+                    networkmanager-openvpn
+                  ];
+                };
 
                 # ============================================================
                 # NIX SETTINGS
@@ -232,6 +238,24 @@
       checks.${system} = {
         boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
         security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        name = "annixion-dev";
+        packages = with pkgs; [
+          nixfmt
+          statix
+          deadnix
+          nil
+          nix-output-monitor
+        ];
+        shellHook = ''
+          if [ ! -f hardware-configuration.nix ]; then
+            cp "$(git rev-parse --show-toplevel)/ci/hardware-stub.nix" hardware-configuration.nix
+            echo "[dev] Stubbed hardware-configuration.nix from ci/hardware-stub.nix"
+          fi
+          echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check."
+        '';
       };
     };
 }

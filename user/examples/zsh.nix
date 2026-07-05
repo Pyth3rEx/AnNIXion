@@ -5,15 +5,20 @@
 # To activate: uncomment in user/home.nix:
 #   imports = [ ./examples/zsh.nix ];
 # ─────────────────────────────────────────────────────────────────────────────
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   programs.zsh = {
     shellAliases = {
       # ── Recon shortcuts ───────────────────────────────────────
-      hosts  = "nmap -sn";         # host discovery
-      ports  = "nmap -sV --open";  # port/service scan
-      dns    = "dig +short";       # quick DNS lookup
+      hosts = "nmap -sn"; # host discovery
+      ports = "nmap -sV --open"; # port/service scan
+      dns = "dig +short"; # quick DNS lookup
     };
 
     initContent = lib.mkAfter ''
