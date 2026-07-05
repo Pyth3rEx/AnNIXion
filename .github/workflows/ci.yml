@@ -64,6 +64,10 @@ jobs:
             nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
           }
           EOF
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       # L1 — flake evaluation: catches syntax errors, bad option types,
       # undefined references. --no-build keeps this step fast.
@@ -147,6 +151,10 @@ jobs:
             nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
           }
           EOF
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       - name: Build ISO
         run: |
