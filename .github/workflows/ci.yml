@@ -210,12 +210,26 @@ jobs:
             exit 0
           fi
 
+          # Auto-generated PR list since the previous tag
+          PREV_TAG=$(git tag --sort=-version:refname | head -1)
+          AUTO_NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+            -X POST \
+            -f tag_name="$TAG" \
+            ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
+            --jq '.body' 2>/dev/null || echo "")
+
+          NOTES_FILE=$(mktemp)
+          {
+            echo "${{ steps.changelog.outputs.body }}"
+            if [ -n "$AUTO_NOTES" ]; then
+              printf '\n---\n\n## All changes in this release\n\n%s\n' "$AUTO_NOTES"
+            fi
+            printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
+            printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
+            printf 'Built from commit `${{ github.sha }}`.\n'
+          } > "$NOTES_FILE"
+
           gh release create "$TAG" \
             --title "AnNIXion $TAG" \
-            --notes "${{ steps.changelog.outputs.body }}
-
----
-**Live credentials:** \`operator\` / \`operator\`
-Flash the ISO with Rufus (Windows) or \`dd\` (Linux/macOS), boot, run \`annixion-install\`.
-Built from commit \`${{ github.sha }}\`." \
+            --notes-file "$NOTES_FILE" \
             "${{ steps.iso.outputs.path }}"
