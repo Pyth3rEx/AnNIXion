@@ -43,11 +43,13 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      pkgsUnfree = import nixpkgs { inherit system; config.allowUnfree = true; };
+      pkgsUnfree = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in
     {
-      packages.${system}.iso =
-        self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+      packages.${system}.iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
 
       nixosConfigurations = {
         AnNIXion-iso = nixpkgs.lib.nixosSystem {

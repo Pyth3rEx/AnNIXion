@@ -1,9 +1,9 @@
 { inputs, pkgs, ... }:
 
 let
-  repoRoot          = inputs.firefox-addons.sourceInfo.outPath;
-  libMozilla        = import "${repoRoot}/lib/mozilla.nix" { lib = pkgs.lib; };
-  buildMozillaXpi   = libMozilla.mkBuildMozillaXpiAddon { inherit (pkgs) fetchurl stdenv; };
+  repoRoot = inputs.firefox-addons.sourceInfo.outPath;
+  libMozilla = import "${repoRoot}/lib/mozilla.nix" { lib = pkgs.lib; };
+  buildMozillaXpi = libMozilla.mkBuildMozillaXpiAddon { inherit (pkgs) fetchurl stdenv; };
   addons = import "${inputs.firefox-addons}" {
     buildMozillaXpiAddon = buildMozillaXpi;
     inherit (pkgs) fetchurl lib stdenv;
@@ -15,14 +15,13 @@ let
   # CSS-escape an addon widget ID for use as an ID selector.
   # Firefox element IDs follow the raw addonId pattern; special characters
   # (@, {, }, .) must be escaped in CSS selectors with a leading backslash.
-  cssId = addon:
+  cssId =
+    addon:
     let
       id = widget addon;
-      escaped = builtins.replaceStrings
-        [ "@"  "{"  "}"  "." ]
-        [ "\\@" "\\{" "\\}" "\\." ]
-        id;
-    in "#${escaped}";
+      escaped = builtins.replaceStrings [ "@" "{" "}" "." ] [ "\\@" "\\{" "\\}" "\\." ] id;
+    in
+    "#${escaped}";
 
   # ── Per-profile Nord + neon CSS ───────────────────────────────────
   # accent      — the neon highlight color for this profile
@@ -129,22 +128,28 @@ let
   # and the developer button (the "technical area").
   makeSettings = navBarExtras: {
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-    "svg.context-properties.content.enabled"             = true;
+    "svg.context-properties.content.enabled" = true;
     "browser.uiCustomization.state" = builtins.toJSON {
       placements = {
-        "widget-overflow-fixed-list" = [];
+        "widget-overflow-fixed-list" = [ ];
         "nav-bar" = [
           "back-button"
           "forward-button"
           "stop-reload-button"
           "urlbar-container"
           "downloads-button"
-        ] ++ navBarExtras ++ [
+        ]
+        ++ navBarExtras
+        ++ [
           "developer-button"
           "unified-extensions-button"
         ];
         "toolbar-menubar" = [ "menubar-items" ];
-        "TabsToolbar"     = [ "tabbrowser-tabs" "new-tab-button" "alltabs-button" ];
+        "TabsToolbar" = [
+          "tabbrowser-tabs"
+          "new-tab-button"
+          "alltabs-button"
+        ];
         "PersonalToolbar" = [ "personal-bookmarks" ];
       };
       seen = [
@@ -152,8 +157,14 @@ let
         "fxa-toolbar-menu-button"
         "unified-extensions-button"
         "downloads-button"
-      ] ++ navBarExtras;
-      dirtyAreaCache = [ "nav-bar" "TabsToolbar" "toolbar-menubar" "PersonalToolbar" ];
+      ]
+      ++ navBarExtras;
+      dirtyAreaCache = [
+        "nav-bar"
+        "TabsToolbar"
+        "toolbar-menubar"
+        "PersonalToolbar"
+      ];
       currentVersion = 20;
       newElementCount = 2;
     };
@@ -162,37 +173,39 @@ in
 {
   # ── Red Team — neon crimson (#ff2244) ────────────────────────────
   # FoxyProxy and HackTools pinned to toolbar; technical area starts at FoxyProxy.
-  programs.firefox.profiles."redteam".settings   = makeSettings [
+  programs.firefox.profiles."redteam".settings = makeSettings [
     (widget addons.foxyproxy-standard)
     (widget addons.hacktools)
   ];
   programs.firefox.profiles."redteam".userChrome = nordCSS {
-    accent     = "#ff2244";
+    accent = "#ff2244";
     techAnchor = cssId addons.foxyproxy-standard;
   };
 
   # ── OSINT — neon amber (#ffd000) ─────────────────────────────────
   # Disabled: addon removed. Kept as reference for the cssId anchor pattern.
   /*
-  programs.firefox.profiles."osint".userChrome = nordCSS {
-    accent     = "#ffd000";
-    techAnchor = cssId addons.someAddon;   # apply cssId to a pinned addon
-  };
+    programs.firefox.profiles."osint".userChrome = nordCSS {
+      accent     = "#ffd000";
+      techAnchor = cssId addons.someAddon;   # apply cssId to a pinned addon
+    };
   */
 
   # ── Puppet Master — neon green (#00e676) ─────────────────────────
-  programs.firefox.profiles."puppet".settings   = makeSettings [];
-  programs.firefox.profiles."puppet".userChrome = (nordCSS {
-    accent     = "#00e676";
-    techAnchor = "#developer-button";
-  }) + ''
+  programs.firefox.profiles."puppet".settings = makeSettings [ ];
+  programs.firefox.profiles."puppet".userChrome =
+    (nordCSS {
+      accent = "#00e676";
+      techAnchor = "#developer-button";
+    })
+    + ''
 
-    /* ── Container identity stripe (Puppet Master only) ─────────── */
-    /* Always-visible 4px strip so the active container identity is
-       immediately obvious even at a glance across many tabs. */
-    .tab-context-line {
-      height:  4px !important;
-      opacity: 1 !important;
-    }
-  '';
+      /* ── Container identity stripe (Puppet Master only) ─────────── */
+      /* Always-visible 4px strip so the active container identity is
+         immediately obvious even at a glance across many tabs. */
+      .tab-context-line {
+        height:  4px !important;
+        opacity: 1 !important;
+      }
+    '';
 }

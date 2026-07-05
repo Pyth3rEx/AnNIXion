@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 # ── HOW TO USE ────────────────────────────────────────────────────────────────
 # Add this file to your user/home.nix imports list:
@@ -9,12 +14,12 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 {
-  programs.git.settings.userName  = "Your Name";
+  programs.git.settings.userName = "Your Name";
   programs.git.settings.userEmail = "you@example.com";
 
   programs.git.settings.extraConfig = {
     init.defaultBranch = "main";
-    pull.rebase        = false;
+    pull.rebase = false;
 
     # Useful for security work — always verify what you're pushing
     push.default = "current";
