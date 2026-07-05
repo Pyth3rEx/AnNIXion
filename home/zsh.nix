@@ -142,15 +142,17 @@
   };
 
   # ───────────────────────────────────────────────────────────────────────────
-  # oh-my-posh — custom red-team prompt theme
+  # oh-my-posh — AnNIXion red-team prompt
+  #
+  # Palette: neon red (#ff0033) on black/grey — no orange.
   #
   # Layout:
-  #   LEFT   [  user @ host ] [ path ] [ ⎇ branch ●+ ]
-  #   RIGHT  [ Nc ] [ ⏱ 1m3s ] [ ✗ N ] [ 15:04:05 ]
-  #   LINE2  ❯ (or #  when root)
+  #   LEFT   [  user @ HOST  ][   ~/path   ][   ⎇ branch  ●N  +N  ↑N  ↓N  ⚑N   ]
+  #   RIGHT                        [  Nc  ][  ⏱ 1m3s  ][  ✗ N  ][  HH:MM:SS  ]
+  #   LINE2  ❯   (or #   when root)
   #
-  # Right segments only appear when relevant (cmd length after first cmd,
-  # exec time when > 3 s, exit code only on failure).
+  # Git block shows: branch · staged count · working count · ahead · behind · stash
+  # Right block: command char count · exec time (>3 s) · exit code · clock
   # ───────────────────────────────────────────────────────────────────────────
   programs.oh-my-posh = {
     enable = true;
@@ -168,97 +170,104 @@
           alignment = "left";
           newline = true;
           segments = [
-            # User @ Host — bright crimson bg, flips to vivid red when root
+            # User @ Host
+            # bg #252525 normally; flips to neon red when root (text goes black for contrast)
             {
               type = "session";
               style = "powerline";
               powerline_symbol = "";
               foreground = "#ffffff";
-              background = "#8b0000";
-              background_templates = [ "{{ if .Root }}#cc0000{{ end }}" ];
-              template = "  {{ if .Root }}☠  ROOT{{ else }}{{ .UserName }}{{ end }}   {{ .HostName }}  ";
+              background = "#252525";
+              foreground_templates = [ "{{ if .Root }}#000000{{ end }}" ];
+              background_templates = [ "{{ if .Root }}#ff0033{{ end }}" ];
+              template = "   {{ if .Root }}☠  ROOT{{ else }}{{ .UserName }}{{ end }}   {{ .HostName }}   ";
               properties.display_host = true;
             }
-            # Path — light rose text on a slightly darker red
+            # Path
             {
               type = "path";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#ffd0d0";
-              background = "#4a0000";
-              template = "   {{ .Path }}  ";
+              foreground = "#d4d4d4";
+              background = "#181818";
+              template = "   {{ .Path }}   ";
               properties = {
                 style = "agnoster_short";
                 max_depth = 4;
                 home_icon = "~";
               };
             }
-            # Git — amber on very dark red; shifts orange when dirty
+            # Git — comprehensive dev data
+            # Clean: muted red.  Any change: neon red.
+            # Shows: branch · staged(●) · working(+) · ahead(↑) · behind(↓) · stash(⚑)
             {
               type = "git";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#ffb347";
-              background = "#1e0000";
+              foreground = "#cc1122";
+              background = "#0e0e0e";
               foreground_templates = [
-                "{{ if or .Working.Changed .Staging.Changed }}#ff7722{{ end }}"
+                "{{ if or .Working.Changed .Staging.Changed }}#ff0033{{ end }}"
               ];
-              template = "   ⎇ {{ .HEAD }}{{ if .Staging.Changed }}  ●{{ end }}{{ if .Working.Changed }}  +{{ end }}  ";
+              template = ''   ⎇ {{ .HEAD }}{{ if .Staging.Changed }}  ●{{ add .Staging.Added .Staging.Modified .Staging.Deleted }}{{ end }}{{ if .Working.Changed }}  +{{ add .Working.Added .Working.Modified .Working.Deleted .Working.Untracked }}{{ end }}{{ if gt .Ahead 0 }}  ↑{{ .Ahead }}{{ end }}{{ if gt .Behind 0 }}  ↓{{ .Behind }}{{ end }}{{ if gt .StashCount 0 }}  ⚑{{ .StashCount }}{{ end }}   '';
               properties = {
                 branch_icon = "";
                 fetch_status = true;
+                fetch_stash_count = true;
               };
             }
           ];
         }
 
-        # ── Line 1 — right ( cmdlen ◄ exectime ◄ exitcode ◄ clock ) ───────
-        # Segments read right-to-left; the clock always anchors the far right.
+        # ── Line 1 — right ────────────────────────────────────────────────
+        # Segments are ordered right-to-left for powerline rendering;
+        # the clock always anchors the far-right edge.
+        # Left-pointing arrow  (U+E0B2) separates each block.
         {
           type = "prompt";
           alignment = "right";
           segments = [
-            # Clock — always visible, rose on dark red
+            # Clock — always visible; anchors far right
             {
               type = "time";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#ff9999";
-              background = "#2d0000";
-              template = ''  {{ .CurrentDate | date "15:04:05" }}  '';
+              foreground = "#cc1122";
+              background = "#2d2d2d";
+              template = ''   {{ .CurrentDate | date "15:04:05" }}   '';
             }
-            # Exit code — only on failure, bright red on dark
+            # Exit code — only when non-zero
             {
               type = "exit";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#ff4444";
-              background = "#1a0000";
-              template = "  ✗ {{ .Code }}  ";
+              foreground = "#ff0033";
+              background = "#1e1e1e";
+              template = "   ✗ {{ .Code }}   ";
               properties.always_enabled = false;
             }
-            # Execution time — only when last command took > 3 s
+            # Execution time — only when last command ran > 3 s
             {
               type = "executiontime";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#ff9900";
-              background = "#1a0000";
-              template = "  ⏱ {{ .FormattedMs }}  ";
+              foreground = "#ff1a1a";
+              background = "#151515";
+              template = "   ⏱ {{ .FormattedMs }}   ";
               properties = {
                 threshold = 3000;
                 style = "round";
                 always_enabled = false;
               };
             }
-            # Command char count — set by the preexec hook; hidden before first cmd
+            # Command char count — hidden until first command runs
             {
               type = "text";
               style = "powerline";
               powerline_symbol = "";
-              foreground = "#aa7777";
-              background = "#0f0000";
-              template = ''{{ if .Env.OMP_CMD_LEN }}  {{ .Env.OMP_CMD_LEN }}c  {{ end }}'';
+              foreground = "#555555";
+              background = "#0e0e0e";
+              template = ''{{ if .Env.OMP_CMD_LEN }}   {{ .Env.OMP_CMD_LEN }}c   {{ end }}'';
             }
           ];
         }
@@ -272,9 +281,9 @@
             {
               type = "text";
               style = "plain";
-              foreground = "#cc0000";
-              foreground_templates = [ "{{ if .Root }}#ff4444{{ end }}" ];
-              template = "{{ if .Root }}#  {{ else }}❯  {{ end }}";
+              foreground = "#aa0011";
+              foreground_templates = [ "{{ if .Root }}#ff0033{{ end }}" ];
+              template = "{{ if .Root }}#   {{ else }}❯   {{ end }}";
             }
           ];
         }
