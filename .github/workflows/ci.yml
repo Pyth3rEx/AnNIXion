@@ -14,6 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # hardware-configuration.nix is machine-specific and must never be
+      # committed (it is gitignored). Reject any PR that force-adds it so a
+      # contributor's disk layout can't leak into the flake.
+      - name: Reject committed hardware configuration
+        if: github.event_name == 'pull_request'
+        run: |
+          if git ls-files --error-unmatch hardware-configuration.nix >/dev/null 2>&1; then
+            echo "::error file=hardware-configuration.nix::hardware-configuration.nix is machine-specific and must not be committed. Remove it from this PR with 'git rm --cached hardware-configuration.nix' (it stays gitignored)."
+            exit 1
+          fi
+          echo "hardware-configuration.nix is not tracked ✓"
+
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM
         run: |
