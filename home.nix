@@ -188,6 +188,7 @@ in
     ./home/only-office.nix
     ./home/apps-menu.nix
     ./home/control-center.nix
+    ./home/fastfetch.nix
     ./home/zsh.nix
   ];
 

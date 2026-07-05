@@ -87,6 +87,7 @@
 
       # ── Tools ──────────────────────────────────────────────
       ftp      = "lftp";
+      neofetch = "fastfetch";
       hex      = "xxd";
       b64e     = "base64";
       b64d     = "base64 -d";

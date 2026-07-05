@@ -47,6 +47,7 @@
         inherit system;
         config.allowUnfree = true;
       };
+      version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile "${self}/VERSION");
     in
     {
       packages.${system}.iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
@@ -121,6 +122,20 @@
                 # ============================================================
                 boot.loader.systemd-boot.enable = lib.mkDefault true;
                 boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+
+                # ============================================================
+                # OS DEFINITION
+                # ============================================================
+                environment.etc."os-release".text = lib.mkForce ''
+                  NAME=AnNIXion
+                  ID=annixion
+                  VERSION="${version}"
+                  VERSION_ID="${version}"
+                  PRETTY_NAME="AnNIXion v${version}"
+                  HOME_URL="https://github.com/Pyth3rEx/AnNIXion/"
+                  SUPPORT_URL="https://github.com/Pyth3rEx/AnNIXion/tree/main/docs"
+                  BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
+                '';
 
                 # ============================================================
                 # NETWORKING
