@@ -52,7 +52,9 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 - [x] Default non-root user (`operator`), sudo via wheel group
 - [x] Home Manager wired into flake — single `nixos-rebuild switch` handles system + user config
-- [x] ZSH with autosuggestions, syntax highlighting, fzf history search
+- [x] ZSH with autosuggestions, fast-syntax-highlighting, fzf widget integration
+- [x] oh-my-zsh + oh-my-posh red-team prompt with git, exec time, exit code, clock
+- [x] zoxide, fzf-tab, you-should-use, autopair, urltools, jsontools, dirhistory
 - [x] tmux, xterm terminal, git declared via Home Manager
 - [x] `nix.gc` — automatic weekly cleanup of old generations
 - [x] `modules/` — modular structure: desktop, xrdp, shell, security-tools
