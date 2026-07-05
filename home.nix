@@ -188,6 +188,7 @@ in
     ./home/only-office.nix
     ./home/apps-menu.nix
     ./home/control-center.nix
+    ./home/zsh.nix
   ];
 
   # Home Manager needs to know your username and home directory.
@@ -263,6 +264,9 @@ in
 
     # ── Plasma widgets ────────────────────────────────────────
     TiledMenu
+
+    # ── Color engines ─────────────────────────────────────────
+    chroma # Used by oh-my-zsh plugin "colorize"
   ];
 
   services = {
@@ -352,80 +356,6 @@ in
   programs = {
     gpg = {
       enable = true;
-    };
-    zsh = {
-      enable = lib.mkDefault true;
-      autosuggestion.enable = lib.mkDefault true; # suggests commands as you type
-      syntaxHighlighting.enable = lib.mkDefault true; # colors valid/invalid commands
-      enableCompletion = lib.mkDefault true;
-      autocd = lib.mkDefault true; # Automaticaly enter into a directory if typed directly in the shell
-
-      # Your shell aliases
-      shellAliases = {
-        ll = "ls -la";
-        gs = "git status";
-        gp = "git push";
-        gl = "git pull";
-        # rebuild — apply current config (same pinned versions, no input bump); kbuildsycoca6 runs via home.activation automatically
-        # upgrade — update all flake inputs (nixpkgs, packages) then rebuild
-        # update  — update inputs only, no rebuild (check what changed before committing)
-        rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
-        upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
-        update = "nix flake update --flake ~/.dotfiles";
-
-        # Networking
-        ip_out = "curl -s https://ifconfig.me && echo";
-        ip_local = "ip -4 addr show scope global | awk '/inet/{print $2}'";
-
-        # Quick edit of your configs
-        enix = "kate ~/.dotfiles/flake.nix";
-        emod = "kate ~/.dotfiles/modules/";
-        euser = "kate ~/.dotfiles/user/";
-        ehome = "kate ~/.dotfiles/home.nix";
-
-        # Tools
-        ftp = "lftp";
-        cat = "bat";
-        seclists = ''
-          sh -c "
-            SECLISTS_PATH=\"\''${SECLISTS_PATH:-/run/current-system/sw/share/wordlists/seclists/}\" &&
-            printf \"=== Seclists Explorer ===\n\n%s\n\nThis is the Seclists wordlists directory (read-only in Nix store). Listing top-level folders:\n\n\" \"\$SECLISTS_PATH\" &&
-            ls -la --group-directories-first \"\$SECLISTS_PATH\" 2>/dev/null | awk '/^d/ {print}'
-          "
-        '';
-      };
-
-      initContent = ''
-        # ── Key bindings ──────────────────────────────────────────────────────
-        bindkey "^[[1;5C" forward-word         # Ctrl+Right — jump word forward
-        bindkey "^[[1;5D" backward-word        # Ctrl+Left  — jump word back
-        bindkey "^H"      backward-kill-word   # Ctrl+Bksp  — delete word back
-        bindkey "^[[3;5~" kill-word            # Ctrl+Del   — delete word forward
-        bindkey "^[[3~"   delete-char          # Delete     — delete char forward
-        bindkey "^[[H"    beginning-of-line    # Home
-        bindkey "^[[F"    end-of-line          # End
-
-        # Up/Down: search history by the prefix already typed
-        autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-        zle -N up-line-or-beginning-search
-        zle -N down-line-or-beginning-search
-        bindkey "^[[A" up-line-or-beginning-search    # Up
-        bindkey "^[[B" down-line-or-beginning-search  # Down
-
-        # ── AnNIXion banner ───────────────────────────────────────────────────
-        echo ""
-        echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
-        echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
-        echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
-        echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
-        echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
-        echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
-        echo ""
-        echo "  \e[0;90mhost\e[0m  $(hostname)"
-        echo "  \e[0;90mdate\e[0m  $(date '+%A %d %B %Y  %H:%M')"
-        echo "  \e[0;90mip  \e[0m  $(ip -4 addr show scope global 2>/dev/null | awk '/inet/{print $2}' | head -1)"
-        echo ""
-      '';
     };
     # ============================================================
     # GIT
