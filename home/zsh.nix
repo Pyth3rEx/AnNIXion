@@ -12,8 +12,8 @@
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;      # grey inline suggestions as you type
-    syntaxHighlighting.enable = true;  # see mkOrder 1190 below for fast-syntax-highlighting
     enableCompletion = true;
+    # Syntax highlighting is handled by zsh-fast-syntax-highlighting at mkOrder 1190
 
     # ── External plugins from nixpkgs ────────────────────────────────────────
     plugins = [
@@ -131,6 +131,12 @@
         # Expose last command char count to oh-my-posh via $OMP_CMD_LEN
         function _omp_track_cmd_len() { export OMP_CMD_LEN=''${#1}; }
         add-zsh-hook preexec _omp_track_cmd_len
+      '')
+
+      # fast-syntax-highlighting at 1190 — after all plugins, before key bindings
+      # Faster and richer than zsh-syntax-highlighting: colors args, strings, globs
+      (lib.mkOrder 1190 ''
+        source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
       '')
 
       # Banner at 1500 — last thing printed before the first prompt
