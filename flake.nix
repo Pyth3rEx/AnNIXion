@@ -233,5 +233,23 @@
         boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
         security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
       };
+
+      devShells.${system}.default = pkgs.mkShell {
+        name = "annixion-dev";
+        packages = with pkgs; [
+          nixfmt
+          statix
+          deadnix
+          nil
+          nix-output-monitor
+        ];
+        shellHook = ''
+          if [ ! -f hardware-configuration.nix ]; then
+            cp "$(git rev-parse --show-toplevel)/ci/hardware-stub.nix" hardware-configuration.nix
+            echo "[dev] Stubbed hardware-configuration.nix from ci/hardware-stub.nix"
+          fi
+          echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check."
+        '';
+      };
     };
 }
