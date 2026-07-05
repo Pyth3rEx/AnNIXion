@@ -26,12 +26,12 @@
         "git"              # git aliases (gst, gco, gp …) + status info
         "docker"           # docker subcommand completion
         "colorize"         # ccat / cless — syntax-highlighted file viewing (needs chroma pkg)
-        "z"                # frecency directory jumping: `z proj` → cd ~/…/project
         "sudo"             # ESC ESC — prepend sudo to the current/previous command
         "extract"          # `x archive.tar.gz` — one command for any archive format
         "history"          # h = history  hs = grep history  hsi = case-insensitive
         "nmap"             # nmap shortcuts: nmap_open_ports, nmap_full_udp, nmap_os …
         "rsync"            # rsync-copy / rsync-move with progress bar
+        # "z" removed — replaced by programs.zoxide above (smarter + zi picker)
       ];
     };
 
@@ -148,6 +148,16 @@
   #   Alt+C   fuzzy cd into any subdirectory
   # ───────────────────────────────────────────────────────────────────────────
   programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # zoxide — smarter frecency directory jumping (replaces the z OMZ plugin)
+  #   z <query>   jump to most-frecent match
+  #   zi          interactive fuzzy picker over jump history
+  # ───────────────────────────────────────────────────────────────────────────
+  programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };
