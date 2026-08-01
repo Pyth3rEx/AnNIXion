@@ -1,8 +1,9 @@
 name: CI
 
 on:
+  # Validation (the `check` job) runs on every PR, whatever the target branch.
   pull_request:
-    branches: [main]
+  # Pushes only matter on main (system closure + ISO release).
   push:
     branches: [main]
 
@@ -13,6 +14,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      # hardware-configuration.nix is machine-specific and must never be
+      # committed (it is gitignored). Reject any PR that force-adds it so a
+      # contributor's disk layout can't leak into the flake.
+      - name: Reject committed hardware configuration
+        if: github.event_name == 'pull_request'
+        run: |
+          if git ls-files --error-unmatch hardware-configuration.nix >/dev/null 2>&1; then
+            echo "::error file=hardware-configuration.nix::hardware-configuration.nix is machine-specific and must not be committed. Remove it from this PR with 'git rm --cached hardware-configuration.nix' (it stays gitignored)."
+            exit 1
+          fi
+          echo "hardware-configuration.nix is not tracked ✓"
 
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM
@@ -51,6 +64,10 @@ jobs:
             nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
           }
           EOF
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       # L1 — flake evaluation: catches syntax errors, bad option types,
       # undefined references. --no-build keeps this step fast.
@@ -77,6 +94,9 @@ jobs:
     name: Build ISO
     runs-on: ubuntu-latest
     needs: check
+    # Main-specific: only build/publish the ISO for PRs into main or
+    # pushes to main. PRs into other branches (e.g. dev) skip this.
+    if: github.base_ref == 'main' || github.ref == 'refs/heads/main'
     permissions:
       contents: write
     timeout-minutes: 180
@@ -131,6 +151,10 @@ jobs:
             nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
           }
           EOF
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       - name: Build ISO
         run: |
@@ -210,12 +234,26 @@ jobs:
             exit 0
           fi
 
+          # Auto-generated PR list since the previous tag
+          PREV_TAG=$(git tag --sort=-version:refname | head -1)
+          AUTO_NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+            -X POST \
+            -f tag_name="$TAG" \
+            ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
+            --jq '.body' 2>/dev/null || echo "")
+
+          NOTES_FILE=$(mktemp)
+          {
+            echo "${{ steps.changelog.outputs.body }}"
+            if [ -n "$AUTO_NOTES" ]; then
+              printf '\n---\n\n## All changes in this release\n\n%s\n' "$AUTO_NOTES"
+            fi
+            printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
+            printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
+            printf 'Built from commit `${{ github.sha }}`.\n'
+          } > "$NOTES_FILE"
+
           gh release create "$TAG" \
             --title "AnNIXion $TAG" \
-            --notes "${{ steps.changelog.outputs.body }}
-
----
-**Live credentials:** \`operator\` / \`operator\`
-Flash the ISO with Rufus (Windows) or \`dd\` (Linux/macOS), boot, run \`annixion-install\`.
-Built from commit \`${{ github.sha }}\`." \
+            --notes-file "$NOTES_FILE" \
             "${{ steps.iso.outputs.path }}"

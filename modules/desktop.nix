@@ -28,19 +28,21 @@
   # SDDM remembers your last session choice per user, so you only need
   # to switch once at the login screen — it will stick on the next boot.
 
-  # X11 display server. Required for the default session and for xrdp.
-  services.xserver.enable = lib.mkDefault true;
+  services = {
+    # X11 display server. Required for the default session and for xrdp.
+    xserver.enable = lib.mkDefault true;
 
-  # SDDM login manager — supports both X11 and Wayland Plasma sessions.
-  services.displayManager.sddm.enable = lib.mkDefault true;
+    # SDDM login manager — supports both X11 and Wayland Plasma sessions.
+    displayManager.sddm.enable = lib.mkDefault true;
 
-  # Default to the X11 Plasma session ("plasma").
-  # The Wayland session ("plasmawayland") is still listed in SDDM and
-  # fully usable — this only controls what SDDM pre-selects on first boot.
-  services.displayManager.defaultSession = lib.mkDefault "plasma";
+    # Default to the X11 Plasma session ("plasma").
+    # The Wayland session ("plasmawayland") is still listed in SDDM and
+    # fully usable — this only controls what SDDM pre-selects on first boot.
+    displayManager.defaultSession = lib.mkDefault "plasma";
 
-  # KDE Plasma 6 — enables both the X11 and Wayland session entries.
-  services.desktopManager.plasma6.enable = lib.mkDefault true;
+    # KDE Plasma 6 — enables both the X11 and Wayland session entries.
+    desktopManager.plasma6.enable = lib.mkDefault true;
+  };
 
   # KDE extras that aren't pulled in automatically
   environment.systemPackages = with pkgs; [

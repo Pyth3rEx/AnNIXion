@@ -1,9 +1,22 @@
 { config, pkgs, ... }:
 
+let
+  github-local-actions = pkgs.vscode-utils.buildVscodeExtension {
+    pname = "SanjulaGanepola-github-local-actions";
+    version = "1.2.5";
+    src = pkgs.fetchurl {
+      url = "https://open-vsx.org/api/SanjulaGanepola/github-local-actions/1.2.5/file/SanjulaGanepola.github-local-actions-1.2.5.vsix";
+      sha256 = "1dqqpzi749mqn983b6m3k90biyn4xfj2d8y9jy1fc9039is0bhrz";
+    };
+    vscodeExtPublisher = "SanjulaGanepola";
+    vscodeExtName = "github-local-actions";
+    vscodeExtUniqueId = "SanjulaGanepola.github-local-actions";
+  };
+in
 {
   programs.vscodium = {
     enable = true;
-    package = pkgs.vscodium; # Using VSCodium (open-source) or use pkgs.vscode for proprietary version
+    package = pkgs.vscodium;
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
@@ -18,6 +31,10 @@
         ms-vscode.makefile-tools
         tamasfe.even-better-toml
         redhat.vscode-yaml
+
+        # CI/CD tools
+        github-local-actions # run GitHub Actions workflows locally (requires act + Docker)
+        timonwong.shellcheck
       ];
       userSettings = {
         # Nix IDE Configuration
@@ -46,6 +63,9 @@
         # Terminal settings
         "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.fontFamily" = "monospace";
+
+        # Task runner
+        "task.allowAutomaticTasks" = "on";
       };
     };
   };
@@ -56,15 +76,16 @@
     nix-your-shell
     nix-zsh-completions
     nixfmt
-    statix # Linter for Nix
-    deadnix # Find unused code in Nix files
+    statix
+    deadnix
 
     # Language servers
-    nil # Nix language server (used by nix-ide)
+    nil
 
+    # Local GitHub Actions runner (used by github-local-actions extension)
+    act
   ];
 
-  # Optional: Add direnv integration for automatic environment loading
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;

@@ -15,7 +15,12 @@
     users.users.operator = {
       isNormalUser = true;
       password = "test";
-      extraGroups = [ "wheel" "networkmanager" "video" "input" ];
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "video"
+        "input"
+      ];
       shell = pkgs.zsh;
     };
 

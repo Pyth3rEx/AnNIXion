@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 # ============================================================
 # CONTROL CENTER + META KEY HANDLER
@@ -17,16 +22,21 @@
 # ============================================================
 
 let
-  py = pkgs.python3.withPackages (p: with p; [ dbus-python pygobject3 ]);
+  py = pkgs.python3.withPackages (
+    p: with p; [
+      dbus-python
+      pygobject3
+    ]
+  );
 
   # ── Control center UI ─────────────────────────────────────────────────
   controlCenter = pkgs.writeShellApplication {
     name = "annixion-cc";
     runtimeInputs = with pkgs; [
-      networkmanager      # nmcli
-      bluez               # bluetoothctl
+      networkmanager # nmcli
+      bluez # bluetoothctl
       kdePackages.kdialog # dialog UI
-      procps              # pkill
+      procps # pkill
     ];
     text = ''
       # Toggle: if already open, close it
@@ -129,19 +139,20 @@ let
     GLib.MainLoop().run()
   '';
 
-in {
+in
+{
   home.packages = [ controlCenter ];
 
   # Start the handler automatically with the graphical session
   systemd.user.services.annixion-meta-key = {
     Unit = {
       Description = "AnNIXion Meta Key Handler";
-      After       = [ "graphical-session.target" ];
-      PartOf      = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart  = "${metaKeyHandler}";
-      Restart    = "on-failure";
+      ExecStart = "${metaKeyHandler}";
+      Restart = "on-failure";
       RestartSec = "3s";
     };
     Install.WantedBy = [ "graphical-session.target" ];
