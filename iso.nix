@@ -9,9 +9,11 @@ let
 in
 {
   # ── ISO image metadata ──────────────────────────────────────────────────
+  image = {
+    baseName = lib.mkForce "AnNIXion";
+    fileName = lib.mkForce "AnNIXion-${version}.iso";
+  };
   isoImage = {
-    isoBaseName = lib.mkForce "AnNIXion";
-    isoName = lib.mkForce "AnNIXion-${version}.iso";
     volumeID = lib.mkForce "ANNIXION";
     squashfsCompression = "xz -Xdict-size 100%";
   };
