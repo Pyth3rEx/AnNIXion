@@ -94,19 +94,33 @@ jobs:
 
       - name: Require version bump (PR)
         if: github.event_name == 'pull_request'
+        env:
+          # The PR's target branch (e.g. "main"), passed via env to avoid
+          # interpolating untrusted context straight into the shell.
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          MAIN_VERSION=$(git show origin/main:VERSION 2>/dev/null || echo "0.0.0")
+          # Read VERSION from the target branch. A plain `git show
+          # origin/main:VERSION` is unreliable on a PR runner: checkout only
+          # fetches the PR merge ref, so origin/main may be absent and the
+          # comparison would silently pass. Fetch the base branch explicitly
+          # and read it from FETCH_HEAD.
+          git fetch --depth=1 origin "$BASE_REF"
+          BASE_VERSION=$(git show FETCH_HEAD:VERSION 2>/dev/null || echo "")
           CURRENT_VERSION=$(cat VERSION)
+          if [ -z "$BASE_VERSION" ]; then
+            echo "::error file=VERSION::Could not read VERSION from ${BASE_REF} — cannot verify the bump."
+            exit 1
+          fi
           if [ -z "$CURRENT_VERSION" ]; then
             echo "::error file=VERSION::VERSION file is empty."
             exit 1
           fi
-          if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
+          if [ "$BASE_VERSION" = "$CURRENT_VERSION" ]; then
             echo "::error file=VERSION::VERSION is still ${CURRENT_VERSION} — bump it before merging."
             echo "::error file=VERSION::  patch → x.y.Z   minor → x.Y.0   major → X.0.0"
             exit 1
           fi
-          echo "Version bumped: ${MAIN_VERSION} → ${CURRENT_VERSION}"
+          echo "Version bumped: ${BASE_VERSION} → ${CURRENT_VERSION}"
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
