@@ -10,6 +10,14 @@ success() { echo -e "${GREEN}${BOLD} ✓  $*${RESET}"; }
 warn()    { echo -e "${YELLOW}${BOLD}[!] $*${RESET}"; }
 die()     { echo -e "${RED}${BOLD}[✗] $*${RESET}" >&2; exit 1; }
 
+# ── Elevate to root ─────────────────────────────────────────────────────────
+# The live session runs as the unprivileged "operator" user, but partitioning,
+# formatting, mounting and nixos-install all require root. Re-exec through sudo
+# if we're not already root (the live ISO grants operator passwordless sudo).
+if [[ ${EUID} -ne 0 ]]; then
+  exec sudo "$0" "$@"
+fi
+
 # ── Banner ─────────────────────────────────────────────────────────────────
 clear
 echo -e "${RED}${BOLD}"
