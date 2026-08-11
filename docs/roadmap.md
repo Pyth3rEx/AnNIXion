@@ -36,6 +36,8 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] GPT partitioning: ESP + root
 - [x] Formats, mounts, clones config, generates hardware config, runs `nixos-install`
 - [x] Installer available in live session as `annixion-install`
+- [x] Auto-elevates via `sudo`, mounts by device node (no udev race), stages the generated `hardware-configuration.nix` for the flake
+- [x] Installs the config to `~/.dotfiles` (its canonical location) and hands ownership to `operator` so runtime assets (wallpaper, icons, certs) resolve
 - [ ] Whiptail TUI for disk selection and options (currently plain readline prompts)
 - [ ] Encryption passphrase prompt (depends on Phase 2 disko integration)
 - [ ] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
@@ -57,7 +59,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] zoxide, fzf-tab, you-should-use, autopair, urltools, jsontools, dirhistory
 - [x] tmux, xterm terminal, git declared via Home Manager
 - [x] `nix.gc` — automatic weekly cleanup of old generations
-- [x] `modules/` — modular structure: desktop, xrdp, shell, security-tools
+- [x] `modules/` — modular structure: `desktop.nix`, `xrdp.nix`, `security-tools.nix` (shell/user config lives under `home/`)
 - [ ] `modules/base/users.nix` — user management as a standalone module
 - [x] Additional shell environment: `direnv` integration via `programs.direnv` and `nix-direnv`
 
@@ -75,7 +77,7 @@ Rationale:
 - Stable X11 session required for reliable xrdp/Enhanced Session support
 - Wayland (Plasma 6) available as a future upgrade path once xrdp Wayland support matures
 
-- [x] KDE Plasma 6 declared in `modules/desktop.nix`
+- [x] KDE Plasma 6 declared in `modules/desktop.nix`; per-user Plasma settings extracted to `home/plasma.nix` (plasma-manager)
 - [x] SDDM login manager with Breeze theme
 - [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
 - [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
@@ -210,9 +212,9 @@ Rationale:
 
 - [ ] ISO tested on real hardware (at least one machine type)
 - [x] Install instructions cover both ISO and existing-NixOS paths
-- [ ] CONTRIBUTING.md for people who want to add tools or profiles
-- [ ] SECURITY.md documenting hardening decisions and what is not hardened
-- [ ] FAQ.md addressing common setup questions
+- [x] `CONTRIBUTING.md` for people who want to add tools or profiles
+- [x] `SECURITY.md` documenting hardening decisions and what is not hardened
+- [x] `docs/faq.md` addressing common setup questions
 - [x] Versioned releases with tagged ISOs (semantic versioning via `VERSION` file)
 - [ ] Release notes per version
 - [x] GitHub Actions CI — flake eval, system closure build, VM tests, ISO build + size gate, release publish

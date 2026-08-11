@@ -2,6 +2,8 @@
 
 This document covers how to contribute to AnNIXion, run CI checks locally, and verify your work before opening a pull request.
 
+> For the high-level branch model, commit conventions, and PR checklist, start with [CONTRIBUTING.md](../CONTRIBUTING.md). This guide is the detailed CI/tooling reference it points to.
+
 ---
 
 ## Contributor flow

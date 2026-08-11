@@ -113,12 +113,24 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | Alias | Expands to |
 |---|---|
 | `ftp` | `lftp` |
+| `neofetch` | `fastfetch` (system info at a glance) |
 | `hex` | `xxd` |
 | `b64e` | `base64` |
 | `b64d` | `base64 -d` |
 | `hashfile` | `sha256sum` |
 | `serve` | `python3 -m http.server` (quick HTTP file server on port 8000) |
 | `seclists` | Browse the SecLists wordlist directory |
+
+---
+
+## Custom plugins
+
+Two extra plugins are loaded on top of oh-my-zsh (declared in `programs.zsh.plugins`):
+
+| Plugin | What it does |
+|---|---|
+| `you-should-use` | Reminds you when a command you typed has an existing alias |
+| `zsh-autopair` | Auto-inserts matching brackets, quotes, and parentheses |
 
 ---
 
@@ -154,6 +166,18 @@ x archive.tar.gz      # extract any archive format with one command
 x file.zip
 x dump.7z
 ```
+
+### colorize plugin
+
+```bash
+ccat exploit.py       # syntax-highlighted cat (via chroma)
+cless config.yaml     # syntax-highlighted less
+```
+
+### docker plugin
+
+Adds completion for `docker` subcommands and a handful of short aliases
+(`dps`, `dpsa`, `dim`, …). Run `alias | grep docker` for the full list.
 
 ### nmap plugin
 

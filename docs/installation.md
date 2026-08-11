@@ -117,7 +117,9 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
+│   ├── plasma.nix                 # Per-user KDE Plasma settings (plasma-manager): wallpaper, shortcuts
 │   ├── zsh.nix                    # ZSH config: oh-my-zsh, oh-my-posh, aliases, plugins
+│   ├── fastfetch.nix              # Fastfetch system-info banner config
 │   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
 │   ├── only-office.nix            # OnlyOffice document editor
 │   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries
