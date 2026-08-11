@@ -94,7 +94,16 @@ success "Cloned to /mnt/etc/nixos"
 # ── Hardware config ────────────────────────────────────────────────────────
 info "Detecting hardware"
 nixos-generate-config --root /mnt --dir /mnt/etc/nixos
-success "hardware-configuration.nix written"
+# nixos-generate-config also drops a configuration.nix we don't use — the flake
+# owns system config. Remove it so it can't shadow anything or confuse readers.
+rm -f /mnt/etc/nixos/configuration.nix
+# Flakes evaluate from the git tree and ignore untracked files. The freshly
+# generated hardware-configuration.nix is both untracked and listed in
+# .gitignore, so force-stage it into the index; otherwise "nixos-install
+# --flake" fails claiming hardware-configuration.nix is missing. Staging is
+# sufficient — Nix includes indexed files without needing a commit.
+git -C /mnt/etc/nixos add -f hardware-configuration.nix
+success "hardware-configuration.nix written and staged"
 
 # ── Install ────────────────────────────────────────────────────────────────
 info "Installing AnNIXion — this will take a while"
