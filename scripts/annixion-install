@@ -69,15 +69,21 @@ fi
 
 # ── Format ─────────────────────────────────────────────────────────────────
 info "Formatting partitions"
-mkfs.fat -F 32 -n BOOT "$PART_BOOT"
+mkfs.fat -F 32 -n boot "$PART_BOOT"
 mkfs.ext4 -L nixos "$PART_ROOT"
+# Let udev create the /dev/disk/by-label/* symlinks before we rely on them.
+udevadm settle
 success "Formatted"
 
 # ── Mount ──────────────────────────────────────────────────────────────────
+# Mount the partition device nodes directly rather than by-label: the by-label
+# symlinks are populated asynchronously by udev after mkfs, so relying on them
+# here races with formatting ("Can't lookup blockdev"). The installed system's
+# fileSystems still use by-label, which udev has settled by boot time.
 info "Mounting"
-mount /dev/disk/by-label/nixos /mnt
+mount "$PART_ROOT" /mnt
 mkdir -p /mnt/boot
-mount /dev/disk/by-label/BOOT /mnt/boot
+mount "$PART_BOOT" /mnt/boot
 success "Mounted at /mnt"
 
 # ── Fetch AnNIXion config ──────────────────────────────────────────────────
