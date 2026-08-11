@@ -10,6 +10,14 @@ success() { echo -e "${GREEN}${BOLD} ✓  $*${RESET}"; }
 warn()    { echo -e "${YELLOW}${BOLD}[!] $*${RESET}"; }
 die()     { echo -e "${RED}${BOLD}[✗] $*${RESET}" >&2; exit 1; }
 
+# ── Elevate to root ─────────────────────────────────────────────────────────
+# The live session runs as the unprivileged "operator" user, but partitioning,
+# formatting, mounting and nixos-install all require root. Re-exec through sudo
+# if we're not already root (the live ISO grants operator passwordless sudo).
+if [[ ${EUID} -ne 0 ]]; then
+  exec sudo "$0" "$@"
+fi
+
 # ── Banner ─────────────────────────────────────────────────────────────────
 clear
 echo -e "${RED}${BOLD}"
@@ -61,31 +69,62 @@ fi
 
 # ── Format ─────────────────────────────────────────────────────────────────
 info "Formatting partitions"
-mkfs.fat -F 32 -n BOOT "$PART_BOOT"
+mkfs.fat -F 32 -n boot "$PART_BOOT"
 mkfs.ext4 -L nixos "$PART_ROOT"
+# Let udev create the /dev/disk/by-label/* symlinks before we rely on them.
+udevadm settle
 success "Formatted"
 
 # ── Mount ──────────────────────────────────────────────────────────────────
+# Mount the partition device nodes directly rather than by-label: the by-label
+# symlinks are populated asynchronously by udev after mkfs, so relying on them
+# here races with formatting ("Can't lookup blockdev"). The installed system's
+# fileSystems still use by-label, which udev has settled by boot time.
 info "Mounting"
-mount /dev/disk/by-label/nixos /mnt
+mount "$PART_ROOT" /mnt
 mkdir -p /mnt/boot
-mount /dev/disk/by-label/BOOT /mnt/boot
+mount "$PART_BOOT" /mnt/boot
 success "Mounted at /mnt"
 
 # ── Fetch AnNIXion config ──────────────────────────────────────────────────
+# The configuration is designed to live at ~/.dotfiles on the installed system,
+# not /etc/nixos: the Home Manager modules reference runtime asset paths such as
+# ~/.dotfiles/assets/wallpaper/* (wallpaper, lockscreen, Firefox icons, certs)
+# and the "rebuild"/"update" shell aliases target ~/.dotfiles. Cloning anywhere
+# else leaves every one of those paths dangling — e.g. the wallpaper silently
+# fails to apply. Clone into the operator's home and install from there.
+DOTFILES="/mnt/home/operator/.dotfiles"
 info "Cloning AnNIXion configuration"
-git clone https://github.com/Pyth3rEx/AnNIXion /mnt/etc/nixos
-success "Cloned to /mnt/etc/nixos"
+mkdir -p /mnt/home/operator
+git clone https://github.com/Pyth3rEx/AnNIXion "$DOTFILES"
+success "Cloned to /home/operator/.dotfiles"
 
 # ── Hardware config ────────────────────────────────────────────────────────
 info "Detecting hardware"
-nixos-generate-config --root /mnt --dir /mnt/etc/nixos
-success "hardware-configuration.nix written"
+nixos-generate-config --root /mnt --dir "$DOTFILES"
+# nixos-generate-config also drops a configuration.nix we don't use — the flake
+# owns system config. Remove it so it can't shadow anything or confuse readers.
+rm -f "$DOTFILES/configuration.nix"
+# Flakes evaluate from the git tree and ignore untracked files. The freshly
+# generated hardware-configuration.nix is both untracked and listed in
+# .gitignore, so force-stage it into the index; otherwise "nixos-install
+# --flake" fails claiming hardware-configuration.nix is missing. Staging is
+# sufficient — Nix includes indexed files without needing a commit.
+git -C "$DOTFILES" add -f hardware-configuration.nix
+success "hardware-configuration.nix written and staged"
 
 # ── Install ────────────────────────────────────────────────────────────────
 info "Installing AnNIXion — this will take a while"
 echo -e "  ${YELLOW}Tip: security tools are large. Expect 30–60 min on a slow connection.${RESET}\n"
-nixos-install --root /mnt --flake /mnt/etc/nixos#AnNIXion --no-root-password
+nixos-install --root /mnt --flake "$DOTFILES#AnNIXion" --no-root-password
+
+# ── Ownership ───────────────────────────────────────────────────────────────
+# We created /home/operator and cloned as root, so the tree is root-owned. Hand
+# the whole home (dotfiles included) to the operator, resolving uid/gid inside
+# the freshly installed system so it stays correct regardless of allocated ids.
+info "Fixing ownership of /home/operator"
+nixos-enter --root /mnt -c 'chown -R operator:users /home/operator'
+success "Ownership set"
 
 # ── Done ───────────────────────────────────────────────────────────────────
 echo
