@@ -139,7 +139,12 @@ Full guide including Hyper-V Enhanced Session setup → [docs/installation.md](d
 | [Installation](docs/installation.md) | Prerequisites, deploy steps, Hyper-V setup, repo structure |
 | [Usage](docs/usage.md) | Browser profiles, Burp + VPN setup, proxy override examples |
 | [Customization](docs/customization.md) | User override system, adding tools, dev environment |
+| [Shell reference](docs/zsh.md) | Prompt, keybindings, and the full alias/plugin list |
+| [CLI tools](docs/tools.md) | Enhanced command-line tools (bat, rg, fd, fzf, jq…) |
+| [Developer guide](docs/dev.md) | Local CI levels, VSCodium tasks, contributor workflow |
+| [FAQ](docs/faq.md) | Common setup and troubleshooting questions |
 | [Roadmap](docs/roadmap.md) | Phase-by-phase progress, planned features |
+| [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) | How to contribute · security posture and reporting |
 
 ---
 

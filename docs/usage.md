@@ -41,8 +41,6 @@ Burp must be running on `127.0.0.1:8080` when you run `burp-ca`. After that, the
 
 After import, Burp uses the same CA as Firefox. HTTPS interception works without certificate warnings.
 
-> These files are machine-specific and excluded from git. Do not commit them.
-
 ---
 
 ## OSINT & Puppet Master — VPN setup

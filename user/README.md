@@ -64,7 +64,7 @@ imports = [
 **Step 3 — apply**
 
 ```bash
-sudo nixos-rebuild switch --flake .#AnNIXion
+rebuild    # alias for: sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure
 ```
 
 ---

@@ -44,9 +44,11 @@ The script will:
 3. Ask for confirmation before wiping
 4. Partition GPT: 512 MiB ESP + remaining root
 5. Format ESP as FAT32, root as ext4
-6. Clone the AnNIXion config to `/mnt/etc/nixos`
-7. Generate `hardware-configuration.nix` for your machine
-8. Run `nixos-install --flake /mnt/etc/nixos#AnNIXion`
+6. Clone the AnNIXion config to `~/.dotfiles` (its canonical location — the
+   config references `~/.dotfiles/assets/…` for the wallpaper, icons and certs)
+7. Generate and stage `hardware-configuration.nix` for your machine
+8. Run `nixos-install --flake ~/.dotfiles#AnNIXion` and hand the dotfiles to the
+   `operator` user
 9. Offer to reboot
 
 > **Note:** Security tools (Metasploit, Ghidra, etc.) are large. Expect 30–60 min on a slow connection.
@@ -90,6 +92,8 @@ After the first successful build, three shell aliases are available:
 | `upgrade` | Update all flake inputs then rebuild |
 | `update` | Update flake inputs only, no rebuild |
 
+See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
+
 ---
 
 ## Repository structure
@@ -113,6 +117,9 @@ After the first successful build, three shell aliases are available:
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
+│   ├── plasma.nix                 # Per-user KDE Plasma settings (plasma-manager): wallpaper, shortcuts
+│   ├── zsh.nix                    # ZSH config: oh-my-zsh, oh-my-posh, aliases, plugins
+│   ├── fastfetch.nix              # Fastfetch system-info banner config
 │   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
 │   ├── only-office.nix            # OnlyOffice document editor
 │   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries

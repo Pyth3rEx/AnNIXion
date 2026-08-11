@@ -1,8 +1,9 @@
 name: CI
 
 on:
+  # Validation (the `check` job) runs on every PR, whatever the target branch.
   pull_request:
-    branches: [main]
+  # Pushes only matter on main (system closure + ISO release).
   push:
     branches: [main]
 
@@ -13,6 +14,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+
+      # hardware-configuration.nix is machine-specific and must never be
+      # committed (it is gitignored). Reject any PR that force-adds it so a
+      # contributor's disk layout can't leak into the flake.
+      - name: Reject committed hardware configuration
+        if: github.event_name == 'pull_request'
+        run: |
+          if git ls-files --error-unmatch hardware-configuration.nix >/dev/null 2>&1; then
+            echo "::error file=hardware-configuration.nix::hardware-configuration.nix is machine-specific and must not be committed. Remove it from this PR with 'git rm --cached hardware-configuration.nix' (it stays gitignored)."
+            exit 1
+          fi
+          echo "hardware-configuration.nix is not tracked ✓"
 
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM
@@ -33,24 +46,14 @@ jobs:
       # CI uses a minimal QEMU-guest stub so the flake evaluates cleanly.
       - name: Stub hardware configuration
         run: |
-          cat > hardware-configuration.nix << 'EOF'
-          { modulesPath, lib, ... }:
-          {
-            imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-            boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
-            boot.initrd.kernelModules = [];
-            boot.kernelModules = [];
-            boot.extraModulePackages = [];
-            fileSystems."/" = { device = "/dev/disk/by-label/nixos"; fsType = "ext4"; };
-            fileSystems."/boot" = {
-              device = "/dev/disk/by-label/boot";
-              fsType = "vfat";
-              options = [ "umask=0077" ];
-            };
-            swapDevices = [];
-            nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-          }
-          EOF
+          # Single source of truth: ci/hardware-stub.nix (the devShell uses the
+          # same file). Copy it in place of the gitignored, machine-specific
+          # hardware-configuration.nix so the flake evaluates cleanly.
+          cp ci/hardware-stub.nix hardware-configuration.nix
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       # L1 — flake evaluation: catches syntax errors, bad option types,
       # undefined references. --no-build keeps this step fast.
@@ -77,6 +80,9 @@ jobs:
     name: Build ISO
     runs-on: ubuntu-latest
     needs: check
+    # Main-specific: only build/publish the ISO for PRs into main or
+    # pushes to main. PRs into other branches (e.g. dev) skip this.
+    if: github.base_ref == 'main' || github.ref == 'refs/heads/main'
     permissions:
       contents: write
     timeout-minutes: 180
@@ -88,19 +94,33 @@ jobs:
 
       - name: Require version bump (PR)
         if: github.event_name == 'pull_request'
+        env:
+          # The PR's target branch (e.g. "main"), passed via env to avoid
+          # interpolating untrusted context straight into the shell.
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          MAIN_VERSION=$(git show origin/main:VERSION 2>/dev/null || echo "0.0.0")
+          # Read VERSION from the target branch. A plain `git show
+          # origin/main:VERSION` is unreliable on a PR runner: checkout only
+          # fetches the PR merge ref, so origin/main may be absent and the
+          # comparison would silently pass. Fetch the base branch explicitly
+          # and read it from FETCH_HEAD.
+          git fetch --depth=1 origin "$BASE_REF"
+          BASE_VERSION=$(git show FETCH_HEAD:VERSION 2>/dev/null || echo "")
           CURRENT_VERSION=$(cat VERSION)
+          if [ -z "$BASE_VERSION" ]; then
+            echo "::error file=VERSION::Could not read VERSION from ${BASE_REF} — cannot verify the bump."
+            exit 1
+          fi
           if [ -z "$CURRENT_VERSION" ]; then
             echo "::error file=VERSION::VERSION file is empty."
             exit 1
           fi
-          if [ "$MAIN_VERSION" = "$CURRENT_VERSION" ]; then
+          if [ "$BASE_VERSION" = "$CURRENT_VERSION" ]; then
             echo "::error file=VERSION::VERSION is still ${CURRENT_VERSION} — bump it before merging."
             echo "::error file=VERSION::  patch → x.y.Z   minor → x.Y.0   major → X.0.0"
             exit 1
           fi
-          echo "Version bumped: ${MAIN_VERSION} → ${CURRENT_VERSION}"
+          echo "Version bumped: ${BASE_VERSION} → ${CURRENT_VERSION}"
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -113,24 +133,14 @@ jobs:
       # evaluates the whole flake, including nixosConfigurations.AnNIXion.
       - name: Stub hardware configuration
         run: |
-          cat > hardware-configuration.nix << 'EOF'
-          { modulesPath, lib, ... }:
-          {
-            imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-            boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sr_mod" "virtio_blk" ];
-            boot.initrd.kernelModules = [];
-            boot.kernelModules = [];
-            boot.extraModulePackages = [];
-            fileSystems."/" = { device = "/dev/disk/by-label/nixos"; fsType = "ext4"; };
-            fileSystems."/boot" = {
-              device = "/dev/disk/by-label/boot";
-              fsType = "vfat";
-              options = [ "umask=0077" ];
-            };
-            swapDevices = [];
-            nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-          }
-          EOF
+          # Single source of truth: ci/hardware-stub.nix (the devShell uses the
+          # same file). Copy it in place of the gitignored, machine-specific
+          # hardware-configuration.nix so the flake evaluates cleanly.
+          cp ci/hardware-stub.nix hardware-configuration.nix
+          # Nix only sees git-tracked files when evaluating a local flake.
+          # The stub is gitignored, so force-add it (this index-only change is
+          # never committed and stays local to the runner).
+          git add --force hardware-configuration.nix
 
       - name: Build ISO
         run: |
@@ -178,24 +188,58 @@ jobs:
           path: ${{ steps.iso.outputs.path }}
           retention-days: 7
 
-      # On merge to main: publish a GitHub Release if this version tag doesn't
-      # exist yet. Merges that don't bump VERSION are silently skipped.
+      # On merge to main: read the merged PR body as the changelog, then
+      # publish a GitHub Release. Skipped if this tag already exists.
+      - name: Read PR changelog
+        id: changelog
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
+            --jq '.[0].body // ""')
+          if [ -z "$BODY" ]; then
+            BODY="_No changelog provided._"
+            echo "::warning::No merged PR found for this commit — release notes will be empty."
+          fi
+          {
+            echo "body<<__EOF__"
+            echo "$BODY"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          ISO="${{ steps.iso.outputs.path }}"
 
           if gh release view "$TAG" > /dev/null 2>&1; then
             echo "Release $TAG already exists — bump VERSION to publish a new release."
-          else
-            gh release create "$TAG" \
-              --title "AnNIXion $TAG" \
-              --notes "Built from commit \`${{ github.sha }}\`.
-
-          **Live credentials:** \`operator\` / \`operator\`
-          Flash the ISO to a USB drive with Balena Etcher or \`dd\`, boot, and use the desktop installer." \
-              "${{ steps.iso.outputs.path }}"
+            exit 0
           fi
+
+          # Auto-generated PR list since the previous tag
+          PREV_TAG=$(git tag --sort=-version:refname | head -1)
+          AUTO_NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+            -X POST \
+            -f tag_name="$TAG" \
+            ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
+            --jq '.body' 2>/dev/null || echo "")
+
+          NOTES_FILE=$(mktemp)
+          {
+            echo "${{ steps.changelog.outputs.body }}"
+            if [ -n "$AUTO_NOTES" ]; then
+              printf '\n---\n\n## All changes in this release\n\n%s\n' "$AUTO_NOTES"
+            fi
+            printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
+            printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
+            printf 'Built from commit `${{ github.sha }}`.\n'
+          } > "$NOTES_FILE"
+
+          gh release create "$TAG" \
+            --title "AnNIXion $TAG" \
+            --notes-file "$NOTES_FILE" \
+            "${{ steps.iso.outputs.path }}"
