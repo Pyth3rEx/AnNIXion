@@ -63,6 +63,29 @@ integration, and wireless on laptop installs. `polkit` and `pkexec` stay because
 Plasma needs them for privileged actions, and the control centre killswitch goes
 through polkit.
 
+## File visibility
+
+A hidden file is one you cannot judge, and this machine exists to handle other
+people's artefacts. `home/file-visibility.nix` turns concealment off in each
+place that does it independently:
+
+| Where | How |
+|---|---|
+| Dolphin | `HiddenFilesShown` in the global view-properties file it reads instead of `dolphinrc` |
+| KDE open/save dialogs | `Show Hidden Files` in `kdeglobals` (set in `home/plasma.nix`) |
+| GTK file chooser (Firefox) | `show-hidden` via dconf, for GTK3 and GTK4 |
+| `rg` and `fd` | `--hidden`, which they otherwise skip |
+
+`--hidden` still honours `.gitignore`; add `--no-ignore` to
+`programs.ripgrep.arguments` if you want that gone too.
+
+**Extensions need no setting.** Dolphin and the KDE dialogs always render the
+whole filename — there is no hide-known-extensions behaviour to switch off. The
+one thing that still masks a name is a `.desktop` file, which shows its `Name=`
+field rather than the filename it has. KDE offers no toggle for this; it answers
+it instead by refusing to run a `.desktop` file that is not both executable and
+trusted.
+
 ## Measured effect
 
 Against the same configuration without `modules/hardening.nix`:
