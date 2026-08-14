@@ -24,7 +24,7 @@
     wireshark # packet capture & analysis
     burpsuite # web app pentesting proxy
     (pkgs.writeShellApplication {
-      name = "burp-ca";
+      name = "annixion-burp-ca";
       runtimeInputs = [
         pkgs.curl
         pkgs.openssl

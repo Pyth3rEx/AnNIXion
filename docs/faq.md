@@ -99,7 +99,7 @@ Delivery menu entry, which does that for you.
 
 ### Firefox shows certificate warnings through Burp
 
-Run `burp-ca` while Burp is running, then `rebuild`. This fetches Burp's CA and
+Run `annixion-burp-ca` while Burp is running. This fetches Burp's CA and
 trusts it via Firefox enterprise policy. Re-run only if Burp regenerates its CA.
 
 ### My VPN is up but enforced profiles still refuse to launch

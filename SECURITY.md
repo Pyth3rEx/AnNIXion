@@ -26,7 +26,7 @@ where you run it and what it can reach.
 - Browser isolation and proxy enforcement: the Red Team / OSINT / Puppet Master
   Firefox profiles fail closed if their assigned proxy (Burp / VPN) is not
   running, so traffic does not leak to a direct connection by default.
-- Burp CA handled out of band via `burp-ca` and Firefox enterprise policy — no
+- Burp CA handled out of band via `annixion-burp-ca` and Firefox enterprise policy — no
   system-wide trust store modification.
 - Machine-specific material (`hardware-configuration.nix`, `assets/certs/`) is
   gitignored and never committed.
