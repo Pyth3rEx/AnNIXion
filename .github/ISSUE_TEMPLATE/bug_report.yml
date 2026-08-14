@@ -58,7 +58,7 @@ body:
     id: nixos_version
     attributes:
       label: NixOS version
-      placeholder: "nixos-rebuild --version  →  NixOS 26.05"
+      placeholder: "nixos-version  →  26.05.XYZ.abc123 (Yarara)"
     validations:
       required: false
 
