@@ -93,12 +93,32 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       # No privatebrowsing.autostart — containers require a regular session
-      "network.proxy.type" = 1;
-      "network.proxy.socks" = "127.0.0.1";
-      "network.proxy.socks_port" = 1080;
-      "network.proxy.socks_version" = 5;
-      "network.proxy.socks_remote_dns" = true;
-      "network.proxy.failover_direct" = false;
+
+      # ── VPN enforcement ───────────────────────────────────────
+      # No proxy. Egress is confined to the tunnel in the kernel by
+      # modules/vpn-enforcement.nix, and this profile is launched via
+      # annixion-vpn-browser, which refuses to start without one.
+      # The old SOCKS 127.0.0.1:1080 prefs pointed at an endpoint
+      # nothing served, which is what hung every request (issue #26).
+      "network.proxy.type" = 0;
+
+      # DNS over HTTPS, no fallback. The killswitch blocks plaintext
+      # :53 out of this profile, including to a local resolver — a
+      # local resolver forwards from outside the cgroup and would
+      # escape enforcement entirely.
+      #
+      # bootstrapAddr pins the resolver's own IP. Without it mode 3
+      # deadlocks: Firefox needs DNS to find the DoH host, and plaintext
+      # DNS is exactly what mode 3 and the killswitch forbid. Note the
+      # name — "bootstrapAddress" is pre-89 and silently does nothing.
+      #
+      # Standard Quad9 here, unlike the OSINT and Red Team profiles:
+      # persona browsing has no reason to reach malicious hosts, so the
+      # blocklist is protection rather than an obstacle.
+      "network.trr.mode" = 3;
+      "network.trr.uri" = "https://dns.quad9.net/dns-query";
+      "network.trr.bootstrapAddr" = "9.9.9.9";
+      "network.dns.skipTRR-when-parental-control-enabled" = false;
 
       # ── HTTPS only ────────────────────────────────────────────
       "dom.security.https_only_mode" = true;
