@@ -73,6 +73,7 @@
             ./modules/xrdp.nix
             ./modules/security-tools.nix
             ./modules/vpn-enforcement.nix
+            ./modules/hardening.nix
 
             # The launcher must exec the Firefox Home Manager wraps.
             # Only that one carries distribution/policies.json — CA
@@ -233,14 +234,6 @@
 
                 # makes /etc/hosts writable
                 environment.etc.hosts.mode = "0700";
-
-                # ============================================================
-                # SSH — useful fallback if xrdp has issues
-                # ============================================================
-                services.openssh = {
-                  enable = lib.mkDefault true;
-                  settings.PasswordAuthentication = lib.mkDefault true;
-                };
 
                 # ============================================================
                 # STATE VERSION — do not change this ever

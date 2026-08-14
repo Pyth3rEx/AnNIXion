@@ -145,6 +145,7 @@ Full guide including Hyper-V Enhanced Session setup → [docs/installation.md](d
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, and the full alias/plugin list |
 | [CLI tools](docs/tools.md) | Enhanced command-line tools (bat, rg, fd, fzf, jq…) |
 | [Developer guide](docs/dev.md) | Local CI levels, VSCodium tasks, contributor workflow |
+| [Hardening](docs/hardening.md) | What is disabled to reduce attack surface, and how to restore it |
 | [FAQ](docs/faq.md) | Common setup and troubleshooting questions |
 | [Roadmap](docs/roadmap.md) | Phase-by-phase progress, planned features |
 | [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) | How to contribute · security posture and reporting |

@@ -30,7 +30,10 @@
 
   services.xrdp = {
     enable = lib.mkDefault true;
-    openFirewall = lib.mkDefault true;
+    # Enhanced Session arrives over vsock (see the ExecStart override
+    # below), so the TCP port would be open with nothing behind it. Bare
+    # metal RDP over TCP needs this set back to true.
+    openFirewall = lib.mkDefault false;
 
     # Launch a proper KDE Plasma X11 session when someone connects.
     # "startplasma-x11" is the standard KDE session launcher — xrdp knows
