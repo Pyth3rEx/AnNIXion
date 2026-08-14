@@ -37,6 +37,12 @@
 #     anticipates vendor naming like Mullvad's "ee-tll-wg-001". A route
 #     in any table counts, since wg-quick and Mullvad install theirs in
 #     a private table reached by an fwmark rule.
+#   * glibc does not resolve names itself — it asks nscd, which runs
+#     outside the enforced cgroup, so blocking DNS in the ruleset stops
+#     only direct queries and nothing that ordinary software does. The
+#     launcher masks the nscd socket and supplies a resolver reachable
+#     only through the tunnel, which puts lookups back inside the
+#     cgroup where the killswitch governs them.
 #   * WireGuard encapsulates in the kernel and the outer packet keeps
 #     the socket that produced the inner one, so the cgroup match
 #     catches it — on the physical interface, since its fwmark routes
@@ -68,6 +74,9 @@ let
   # Depth of the leaf slice: the three user-manager levels above it, plus
   # one level per "-"-separated component of the slice name.
   cgroupLevel = 3 + builtins.length sliceParts;
+
+  dnsConfined = cfg.dnsServers != [ ];
+  resolvArgs = lib.escapeShellArgs (map (s: "nameserver ${s}") cfg.dnsServers);
 
   # ── Tunnel enumeration ────────────────────────────────────────────────
   # Single source of truth for "which interfaces are live tunnels", read
@@ -292,13 +301,31 @@ let
         fail "refusing to launch '$LABEL' — could not arm the VPN killswitch"
       fi
 
-      # 4. The tunnel is up now; the killswitch is what keeps it honest
+      # 4. Confine DNS. glibc hands name lookups to nscd, which runs
+      #    outside this cgroup, so an enforced process's queries are
+      #    made by a daemon the killswitch never sees — they would carry
+      #    on resolving in the clear after the tunnel dropped, leaking
+      #    exactly the names the profile was visiting. Masking the nscd
+      #    socket forces the process to resolve for itself, against a
+      #    resolver reachable only through the tunnel, so DNS now fails
+      #    closed with everything else.
+      ${lib.optionalString dnsConfined ''
+        RESOLV_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/annixion-vpn"
+        mkdir -p "$RESOLV_DIR"
+        printf '%s\n' ${resolvArgs} > "$RESOLV_DIR/resolv.conf"
+      ''}
+
+      # 5. The tunnel is up now; the killswitch is what keeps it honest
       #    if it drops mid-session.
       UNIT="annixion-vpn-$(basename "$1" | tr -cd '[:alnum:]_.-')-$$"
       exec systemd-run --user --quiet \
         --slice=${sliceBare} \
         --scope --unit="$UNIT" \
-        "$@"
+        ${lib.optionalString dnsConfined ''
+          ${pkgs.bubblewrap}/bin/bwrap --dev-bind / / \
+          --ro-bind "$RESOLV_DIR/resolv.conf" /etc/resolv.conf \
+          --tmpfs /run/nscd -- \
+        ''}"$@"
     '';
   };
 
@@ -395,6 +422,29 @@ in
         tap, ppp, xfrm, ...), so these patterns are only needed for a
         tunnel presenting as some other type. An unrecognised tunnel
         fails CLOSED (traffic blocked), never open.
+      '';
+    };
+
+    dnsServers = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "9.9.9.10"
+        "149.112.112.10"
+      ];
+      description = ''
+        Resolvers that enforced processes use, given to them as a private
+        /etc/resolv.conf. They must be reachable through the tunnel and
+        nowhere else, so a lookup fails closed exactly like any other
+        traffic when the tunnel drops.
+
+        Unfiltered Quad9 by default, matching the Red Team and OSINT
+        browser profiles: a blocklist would hide the infrastructure those
+        tools exist to reach.
+
+        Set to [ ] to leave DNS alone. Queries then go to the system
+        resolver via nscd, which runs outside the enforced cgroup — the
+        killswitch cannot see them, and they resolve in the clear once
+        the tunnel is gone.
       '';
     };
 
