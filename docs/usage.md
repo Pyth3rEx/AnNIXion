@@ -20,6 +20,10 @@ lot. Every one of them takes `-h` / `--help`.
 The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
 `annixion-htb-vpn` once imported.
 
+Internal helper scripts carry the prefix too, so an AnNIXion store path is
+recognisable in `ps` output, but they take no arguments and are not meant to be
+run by hand.
+
 Shell aliases (`rebuild`, `upgrade`, `gs`, `ll`, …) are not prefixed — they are
 typing shortcuts, and several deliberately shadow standard tools.
 
