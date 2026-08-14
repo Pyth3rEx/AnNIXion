@@ -135,6 +135,22 @@
         assert "cb46 accept" in ruleset, ruleset
         machine.succeed("ip link del ee-tll-wg-001")
 
+    with subtest("enforced processes resolve inside the cgroup"):
+        # Regression: glibc delegates lookups to nscd, which runs outside
+        # the cgroup, so DNS escaped the killswitch entirely and would
+        # have kept resolving in the clear after the tunnel dropped.
+        machine.succeed("ip link add wg0 type dummy")
+        machine.succeed("ip addr add 10.99.0.2/24 dev wg0")
+        machine.succeed("ip link set wg0 up")
+        resolv = machine.succeed(
+            asOperator.format("annixion-vpn-run cat /etc/resolv.conf")
+        )
+        assert "9.9.9.10" in resolv, resolv
+        # The nscd socket must be gone, or glibc would hand the query
+        # straight back to the daemon and out of the cgroup again.
+        machine.fail(asOperator.format("annixion-vpn-run test -S /run/nscd/socket"))
+        machine.succeed("ip link del wg0")
+
     with subtest("an interface with no route does not count as a tunnel"):
         machine.succeed("ip link add tun9 type dummy")
         machine.succeed("ip link set tun9 up")
