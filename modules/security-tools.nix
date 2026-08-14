@@ -42,7 +42,10 @@
         openssl x509 -inform der -in /tmp/burp-ca.der -out "$CERT_OUT"
         rm -f /tmp/burp-ca.der
         echo "saved to $CERT_OUT"
-        echo "run 'rebuild' to apply to Firefox"
+        # The Firefox enterprise policy holds this path, not the file's
+        # contents, so Firefox re-reads it on every start. Only the path
+        # is baked at build time — refreshing the cert needs no rebuild.
+        echo "restart Firefox to trust it (no rebuild needed)"
       '';
     })
     metasploit # exploitation framework
