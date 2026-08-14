@@ -190,6 +190,7 @@ in
     ./home/control-center.nix
     ./home/fastfetch.nix
     ./home/zsh.nix
+    ./home/file-visibility.nix
   ];
 
   # Home Manager needs to know your username and home directory.

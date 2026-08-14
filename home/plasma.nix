@@ -237,6 +237,10 @@
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
 
+      # Show dotfiles in every KDE open/save dialog. Dolphin's own view
+      # is set separately, in home/file-visibility.nix.
+      "kdeglobals"."KFileDialog Settings"."Show Hidden Files" = true;
+
       # Bare Meta → activateLauncherMenu → TiledMenu toggles open/closed.
       # TiledMenu registers as an Application Launcher applet, so plasmashell
       # targets it when this D-Bus method is called.
