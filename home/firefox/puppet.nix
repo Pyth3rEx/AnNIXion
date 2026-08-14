@@ -102,19 +102,12 @@ in
       # nothing served, which is what hung every request (issue #26).
       "network.proxy.type" = 0;
 
-      # DNS over HTTPS, no fallback. The killswitch blocks plaintext
-      # :53 out of this profile, including to a local resolver — a
-      # local resolver forwards from outside the cgroup and would
-      # escape enforcement entirely.
-      #
-      # bootstrapAddr pins the resolver's own IP. Without it mode 3
-      # deadlocks: Firefox needs DNS to find the DoH host, and plaintext
-      # DNS is exactly what mode 3 and the killswitch forbid. Note the
-      # name — "bootstrapAddress" is pre-89 and silently does nothing.
-      #
-      # Standard Quad9 here, unlike the OSINT and Red Team profiles:
-      # persona browsing has no reason to reach malicious hosts, so the
-      # blocklist is protection rather than an obstacle.
+      # DoH with no plaintext fallback; the killswitch blocks :53 out of
+      # this profile, including to a local resolver. bootstrapAddr pins
+      # the resolver's own IP; without it mode 3 deadlocks, needing DNS
+      # to find the DoH host. The pre-89 name "bootstrapAddress" is
+      # silently ignored. Standard Quad9 here, unlike OSINT and Red Team:
+      # persona browsing has no reason to reach malicious hosts.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.9";
