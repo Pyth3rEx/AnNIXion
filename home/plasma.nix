@@ -213,7 +213,11 @@
     };
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
-    configFile = lib.mkDefault {
+    # Do not wrap this in lib.mkDefault. configFile is an opaque attrs
+    # option that plasma-manager also writes at normal priority, so a
+    # mkDefault here loses the whole block rather than merging into it —
+    # every key below silently did nothing until this was removed.
+    configFile = {
       # Enable Krohnkite tiling script
       "kwinrc"."Plugins"."krohnkiteEnabled" = true;
 
