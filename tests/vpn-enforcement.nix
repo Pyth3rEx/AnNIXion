@@ -114,10 +114,8 @@
         assert 'oifname "ee-tll-wg-001"' in ruleset, ruleset
 
     with subtest("WireGuard's own encapsulated egress is permitted"):
-        # Regression: the outer packet keeps the inner packet's socket, so
-        # the cgroup match catches it on the physical interface. Rejecting
-        # it stops the tunnel transmitting at all, and the app hangs to
-        # timeout rather than failing fast.
+        # Regression: the outer packet keeps the inner socket, so the
+        # cgroup match catches it on the physical interface.
         machine.succeed("wg set ee-tll-wg-001 fwmark 0xcb46")
         machine.succeed("annixion-vpn-killswitch-load")
         ruleset = machine.succeed("nft list table inet annixion_vpn_killswitch")

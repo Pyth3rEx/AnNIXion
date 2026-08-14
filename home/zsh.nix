@@ -11,7 +11,7 @@
   # ───────────────────────────────────────────────────────────────────────────
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;      # grey inline suggestions as you type
+    autosuggestion.enable = true; # grey inline suggestions as you type
     enableCompletion = true;
     # Syntax highlighting is handled by zsh-fast-syntax-highlighting at mkOrder 1190
 
@@ -29,27 +29,27 @@
         file = "autopair.zsh";
       }
     ];
-    autocd = true;                     # type a directory name to cd into it
+    autocd = true; # type a directory name to cd into it
 
     # ── oh-my-zsh framework ─────────────────────────────────────────────────
     # Only bundled plugins go here — external packages (autosuggestions,
     # syntax-highlighting) are handled by the HM options above.
     oh-my-zsh = {
       enable = true;
-      theme = "";  # oh-my-posh owns the prompt; leave this empty
+      theme = ""; # oh-my-posh owns the prompt; leave this empty
       plugins = [
-        "git"              # git aliases (gst, gco, gp …) + status info
-        "docker"           # docker subcommand completion
-        "colorize"         # ccat / cless — syntax-highlighted file viewing (needs chroma pkg)
-        "sudo"             # ESC ESC — prepend sudo to the current/previous command
-        "extract"          # `x archive.tar.gz` — one command for any archive format
-        "history"          # h = history  hs = grep history  hsi = case-insensitive
-        "nmap"             # nmap shortcuts: nmap_open_ports, nmap_full_udp, nmap_os …
-        "rsync"            # rsync-copy / rsync-move with progress bar
-        "urltools"         # urlencode / urldecode — encode payloads, decode responses
-        "jsontools"        # pp_json, is_json, json_grep — parse curl/API output
-        "dirhistory"       # Alt+← / Alt+→ — walk backward/forward through cd history
-        "magic-enter"      # Enter on empty prompt → git status in repo, ls elsewhere
+        "git" # git aliases (gst, gco, gp …) + status info
+        "docker" # docker subcommand completion
+        "colorize" # ccat / cless — syntax-highlighted file viewing (needs chroma pkg)
+        "sudo" # ESC ESC — prepend sudo to the current/previous command
+        "extract" # `x archive.tar.gz` — one command for any archive format
+        "history" # h = history  hs = grep history  hsi = case-insensitive
+        "nmap" # nmap shortcuts: nmap_open_ports, nmap_full_udp, nmap_os …
+        "rsync" # rsync-copy / rsync-move with progress bar
+        "urltools" # urlencode / urldecode — encode payloads, decode responses
+        "jsontools" # pp_json, is_json, json_grep — parse curl/API output
+        "dirhistory" # Alt+← / Alt+→ — walk backward/forward through cd history
+        "magic-enter" # Enter on empty prompt → git status in repo, ls elsewhere
         # "z" removed — replaced by programs.zoxide above (smarter + zi picker)
       ];
     };
@@ -64,7 +64,7 @@
       # ── NixOS rebuild ──────────────────────────────────────
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
       upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
-      update  = "nix flake update --flake ~/.dotfiles";
+      update = "nix flake update --flake ~/.dotfiles";
 
       # ── Git ────────────────────────────────────────────────
       gs = "git status";
@@ -72,27 +72,27 @@
       gl = "git pull";
 
       # ── Network / OSINT ────────────────────────────────────
-      ip_out   = "curl -s https://ifconfig.me && echo";
+      ip_out = "curl -s https://ifconfig.me && echo";
       ip_local = "ip -4 addr show scope global | awk '/inet/{print $2}'";
-      myip     = "ip -4 addr | awk '/inet/ && !/127.0.0.1/{printf \"%-12s %s\\n\", $NF\":\", $2}'";
-      ports    = "ss -tulnp";
-      vpn      = "ip link 2>/dev/null | awk '/tun[0-9]|wg[0-9]|vpn/{printf \"VPN ACTIVE: %s\\n\", $2}' | grep . || echo 'No VPN detected'";
+      myip = "ip -4 addr | awk '/inet/ && !/127.0.0.1/{printf \"%-12s %s\\n\", $NF\":\", $2}'";
+      ports = "ss -tulnp";
+      vpn = "ip link 2>/dev/null | awk '/tun[0-9]|wg[0-9]|vpn/{printf \"VPN ACTIVE: %s\\n\", $2}' | grep . || echo 'No VPN detected'";
 
       # ── Quick config edit ──────────────────────────────────
-      enix  = "kate ~/.dotfiles/flake.nix";
-      emod  = "kate ~/.dotfiles/modules/";
+      enix = "kate ~/.dotfiles/flake.nix";
+      emod = "kate ~/.dotfiles/modules/";
       euser = "kate ~/.dotfiles/user/";
       ehome = "kate ~/.dotfiles/home.nix";
-      ezsh  = "kate ~/.dotfiles/home/zsh.nix";
+      ezsh = "kate ~/.dotfiles/home/zsh.nix";
 
       # ── Tools ──────────────────────────────────────────────
-      ftp      = "lftp";
+      ftp = "lftp";
       neofetch = "fastfetch";
-      hex      = "xxd";
-      b64e     = "base64";
-      b64d     = "base64 -d";
+      hex = "xxd";
+      b64e = "base64";
+      b64d = "base64 -d";
       hashfile = "sha256sum";
-      serve    = "python3 -m http.server";  # quick HTTP file server
+      serve = "python3 -m http.server"; # quick HTTP file server
 
       # ── SecLists explorer ──────────────────────────────────
       seclists = ''
@@ -197,16 +197,9 @@
 
   # ───────────────────────────────────────────────────────────────────────────
   # oh-my-posh — AnNIXion red-team prompt
-  #
-  # Palette: neon red (#ff0033) on black/grey — no orange.
-  #
-  # Layout:
-  #   LEFT   [  user @ HOST  ][   ~/path   ][   ⎇ branch  ●N  +N  ↑N  ↓N  ⚑N   ]
-  #   RIGHT                        [  Nc  ][  ⏱ 1m3s  ][  ✗ N  ][  HH:MM:SS  ]
-  #   LINE2  ❯   (or #   when root)
-  #
-  # Git block shows: branch · staged count · working count · ahead · behind · stash
-  # Right block: command char count · exec time (>3 s) · exit code · clock
+  #   LEFT   [ user @ HOST ][ ~/path ][ ⎇ branch ●N +N ↑N ↓N ⚑N ]
+  #   RIGHT  [ Nc ][ ⏱ 1m3s ][ ✗ N ][ HH:MM:SS ]
+  #   LINE2  ❯  (# when root)
   # ───────────────────────────────────────────────────────────────────────────
   programs.oh-my-posh = {
     enable = true;
@@ -263,7 +256,7 @@
               foreground_templates = [
                 "{{ if or .Working.Changed .Staging.Changed }}#ff0033{{ end }}"
               ];
-              template = ''   ⎇ {{ .HEAD }}{{ if .Staging.Changed }}  ●{{ add .Staging.Added .Staging.Modified .Staging.Deleted }}{{ end }}{{ if .Working.Changed }}  +{{ add .Working.Added .Working.Modified .Working.Deleted .Working.Untracked }}{{ end }}{{ if gt .Ahead 0 }}  ↑{{ .Ahead }}{{ end }}{{ if gt .Behind 0 }}  ↓{{ .Behind }}{{ end }}{{ if gt .StashCount 0 }}  ⚑{{ .StashCount }}{{ end }}   '';
+              template = "⎇ {{ .HEAD }}{{ if .Staging.Changed }}  ●{{ add .Staging.Added .Staging.Modified .Staging.Deleted }}{{ end }}{{ if .Working.Changed }}  +{{ add .Working.Added .Working.Modified .Working.Deleted .Working.Untracked }}{{ end }}{{ if gt .Ahead 0 }}  ↑{{ .Ahead }}{{ end }}{{ if gt .Behind 0 }}  ↓{{ .Behind }}{{ end }}{{ if gt .StashCount 0 }}  ⚑{{ .StashCount }}{{ end }}   ";
               properties = {
                 branch_icon = "";
                 fetch_status = true;
@@ -274,9 +267,7 @@
         }
 
         # ── Line 1 — right ────────────────────────────────────────────────
-        # Segments are ordered right-to-left for powerline rendering;
-        # the clock always anchors the far-right edge.
-        # Left-pointing arrow  (U+E0B2) separates each block.
+        # Right-to-left for powerline; clock anchors the edge.
         {
           type = "prompt";
           alignment = "right";
@@ -288,7 +279,7 @@
               powerline_symbol = "";
               foreground = "#cc1122";
               background = "#2d2d2d";
-              template = ''   {{ .CurrentDate | date "15:04:05" }}   '';
+              template = ''{{ .CurrentDate | date "15:04:05" }}   '';
             }
             # Exit code — only when non-zero
             {
@@ -321,7 +312,7 @@
               powerline_symbol = "";
               foreground = "#555555";
               background = "#0e0e0e";
-              template = ''{{ if .Env.OMP_CMD_LEN }}   {{ .Env.OMP_CMD_LEN }}c   {{ end }}'';
+              template = "{{ if .Env.OMP_CMD_LEN }}   {{ .Env.OMP_CMD_LEN }}c   {{ end }}";
             }
           ];
         }

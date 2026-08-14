@@ -6,9 +6,7 @@
 }:
 
 {
-  # ============================================================
-  # SECURITY TOOLS — OFFENSIVE & OSINT
-  # ============================================================
+  # ── SECURITY TOOLS — OFFENSIVE & OSINT ────────────────────
   # Installed system-wide (environment.systemPackages) so these tools
   # are available to all users and before any user session starts.
   #
