@@ -1,5 +1,34 @@
 # Usage
 
+## Commands
+
+Everything AnNIXion ships is prefixed `annixion-`, so `annixion-<Tab>` lists the
+lot. Every one of them takes `-h` / `--help`.
+
+| Command | Purpose |
+|---|---|
+| `annixion-install` | Install to disk from the live ISO |
+| `annixion-cc` | Control center — Wi-Fi, Bluetooth, network killswitch |
+| `annixion-burp-ca` | Fetch Burp's CA so Firefox trusts intercepted HTTPS |
+| `annixion-vpn-run` | Run any command inside the VPN-enforced slice |
+| `annixion-vpn-browser` | Launch a Firefox profile inside that slice |
+| `annixion-vpn-status` | Tunnel, killswitch and slice state |
+| `annixion-vpn-tunnels` | List every interface that qualifies as a live tunnel |
+| `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
+| `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
+
+The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
+`annixion-htb-vpn` once imported.
+
+Internal helper scripts carry the prefix too, so an AnNIXion store path is
+recognisable in `ps` output, but they take no arguments and are not meant to be
+run by hand.
+
+Shell aliases (`rebuild`, `upgrade`, `gs`, `ll`, …) are not prefixed — they are
+typing shortcuts, and several deliberately shadow standard tools.
+
+---
+
 ## Firefox profiles
 
 Four isolated profiles launch from the desktop. Each has its own cookies, cache, and extensions.
@@ -56,14 +85,14 @@ $ annixion-vpn-run burpsuite
 Burp signs intercepted HTTPS traffic with its own CA (PortSwigger CA). Firefox needs to trust that cert. Run this once per machine after starting Burp:
 
 ```bash
-burp-ca    # fetches Burp's CA from the running proxy, saves to ~/.dotfiles/assets/certs/
+annixion-burp-ca    # fetches Burp's CA from the running proxy, saves to ~/.dotfiles/assets/certs/
 ```
 
 Then restart Firefox. No `rebuild` is needed: the enterprise policy records the
 *path* to the cert, not its contents, so Firefox re-reads the file every time it
 starts.
 
-Burp must be running on `127.0.0.1:8080` when you run `burp-ca`. After that, the cert is stable — it only needs to be re-run if Burp's data directory is wiped and it regenerates its CA.
+Burp must be running on `127.0.0.1:8080` when you run `annixion-burp-ca`. After that, the cert is stable — it only needs to be re-run if Burp's data directory is wiped and it regenerates its CA.
 
 > The cert file is machine-specific and excluded from git via `.gitignore`.
 

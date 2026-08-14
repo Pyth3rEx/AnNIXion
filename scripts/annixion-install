@@ -10,6 +10,22 @@ success() { echo -e "${GREEN}${BOLD} ✓  $*${RESET}"; }
 warn()    { echo -e "${YELLOW}${BOLD}[!] $*${RESET}"; }
 die()     { echo -e "${RED}${BOLD}[✗] $*${RESET}" >&2; exit 1; }
 
+# ── Help ────────────────────────────────────────────────────────────────────
+# Handled before the sudo re-exec, so --help never needs root.
+case "${1:-}" in
+  -h | --help)
+    cat <<'USAGE'
+usage: annixion-install
+
+Installs AnNIXion to disk from the live ISO: partitions, formats, mounts
+and runs nixos-install. Re-execs itself through sudo.
+
+  -h, --help  show this help
+USAGE
+    exit 0
+    ;;
+esac
+
 # ── Elevate to root ─────────────────────────────────────────────────────────
 # The live session runs as the unprivileged "operator" user, but partitioning,
 # formatting, mounting and nixos-install all require root. Re-exec through sudo

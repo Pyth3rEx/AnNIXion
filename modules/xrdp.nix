@@ -35,7 +35,7 @@
     # Launch a proper KDE Plasma X11 session when someone connects.
     # "startplasma-x11" is the standard KDE session launcher — xrdp knows
     # how to set up the environment for it correctly.
-    defaultWindowManager = lib.mkDefault "${pkgs.writeShellScript "start-plasma-rdp" ''
+    defaultWindowManager = lib.mkDefault "${pkgs.writeShellScript "annixion-start-plasma-rdp" ''
       # ── Runtime directory ────────────────────────────────────────────
       # systemd creates this at boot when linger is enabled (see below).
       export XDG_RUNTIME_DIR=/run/user/$(id -u)

@@ -24,12 +24,25 @@
     wireshark # packet capture & analysis
     burpsuite # web app pentesting proxy
     (pkgs.writeShellApplication {
-      name = "burp-ca";
+      name = "annixion-burp-ca";
       runtimeInputs = [
         pkgs.curl
         pkgs.openssl
       ];
       text = ''
+        case "''${1:-}" in
+          -h | --help)
+            printf '%s\n' 'usage: annixion-burp-ca
+
+        Fetches Burp'"'"'s CA certificate from the proxy on 127.0.0.1:8080 and
+        writes it where the Firefox enterprise policy expects it. Restart
+        Firefox afterwards; no rebuild is needed.
+
+          -h, --help  show this help'
+            exit 0
+            ;;
+        esac
+
         CERT_DIR="$HOME/.dotfiles/assets/certs"
         CERT_OUT="$CERT_DIR/burp-ca.pem"
 

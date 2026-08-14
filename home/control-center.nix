@@ -39,6 +39,18 @@ let
       procps # pkill
     ];
     text = ''
+      case "''${1:-}" in
+        -h | --help)
+          printf '%s\n' 'usage: annixion-cc
+
+      Opens the AnNIXion control center: Wi-Fi, Bluetooth and the network
+      killswitch. Running it again closes an open dialog.
+
+        -h, --help  show this help'
+          exit 0
+          ;;
+      esac
+
       # Toggle: if already open, close it
       if pgrep -x kdialog > /dev/null 2>&1; then
         pkill -x kdialog
