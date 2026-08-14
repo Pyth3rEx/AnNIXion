@@ -63,12 +63,29 @@ in
 
   # ── Base packages and docs ────────────────────────────────────────
   # defaultPackages is perl, rsync and strace, none of which the system
-  # needs to boot or run. Man pages stay: this is a tooling distro.
+  # needs to boot or run.
+  #
+  # Only the three sub-switches are set. documentation.enable is the
+  # master gate and takes man pages with it -- 162 of them, dig and the
+  # dnssec-* family included -- which is the wrong trade on a tooling
+  # distro.
   environment.defaultPackages = harden [ ];
   environment.stub-ld.enable = harden false;
   documentation.nixos.enable = harden false;
   documentation.info.enable = harden false;
   documentation.doc.enable = harden false;
+
+  # ── Desktop services ──────────────────────────────────────────────
+  # geoclue2 and fwupd are on by default and are the only two here that
+  # change anything; the rest are already off and are named so the
+  # intent survives an upstream default flipping.
+  services.geoclue2.enable = harden false;
+  services.fwupd.enable = harden false;
+  services.avahi.enable = harden false;
+  services.printing.enable = harden false;
+  services.gvfs.enable = harden false;
+  services.blueman.enable = harden false;
+  services.locate.enable = harden false;
 
   # ── Nix daemon ────────────────────────────────────────────────────
   # allowed-users defaults to "*", letting any account submit builds.
@@ -132,9 +149,12 @@ in
   #   Strict reverse-path filtering drops the asymmetric paths that
   #   policy-routed WireGuard tunnels create.
   #
-  # udisks2, upower, wireless
-  #   Plasma's device and battery integration, and wifi on laptop
-  #   installs. Off by default would break hardware AnNIXion supports.
+  # udisks2, upower, wireless, xdg.portal
+  #   Plasma's device and battery integration, wifi on laptop installs,
+  #   and the portal the GTK and Flatpak file choosers go through.
+  #   Plasma sets udisks2 and xdg.portal at normal priority, so harden
+  #   cannot touch them anyway -- it would take mkForce, and the result
+  #   would be no USB mounting and a broken file chooser.
   #
   # polkit / pkexec
   #   Plasma needs polkit for privileged actions, and the control centre
