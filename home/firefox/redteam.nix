@@ -87,9 +87,8 @@ in
       "browser.privatebrowsing.autostart" = true;
 
       # ── Burp — profile-level proxy (issue #25) ─────────────────
-      # Set natively rather than through FoxyProxy, so interception does
-      # not depend on an addon staying installed and enabled. FoxyProxy
-      # ships disabled — see the 3rdparty policy at the end of this file.
+      # Native, so interception does not depend on an addon staying
+      # installed. FoxyProxy ships disabled; see the end of this file.
       "network.proxy.type" = 1;
       "network.proxy.http" = "127.0.0.1";
       "network.proxy.http_port" = 8080;
@@ -106,11 +105,9 @@ in
       "network.proxy.proxy_over_tls" = false;
 
       # ── DNS over HTTPS ─────────────────────────────────────────
-      # Burp resolves for proxied requests, so this covers what bypasses
-      # it. bootstrapAddr pins the resolver's own IP; without it mode 3
-      # deadlocks, needing DNS to find the DoH host. The pre-89 name
-      # "bootstrapAddress" is silently ignored. Unfiltered Quad9: a
-      # blocklist would hide the infrastructure under test.
+      # Covers what bypasses Burp. bootstrapAddr pins the resolver's IP
+      # or mode 3 deadlocks; the pre-89 spelling is ignored. Unfiltered
+      # Quad9 — a blocklist would hide the target.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
@@ -189,14 +186,11 @@ in
   };
 
   # ── FoxyProxy — shipped, seeded, switched off ────────────────────
-  # Interception is the network.proxy.* block above, not this. FoxyProxy
-  # is here for ad-hoc work — an upstream proxy, a SOCKS pivot, a second
-  # Burp — and the entry below is a worked example, not an active route.
+  # Interception is the network.proxy.* block above, not this. Here for
+  # ad-hoc work; the entry below is an example, not an active route.
   #
-  # mode = "disabled" leaves Firefox's own proxy settings in force.
-  # Enabling FoxyProxy hands it the proxy API, which overrides
-  # network.proxy.* wholesale, failover_direct included: the profile's
-  # fail-rather-than-connect guarantee becomes whatever it points at.
+  # Enabling it hands FoxyProxy the proxy API, overriding network.proxy.*
+  # wholesale — failover_direct included.
   programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
     mode = "disabled";
     sync = false;

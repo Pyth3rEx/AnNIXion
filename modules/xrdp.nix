@@ -6,9 +6,7 @@
 }:
 
 {
-  # ============================================================
-  # HYPER-V GUEST SUPPORT
-  # ============================================================
+  # ── HYPER-V GUEST SUPPORT ─────────────────────────────────
 
   # Tell NixOS it's running inside Hyper-V.
   # Loads the right kernel drivers automatically.
@@ -22,22 +20,16 @@
   # This is the virtual cable Enhanced Session uses.
   boot.kernelModules = lib.mkDefault [ "hv_sock" ];
 
-  # ============================================================
-  # XRDP — ENHANCED SESSION
-  # ============================================================
-  # Hyper-V Enhanced Session connects over vsock (a virtual internal
-  # cable) rather than the network. xrdp listens on that cable.
+  # ── XRDP — ENHANCED SESSION ───────────────────────────────
+  # Enhanced Session connects over vsock, not the network.
 
   services.xrdp = {
     enable = lib.mkDefault true;
-    # Enhanced Session arrives over vsock (see the ExecStart override
-    # below), so the TCP port would be open with nothing behind it. Bare
-    # metal RDP over TCP needs this set back to true.
+    # vsock only — the TCP port would have nothing behind it. Bare
+    # metal RDP needs this back to true.
     openFirewall = lib.mkDefault false;
 
-    # Launch a proper KDE Plasma X11 session when someone connects.
-    # "startplasma-x11" is the standard KDE session launcher — xrdp knows
-    # how to set up the environment for it correctly.
+    # startplasma-x11 is the session launcher xrdp knows how to set up.
     defaultWindowManager = lib.mkDefault "${pkgs.writeShellScript "annixion-start-plasma-rdp" ''
       # ── Runtime directory ────────────────────────────────────────────
       # systemd creates this at boot when linger is enabled (see below).
@@ -45,22 +37,16 @@
       export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
 
       # ── D-Bus ────────────────────────────────────────────────────────
-      # With linger enabled, systemd --user manages the bus socket at
-      # $XDG_RUNTIME_DIR/bus. Fall back to dbus-launch only if it is
-      # somehow absent (e.g. first boot before linger takes effect).
+      # linger means systemd --user owns the bus socket; dbus-launch is
+      # the fallback for first boot.
       if ! [ -S "$XDG_RUNTIME_DIR/bus" ]; then
         eval $(${pkgs.dbus}/bin/dbus-launch --sh-syntax --exit-with-session)
       fi
 
       # ── Inject display environment into systemd user session ─────────
-      # In Plasma 6, plasmashell and most shell components are started as
-      # systemd user units (via plasma-x11-session.target), not directly
-      # by startplasma-x11. Those units inherit systemd --user's environment,
-      # not the script's environment, so they can't find the display unless
-      # we push the X11 variables in explicitly before Plasma starts.
-      # Without this, plasmashell silently fails to launch and you get a
-      # black screen with only the cursor (kwin starts fine; it is the
-      # shell that depends on these units).
+      # Plasma 6 starts plasmashell as a systemd user unit, which inherits
+      # systemd --user's environment rather than this script's. Without
+      # this push, plasmashell never launches: black screen with a cursor.
       systemctl --user import-environment \
         DISPLAY XAUTHORITY \
         XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
@@ -69,14 +55,8 @@
         2>/dev/null || true
 
       # ── Force X11 for Qt and KDE ─────────────────────────────────────
-      # In NixOS 26.05, Plasma 6 is Wayland-first. Qt 6 auto-detects the
-      # platform and prefers "wayland" when Wayland libraries are present.
-      # Inside an xrdp session there is no Wayland compositor, so anything
-      # that probes for one hangs waiting for a socket that never comes.
-      #
-      # unset WAYLAND_DISPLAY  — clears any value inherited from the system
-      #   environment so nothing tries to connect to a stale compositor.
-      # QT_QPA_PLATFORM=xcb   — forces the X11 backend unconditionally.
+      # Qt 6 prefers Wayland when its libraries are present. There is no
+      # compositor in an xrdp session, so probing hangs.
       unset WAYLAND_DISPLAY
       export QT_QPA_PLATFORM=xcb
 
@@ -98,11 +78,8 @@
     ''}";
   };
 
-  # Enable linger for the operator user so systemd --user starts at boot
-  # and stays running regardless of how the session is opened.
-  # xrdp sessions bypass the normal PAM/logind flow that would otherwise
-  # start systemd --user, so without linger, systemctl --user is unavailable
-  # and Plasma 6's shell components (started as user units) never launch.
+  # xrdp bypasses the PAM/logind flow that starts systemd --user, so
+  # without linger the Plasma 6 shell units never launch.
   users.users.operator.linger = lib.mkDefault true;
 
   # Override xrdp's ExecStart to listen on vsock://-1:3389 instead

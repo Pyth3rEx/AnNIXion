@@ -95,19 +95,12 @@ in
       # No privatebrowsing.autostart — containers require a regular session
 
       # ── VPN enforcement ───────────────────────────────────────
-      # No proxy. Egress is confined to the tunnel in the kernel by
-      # modules/vpn-enforcement.nix, and this profile is launched via
-      # annixion-vpn-browser, which refuses to start without one.
-      # The old SOCKS 127.0.0.1:1080 prefs pointed at an endpoint
-      # nothing served, which is what hung every request (issue #26).
+      # No proxy — egress is confined by modules/vpn-enforcement.nix.
       "network.proxy.type" = 0;
 
-      # DoH with no plaintext fallback; the killswitch blocks :53 out of
-      # this profile, including to a local resolver. bootstrapAddr pins
-      # the resolver's own IP; without it mode 3 deadlocks, needing DNS
-      # to find the DoH host. The pre-89 name "bootstrapAddress" is
-      # silently ignored. Standard Quad9 here, unlike OSINT and Red Team:
-      # persona browsing has no reason to reach malicious hosts.
+      # DoH, no plaintext fallback — the killswitch blocks :53, loopback
+      # included. bootstrapAddr pins the resolver's IP or mode 3
+      # deadlocks. Standard Quad9: persona browsing needs no malware.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.9";
