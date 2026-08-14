@@ -31,7 +31,7 @@ user/
 └── examples/
     ├── git.nix           ready-to-use git identity override
     ├── zsh.nix           welcome banner + recon aliases
-    └── hackthebox.nix    HTB networking helper (dnsmasq, addTheBox, vpnTheBox)
+    └── hackthebox.nix    HTB networking helper (dnsmasq, annixion-htb-hosts, annixion-htb-vpn)
 ```
 
 ---
