@@ -451,7 +451,16 @@ in
     browserPackage = lib.mkOption {
       type = lib.types.package;
       default = pkgs.firefox;
-      description = "Browser package the launcher execs.";
+      description = ''
+        Browser package the launcher execs.
+
+        This must be the *wrapped* package carrying
+        distribution/policies.json — under Home Manager that is
+        programs.firefox.finalPackage, which flake.nix wires in. Bare
+        pkgs.firefox has an empty policy set, and pointing the launcher
+        at it fails silently: the browser opens, but with no certificate
+        trust, no ExtensionSettings and no 3rdparty extension config.
+      '';
     };
 
     errorTitle = lib.mkOption {
