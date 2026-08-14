@@ -85,7 +85,27 @@ in
     settings = {
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
+
+      # ── Burp — profile-level proxy (issue #25) ─────────────────
+      # Set natively rather than through FoxyProxy so interception does
+      # not depend on a third-party addon staying installed, enabled and
+      # correctly configured. FoxyProxy is still shipped for ad-hoc use,
+      # but ships disabled — see the 3rdparty policy at the end of this
+      # file.
+      "network.proxy.type" = 1;
+      "network.proxy.http" = "127.0.0.1";
+      "network.proxy.http_port" = 8080;
+      "network.proxy.ssl" = "127.0.0.1";
+      "network.proxy.ssl_port" = 8080;
+      "network.proxy.share_proxy_settings" = true;
+      # Intercept localhost targets too — testing local apps is routine.
+      "network.proxy.allow_hijacking_localhost" = true;
+      "network.proxy.no_proxies_on" = "";
+      # Never silently fall back to a direct connection if Burp is down;
+      # an unproxied request during a test is worse than a failed one.
       "network.proxy.failover_direct" = false;
+      # Burp resolves hostnames, so Firefox must not resolve them itself.
+      "network.proxy.proxy_over_tls" = false;
 
       # ── WebRTC + geolocation ───────────────────────────────────
       "media.peerconnection.enabled" = false;
@@ -159,8 +179,22 @@ in
     };
   };
 
+  # ── FoxyProxy — shipped, seeded, and switched off ─────────────────
+  # Interception is the profile-level network.proxy.* block above, not
+  # this. FoxyProxy is here for ad-hoc work during an engagement —
+  # flipping to an upstream proxy, a SOCKS pivot, a second Burp — and
+  # the Burpsuite entry below is a worked example to copy, not an
+  # active route.
+  #
+  # mode = "disabled" leaves Firefox's own proxy settings in force, and
+  # the entry carries active = false so it is listed but not selected.
+  # Be aware that enabling FoxyProxy hands it the proxy API, which
+  # overrides network.proxy.* wholesale — including failover_direct,
+  # the pref that stops a request falling back to a direct connection
+  # when Burp is down. Turning it on trades the profile's guarantee for
+  # whatever FoxyProxy is pointed at.
   programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
-    mode = "127.0.0.1:8080";
+    mode = "disabled";
     sync = false;
     autoBackup = false;
     passthrough = "";
@@ -174,8 +208,8 @@ in
     };
     data = [
       {
-        active = true;
-        title = "Burpsuite";
+        active = false;
+        title = "Burpsuite (example — profile prefs do the real work)";
         type = "http";
         hostname = "127.0.0.1";
         port = "8080";

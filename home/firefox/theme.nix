@@ -172,7 +172,10 @@ let
 in
 {
   # ── Red Team — neon crimson (#ff2244) ────────────────────────────
-  # FoxyProxy and HackTools pinned to toolbar; technical area starts at FoxyProxy.
+  # FoxyProxy and HackTools pinned to toolbar; technical area starts at
+  # FoxyProxy. The pin is for reach during an engagement — Burp
+  # interception itself comes from the profile's network.proxy.* prefs,
+  # not from the extension (#25).
   programs.firefox.profiles."redteam".settings = makeSettings [
     (widget addons.foxyproxy-standard)
     (widget addons.hacktools)
