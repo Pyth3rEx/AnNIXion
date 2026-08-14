@@ -107,6 +107,23 @@ in
       # Burp resolves hostnames, so Firefox must not resolve them itself.
       "network.proxy.proxy_over_tls" = false;
 
+      # ── DNS over HTTPS ─────────────────────────────────────────
+      # Burp resolves for proxied requests, so this only covers what
+      # bypasses the proxy — but the killswitch blocks plaintext :53
+      # out of this profile, so there has to be a resolver it can use.
+      #
+      # bootstrapAddr pins the resolver's own IP. Without it mode 3
+      # deadlocks: Firefox needs DNS to find the DoH host, and plaintext
+      # DNS is exactly what mode 3 and the killswitch forbid. Note the
+      # name — "bootstrapAddress" is pre-89 and silently does nothing.
+      #
+      # Unfiltered Quad9: a blocklist would hide the very infrastructure
+      # under test.
+      "network.trr.mode" = 3;
+      "network.trr.uri" = "https://dns10.quad9.net/dns-query";
+      "network.trr.bootstrapAddr" = "9.9.9.10";
+      "network.dns.skipTRR-when-parental-control-enabled" = false;
+
       # ── WebRTC + geolocation ───────────────────────────────────
       "media.peerconnection.enabled" = false;
       "geo.enabled" = false;
