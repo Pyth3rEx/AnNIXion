@@ -3,8 +3,8 @@
 # What it does:
 #   * Runs a local dnsmasq as the system resolver (127.0.0.1). The HTB VPN can push whatever DNs it likes, nothing consumes it; so internet resolution never breaks.
 #   * Forwards normal queries to real upstreams; never leaks *.htb upstream.
-#   * Goves you `addTheBox` to manage per-box host entries and *.htb forwarding at runtime (no rebuild needed).
-#   * Ships `vpnTheBox` to connect to any lab .ovpn with split-tunnel + no DNS/resolv.conf hijacking (covers Pro Labs that push redirect-gateway).
+#   * Goves you `annixion-htb-hosts` to manage per-box host entries and *.htb forwarding at runtime (no rebuild needed).
+#   * Ships `annixion-htb-vpn` to connect to any lab .ovpn with split-tunnel + no DNS/resolv.conf hijacking (covers Pro Labs that push redirect-gateway).
 
 {
   config,
@@ -33,9 +33,9 @@ let
     done
   '';
 
-  # addTheBox | manages HTB host entries and *.htb DNS forwarding
-  addTheBox = pkgs.writeShellApplication {
-    name = "addTheBox";
+  # annixion-htb-hosts | manages HTB host entries and *.htb DNS forwarding
+  htbHosts = pkgs.writeShellApplication {
+    name = "annixion-htb-hosts";
     runtimeInputs = [
       pkgs.gawk
       pkgs.coreutils
@@ -43,6 +43,17 @@ let
     ];
     text = ''
       set -euo pipefail
+
+      usage() {
+        echo "annixion-htb-hosts | HTB host/DNS manager"
+        echo "  annixion-htb-hosts add <ip> <domain...>     | add/replace host entries"
+        echo "  annixion-htb-hosts update <ip> <domain...>  | alias for add (boxes re-IP on respawn)"
+        echo "  annixion-htb-hosts remove <domain...>       | remove host entries"
+        echo "  annixion-htb-hosts dns <ip|off>             | send all *.htb to a box DNS (AD boxes)"
+        echo "  annixion-htb-hosts list                     | show current state"
+        echo "  annixion-htb-hosts flush                    | wipe everything"
+        echo "  -h, --help                                  | show this help"
+      }
 
       HOSTS="${hostsFile}"
       SERVERS="${serversFile}"
@@ -116,25 +127,31 @@ let
           echo "[*] cleared all host entries and reset *.htb forwarder"
           ;;
 
+        -h|--help)
+          usage
+          ;;
+
         *)
-          echo "addTheBox | HTB host/DNS manager"
-          echo "  addTheBox add <ip> <domain...>     | add/replace host entries"
-          echo "  addTheBox update <ip> <domain...>  | alias for add (boxes re-IP on respawn)"
-          echo "  addTheBox remove <domain...>       | remove host entries"
-          echo "  addTheBox dns <ip|off>             | send all *.htb to a box DNS (AD boxes)"
-          echo "  addTheBox list                     | show current state"
-          echo "  addTheBox flush                    | wipe everything"
+          usage
           exit 1
           ;;
       esac
     '';
   };
 
-  # vpnTheBox | connect to a lab or academy config without losing internet or resolv.conf
-  vpnTheBox = pkgs.writeShellScriptBin "vpnTheBox" ''
+  # annixion-htb-vpn | connect to a lab or academy config without losing internet or resolv.conf
+  htbVpn = pkgs.writeShellScriptBin "annixion-htb-vpn" ''
     set -euo pipefail
+    case "''${1:-}" in
+      -h|--help)
+        echo "usage: annixion-htb-vpn <config.ovpn>"
+        echo "  Connects to a lab .ovpn with split tunnelling and no DNS hijacking."
+        echo "  -h, --help  show this help"
+        exit 0
+        ;;
+    esac
     if [ "''$#" -lt 1 ]; then
-      echo "usage: vpnTheBox <config.ovpn>";
+      echo "usage: annixion-htb-vpn <config.ovpn>";
       exit 1;
     fi
     exec sudo ${pkgs.openvpn}/bin/openvpn \
@@ -177,8 +194,8 @@ in
         no-resolv = true; # ignore /etc/resolv.conf for upstreams
         server = cfg.upstreams;
         cache-size = 1000;
-        addn-hosts = hostsFile; # runtime per-box entries (addTheBox add)
-        servers-file = serversFile; # the *.htb forwarder (addTheBox dns)
+        addn-hosts = hostsFile; # runtime per-box entries (annixion-htb-hosts add)
+        servers-file = serversFile; # the *.htb forwarder (annixion-htb-hosts dns)
       };
     };
 
@@ -190,7 +207,7 @@ in
     networking.networkmanager.dns = "none";
     networking.nameservers = [ "127.0.0.1" ];
 
-    # Let your user reload dnsmasq without sudo (so addTheBox is friction-free)
+    # Let your user reload dnsmasq without sudo (so annixion-htb-hosts is friction-free)
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {
         if (action.id == "org.freedesktop.systemd1.manage-utils" &&
@@ -202,8 +219,8 @@ in
     '';
 
     environment.systemPackages = [
-      addTheBox
-      vpnTheBox
+      htbHosts
+      htbVpn
     ];
   };
 }
