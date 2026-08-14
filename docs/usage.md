@@ -56,14 +56,14 @@ $ annixion-vpn-run burpsuite
 Burp signs intercepted HTTPS traffic with its own CA (PortSwigger CA). Firefox needs to trust that cert. Run this once per machine after starting Burp:
 
 ```bash
-burp-ca    # fetches Burp's CA from the running proxy, saves to ~/.dotfiles/assets/certs/
+annixion-burp-ca    # fetches Burp's CA from the running proxy, saves to ~/.dotfiles/assets/certs/
 ```
 
 Then restart Firefox. No `rebuild` is needed: the enterprise policy records the
 *path* to the cert, not its contents, so Firefox re-reads the file every time it
 starts.
 
-Burp must be running on `127.0.0.1:8080` when you run `burp-ca`. After that, the cert is stable — it only needs to be re-run if Burp's data directory is wiped and it regenerates its CA.
+Burp must be running on `127.0.0.1:8080` when you run `annixion-burp-ca`. After that, the cert is stable — it only needs to be re-run if Burp's data directory is wiped and it regenerates its CA.
 
 > The cert file is machine-specific and excluded from git via `.gitignore`.
 
