@@ -88,21 +88,15 @@ in
       "browser.privatebrowsing.autostart" = true;
 
       # ── VPN enforcement ───────────────────────────────────────
-      # See puppet.nix — egress is confined to the tunnel in the
-      # kernel by modules/vpn-enforcement.nix, not by proxy prefs.
+      # Egress is confined to the tunnel by modules/vpn-enforcement.nix,
+      # not by proxy prefs.
       "network.proxy.type" = 0;
 
-      # DNS over HTTPS, no fallback (plaintext :53 is blocked for
-      # this profile by the killswitch).
-      #
-      # bootstrapAddr pins the resolver's own IP. Without it mode 3
-      # deadlocks: Firefox needs DNS to find the DoH host, and plaintext
-      # DNS is exactly what mode 3 and the killswitch forbid. Note the
-      # name — "bootstrapAddress" is pre-89 and silently does nothing.
-      #
-      # Unfiltered Quad9: the standard service NXDOMAINs known-malicious
-      # domains, which is precisely the infrastructure OSINT work needs
-      # to resolve.
+      # DoH with no plaintext fallback. bootstrapAddr pins the resolver's
+      # own IP; without it mode 3 deadlocks, needing DNS to find the DoH
+      # host. The pre-89 name "bootstrapAddress" is silently ignored.
+      # Unfiltered Quad9: the standard service NXDOMAINs the malicious
+      # domains OSINT work has to resolve.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
