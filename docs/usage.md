@@ -158,6 +158,21 @@ Do53, which the killswitch blocks and which would leak. There is therefore no
 automatic failover — switching provider is a config change, shown under the
 override examples below.
 
+#### Everything that is not Firefox
+
+Burp, `sqlmap`, `ffuf` and anything else launched through `annixion-vpn-run`
+resolve names through glibc, which does not do the lookup itself — it hands the
+query to `nscd`. That daemon runs *outside* the enforced cgroup, so blocking
+DNS in the ruleset stops only direct queries and nothing that ordinary software
+does. Left alone, an enforced tool's lookups would keep resolving in the clear
+after the tunnel dropped, leaking precisely the names it was visiting.
+
+The launcher therefore masks the `nscd` socket and supplies a private
+`/etc/resolv.conf` naming resolvers reachable only through the tunnel, so the
+process resolves for itself and DNS fails closed with everything else. Change
+them with `annixion.vpnEnforcement.dnsServers`; setting it to `[ ]` restores
+the system resolver and gives up this guarantee.
+
 ---
 
 ## Bypassing proxy enforcement via user overrides
