@@ -41,7 +41,7 @@
       Name=Firefox - Red Team
       GenericName=Assault Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
-      Exec=firefox -P "Red Team" --no-remote
+      Exec=annixion-vpn-browser "Red Team"
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -52,7 +52,7 @@
       Name=Firefox - OSINT
       GenericName=Search Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
-      Exec=firefox -P "OSINT" --no-remote
+      Exec=annixion-vpn-browser "OSINT"
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -63,7 +63,7 @@
       Name=Firefox - Puppet Master
       GenericName=Persona Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
-      Exec=firefox -P "Puppet Master" --no-remote
+      Exec=annixion-vpn-browser "Puppet Master"
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
