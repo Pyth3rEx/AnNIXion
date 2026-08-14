@@ -74,6 +74,21 @@
             ./modules/security-tools.nix
             ./modules/vpn-enforcement.nix
 
+            # The enforced launcher must exec the Firefox that Home
+            # Manager wraps, not bare pkgs.firefox. Only the wrapped one
+            # carries distribution/policies.json — the Burp CA trust,
+            # ExtensionSettings and the FoxyProxy 3rdparty config all
+            # live there, and launching the plain package drops them
+            # silently: the browser still starts, just untrusting and
+            # without its extensions.
+            (
+              { config, ... }:
+              {
+                annixion.vpnEnforcement.browserPackage =
+                  config.home-manager.users.operator.programs.firefox.finalPackage;
+              }
+            )
+
             # ── Wire Home Manager into the NixOS build ───────────
             # "nixos-rebuild switch" handles both system AND user config
             # in one command — no separate "home-manager switch" step needed.
