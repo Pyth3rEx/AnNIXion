@@ -74,13 +74,10 @@
             ./modules/security-tools.nix
             ./modules/vpn-enforcement.nix
 
-            # The enforced launcher must exec the Firefox that Home
-            # Manager wraps, not bare pkgs.firefox. Only the wrapped one
-            # carries distribution/policies.json — the Burp CA trust,
-            # ExtensionSettings and the FoxyProxy 3rdparty config all
-            # live there, and launching the plain package drops them
-            # silently: the browser still starts, just untrusting and
-            # without its extensions.
+            # The launcher must exec the Firefox Home Manager wraps.
+            # Only that one carries distribution/policies.json — CA
+            # trust, ExtensionSettings, the FoxyProxy 3rdparty config —
+            # and bare pkgs.firefox drops them silently.
             (
               { config, ... }:
               {

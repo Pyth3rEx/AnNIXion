@@ -87,11 +87,9 @@ in
       "browser.privatebrowsing.autostart" = true;
 
       # ── Burp — profile-level proxy (issue #25) ─────────────────
-      # Set natively rather than through FoxyProxy so interception does
-      # not depend on a third-party addon staying installed, enabled and
-      # correctly configured. FoxyProxy is still shipped for ad-hoc use,
-      # but ships disabled — see the 3rdparty policy at the end of this
-      # file.
+      # Set natively rather than through FoxyProxy, so interception does
+      # not depend on an addon staying installed and enabled. FoxyProxy
+      # ships disabled — see the 3rdparty policy at the end of this file.
       "network.proxy.type" = 1;
       "network.proxy.http" = "127.0.0.1";
       "network.proxy.http_port" = 8080;
@@ -108,17 +106,11 @@ in
       "network.proxy.proxy_over_tls" = false;
 
       # ── DNS over HTTPS ─────────────────────────────────────────
-      # Burp resolves for proxied requests, so this only covers what
-      # bypasses the proxy — but the killswitch blocks plaintext :53
-      # out of this profile, so there has to be a resolver it can use.
-      #
-      # bootstrapAddr pins the resolver's own IP. Without it mode 3
-      # deadlocks: Firefox needs DNS to find the DoH host, and plaintext
-      # DNS is exactly what mode 3 and the killswitch forbid. Note the
-      # name — "bootstrapAddress" is pre-89 and silently does nothing.
-      #
-      # Unfiltered Quad9: a blocklist would hide the very infrastructure
-      # under test.
+      # Burp resolves for proxied requests, so this covers what bypasses
+      # it. bootstrapAddr pins the resolver's own IP; without it mode 3
+      # deadlocks, needing DNS to find the DoH host. The pre-89 name
+      # "bootstrapAddress" is silently ignored. Unfiltered Quad9: a
+      # blocklist would hide the infrastructure under test.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
@@ -196,20 +188,15 @@ in
     };
   };
 
-  # ── FoxyProxy — shipped, seeded, and switched off ─────────────────
-  # Interception is the profile-level network.proxy.* block above, not
-  # this. FoxyProxy is here for ad-hoc work during an engagement —
-  # flipping to an upstream proxy, a SOCKS pivot, a second Burp — and
-  # the Burpsuite entry below is a worked example to copy, not an
-  # active route.
+  # ── FoxyProxy — shipped, seeded, switched off ────────────────────
+  # Interception is the network.proxy.* block above, not this. FoxyProxy
+  # is here for ad-hoc work — an upstream proxy, a SOCKS pivot, a second
+  # Burp — and the entry below is a worked example, not an active route.
   #
-  # mode = "disabled" leaves Firefox's own proxy settings in force, and
-  # the entry carries active = false so it is listed but not selected.
-  # Be aware that enabling FoxyProxy hands it the proxy API, which
-  # overrides network.proxy.* wholesale — including failover_direct,
-  # the pref that stops a request falling back to a direct connection
-  # when Burp is down. Turning it on trades the profile's guarantee for
-  # whatever FoxyProxy is pointed at.
+  # mode = "disabled" leaves Firefox's own proxy settings in force.
+  # Enabling FoxyProxy hands it the proxy API, which overrides
+  # network.proxy.* wholesale, failover_direct included: the profile's
+  # fail-rather-than-connect guarantee becomes whatever it points at.
   programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
     mode = "disabled";
     sync = false;
