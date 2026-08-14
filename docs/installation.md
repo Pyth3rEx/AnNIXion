@@ -113,7 +113,7 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   ├── firefox/
 │   │   ├── default.nix            # Firefox enable, policies, desktop launchers
 │   │   ├── untrusted.nix          # Unsafe Browser profile (clearnet, id 0)
-│   │   ├── redteam.nix            # Red Team profile: Burp proxy, FoxyProxy, HackTools
+│   │   ├── redteam.nix            # Red Team profile: Burp proxy, HackTools
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
@@ -128,11 +128,13 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 ├── modules/
 │   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
 │   ├── xrdp.nix                   # Hyper-V Enhanced Session via vsock
-│   └── security-tools.nix         # Offensive, OSINT, and SDR packages
+│   ├── security-tools.nix         # Offensive, OSINT, and SDR packages
+│   └── vpn-enforcement.nix        # Kernel killswitch: browser egress confined to the VPN
 │
 ├── tests/
 │   ├── boot.nix                   # VM test: system boots, services start
-│   └── security-tools.nix         # VM test: all tools are present
+│   ├── security-tools.nix         # VM test: all tools are present
+│   └── vpn-enforcement.nix        # VM test: killswitch loads and fails closed
 │
 ├── user/                          # Personal overrides — never committed upstream
 │   ├── configuration.nix
