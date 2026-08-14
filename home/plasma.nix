@@ -237,6 +237,10 @@
       "kdeglobals"."General"."ColorScheme" = "BreezeDark";
       "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
 
+      # Baloo indexes file contents in the background. On a machine that
+      # collects other people's files, that means parsing them.
+      "baloofilerc"."Basic Settings"."Indexing-Enabled" = false;
+
       # Show dotfiles in every KDE open/save dialog. Dolphin's own view
       # is set separately, in home/file-visibility.nix.
       "kdeglobals"."KFileDialog Settings"."Show Hidden Files" = true;

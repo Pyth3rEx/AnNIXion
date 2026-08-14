@@ -75,6 +75,36 @@ in
   documentation.info.enable = harden false;
   documentation.doc.enable = harden false;
 
+  # ── KDE PIM ───────────────────────────────────────────────────────
+  # Plasma enables this at mkDefault true, putting akonadi and
+  # kdepim-runtime on PATH: a database and a set of agents that speak
+  # IMAP, EWS, Google, Kolab and DAV. No mail client is installed to use
+  # any of it. kmail, kontact and merkuro are separate switches and were
+  # already off.
+  programs.kde-pim.enable = harden false;
+
+  # ── Plasma optional packages ──────────────────────────────────────
+  # Everything Plasma installs that this distro has no use for. konsole,
+  # kate, dolphin, ark, okular, gwenview and spectacle are kept: the
+  # panel launches some, the zsh config edits with kate, and the rest
+  # are how you read what you collect.
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    # A second RDP server, alongside the xrdp this distro configures.
+    krdp
+    # Bridges the desktop to Chrome and Firefox through a native
+    # messaging host. The browser profiles here are deliberately
+    # locked down; this reaches around them.
+    plasma-browser-integration
+    # Generates thumbnails by parsing whatever video a directory
+    # happens to contain.
+    ffmpegthumbs
+    elisa
+    khelpcenter
+    plasma-workspace-wallpapers
+    plasma-keyboard
+    qtvirtualkeyboard
+  ];
+
   # ── Desktop services ──────────────────────────────────────────────
   # geoclue2 and fwupd are on by default and are the only two here that
   # change anything; the rest are already off and are named so the
