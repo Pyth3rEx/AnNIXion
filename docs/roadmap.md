@@ -126,12 +126,13 @@ Rationale:
 
 - [x] `home/firefox/default.nix` — Firefox enable, force-installed policies, desktop launchers
 - [x] `home/firefox/untrusted.nix` — Unsafe Browser profile (id 0, isDefault): direct connection, uBlock only; replaces empty default profile
-- [x] `home/firefox/redteam.nix` — Red Team profile: FoxyProxy, HackTools, Wappalyzer, Cookie Editor, Retire.js; search engines: Exploit-DB, CVE, NVD
+- [x] `home/firefox/redteam.nix` — Red Team profile: HackTools, Wappalyzer, Cookie Editor, Retire.js; search engines: Exploit-DB, CVE, NVD
 - [x] `home/firefox/osint.nix` — OSINT profile: NoScript, CanvasBlocker, User-Agent Switcher, Cookie AutoDelete; search engines: Shodan, Censys, Wayback Machine
 - [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, social search
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
-- [x] FoxyProxy pre-configured via managed storage (`3rdparty` policy) to route all RedTeam traffic through Burp Suite (127.0.0.1:8080); `failover_direct = false` blocks leaks if Burp is down
-- [x] VPN enforcement in OSINT and Puppet profiles: SOCKS5 placeholder at 127.0.0.1:1080, DNS through proxy, `failover_direct = false` — connections fail until VPN is running
+- [x] Burp proxy set at profile level (`network.proxy.*`) rather than via FoxyProxy, so interception does not depend on a third-party extension (#25); `failover_direct = false` blocks leaks if Burp is down. FoxyProxy stays installed for ad-hoc switching, shipped disabled with the Burp entry as a worked example
+- [x] VPN enforcement rebuilt in the kernel (`modules/vpn-enforcement.nix`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
+- [x] VPN enforcement covers Red Team as well as OSINT and Puppet, with Burp launched inside the same slice — the browser only reaches loopback, so Burp's egress is the one that has to be confined
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
   - [x] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar

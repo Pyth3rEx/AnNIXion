@@ -53,7 +53,7 @@ AnNIXion is different in kind.
 <td valign="top" width="50%">
 
 **Browsers**
-- Red Team Firefox — Burp proxy enforced, FoxyProxy pre-configured, HackTools, Wappalyzer, Retire.js
+- Red Team Firefox — VPN-enforced, Burp proxy set at profile level, FoxyProxy for ad-hoc switching, HackTools, Wappalyzer, Retire.js
 - OSINT Firefox — VPN-enforced, NoScript, CanvasBlocker, UA Switcher, fingerprint evasion
 - Puppet Master Firefox — VPN-enforced, Multi-Account Containers, Temporary Containers, persona tooling
 - Unsafe Browser — clearnet fallback, uBlock only, for captive portals
@@ -97,12 +97,15 @@ Every profile launches isolated — separate cookies, cache, extensions, and pro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Firefox - Red Team          → Burp Suite  127.0.0.1:8080       │
-│  Firefox - OSINT             → VPN SOCKS5  127.0.0.1:1080       │
-│  Firefox - Puppet Master     → VPN SOCKS5  127.0.0.1:1080       │
+│  Firefox - Red Team          → Burp 127.0.0.1:8080, over VPN    │
+│  Firefox - OSINT             → VPN tunnel (kernel-enforced)     │
+│  Firefox - Puppet Master     → VPN tunnel (kernel-enforced)     │
 │  Firefox - Unsafe Browser    → Direct (clearnet, no proxy)      │
 └─────────────────────────────────────────────────────────────────┘
-  If the assigned proxy is not running, the browser blocks. No fallback. No leaks.
+  Red Team, OSINT and Puppet Master are confined to the VPN tunnel by an
+  nftables killswitch and refuse to launch without one. Burp runs inside the
+  same enforced slice, so the traffic it forwards is confined too.
+  No fallback. No leaks.
 ```
 
 ---

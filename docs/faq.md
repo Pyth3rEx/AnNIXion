@@ -84,19 +84,64 @@ Flakes only see git-tracked files. Run `git add` on the new file before
 ### A browser profile won't connect to anything
 
 That's by design. The Red Team profile fails closed unless Burp is running on
-`127.0.0.1:8080`; OSINT and Puppet Master fail closed unless a SOCKS5 proxy is
-on `127.0.0.1:1080`. Start the proxy, or override enforcement per
+`127.0.0.1:8080`. Red Team, OSINT and Puppet Master are all confined to the VPN
+tunnel in the kernel and will not even open a window without one — run
+`annixion-vpn-status` to see why. Start the proxy or connect the VPN, or
+override enforcement per
 [usage.md](usage.md#bypassing-proxy-enforcement-via-user-overrides).
+
+### Burp works, but Red Team traffic isn't going through the VPN
+
+Burp was probably started from a shell rather than the menu. Firefox only talks
+to loopback, so Burp makes the real requests — outside the enforced slice its
+egress is unconfined. Launch it with `annixion-vpn-run burpsuite`, or from the
+Delivery menu entry, which does that for you.
 
 ### Firefox shows certificate warnings through Burp
 
 Run `burp-ca` while Burp is running, then `rebuild`. This fetches Burp's CA and
 trusts it via Firefox enterprise policy. Re-run only if Burp regenerates its CA.
 
-### My VPN uses a different SOCKS port
+### My VPN is up but enforced profiles still refuse to launch
 
-Override `network.proxy.socks_port` for the `osint` and `puppet` profiles from
-`user/` — see [usage.md](usage.md#osint--puppet-master--vpn-setup).
+Run `annixion-vpn-status`. If it reports `tunnel: NONE`, the tunnel is not being
+recognised; `annixion-vpn-tunnels` lists every interface that qualifies.
+
+Detection needs a tunnel **device type** (WireGuard, tun/tap, PPP, xfrm, …)
+*and* a route in some routing table. A tunnel that is up but routes nothing is
+rejected deliberately — the killswitch would block all its traffic anyway, which
+looks like an unexplained blackhole. Interface *names* are not consulted, so
+vendor naming like Mullvad's `ee-tll-wg-001` is fine; if your VPN presents as
+some other device type, add its name to
+`annixion.vpnEnforcement.tunnelInterfaces` from `user/`.
+
+### Enforced profiles hang and time out instead of loading
+
+A hang means something different from a block. The killswitch rejects with ICMP
+admin-prohibited, so a genuinely blocked connection fails in under a
+millisecond. One that hangs until it times out means the inner packet was
+accepted but the encrypted packet carrying it never reached the wire — the
+tunnel's own egress being blocked rather than your browsing.
+
+```console
+$ annixion-vpn-run curl --max-time 8 http://<a LAN address>/   # should fail in ~0ms
+$ annixion-vpn-run curl --max-time 8 https://9.9.9.9/          # should not hang
+```
+
+Instant failure on the first with a hang on the second confirms it.
+
+### Firefox can't connect to the DoH resolver, and nothing loads
+
+DoH runs in TRR-only mode with no plaintext fallback, so
+`network.trr.bootstrapAddr` must hold an IP of the host in `network.trr.uri`.
+If it is missing or names a different host, Firefox cannot resolve its own
+resolver and the profile has no DNS at all. Check both agree in `about:config` —
+and note the pref is `bootstrapAddr` since Firefox 89, the older
+`bootstrapAddress` being silently ignored.
+
+Red Team and OSINT use unfiltered Quad9 while Puppet Master uses the
+blocklisted service, so a domain resolving in one profile may legitimately
+NXDOMAIN in another.
 
 ---
 
