@@ -1,5 +1,30 @@
 # Usage
 
+## Commands
+
+Everything AnNIXion ships is prefixed `annixion-`, so `annixion-<Tab>` lists the
+lot. Every one of them takes `-h` / `--help`.
+
+| Command | Purpose |
+|---|---|
+| `annixion-install` | Install to disk from the live ISO |
+| `annixion-cc` | Control center — Wi-Fi, Bluetooth, network killswitch |
+| `annixion-burp-ca` | Fetch Burp's CA so Firefox trusts intercepted HTTPS |
+| `annixion-vpn-run` | Run any command inside the VPN-enforced slice |
+| `annixion-vpn-browser` | Launch a Firefox profile inside that slice |
+| `annixion-vpn-status` | Tunnel, killswitch and slice state |
+| `annixion-vpn-tunnels` | List every interface that qualifies as a live tunnel |
+| `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
+| `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
+
+The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
+`annixion-htb-vpn` once imported.
+
+Shell aliases (`rebuild`, `upgrade`, `gs`, `ll`, …) are not prefixed — they are
+typing shortcuts, and several deliberately shadow standard tools.
+
+---
+
 ## Firefox profiles
 
 Four isolated profiles launch from the desktop. Each has its own cookies, cache, and extensions.
