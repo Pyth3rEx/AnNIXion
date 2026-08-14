@@ -22,7 +22,7 @@ let
 
   # Create state dir + files as root BEFORE dnsmasq --test runs
   # Only creates when missing, so existing host entries are never wiped
-  ensureState = pkgs.writeShellScript "htb-ensure-state" ''
+  ensureState = pkgs.writeShellScript "annixion-htb-ensure-state" ''
     ${pkgs.coreutils}/bin/install -d -m 0755 -o ${cfg.user} -g users ${stateDir}
     for f in ${hostsFile} ${serversFile}; do
       if [ ! -e "''$f" ]; then
