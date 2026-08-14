@@ -72,6 +72,7 @@
             ./modules/desktop.nix
             ./modules/xrdp.nix
             ./modules/security-tools.nix
+            ./modules/vpn-enforcement.nix
 
             # ── Wire Home Manager into the NixOS build ───────────
             # "nixos-rebuild switch" handles both system AND user config
@@ -253,6 +254,7 @@
       checks.${system} = {
         boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
         security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
+        vpn-enforcement = pkgs.testers.nixosTest (import ./tests/vpn-enforcement.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {
