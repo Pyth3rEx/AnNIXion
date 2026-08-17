@@ -217,13 +217,12 @@ let
       name = "Burp Suite";
       genericName = "Web App Security Proxy";
       icon = "burpsuite";
-      # VPN-enforced: the Red Team profile sends everything to Burp on
-      # loopback, so Burp — not Firefox — makes the real requests. Running
-      # it outside the enforced slice would leave that egress unconfined
-      # and make Red Team's VPN enforcement meaningless.
-      exec = "annixion-vpn-run burpsuite";
+      # Not VPN-enforced, for the same reason Red Team is not (#37): Burp
+      # makes the real requests, so gating it on a tunnel puts internal
+      # targets out of reach. annixion-vpn-run burpsuite when that is wanted.
+      exec = "burpsuite";
       categories = [ "X-AnNIXion-Delivery-Proxy" ];
-      comment = "Web application security testing platform (VPN-enforced)";
+      comment = "Web application security testing platform";
     };
     "annixion-sqlmap" = de {
       name = "sqlmap";

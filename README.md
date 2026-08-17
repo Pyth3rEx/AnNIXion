@@ -53,7 +53,7 @@ AnNIXion is different in kind.
 <td valign="top" width="50%">
 
 **Browsers**
-- Red Team Firefox — VPN-enforced, Burp proxy set at profile level, FoxyProxy for ad-hoc switching, HackTools, Wappalyzer, Retire.js
+- Red Team Firefox — Burp proxy set at profile level, FoxyProxy for ad-hoc switching, HackTools, Wappalyzer, Retire.js
 - OSINT Firefox — VPN-enforced, NoScript, CanvasBlocker, UA Switcher, fingerprint evasion
 - Puppet Master Firefox — VPN-enforced, Multi-Account Containers, Temporary Containers, persona tooling
 - Unsafe Browser — clearnet fallback, uBlock only, for captive portals
@@ -97,15 +97,17 @@ Every profile launches isolated — separate cookies, cache, extensions, and pro
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  Firefox - Red Team          → Burp 127.0.0.1:8080, over VPN    │
+│  Firefox - Red Team          → Burp 127.0.0.1:8080              │
 │  Firefox - OSINT             → VPN tunnel (kernel-enforced)     │
 │  Firefox - Puppet Master     → VPN tunnel (kernel-enforced)     │
 │  Firefox - Unsafe Browser    → Direct (clearnet, no proxy)      │
 └─────────────────────────────────────────────────────────────────┘
-  Red Team, OSINT and Puppet Master are confined to the VPN tunnel by an
-  nftables killswitch and refuse to launch without one. Burp runs inside the
-  same enforced slice, so the traffic it forwards is confined too.
-  No fallback. No leaks.
+  OSINT and Puppet Master are confined to the VPN tunnel by an nftables
+  killswitch and refuse to launch without one. No fallback. No leaks.
+
+  Red Team is not: it has to reach targets on the LAN as often as on the
+  internet. Burp is its control, and still fails closed. Run it through
+  the tunnel with  annixion-vpn-browser "Red Team"  when you want that.
 ```
 
 ---
