@@ -213,7 +213,10 @@
     };
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
-    configFile = lib.mkDefault {
+    # No lib.mkDefault here: configFile is opaque attrs that
+    # plasma-manager also writes at normal priority, so mkDefault loses
+    # the whole block instead of merging.
+    configFile = {
       # Enable Krohnkite tiling script
       "kwinrc"."Plugins"."krohnkiteEnabled" = true;
 
@@ -229,9 +232,13 @@
       "kwinrc"."Compositing"."AnimationSpeed" = 3;
       "kwinrc"."Compositing"."Enabled" = true;
 
-      # Dark theme
-      "kdeglobals"."General"."ColorScheme" = "BreezeDark";
-      "kdeglobals"."KDE"."LookAndFeelPackage" = "org.kde.breezedark.desktop";
+      # Baloo indexes file contents in the background. On a machine that
+      # collects other people's files, that means parsing them.
+      "baloofilerc"."Basic Settings"."Indexing-Enabled" = false;
+
+      # Show dotfiles in every KDE open/save dialog. Dolphin's own view
+      # is set separately, in home/file-visibility.nix.
+      "kdeglobals"."KFileDialog Settings"."Show Hidden Files" = true;
 
       # Bare Meta → activateLauncherMenu → TiledMenu toggles open/closed.
       # TiledMenu registers as an Application Launcher applet, so plasmashell

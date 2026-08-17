@@ -1,11 +1,5 @@
-# home.nix
-# This file declares everything about YOUR user environment.
-# Think of it as your personal layer on top of the system.
-# Changes here only affect the "operator" user, not the whole system.
-#
-# Every option uses lib.mkDefault (priority 1000). That means anything
-# you put in user/home.nix at normal priority (100) automatically wins
-# without needing lib.mkForce.
+# home.nix — the operator user's environment.
+# All mkDefault, so user/home.nix wins without lib.mkForce.
 {
   inputs,
   config,
@@ -190,6 +184,7 @@ in
     ./home/control-center.nix
     ./home/fastfetch.nix
     ./home/zsh.nix
+    ./home/file-visibility.nix
   ];
 
   # Home Manager needs to know your username and home directory.
@@ -206,12 +201,9 @@ in
   # Declare icons symlink so KDE sees them
   xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
 
-  # ============================================================
-  # USER PACKAGES
-  # ============================================================
-  # These are installed only for the operator user, not system-wide.
-  # Offensive/OSINT/SDR tools have moved to modules/security-tools.nix
-  # and are now system-wide packages.
+  # ── USER PACKAGES ─────────────────────────────────────────
+  # User-only. Offensive/OSINT/SDR tools are system-wide, in
+  # modules/security-tools.nix.
   home.packages = with pkgs; [
     # ── Terminal & Shell ──────────────────────────────────────
     zsh # better shell than bash
@@ -309,11 +301,8 @@ in
     $DRY_RUN_CMD chmod -R u+w "$_tm"
   '';
 
-  # Directly patch the TiledMenu applet config in plasma-org.kde.plasma.desktop-appletsrc.
-  # plasma-manager writes that file during writeBoundary; we read it here to find
-  # the dynamic applet ID, then write the settings kwriteconfig6 style.
-  # This is a belt-and-suspenders fallback in case plasma-manager's config.General
-  # block doesn't fully propagate for third-party widgets.
+  # Fallback for third-party widgets: find TiledMenu's dynamic applet ID
+  # in the file plasma-manager writes, then set its keys directly.
   home.activation.configureTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     _log="/tmp/annixion-tiledmenu.log"
     _plasmarc="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
@@ -358,9 +347,7 @@ in
     gpg = {
       enable = true;
     };
-    # ============================================================
-    # GIT
-    # ============================================================
+    # ── GIT ─────────────────────────────────────────────────
     # Override userName/userEmail in user/home.nix (see user/examples/git.nix).
     git = {
       settings = {

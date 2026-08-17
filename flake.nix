@@ -6,9 +6,6 @@
     # Main nixpkgs — your system packages come from here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # NUR — Nix User Repository, a collection of community-maintained packages.
-    nur.url = "github:nix-community/NUR";
-
     # Home Manager — declares your user environment (dotfiles,
     # shortcuts, apps) in Nix. Follows the same nixpkgs version.
     home-manager = {
@@ -73,11 +70,10 @@
             ./modules/xrdp.nix
             ./modules/security-tools.nix
             ./modules/vpn-enforcement.nix
+            ./modules/hardening.nix
 
-            # The launcher must exec the Firefox Home Manager wraps.
-            # Only that one carries distribution/policies.json — CA
-            # trust, ExtensionSettings, the FoxyProxy 3rdparty config —
-            # and bare pkgs.firefox drops them silently.
+            # Only the HM-wrapped Firefox carries policies.json (CA
+            # trust, extensions); bare pkgs.firefox drops them silently.
             (
               { config, ... }:
               {
@@ -104,10 +100,8 @@
                 # Extra arguments to Home Manager modules
                 extraSpecialArgs = { inherit inputs; };
 
-                # Merge home.nix with user/home.nix (if it exists).
-                # home.nix uses lib.mkDefault throughout (priority 1000).
-                # user/home.nix uses normal priority (100) and therefore wins
-                # automatically — no lib.mkForce needed in your overrides.
+                # home.nix is all mkDefault, so user/home.nix wins
+                # without lib.mkForce.
                 users.operator = {
                   imports = [
                     ./home.nix
@@ -118,9 +112,7 @@
             }
 
             # ── Core system configuration ────────────────────────
-            # Boot, networking, nix settings, locale, audio, user account,
-            # base system packages, SSH. All options use lib.mkDefault so
-            # user/configuration.nix can override any of them freely.
+            # All mkDefault, so user/configuration.nix overrides freely.
             (
               {
                 config,
@@ -130,15 +122,11 @@
               }:
               {
 
-                # ============================================================
-                # BOOT LOADER
-                # ============================================================
+                # ── BOOT LOADER ─────────────────────────────
                 boot.loader.systemd-boot.enable = lib.mkDefault true;
                 boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
-                # ============================================================
-                # OS DEFINITION
-                # ============================================================
+                # ── OS DEFINITION ───────────────────────────
                 environment.etc."os-release".text = lib.mkForce ''
                   NAME=AnNIXion
                   ID=annixion
@@ -150,9 +138,7 @@
                   BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
                 '';
 
-                # ============================================================
-                # NETWORKING
-                # ============================================================
+                # ── NETWORKING ──────────────────────────────
                 networking = {
                   hostName = lib.mkDefault "AnNIXion";
                   networkmanager.enable = lib.mkDefault true;
@@ -161,10 +147,7 @@
                   ];
                 };
 
-                # ============================================================
-                # NIX SETTINGS
-                # ============================================================
-                # Enable modern nix commands (nix run, nix build, nix flake etc.)
+                # ── NIX SETTINGS ────────────────────────────
                 nix.settings.experimental-features = lib.mkDefault [
                   "nix-command"
                   "flakes"
@@ -179,15 +162,11 @@
                   options = lib.mkDefault "--delete-older-than 15d";
                 };
 
-                # ============================================================
-                # LOCALE & TIME
-                # ============================================================
+                # ── LOCALE & TIME ───────────────────────────
                 time.timeZone = lib.mkDefault "Europe/Paris";
                 i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-                # ============================================================
-                # AUDIO (Pipewire)
-                # ============================================================
+                # ── AUDIO (Pipewire) ────────────────────────
                 # Enhanced Session passes audio from the VM to Windows.
                 services.pipewire = {
                   enable = lib.mkDefault true;
@@ -196,15 +175,11 @@
                   pulse.enable = lib.mkDefault true;
                 };
 
-                # ============================================================
-                # SECURITY & SUDO
-                # ============================================================
+                # ── SECURITY & SUDO ─────────────────────────
                 # Allow users in the "wheel" group to use sudo.
                 security.sudo.wheelNeedsPassword = lib.mkDefault true;
 
-                # ============================================================
-                # USER ACCOUNT
-                # ============================================================
+                # ── USER ACCOUNT ────────────────────────────
                 users.users.operator = {
                   isNormalUser = lib.mkDefault true;
                   extraGroups = lib.mkDefault [
@@ -216,11 +191,8 @@
                   hashedPassword = lib.mkDefault "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
                 };
 
-                # ============================================================
-                # SYSTEM PACKAGES
-                # ============================================================
-                # Core utilities installed system-wide, available to all users.
-                # Tool-specific packages live in the relevant module.
+                # ── SYSTEM PACKAGES ─────────────────────────
+                # Tool-specific packages live in their own module.
                 nixpkgs.config.allowUnfree = lib.mkDefault true;
 
                 environment.systemPackages = with pkgs; [
@@ -234,21 +206,8 @@
                 # makes /etc/hosts writable
                 environment.etc.hosts.mode = "0700";
 
-                # ============================================================
-                # SSH — useful fallback if xrdp has issues
-                # ============================================================
-                services.openssh = {
-                  enable = lib.mkDefault true;
-                  settings.PasswordAuthentication = lib.mkDefault true;
-                };
-
-                # ============================================================
-                # STATE VERSION — do not change this ever
-                # ============================================================
-                # This is the NixOS version you first installed with.
-                # It controls stateful defaults. Changing it breaks things.
-                # lib.mkDefault is used so a conflict error is avoided if you
-                # accidentally set it in user/configuration.nix — but don't.
+                # ── STATE VERSION — do not change this ever ───
+                # Controls stateful defaults. Changing it breaks things.
                 system.stateVersion = lib.mkDefault "26.05";
 
               }

@@ -92,11 +92,9 @@ in
       # not by proxy prefs.
       "network.proxy.type" = 0;
 
-      # DoH with no plaintext fallback. bootstrapAddr pins the resolver's
-      # own IP; without it mode 3 deadlocks, needing DNS to find the DoH
-      # host. The pre-89 name "bootstrapAddress" is silently ignored.
-      # Unfiltered Quad9: the standard service NXDOMAINs the malicious
-      # domains OSINT work has to resolve.
+      # DoH, no plaintext fallback. bootstrapAddr pins the resolver's IP
+      # or mode 3 deadlocks; the pre-89 spelling is ignored. Unfiltered
+      # Quad9 — the standard service NXDOMAINs what OSINT must resolve.
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
