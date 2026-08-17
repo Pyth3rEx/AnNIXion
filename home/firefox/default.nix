@@ -41,7 +41,7 @@
       Name=Firefox - Red Team
       GenericName=Assault Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
-      Exec=annixion-vpn-browser "Red Team"
+      Exec=firefox -P "Red Team" --no-remote
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;

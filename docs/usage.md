@@ -36,7 +36,7 @@ Four isolated profiles launch from the desktop. Each has its own cookies, cache,
 | Profile | Egress | Purpose |
 |---|---|---|
 | **Unsafe Browser** | Direct (no proxy) | Captive portals, clearnet sessions. Default when running bare `firefox`. |
-| **Red Team** | Burp Suite — `127.0.0.1:8080`, over the VPN tunnel | Web app testing, interception. Blocks if Burp is not running; refuses to launch without a VPN tunnel. |
+| **Red Team** | Burp Suite — `127.0.0.1:8080` | Web app testing, interception. Blocks if Burp is not running. No VPN required — internal targets are reachable. |
 | **OSINT** | VPN tunnel — kernel-enforced | Source gathering, investigations. Refuses to launch without a VPN tunnel. |
 | **Puppet Master** | VPN tunnel — kernel-enforced | Persona management, containers. Refuses to launch without a VPN tunnel. |
 
@@ -69,16 +69,24 @@ FoxyProxy is driving, the profile's "fail rather than connect directly"
 guarantee is whatever FoxyProxy is pointed at instead. Switch it back to
 **Disable** when you are done and the profile prefs resume.
 
-**Launch Burp from the menu, not from a shell.** The Red Team profile is also
-VPN-enforced, and the menu entry runs Burp inside the enforced slice via
-`annixion-vpn-run`. This matters more than it looks: Firefox only ever talks to
-loopback, so *Burp* makes the real requests. A Burp started bare from a terminal
-sits outside the slice, its egress is unconfined, and Red Team's VPN enforcement
-becomes decorative. To run it by hand, use:
+### Running Red Team through a VPN
+
+The profile does **not** require a tunnel, because red team targets are as often
+on the LAN in front of you as on the internet, and an attribution control has no
+business gating reachability. Burp is the control that matters here, and it
+still fails closed.
+
+When you do want the tunnel — external infrastructure, a lab, anything where the
+source address matters — launch it explicitly:
 
 ```console
+$ annixion-vpn-browser "Red Team"
 $ annixion-vpn-run burpsuite
 ```
+
+Launch **both** through the slice or neither. Firefox only ever talks to
+loopback, so *Burp* makes the real requests: a Burp started bare while the
+browser is enforced leaves egress unconfined and the enforcement decorative.
 
 ### SSL interception — Burp CA certificate
 
@@ -100,17 +108,21 @@ After import, Burp uses the same CA as Firefox. HTTPS interception works without
 
 ---
 
-## VPN enforcement — Red Team, OSINT & Puppet Master
+## VPN enforcement — OSINT & Puppet Master
 
-All three profiles are confined to the VPN tunnel **in the kernel**, not by
-proxy preferences. Bring up your VPN however you like — NetworkManager,
-`wg-quick`, a raw `.ovpn`; enforcement is VPN-agnostic and matches the tunnel
-interface.
+Both profiles are confined to the VPN tunnel **in the kernel**, not by proxy
+preferences. Bring up your VPN however you like — NetworkManager, `wg-quick`, a
+raw `.ovpn`; enforcement is VPN-agnostic and matches the tunnel interface.
+
+Red Team launches unenforced by default, since its job is reaching the target
+rather than hiding the source — see [above](#running-red-team-through-a-vpn) for
+running it through the tunnel when that is what you want.
 
 How it works (`modules/vpn-enforcement.nix`):
 
 1. Enforced applications run inside a dedicated systemd user slice —
-   the three browser profiles, and Burp alongside them.
+   the browser profiles launched through `annixion-vpn-browser`, and anything
+   started with `annixion-vpn-run`.
 2. Tunnels are identified by **device type** (WireGuard, tun/tap, PPP, xfrm, …),
    not by interface name, so vendor naming doesn't matter — Mullvad's
    `ee-tll-wg-001` is recognised as readily as `wg0`.
@@ -134,8 +146,10 @@ allowing them is what the boundary means — and since setting `SO_MARK` require
 `CAP_NET_ADMIN`, an enforced browser cannot forge the mark to escape.
 
 Anything that makes network requests on a profile's behalf has to be in the
-slice too, or it becomes the leak. That is why Burp is launched through
-`annixion-vpn-run` — see the Red Team section above.
+slice too, or it becomes the leak — Burp above all, since an intercepting proxy
+makes every request the browser appears to make. The menu entry launches it
+unenforced, so pair `annixion-vpn-run burpsuite` with any profile you launch
+through `annixion-vpn-browser`.
 
 This is fail-closed by construction: if the tunnel drops mid-session, traffic
 from those profiles stops leaving immediately — there is no default route to

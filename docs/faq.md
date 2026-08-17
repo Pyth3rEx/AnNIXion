@@ -84,18 +84,28 @@ Flakes only see git-tracked files. Run `git add` on the new file before
 ### A browser profile won't connect to anything
 
 That's by design. The Red Team profile fails closed unless Burp is running on
-`127.0.0.1:8080`. Red Team, OSINT and Puppet Master are all confined to the VPN
-tunnel in the kernel and will not even open a window without one — run
-`annixion-vpn-status` to see why. Start the proxy or connect the VPN, or
-override enforcement per
+`127.0.0.1:8080`. OSINT and Puppet Master are confined to the VPN tunnel in the
+kernel and will not even open a window without one — run `annixion-vpn-status`
+to see why. Start the proxy or connect the VPN, or override enforcement per
 [usage.md](usage.md#bypassing-proxy-enforcement-via-user-overrides).
 
-### Burp works, but Red Team traffic isn't going through the VPN
+### Red Team won't reach a target on the local network
 
-Burp was probably started from a shell rather than the menu. Firefox only talks
-to loopback, so Burp makes the real requests — outside the enforced slice its
-egress is unconfined. Launch it with `annixion-vpn-run burpsuite`, or from the
-Delivery menu entry, which does that for you.
+It should, as of the fix for
+[#37](https://github.com/Pyth3rEx/AnNIXion/issues/37) — the profile no longer
+requires a VPN tunnel. If it still refuses to launch, you are on an older
+version: launch it with `firefox -P "Red Team" --no-remote` in the meantime.
+
+If the window opens but nothing loads, the proxy is the cause rather than the
+tunnel. Every request goes through Burp, internal addresses included, so Burp
+has to be running and able to reach the target itself.
+
+### Burp works, but enforced traffic isn't going through the VPN
+
+Burp was probably started from a shell rather than through the slice. Firefox
+only talks to loopback, so Burp makes the real requests — outside the enforced
+slice its egress is unconfined. When you run a profile through
+`annixion-vpn-browser`, start Burp with `annixion-vpn-run burpsuite` too.
 
 ### Firefox shows certificate warnings through Burp
 
