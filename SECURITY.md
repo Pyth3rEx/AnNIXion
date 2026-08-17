@@ -14,12 +14,23 @@ vulnerability in AnNIXion itself.
 
 ## Current security posture
 
-AnNIXion optimizes for a capable, reproducible operator workstation. It is
-**not** a hardened or anonymity-focused distribution today, tho it plans to be by version 1.0. Be deliberate about
-where you run it and what it can reach.
+AnNIXion optimizes for a capable, reproducible operator workstation. An attack
+surface reduction pass has landed, but it is **not** an anonymity-focused
+distribution and does not claim to be hardened against an attacker who already
+has local code execution. Be deliberate about where you run it and what it can
+reach.
 
 **What is configured**
 
+- Attack surface reduction — `modules/hardening.nix` disables OpenSSH,
+  ModemManager, geoclue, fwupd, the KDE PIM stack and the rest of what the
+  distro does not use; enables the firewall with no ports open; sets kernel
+  sysctls covering `dmesg`, kernel pointers, kexec, unprivileged BPF, `ptrace`
+  and ICMP redirects; and blacklists uncommon network protocols and exotic
+  filesystems. Everything is applied at priority 900, so a single line in
+  `user/configuration.nix` restores any of it. See
+  [docs/hardening.md](docs/hardening.md), which also records what was
+  deliberately left alone and why.
 - Non-root `operator` user; `sudo` gated behind the `wheel` group
   (`security.sudo.wheelNeedsPassword` defaults to requiring a password on the
   installed system).
@@ -33,18 +44,22 @@ where you run it and what it can reach.
 
 **What is NOT hardened yet**
 
-The items in **Phase 10** of [docs/roadmap.md](docs/roadmap.md) are open. In
+Part of **Phase 10** in [docs/roadmap.md](docs/roadmap.md) is still open. In
 particular, the following are **not** applied out of the box:
 
-- No kernel hardening sysctls (`dmesg_restrict`, `kptr_restrict`,
-  `unprivileged_userns_clone`, `ptrace_scope`).
+- No full-disk encryption. The installer does not offer it yet, so the disk is
+  readable by anyone holding the machine.
 - No MAC randomization or IPv6 privacy extensions configured by default.
+- `kernel.unprivileged_userns_clone` is **not** set to 0, and
+  `security.lockKernelModules` is off. Both are standard hardening steps, and
+  both break things AnNIXion depends on — bubblewrap and Firefox's sandbox for
+  the first, WireGuard device creation for the second.
+- No systemd unit sandboxing on the services that remain, xrdp included.
 - The live ISO grants the `operator` **passwordless sudo** so the guided
   installer can run — this is a property of the *installer environment*, not the
   installed system.
-- OpenSSH is enabled with password authentication permitted. Disable it or
-  switch to key-only auth via `user/configuration.nix` if the box is reachable.
-- The firewall is left at NixOS defaults; no deny-by-default ruleset is declared.
+- Every install ships the same `hashedPassword` for `operator` until it is
+  changed. Set your own in `user/configuration.nix`.
 
 Harden per deployment through the `user/` override system — see
 [docs/customization.md](docs/customization.md).
