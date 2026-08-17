@@ -34,9 +34,12 @@ reach.
 - Non-root `operator` user; `sudo` gated behind the `wheel` group
   (`security.sudo.wheelNeedsPassword` defaults to requiring a password on the
   installed system).
-- Browser isolation and proxy enforcement: the Red Team / OSINT / Puppet Master
-  Firefox profiles fail closed if their assigned proxy (Burp / VPN) is not
-  running, so traffic does not leak to a direct connection by default.
+- Browser isolation and proxy enforcement: each Firefox profile fails closed if
+  its assigned proxy is not running, so traffic does not leak to a direct
+  connection by default. OSINT and Puppet Master are confined to a VPN tunnel in
+  the kernel and refuse to launch without one; Red Team fails closed on Burp
+  instead, and is deliberately **not** tunnel-gated, since it has to reach
+  internal targets (#37).
 - Burp CA handled out of band via `annixion-burp-ca` and Firefox enterprise policy — no
   system-wide trust store modification.
 - Machine-specific material (`hardware-configuration.nix`, `assets/certs/`) is

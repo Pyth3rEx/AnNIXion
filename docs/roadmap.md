@@ -180,7 +180,7 @@ Rationale:
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
 - [x] Burp proxy set at profile level (`network.proxy.*`) rather than via FoxyProxy, so interception does not depend on a third-party extension (#25); `failover_direct = false` blocks leaks if Burp is down. FoxyProxy stays installed for ad-hoc switching, shipped disabled with the Burp entry as a worked example
 - [x] VPN enforcement rebuilt in the kernel (`modules/vpn-enforcement.nix`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
-- [x] VPN enforcement covers Red Team as well as OSINT and Puppet, with Burp launched inside the same slice — the browser only reaches loopback, so Burp's egress is the one that has to be confined
+- [x] VPN enforcement covers OSINT and Puppet Master. Red Team was enforced too until #37: an attribution control gating a reachability workflow made the profile unusable on internal engagements, where the target is on the LAN and no tunnel is involved. It now launches direct, with `annixion-vpn-browser "Red Team"` available when the tunnel is wanted — and Burp must go through `annixion-vpn-run` alongside it, since the browser only reaches loopback
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
   - [x] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar
