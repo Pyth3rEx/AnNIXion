@@ -26,9 +26,9 @@ cd ~/.dotfiles
 nix develop
 ```
 
-The dev shell provides `nixfmt`, `statix`, `deadnix`, `nil`, and `nix-output-monitor`. If `hardware-configuration.nix` is absent (e.g. on a contributor's machine that isn't running AnNIXion), the shell hook stubs it automatically from `ci/hardware-stub.nix`.
+The dev shell provides `nixfmt`, `statix`, `deadnix`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
 
-If you are running AnNIXion, your real `hardware-configuration.nix` is already present — no stub needed.
+If you are running AnNIXion, your real `hardware-configuration.nix` is already present and the `AnNIXion` configuration is offered alongside it.
 
 ---
 
@@ -37,7 +37,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | Level | Command | What it checks | Typical runtime |
 |---|---|---|---|
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
-| **L2** | `nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
+| **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
 
 **Lint**
@@ -86,7 +86,7 @@ deadnix .
 nixfmt --check .
 
 # L2 — recommended before opening a PR
-nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel \
+nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
   --print-build-logs --no-link
 
 # L3 — optional locally, always runs in CI
@@ -112,19 +112,36 @@ Before pushing your branch or opening a PR:
 - [ ] `statix check .` clean
 - [ ] `deadnix .` clean
 - [ ] `nixfmt --check .` passes (or run `nixfmt .` to fix)
-- [ ] `nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel --no-link` succeeds (recommended)
+- [ ] `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link` succeeds (recommended)
 
 ---
 
 ## Hardware configuration
 
-`hardware-configuration.nix` is machine-specific and gitignored. CI generates a minimal QEMU stub on every run (sourced from `ci/hardware-stub.nix`).
+`hardware-configuration.nix` is machine-specific and gitignored. The disk layout
+is the only thing that varies between a real install and CI, so the flake ships
+two configurations built from the same modules:
 
-- **Running on AnNIXion** — your real file is already at the repo root. Nothing to do.
-- **Contributing from another machine** — `nix develop` stubs it automatically. If you run nix commands outside the dev shell, copy the stub manually:
+| Configuration | Disk layout | Offered when |
+|---|---|---|
+| `AnNIXion` | `./hardware-configuration.nix` | that file exists |
+| `AnNIXion-ci` | `./ci/hardware-stub.nix` | always |
+
+Nothing ever copies the stub to `hardware-configuration.nix`. A placeholder at
+that path is indistinguishable from a real machine's config, and rebuilding from
+one produces a system whose root device does not exist.
+
+- **Running on AnNIXion** — your real file is already at the repo root. Build
+  `AnNIXion`.
+- **Contributing from another machine** — build `AnNIXion-ci`. `nix flake check`
+  passes with no hardware configuration present.
+
+If `nixos-rebuild --flake .#AnNIXion` reports that the flake does not provide
+that attribute, your `hardware-configuration.nix` is missing or unstaged:
 
 ```bash
-cp ci/hardware-stub.nix hardware-configuration.nix
+sudo nixos-generate-config --show-hardware-config > hardware-configuration.nix
+git add -f hardware-configuration.nix   # flakes only read tracked or staged files
 ```
 
 Do not commit `hardware-configuration.nix`.

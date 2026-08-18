@@ -16,7 +16,7 @@
     {
       "label": "CI: L2 — System Build",
       "type": "shell",
-      "command": "nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel --print-build-logs --no-link",
+      "command": "nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --print-build-logs --no-link",
       "group": "build",
       "presentation": {
         "reveal": "always",
