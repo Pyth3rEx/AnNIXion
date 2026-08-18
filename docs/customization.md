@@ -1,5 +1,10 @@
 # Customization
 
+How to change AnNIXion without touching shared configuration: the `user/`
+override system, adding tools, and the development environment.
+
+---
+
 ## User override system
 
 All base config options use `lib.mkDefault`, so settings in `user/` win automatically — no `lib.mkForce` needed (except for Firefox proxy prefs, see [usage.md](usage.md)).

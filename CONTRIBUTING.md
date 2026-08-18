@@ -59,7 +59,9 @@ Building the full system closure (L2) before opening a PR is recommended:
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link
 ```
 
-CI runs L1–L3, the ISO build, and the size gate on every PR to `dev`.
+CI runs L1–L3 on every PR, whatever the target branch. The ISO build, the size
+gate and the version/release-name gates only run on PRs into `main` and on
+pushes to `main`.
 
 ---
 
