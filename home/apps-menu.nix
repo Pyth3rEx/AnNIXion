@@ -81,7 +81,9 @@ let
           <Include><Category>X-AnNIXion-Recon-Scanning</Category></Include>
         </Menu>
         <Menu>
-          <Name>RF / Signal Intel</Name>
+          <!-- No "/" in a menu Name: it is a path separator, so the slash
+               invents a parent menu. The label comes from the .directory. -->
+          <Name>RF Signal Intel</Name>
           <Directory>annixion-1-recon-rf.directory</Directory>
           <Include><Category>X-AnNIXion-Recon-RF</Category></Include>
         </Menu>
