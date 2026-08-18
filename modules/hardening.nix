@@ -1,16 +1,13 @@
+# ── Hardening — attack surface reduction ─────────────────────────────────
+# Priority 900 beats an upstream mkDefault (1000) and loses to
+# user/configuration.nix (100), so restoring anything is one line.
+# What is disabled, and what is deliberately left alone: docs/hardening.md
 {
   config,
   lib,
   pkgs,
   ...
 }:
-
-# ============================================================
-# HARDENING — ATTACK SURFACE REDUCTION
-# ============================================================
-# Priority 900: beats an upstream mkDefault (1000), loses to
-# user/configuration.nix (100). Restoring anything is one line.
-# ============================================================
 
 let
   harden = lib.mkOverride 900;
@@ -23,7 +20,7 @@ in
   services.power-profiles-daemon.enable = harden false;
 
   # Screen reader, on by default; pulls in speechd and at-spi2.
-  # Accessibility — re-enable orca and the other two follow.
+  # Accessibility: re-enable orca and the other two follow.
   services.orca.enable = harden false;
   services.speechd.enable = harden false;
 
@@ -109,12 +106,4 @@ in
     "hfsplus"
   ];
 
-  # Left alone, deliberately:
-  #   lockKernelModules    — breaks `ip link add type wireguard`
-  #   unprivileged_userns  — breaks bubblewrap and Firefox's sandbox
-  #   rp_filter = 1        — drops policy-routed tunnel paths
-  #   udisks2, xdg.portal  — Plasma sets both at normal priority; forcing
-  #                          them off kills USB mounting and file dialogs
-  #   upower, wireless     — laptop hardware
-  #   polkit / pkexec      — Plasma privileged actions, control centre
 }

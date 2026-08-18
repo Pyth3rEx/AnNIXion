@@ -1,3 +1,4 @@
+# VSCodium with the Nix toolchain: language server, formatter, linters.
 { config, pkgs, ... }:
 
 let
@@ -20,29 +21,27 @@ in
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
-        # Nix Language Support
+        # ── Nix ─────────────────────────────────────────────────
         jnoortheen.nix-ide
-
-        # Additional useful extensions for Nix development
         mkhl.direnv
 
-        # General development tools
+        # ── General development ─────────────────────────────────
         eamodio.gitlens
         ms-vscode.makefile-tools
         tamasfe.even-better-toml
         redhat.vscode-yaml
 
-        # CI/CD tools
-        github-local-actions # run GitHub Actions workflows locally (requires act + Docker)
+        # ── CI/CD ───────────────────────────────────────────────
+        github-local-actions # needs act + Docker
         timonwong.shellcheck
       ];
       userSettings = {
-        # Nix IDE Configuration
+        # ── Nix IDE ─────────────────────────────────────────────
         "nix.enableLanguageServer" = true;
         "nix.serverPath" = "nil";
         "nix.linting.enabled" = true;
 
-        # Editor settings
+        # ── Editor ──────────────────────────────────────────────
         "[nix]" = {
           "editor.defaultFormatter" = "jnoortheen.nix-ide";
           "editor.formatOnSave" = true;
@@ -50,39 +49,33 @@ in
           "editor.insertSpaces" = true;
         };
 
-        # General VS Code settings
         "editor.wordWrap" = "on";
         "editor.formatOnPaste" = true;
         "files.autoSave" = "afterDelay";
         "files.autoSaveDelay" = 1000;
 
-        # Git settings
+        # ── Git ─────────────────────────────────────────────────
         "gitlens.hovers.currentLine.enabled" = true;
         "gitlens.codeLens.enabled" = true;
 
-        # Terminal settings
+        # ── Terminal ────────────────────────────────────────────
         "terminal.integrated.defaultProfile.linux" = "zsh";
         "terminal.integrated.fontFamily" = "monospace";
 
-        # Task runner
+        # ── Tasks ───────────────────────────────────────────────
         "task.allowAutomaticTasks" = "on";
       };
     };
   };
 
-  # Development environment dependencies
+  # ── Toolchain the extensions call out to ──────────────────────
   home.packages = with pkgs; [
-    # Nix tooling
     nix-your-shell
     nix-zsh-completions
     nixfmt
     statix
     deadnix
-
-    # Language servers
     nil
-
-    # Local GitHub Actions runner (used by github-local-actions extension)
     act
   ];
 

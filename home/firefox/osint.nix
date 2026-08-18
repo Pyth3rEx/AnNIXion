@@ -1,3 +1,4 @@
+# OSINT profile — VPN-enforced, investigation engines and fingerprint evasion.
 {
   inputs,
   config,
@@ -88,13 +89,12 @@ in
       "browser.privatebrowsing.autostart" = true;
 
       # ── VPN enforcement ───────────────────────────────────────
-      # Egress is confined to the tunnel by modules/vpn-enforcement.nix,
-      # not by proxy prefs.
+      # Egress is confined by modules/vpn-enforcement.nix, not by prefs.
       "network.proxy.type" = 0;
 
-      # DoH, no plaintext fallback. bootstrapAddr pins the resolver's IP
-      # or mode 3 deadlocks; the pre-89 spelling is ignored. Unfiltered
-      # Quad9 — the standard service NXDOMAINs what OSINT must resolve.
+      # ── DNS over HTTPS ─────────────────────────────────────────
+      # No plaintext fallback. bootstrapAddr pins the resolver's IP or
+      # mode 3 deadlocks. Unfiltered Quad9 (docs/usage.md#dns).
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";

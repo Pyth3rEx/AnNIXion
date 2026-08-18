@@ -1,3 +1,4 @@
+# Puppet Master profile — VPN-enforced, persona and container management.
 {
   inputs,
   config,
@@ -92,15 +93,15 @@ in
     };
     settings = {
       "extensions.autoDisableScopes" = 0;
-      # No privatebrowsing.autostart — containers require a regular session
+      # No privatebrowsing.autostart — containers need a regular session.
 
       # ── VPN enforcement ───────────────────────────────────────
-      # No proxy — egress is confined by modules/vpn-enforcement.nix.
+      # Egress is confined by modules/vpn-enforcement.nix, not by prefs.
       "network.proxy.type" = 0;
 
-      # DoH, no plaintext fallback — the killswitch blocks :53, loopback
-      # included. bootstrapAddr pins the resolver's IP or mode 3
-      # deadlocks. Standard Quad9: persona browsing needs no malware.
+      # ── DNS over HTTPS ─────────────────────────────────────────
+      # No plaintext fallback. bootstrapAddr pins the resolver's IP or
+      # mode 3 deadlocks. Blocklisted Quad9 (docs/usage.md#dns).
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.9";

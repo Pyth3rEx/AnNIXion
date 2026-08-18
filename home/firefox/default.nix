@@ -1,3 +1,4 @@
+# Firefox: shared policies, desktop launchers, and the four profiles.
 {
   inputs,
   config,

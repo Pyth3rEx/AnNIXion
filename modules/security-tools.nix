@@ -1,3 +1,4 @@
+# System-wide offensive, OSINT, RF and forensics tooling.
 {
   config,
   lib,
@@ -6,16 +7,13 @@
 }:
 
 {
-  # ── SECURITY TOOLS — OFFENSIVE & OSINT ────────────────────
-  # Installed system-wide (environment.systemPackages) so these tools
-  # are available to all users and before any user session starts.
-  #
-  # Unfree packages (burpsuite, metasploit) require
-  # nixpkgs.config.allowUnfree = true, which is set in flake.nix.
+  # ── Security tools — offensive & OSINT ────────────────────
+  # System-wide, so they are present before any user session starts.
+  # Unfree packages need allowUnfree, set in flake.nix.
 
   environment.systemPackages = with pkgs; [
 
-    # ── Offensive Security ────────────────────────────────────
+    # ── Offensive security ────────────────────────────────────
     openssl # TLS/crypto toolkit — cert generation, inspection, conversion
     nmap # network scanner
     netcat-gnu # networking swiss army knife
@@ -53,8 +51,7 @@
         openssl x509 -inform der -in /tmp/burp-ca.der -out "$CERT_OUT"
         rm -f /tmp/burp-ca.der
         echo "saved to $CERT_OUT"
-        # The enterprise policy holds this path, not the file's
-        # contents, so Firefox re-reads it on every start.
+        # The policy holds the path, not the contents: Firefox re-reads it.
         echo "restart Firefox to trust it (no rebuild needed)"
       '';
     })
@@ -76,7 +73,7 @@
     whois
     dnsutils # dig, nslookup
 
-    # ── SDR / RF (your HackRF etc.) ───────────────────────────
+    # ── SDR / RF ──────────────────────────────────────────────
     hackrf # HackRF tools
     gqrx # SDR receiver GUI
     gnuradio # SDR signal processing

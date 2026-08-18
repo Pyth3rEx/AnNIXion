@@ -25,8 +25,7 @@ let
   };
 
   # ── TiledMenu tile layout ────────────────────────────────────────────────
-  # Each entry becomes a group header + 2×2 app tiles arranged 3 per row.
-  # Apps reference the .desktop file IDs written by apps-menu.nix.
+  # Group header + 2×2 tiles, 3 per row, keyed on home/apps-menu.nix IDs.
   tileGroups = [
     {
       label = "01. Reconnaissance";
@@ -187,44 +186,40 @@ in
     ./home/file-visibility.nix
   ];
 
-  # Home Manager needs to know your username and home directory.
   home.username = lib.mkDefault "operator";
   home.homeDirectory = lib.mkDefault "/home/operator";
 
-  # Like system.stateVersion — do not change this ever.
-  # It records the Home Manager version you first activated with.
+  # Like system.stateVersion — never change this.
   home.stateVersion = "26.05";
 
-  # Let Home Manager manage itself.
   programs.home-manager.enable = lib.mkDefault true;
 
-  # Declare icons symlink so KDE sees them
+  # Symlink so KDE picks the icon theme up.
   xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
 
-  # ── USER PACKAGES ─────────────────────────────────────────
-  # User-only. Offensive/OSINT/SDR tools are system-wide, in
-  # modules/security-tools.nix.
+  # ── User packages ─────────────────────────────────────────
+  # Offensive/OSINT/SDR tooling is system-wide, in modules/security-tools.nix.
   home.packages = with pkgs; [
-    # ── Terminal & Shell ──────────────────────────────────────
-    zsh # better shell than bash
+    # ── Terminal & shell ──────────────────────────────────────
+    zsh
 
     # ── Development ───────────────────────────────────────────
-    gh # GitHub CLI
-    github-desktop # Github GUI
+    gh
+    github-desktop
     python3
     python3Packages.pip
 
     # ── Utilities ─────────────────────────────────────────────
-    ripgrep # fast grep (rg)
-    fd # fast find
-    bat # cat with syntax highlighting
+    ripgrep
+    fd
+    bat
     # fzf is managed by programs.fzf in home/zsh.nix
-    jq # JSON processor
+    jq
     unzip
     p7zip
     file
-    inetutils # Collection of common network programs
-    wirelesstools # iwconfig
+    inetutils
+    wirelesstools
     net-tools
     dnsmasq
     lftp
@@ -233,33 +228,32 @@ in
     curl
     htop
     tree
-    act # Run github actions locally
+    act
 
     # ── Productivity ──────────────────────────────────────────
-    obsidian # Note-taking and knowledge management*
-    kdePackages.kleopatra # PGP Manager
+    obsidian
+    kdePackages.kleopatra
 
-    # ── STYLES ────────────────────────────────────────────────
     # ── Fonts ─────────────────────────────────────────────────
-    kdePackages.fcitx5-qt # Fcitx5 Qt integration
+    kdePackages.fcitx5-qt
 
-    nerd-fonts.jetbrains-mono # terminal font with icons
+    nerd-fonts.jetbrains-mono
     nerd-fonts.fira-code
 
-    noto-fonts # Non-english char fonts
+    noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
-    # ── Icons ─────────────────────────────────────────────────
+
+    # ── Icons & cursors ───────────────────────────────────────
     SlotIcons
-    # ── Cursors ───────────────────────────────────────────────
     nordzy-cursor-theme
 
     # ── Plasma widgets ────────────────────────────────────────
     TiledMenu
 
     # ── Color engines ─────────────────────────────────────────
-    chroma # Used by oh-my-zsh plugin "colorize"
+    chroma # needed by the oh-my-zsh "colorize" plugin
   ];
 
   services = {
@@ -288,8 +282,8 @@ in
       "$HOME/.local/share/fonts/" 2>/dev/null || true
   '';
 
-  # Copy TiledMenu into ~/.local/share/plasma/plasmoids/ — the canonical
-  # user-level plasmoid path that Plasma scans at session start.
+  # ── TiledMenu install & configuration ─────────────────────
+  # Plasma only scans ~/.local/share/plasma/plasmoids/ at session start.
   home.activation.installTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     _tm="$HOME/.local/share/plasma/plasmoids/com.github.zren.tiledmenu"
     [ -d "$_tm" ] && $DRY_RUN_CMD chmod -R u+w "$_tm"
@@ -301,8 +295,8 @@ in
     $DRY_RUN_CMD chmod -R u+w "$_tm"
   '';
 
-  # Fallback for third-party widgets: find TiledMenu's dynamic applet ID
-  # in the file plasma-manager writes, then set its keys directly.
+  # plasma-manager cannot reach a third-party widget's dynamic applet ID,
+  # so find it in the file it writes and set the keys directly.
   home.activation.configureTiledMenu = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     _log="/tmp/annixion-tiledmenu.log"
     _plasmarc="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
@@ -347,7 +341,7 @@ in
     gpg = {
       enable = true;
     };
-    # ── GIT ─────────────────────────────────────────────────
+    # ── Git ─────────────────────────────────────────────────
     # Override userName/userEmail in user/home.nix (see user/examples/git.nix).
     git = {
       settings = {
