@@ -186,6 +186,12 @@
                   { "name": "Tor Project", "url": "https://www.torproject.org/" },
                   { "name": "Proxynova - Proxy List", "url": "https://www.proxynova.com/proxy-server-list/" }
                 ]
+              },
+              {
+                "name": "Account-Free Tools",
+                "bookmarks": [
+                  { "name": "NoSignups - Tools Without Accounts", "url": "https://nosignups.net/" }
+                ]
               }
             ]
           },
