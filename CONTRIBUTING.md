@@ -62,8 +62,30 @@ CI runs L1–L3, the ISO build, and the size gate on every PR to `dev`.
   `feat(firefox): …`, `docs: …`, `chore(ci): …`.
 - Keep each commit focused on one logical change — small, reviewable diffs.
 - Write PR descriptions that state the **problem**, the **fix**, and how you
-  **tested** it. Link the issue it closes.
+  **tested** it.
+- Link the issue with a **closing keyword** — `Closes #12`, `Fixes #12`. A bare
+  `(#12)` reads like a link but closes nothing on merge.
 - Do not add `Co-Authored-By` trailers.
+
+### Release PRs (`dev` → `main`)
+
+The merged body is published verbatim as the GitHub Release notes, so its form
+is checked by CI (`Release PR form`). Start from
+[.github/RELEASE_TEMPLATE.md](.github/RELEASE_TEMPLATE.md):
+
+- Sections are `## Added`, `## Changed`, `## Removed`, `## Fixed` — at least one,
+  spelled exactly, and every bullet starts with its section name: `- Fixed: …`.
+- One change per bullet, on one line, no sub-bullets.
+- `## Upgrade notes` is mandatory — "None." is a valid answer.
+- Every `#<n>` must carry a closing keyword, sit under
+  `## Known issues, not closed here`, or be written as a full URL.
+- The body ends with the version footer: ``**Version:** `OLD` → `NEW` ``.
+
+Check a draft before opening the PR:
+
+```bash
+python3 .github/scripts/check-release-form.py my-draft.md
+```
 
 ---
 
