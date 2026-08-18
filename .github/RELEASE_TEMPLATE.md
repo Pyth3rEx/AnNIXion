@@ -6,10 +6,21 @@
   THIS text as the release notes, then appends an auto-generated "All changes in
   this release" PR list below it.
 
-  Guidelines:
+  The form below is enforced by the `Release PR form` check
+  (.github/scripts/check-release-form.py). Validate a draft before opening the PR:
+
+      python3 .github/scripts/check-release-form.py my-draft.md
+
+  Rules:
+  - Sections are `## Added`, `## Changed`, `## Removed`, `## Fixed` — spelled
+    exactly, at least one present. Omit the ones you do not need.
+  - Every bullet in those sections starts with its own section name and a colon:
+    `- Added: …`, `- Fixed: …`. One change per bullet, on one line, no sub-bullets.
+  - `## Upgrade notes` is mandatory. Write "None." if there is nothing to do.
+  - Every `#<n>` you mention must either carry a closing keyword, sit under
+    `## Known issues, not closed here`, or be written as a full URL (merged PRs).
+    A bare `(#12)` does NOT close anything — that is the whole point of the check.
   - Write for end users and operators, not reviewers.
-  - Keep entries in the imperative/plain voice, one change per bullet.
-  - Omit empty sections. Link issues/PRs with #<number>.
   - Bump VERSION in the same PR (minor for features, patch for fixes, major for
     breaking changes) — CI rejects the merge if VERSION is unchanged.
 -->
@@ -22,20 +33,32 @@ Short one-paragraph summary of what this release delivers and who it's for.
 
 ## Added
 
-- New features, tools, modules, or docs.
+- Added: new features, tools, modules, or docs — one per line.
 
 ## Changed
 
-- Behavior, defaults, structure, or dependencies that changed.
+- Changed: behavior, defaults, structure, or dependencies that changed.
+
+## Removed
+
+- Removed: what no longer ships, and the one line that restores it.
 
 ## Fixed
 
-- Bugs resolved. Reference the issue: `Fixes #<n>`.
+- Fixed: the bug, in terms of what the user saw going wrong.
 
 ## Upgrade notes
 
 - Anything an existing user must do by hand (manual steps, breaking changes,
   data migrations). Write "None." if there are none.
+
+## Issues closed on merge
+
+- Closes #<n> — one line on why this release resolves it.
+
+## Known issues, not closed here
+
+- #<n> — referenced but still open, and why it stays open.
 
 ---
 
