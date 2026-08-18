@@ -1899,6 +1899,10 @@
                   {
                     "name": "DMI Tool Database",
                     "url": "https://wiki.digitalmethods.net/Dmi/ToolDatabase"
+                  },
+                  {
+                    "name": "NoSignups - Tools Without Accounts",
+                    "url": "https://nosignups.net/"
                   }
                 ]
               },
