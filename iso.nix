@@ -1,3 +1,4 @@
+# Live installer ISO: auto-login shell with annixion-install on PATH.
 { lib, pkgs, ... }:
 let
   version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);

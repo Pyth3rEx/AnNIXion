@@ -1,3 +1,4 @@
+# Unsafe Browser profile — clearnet fallback, hardened, no proxy.
 {
   inputs,
   config,
@@ -70,8 +71,7 @@ in
       "dom.security.https_only_mode_ever_enabled" = true;
 
       # ── Fingerprinting resistance ──────────────────────────────
-      # RFP: spoofs window size, timezone (→ UTC), locale, canvas,
-      # fonts, and many other surfaces used to fingerprint browsers.
+      # RFP spoofs window size, timezone, locale, canvas and fonts.
       "privacy.resistFingerprinting" = true;
       "privacy.fingerprintingProtection" = true;
 
@@ -82,23 +82,19 @@ in
       "privacy.trackingprotection.cryptomining.enabled" = true;
 
       # ── Cookie isolation (Total Cookie Protection) ─────────────
-      # Partitions cookie jars per site — cross-site tracking broken
-      # without blocking cookies outright.
       "network.cookie.cookieBehavior" = 5;
 
-      # ── WebRTC — disable to prevent IP leaks ──────────────────
+      # ── WebRTC + geolocation ───────────────────────────────────
       "media.peerconnection.enabled" = false;
-
-      # ── Geolocation ───────────────────────────────────────────
       "geo.enabled" = false;
 
-      # ── Prefetching — disable speculative requests ─────────────
+      # ── No speculative requests ────────────────────────────────
       "network.dns.disablePrefetch" = true;
       "network.prefetch-next" = false;
       "network.predictor.enabled" = false;
       "network.http.speculative-parallel-limit" = 0;
 
-      # ── Safe browsing — keep on for clearnet protection ────────
+      # ── Safe browsing ──────────────────────────────────────────
       "browser.safebrowsing.malware.enabled" = true;
       "browser.safebrowsing.phishing.enabled" = true;
 
@@ -108,21 +104,17 @@ in
       "toolkit.telemetry.unified" = false;
       "browser.ping-centre.telemetry" = false;
 
-      # ── No credential or form storage ─────────────────────────
+      # ── Storage ───────────────────────────────────────────────
       "signon.rememberSignons" = false;
       "browser.formfill.enable" = false;
-
-      # ── Autoplay blocked ──────────────────────────────────────
       "media.autoplay.default" = 5;
-
-      # ── Always prompt for download location ───────────────────
       "browser.download.useDownloadDir" = false;
     };
     extensions = {
       packages = with addons; [
-        ublock-origin # ad + malware blocking
-        canvasblocker # canvas/WebGL fingerprinting protection
-        privacy-badger # tracker blocking
+        ublock-origin
+        canvasblocker
+        privacy-badger
       ];
     };
   };

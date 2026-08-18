@@ -1,20 +1,11 @@
+# File visibility: KDE, GTK and the search tools hide dotfiles
+# independently, so each needs its own switch (docs/hardening.md).
 {
   config,
   lib,
   pkgs,
   ...
 }:
-
-# ============================================================
-# FILE VISIBILITY
-# ============================================================
-# KDE, GTK and the search tools hide dotfiles independently, so each
-# needs its own switch.
-#
-# Extensions need no setting — the whole filename is always rendered.
-# Only .desktop files mask a name, showing Name= instead; KDE has no
-# toggle and answers it by refusing untrusted ones.
-# ============================================================
 
 {
   # Not dolphinrc: GlobalViewProps means every folder reads this.

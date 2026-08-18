@@ -1,3 +1,5 @@
+# Kill-chain application menu: the XDG menu tree, its .directory labels
+# and every AnNIXion .desktop entry.
 {
   config,
   lib,
@@ -16,12 +18,9 @@ let
     Icon=${icon}
   '';
 
-  # Generate .desktop file text.
-  # xdg.desktopEntries in HM 26.05 installs files into the HM profile
-  # (/etc/profiles/per-user/operator/share/applications/) rather than
-  # ~/.local/share/applications/. kbuildsycoca6 does not reliably index
-  # that path, so categories never appear. We write raw .desktop text via
-  # home.file instead, which is proven to land in ~/.local/share/.
+  # Raw .desktop text, written through home.file: xdg.desktopEntries lands
+  # in the HM profile, which kbuildsycoca6 does not reliably index, so the
+  # categories never appear.
   de =
     {
       name,
@@ -406,9 +405,8 @@ let
       name = "Burp Suite";
       genericName = "Web App Security Proxy";
       icon = "burpsuite";
-      # Not VPN-enforced, for the same reason Red Team is not (#37): Burp
-      # makes the real requests, so gating it on a tunnel puts internal
-      # targets out of reach. annixion-vpn-run burpsuite when that is wanted.
+      # Not VPN-enforced, for the same reason Red Team is not (#37).
+      # Use annixion-vpn-run burpsuite when the tunnel is wanted.
       exec = "burpsuite";
       categories = [ "X-AnNIXion-Delivery-Proxy" ];
       comment = "Web application security testing platform";
@@ -648,18 +646,16 @@ let
 
 in
 {
-  # Rebuild the KDE service cache after every HM activation.
-  # writeBoundary guarantees all files are on disk first.
+  # Rebuild the KDE service cache once every file is on disk.
   home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/operator/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
       ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
   '';
 
-  # All menu files written via home.file so they land in ~/.local/share/
-  # and ~/.config/ — paths kbuildsycoca6 always indexes.
+  # home.file lands these in ~/.local/share/ and ~/.config/ — the paths
+  # kbuildsycoca6 always indexes.
   home.file =
-    # Plasma resolves ${XDG_MENU_PREFIX}applications.menu, and NixOS sets that
-    # prefix to "plasma-". Ship both names so the tree applies either way.
+    # NixOS sets XDG_MENU_PREFIX to "plasma-"; ship both names.
     lib.genAttrs [
       ".config/menus/applications.menu"
       ".config/menus/plasma-applications.menu"

@@ -1,3 +1,4 @@
+# Per-profile Nord + neon chrome CSS and toolbar layouts.
 { inputs, pkgs, ... }:
 
 let
@@ -12,9 +13,8 @@ let
   # Firefox browser-action widget ID convention: "<addonId>-browser-action"
   widget = addon: "${addon.addonId}-browser-action";
 
-  # CSS-escape an addon widget ID for use as an ID selector.
-  # Firefox element IDs follow the raw addonId pattern; special characters
-  # (@, {, }, .) must be escaped in CSS selectors with a leading backslash.
+  # Firefox element IDs carry the raw addonId, whose @ { } . must be
+  # backslash-escaped to work as a CSS ID selector.
   cssId =
     addon:
     let
@@ -24,9 +24,8 @@ let
     "#${escaped}";
 
   # ── Per-profile Nord + neon CSS ───────────────────────────────────
-  # accent      — the neon highlight color for this profile
-  # techAnchor  — CSS selector for the first button in the technical area;
-  #               receives the left separator that marks the section start
+  # accent: the profile's highlight colour. techAnchor: first button of
+  # the technical area, which takes the left separator.
   nordCSS = { accent, techAnchor }: ''
     :root {
       --ann-nord0:  #2e3440;
@@ -103,10 +102,8 @@ let
     }
 
     /* ── Technical area — left separator ────────────────────────────
-       Pseudo-elements positioned outside the button are clipped by
-       Firefox's -moz-hidden-unscrollable toolbar containers.
-       A background-image gradient drawn on the button's left edge is
-       rendered entirely within the element's own box — immune to clipping. */
+       A gradient, not a pseudo-element: Firefox's toolbar containers
+       clip anything drawn outside the button's own box. */
     ${techAnchor} {
       background-image: linear-gradient(
         to bottom,
@@ -124,8 +121,8 @@ let
   '';
 
   # ── Toolbar layout ─────────────────────────────────────────────────
-  # navBarExtras: list of extension widget IDs to pin between the URL bar
-  # and the developer button (the "technical area").
+  # navBarExtras: widget IDs pinned between the URL bar and the
+  # developer button — the "technical area".
   makeSettings = navBarExtras: {
     "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
     "svg.context-properties.content.enabled" = true;
@@ -172,10 +169,8 @@ let
 in
 {
   # ── Red Team — neon crimson (#ff2244) ────────────────────────────
-  # FoxyProxy and HackTools pinned to toolbar; technical area starts at
-  # FoxyProxy. The pin is for reach during an engagement — Burp
-  # interception itself comes from the profile's network.proxy.* prefs,
-  # not from the extension (#25).
+  # FoxyProxy and HackTools pinned for reach during an engagement;
+  # interception itself is the profile's network.proxy.* prefs (#25).
   programs.firefox.profiles."redteam".settings = makeSettings [
     (widget addons.foxyproxy-standard)
     (widget addons.hacktools)
@@ -203,9 +198,8 @@ in
     })
     + ''
 
-      /* ── Container identity stripe (Puppet Master only) ─────────── */
-      /* Always-visible 4px strip so the active container identity is
-         immediately obvious even at a glance across many tabs. */
+      /* ── Container identity stripe ───────────────────────────────
+         Always visible, so the active container reads at a glance. */
       .tab-context-line {
         height:  4px !important;
         opacity: 1 !important;

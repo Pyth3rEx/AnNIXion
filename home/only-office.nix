@@ -1,3 +1,4 @@
+# OnlyOffice document editor.
 { config, pkgs, ... }:
 
 {

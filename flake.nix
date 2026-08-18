@@ -1,20 +1,15 @@
-# flake.nix
+# Flake entry point: inputs, system/user wiring, checks and dev shell.
 {
   description = "Main AnNIXion flake";
 
   inputs = {
-    # Main nixpkgs — your system packages come from here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    # Home Manager — declares your user environment (dotfiles,
-    # shortcuts, apps) in Nix. Follows the same nixpkgs version.
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # plasma-manager — lets you declare KDE Plasma settings in Nix.
-    # Without this, programs.plasma doesn't exist in Home Manager.
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,8 +51,8 @@
         ./modules/vpn-enforcement.nix
         ./modules/hardening.nix
 
-        # Only the HM-wrapped Firefox carries policies.json (CA
-        # trust, extensions); bare pkgs.firefox drops them silently.
+        # Only the HM-wrapped Firefox carries policies.json (CA trust,
+        # extensions); bare pkgs.firefox drops them silently.
         (
           { config, ... }:
           {
@@ -66,26 +61,18 @@
           }
         )
 
-        # ── Wire Home Manager into the NixOS build ───────────
-        # "nixos-rebuild switch" handles both system AND user config
-        # in one command — no separate "home-manager switch" step needed.
+        # ── Home Manager ─────────────────────────────────────
+        # "nixos-rebuild switch" then covers system and user config.
         home-manager.nixosModules.home-manager
         {
           home-manager = {
-            useGlobalPkgs = true; # share system pkgs
-            useUserPackages = true; # install to user profile
-            # Back up any file HM wants to write that already exists on disk.
-            # Without this, HM aborts if a file exists but wasn't created by HM
-            # (e.g. KDE wrote it, or a previous partial activation left it).
+            useGlobalPkgs = true;
+            useUserPackages = true;
+            # HM aborts on a file it did not create; back it up instead.
             backupFileExtension = "backup";
-            # Give Home Manager access to the plasma-manager module
             sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-
-            # Extra arguments to Home Manager modules
             extraSpecialArgs = { inherit inputs; };
 
-            # home.nix is all mkDefault, so user/home.nix wins
-            # without lib.mkForce.
             users.operator = {
               imports = [
                 ./home.nix
@@ -106,11 +93,11 @@
           }:
           {
 
-            # ── BOOT LOADER ─────────────────────────────
+            # ── Boot loader ─────────────────────────────
             boot.loader.systemd-boot.enable = lib.mkDefault true;
             boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
 
-            # ── OS DEFINITION ───────────────────────────
+            # ── OS definition ───────────────────────────
             environment.etc."os-release".text = lib.mkForce ''
               NAME=AnNIXion
               ID=annixion
@@ -122,7 +109,7 @@
               BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
             '';
 
-            # ── NETWORKING ──────────────────────────────
+            # ── Networking ──────────────────────────────
             networking = {
               hostName = lib.mkDefault "AnNIXion";
               networkmanager.enable = lib.mkDefault true;
@@ -131,26 +118,24 @@
               ];
             };
 
-            # ── NIX SETTINGS ────────────────────────────
+            # ── Nix settings ────────────────────────────
             nix.settings.experimental-features = lib.mkDefault [
               "nix-command"
               "flakes"
             ];
 
-            # Auto-delete old system generations older than 15 days.
-            # NixOS keeps every old version for rollback — this prevents
-            # your disk filling up over time.
+            # Old generations pile up otherwise.
             nix.gc = {
               automatic = lib.mkDefault true;
               dates = lib.mkDefault "weekly";
               options = lib.mkDefault "--delete-older-than 15d";
             };
 
-            # ── LOCALE & TIME ───────────────────────────
+            # ── Locale & time ───────────────────────────
             time.timeZone = lib.mkDefault "Europe/Paris";
             i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
-            # ── AUDIO (Pipewire) ────────────────────────
+            # ── Audio (Pipewire) ────────────────────────
             # Enhanced Session passes audio from the VM to Windows.
             services.pipewire = {
               enable = lib.mkDefault true;
@@ -159,24 +144,23 @@
               pulse.enable = lib.mkDefault true;
             };
 
-            # ── SECURITY & SUDO ─────────────────────────
-            # Allow users in the "wheel" group to use sudo.
+            # ── Security & sudo ─────────────────────────
             security.sudo.wheelNeedsPassword = lib.mkDefault true;
 
-            # ── USER ACCOUNT ────────────────────────────
+            # ── User account ────────────────────────────
             users.users.operator = {
               isNormalUser = lib.mkDefault true;
               extraGroups = lib.mkDefault [
-                "wheel" # sudo access
-                "networkmanager" # manage network connections
-                "video" # needed for some hardware tools
-                "input" # needed for input devices
+                "wheel"
+                "networkmanager"
+                "video"
+                "input"
               ];
               hashedPassword = lib.mkDefault "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
             };
 
-            # ── SYSTEM PACKAGES ─────────────────────────
-            # Tool-specific packages live in their own module.
+            # ── System packages ─────────────────────────
+            # Tool packages live in modules/security-tools.nix.
             nixpkgs.config.allowUnfree = lib.mkDefault true;
 
             environment.systemPackages = with pkgs; [
@@ -187,21 +171,16 @@
               kdePackages.kservice
             ];
 
-            # makes /etc/hosts writable
+            # Makes /etc/hosts writable.
             environment.etc.hosts.mode = "0700";
 
-            # ── STATE VERSION — do not change this ever ───
-            # Controls stateful defaults. Changing it breaks things.
+            # ── State version — never change this ───────
             system.stateVersion = lib.mkDefault "26.05";
 
           }
         )
       ]
       # ── User overrides (system level) ────────────────────────────
-      # user/configuration.nix is imported only if the file exists.
-      # Because all base options above use lib.mkDefault (priority 1000),
-      # anything you write in that file at normal priority (100) wins
-      # automatically — no lib.mkForce needed.
       ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
 
       # The disk layout is the only thing that varies between a real install
@@ -227,14 +206,13 @@
           ];
         };
 
-        # Stand-in disk layout for CI and fresh clones. Referenced where it
-        # lives, never copied to hardware-configuration.nix, so it can never
-        # be rebuilt onto a real machine.
+        # Referenced where it lives, never copied to
+        # hardware-configuration.nix, so it cannot reach a real machine.
         AnNIXion-ci = mkAnnixion ./ci/hardware-stub.nix;
       }
-      # Only offered once the machine has a real hardware-configuration.nix.
-      # Absent, "nixos-rebuild --flake .#AnNIXion" fails on the missing
-      # attribute rather than silently building someone else's disk layout.
+      # Absent a real hardware-configuration.nix, "nixos-rebuild
+      # --flake .#AnNIXion" fails on the missing attribute rather than
+      # silently building someone else's disk layout.
       // nixpkgs.lib.optionalAttrs (builtins.pathExists ./hardware-configuration.nix) {
         AnNIXion = mkAnnixion ./hardware-configuration.nix;
       };
