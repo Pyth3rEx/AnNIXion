@@ -40,6 +40,11 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
 
+Three VM tests exist — `boot`, `security-tools` and `vpn-enforcement`. L1
+evaluates all three; CI's L3 step builds the first two. Run the killswitch
+regression suite locally with
+`nix build .#checks.x86_64-linux.vpn-enforcement`.
+
 **Lint**
 
 ```bash
@@ -49,7 +54,9 @@ nixfmt --check .  # Format check
 nixfmt .          # Auto-format (apply)
 ```
 
-Run L1 + lint before every push. L2 before opening a PR. L3 is optional locally — CI runs it on every PR.
+Run L1 + lint before every push. L2 before opening a PR. L3 is optional locally
+— CI runs it on every PR. The ISO build and its size gate run only on PRs into
+`main` and on pushes to `main`.
 
 ---
 
@@ -89,10 +96,11 @@ nixfmt --check .
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
   --print-build-logs --no-link
 
-# L3 — optional locally, always runs in CI
+# L3 — optional locally, runs in CI
 nix build \
   .#checks.x86_64-linux.boot \
   .#checks.x86_64-linux.security-tools \
+  .#checks.x86_64-linux.vpn-enforcement \
   --print-build-logs --no-link
 ```
 

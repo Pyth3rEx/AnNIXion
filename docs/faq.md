@@ -170,6 +170,6 @@ it. Don't bump `VERSION` in feature PRs against `dev`.
 
 ### The ISO build fails the size gate
 
-The release ISO must stay under the GitHub asset limit (the CI gate rejects
-oversized images). Trim added packages or move heavy tooling behind an optional
-module rather than the base ISO.
+The release ISO must stay under 1900 MB — the GitHub release asset limit. Trim
+added packages or move heavy tooling behind an optional module rather than the
+base ISO. The gate runs only on PRs into `main` and on pushes to `main`.

@@ -1,5 +1,10 @@
 # Usage
 
+Day-to-day operation: the commands AnNIXion ships, the four browser profiles,
+and how Burp interception and VPN enforcement are set up and overridden.
+
+---
+
 ## Commands
 
 Everything AnNIXion ships is prefixed `annixion-`, so `annixion-<Tab>` lists the

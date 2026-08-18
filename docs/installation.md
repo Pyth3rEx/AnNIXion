@@ -100,41 +100,49 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 
 ```
 .
-├── flake.nix                      # Flake inputs, outputs, system config wiring
-├── iso.nix                        # Minimal installer ISO configuration
-├── hardware-configuration.nix     # Auto-generated per-machine — do not edit
-├── VERSION                        # Semantic version — bumped on every PR to main
+├── flake.nix                      # Inputs, outputs, system and user wiring
+├── iso.nix                        # Live installer ISO configuration
+├── hardware-configuration.nix     # Auto-generated per-machine — gitignored, do not edit
+├── VERSION                        # Semantic version — bumped on every release
+├── RELEASE_NAME                   # Codename for the current release
 │
 ├── scripts/
-│   └── annixion-install           # Guided bash installer (bundled into the ISO)
+│   └── annixion-install           # Guided installer, bundled into the ISO
 │
 ├── home.nix                       # Base user environment
 ├── home/
 │   ├── firefox/
 │   │   ├── default.nix            # Firefox enable, policies, desktop launchers
 │   │   ├── untrusted.nix          # Unsafe Browser profile (clearnet, id 0)
-│   │   ├── redteam.nix            # Red Team profile: Burp proxy, HackTools
+│   │   ├── redteam.nix            # Red Team profile: Burp proxy, web tooling
 │   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
-│   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona & container mgmt
+│   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona and containers
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
-│   ├── plasma.nix                 # Per-user KDE Plasma settings (plasma-manager): wallpaper, shortcuts
-│   ├── zsh.nix                    # ZSH config: oh-my-zsh, oh-my-posh, aliases, plugins
-│   ├── fastfetch.nix              # Fastfetch system-info banner config
-│   ├── vscodium.nix               # VSCodium with Nix IDE, formatters, language server
+│   ├── plasma.nix                 # KDE Plasma: panels, shortcuts, Krohnkite tiling
+│   ├── zsh.nix                    # ZSH: oh-my-zsh, oh-my-posh, aliases, plugins
+│   ├── fastfetch.nix              # Fastfetch system-info banner
+│   ├── vscodium.nix               # VSCodium with the Nix toolchain
 │   ├── only-office.nix            # OnlyOffice document editor
-│   ├── apps-menu.nix              # Kill-chain XDG application menu and desktop entries
-│   └── control-center.nix         # Meta key handler and AnNIXion control center
+│   ├── apps-menu.nix              # Kill-chain application menu and desktop entries
+│   ├── control-center.nix         # annixion-cc control center, Meta key handler
+│   └── file-visibility.nix        # Show hidden files across KDE, GTK, rg and fd
 │
 ├── modules/
-│   ├── desktop.nix                # KDE Plasma 6 (X11), SDDM, Krohnkite tiling
-│   ├── xrdp.nix                   # Hyper-V Enhanced Session via vsock
-│   ├── security-tools.nix         # Offensive, OSINT, and SDR packages
-│   └── vpn-enforcement.nix        # Kernel killswitch: browser egress confined to the VPN
+│   ├── desktop.nix                # Plasma 6 on X11, SDDM, KDE extras
+│   ├── xrdp.nix                   # Hyper-V guest support, Enhanced Session via vsock
+│   ├── security-tools.nix         # Offensive, OSINT, RF and forensics packages
+│   ├── vpn-enforcement.nix        # Kernel killswitch: egress confined to the VPN
+│   └── hardening.nix              # Attack surface reduction
 │
 ├── tests/
 │   ├── boot.nix                   # VM test: system boots, services start
 │   ├── security-tools.nix         # VM test: all tools are present
 │   └── vpn-enforcement.nix        # VM test: killswitch loads and fails closed
+│
+├── ci/
+│   └── hardware-stub.nix          # Stand-in disk layout for CI and fresh clones
+│
+├── assets/                        # Wallpapers, icons, bookmarks, Burp CA
 │
 ├── user/                          # Personal overrides — never committed upstream
 │   ├── configuration.nix
