@@ -6,7 +6,7 @@
 
 **The environment for operators who refuse to wing it.**
 
-[![Version](https://img.shields.io/github/v/release/Pyth3rEx/AnNIXion?style=flat-square&label=version&color=B22222)](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
+[![Version](https://img.shields.io/github/v/release/Pyth3rEx/AnNIXion?style=flat-square&label=version&color=2EA043&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAWCAMAAACWh252AAAAnFBMVEX///+9vb2+trbNyMjt7Oy3trZoFBRzHh7JyMjHv79qCgpfCAipmpppZ2eZkZGRgICXioq7urq9vLzx8fH29vbn5ubVyclQCgqNcXGGbW14VFSZamq4mppTCQlgGBh6QECIVFR4MDBmGRnYyMjBpKRuEBCreXmBLCxlBwdvJyeNYWFzPj6BRUV8LS3m399hEBBsCQmKFRXy8PCiiIhhszV1AAAAAXRSTlMAQObYZgAAASZJREFUKM9tko12gjAMhUspMxZoLZa5ISqCf6CI4vu/20rwAEO+c6BA0nBvUkIQizZ3mzlfM5jPOOeuy8kQz8dFCCIXgkygAixBGQBTUwkSQOLDUocT4QAM8yCgUobs+zO++vF/ET+K1nG02WyjLUpc9Tm7JNmn2zRN19lhf0xOZ3dUxMnopWV2iPPFouCrhl7jQJqS1+g29pBlQ2/leRi0GWP6fsorQ9u8x/N5fFTVIKHWdZx3H3jVMihimkPVSPbFXF0O08oKil7kqAVE6SWhQN9vFF4fnaxxFq+82VUIUZRlyTvQZVMGHGX8MEcik+OkUNc6XDIQu4mBWgAWCrKnxt38wRMeFg7tsQkEoLh5XmFOItXs6rqYYKbVnczm0L6tCvpv6x9FEReRd286IAAAAABJRU5ErkJggg==)](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
 [![NixOS](https://img.shields.io/badge/NixOS-26.05-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.org)
 [![Flakes](https://img.shields.io/badge/flakes-enabled-5277C3?style=flat-square&logo=nixos&logoColor=white)](https://nixos.wiki/wiki/Flakes)
 [![Platform](https://img.shields.io/badge/platform-x86__64--linux-4A4A4A?style=flat-square&logo=linux&logoColor=white)](https://github.com/Pyth3rEx/AnNIXion)
@@ -32,24 +32,35 @@ completely, make it yours.
 
 ---
 
-## The problem
+## Features
 
-Your assessment box is the one machine you cannot afford to be unsure about, and
-it is usually the least trustworthy thing you own.
+- **Kernel-level VPN enforcement.** The OSINT and Puppet Master profiles run in
+  a dedicated systemd slice, and an nftables rule matching that cgroup permits
+  egress only through a live tunnel. Enforcement is independent of browser
+  preferences, so WebRTC, OCSP and captive-portal probes are covered, and
+  traffic stops if the tunnel drops.
+- **Isolated browser profiles.** Four Firefox profiles, each with its own
+  cookies, cache, extensions, search engines and egress path, generated from
+  configuration rather than set up by hand.
+- **Burp CA automation.** `annixion-burp-ca` fetches Burp's certificate and
+  installs it through Firefox enterprise policy. The Red Team profile proxies
+  through Burp at profile level and does not fall back to a direct connection
+  when the proxy is unavailable.
+- **Attack surface reduction.** `modules/hardening.nix` disables unused
+  services, trims default packages and sets kernel sysctls. Every setting is
+  applied at priority 900, so any of it can be restored with one line in
+  `user/`.
+- **Reproducible by construction.** The system is one flake: packages, browser
+  profiles, egress policy, desktop layout and shell. Deployment and
+  redeployment are the same command, and a bad change is undone by booting the
+  previous generation.
+- **Tested in CI.** Every pull request runs flake evaluation, a full system
+  closure build, and VM tests covering boot, tool presence and killswitch
+  regressions. Releases additionally build the ISO behind a size gate.
 
-Most security distributions are a package list dropped on a general-purpose OS.
-You get the tools; you do not get the environment. Proxy settings drift. A
-half-finished experiment lingers for months. The isolation you set up between
-personas erodes one convenient exception at a time. Six months in, nobody —
-including you — can say what that machine actually does, and the reinstall that
-would settle it costs a day you do not have.
+---
 
-## The answer
-
-**Declare the machine, don't maintain it.** AnNIXion is one Nix flake describing
-the entire system: packages, browser profiles, egress policy, desktop layout,
-shell. Deploying it is one command. Reproducing it on new hardware is the same
-command. Undoing a bad change is a reboot into the previous generation.
+## Why NixOS
 
 |  | Traditional distro | AnNIXion |
 |---|:---:|:---:|
@@ -60,32 +71,6 @@ command. Undoing a bad change is a reboot into the previous generation.
 | Burp CA setup | Manual every install | Auto-generated, trusted on first boot |
 | Roll back a bad change | Not possible | Boot the previous generation |
 | Share your exact setup | Zip file and prayer | `git clone` |
-
----
-
-## What sets it apart
-
-**Egress that fails closed.** The OSINT and Puppet Master profiles are confined
-to your VPN tunnel by an nftables killswitch matched on a cgroup — not by browser
-preferences that WebRTC, OCSP and captive-portal probes route straight around.
-Tunnel drops, traffic stops. No fallback, no silent clearnet.
-
-**Isolation you cannot erode.** Four Firefox profiles, each with its own cookies,
-cache, extensions, search engines and egress path. They are generated from code,
-so "just this once" is not a thing they can do.
-
-**Interception that works on first boot.** Burp's CA is fetched and trusted
-automatically. The Red Team profile proxies through Burp at the profile level,
-and refuses to connect directly when Burp is down — a failed request beats an
-unproxied one during an engagement.
-
-**A machine that stays honest.** Attack surface reduction is a module you can
-read, every setting one line to reverse. Hidden files are shown everywhere,
-because an artefact you cannot see is one you cannot judge.
-
-**Tested like software, not curated like a wallpaper.** Every push runs flake
-evaluation, VM boot tests, tool-presence tests, killswitch regression tests, an
-ISO build and a size gate.
 
 ---
 
