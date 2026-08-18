@@ -28,10 +28,13 @@ cd ~/.dotfiles
 nix develop        # provides nixfmt, statix, deadnix, nil, nix-output-monitor
 ```
 
-If you are not running AnNIXion, the dev shell stubs a minimal
-`hardware-configuration.nix` from `ci/hardware-stub.nix` automatically so the
-flake evaluates. Never commit `hardware-configuration.nix` — it is machine
-specific and gitignored, and CI rejects PRs that add it.
+You do not need a `hardware-configuration.nix` to work on AnNIXion. The
+`AnNIXion-ci` configuration pairs the full system with `ci/hardware-stub.nix`,
+so the flake evaluates and builds on any machine. `AnNIXion` itself is only
+offered once you have a real `hardware-configuration.nix` in the repo root.
+
+Never commit `hardware-configuration.nix` — it is machine specific and
+gitignored, and CI rejects PRs that add it.
 
 ---
 
@@ -49,7 +52,7 @@ nixfmt --check .               # formatting (run `nixfmt .` to fix)
 Building the full system closure (L2) before opening a PR is recommended:
 
 ```bash
-nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel --no-link
+nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link
 ```
 
 CI runs L1–L3, the ISO build, and the size gate on every PR to `dev`.
