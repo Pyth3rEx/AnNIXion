@@ -1,0 +1,22 @@
+name: PR form
+
+# Release PRs only (base branch main): the merged body is published verbatim as
+# the GitHub Release notes by ci.yml. Kept out of ci.yml so that editing a body
+# re-runs this check alone, not the ISO build.
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+jobs:
+  form:
+    name: Release PR form
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check changelog form and issue references
+        env:
+          # Via env, never interpolated into the shell: the body is untrusted input.
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: python3 .github/scripts/check-release-form.py
