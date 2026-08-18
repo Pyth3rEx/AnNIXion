@@ -245,38 +245,38 @@ let
   directories = {
     "annixion.directory" = dir "AnNIXion" "security-high";
 
-    "annixion-1-recon.directory" = dir "1. Reconnaissance" "system-search";
+    "annixion-1-recon.directory" = dir "01. Reconnaissance" "system-search";
     "annixion-1-recon-osint.directory" = dir "Passive OSINT" "applications-internet";
     "annixion-1-recon-scanning.directory" = dir "Active Scanning" "network-wired";
     "annixion-1-recon-rf.directory" = dir "RF / Signal Intel" "audio-input-microphone";
 
-    "annixion-2-weapon.directory" = dir "2. Weaponization" "package-x-generic";
+    "annixion-2-weapon.directory" = dir "02. Weaponization" "package-x-generic";
     "annixion-2-weapon-disasm.directory" = dir "Disassembly" "applications-engineering";
     "annixion-2-weapon-firmware.directory" = dir "Firmware Analysis" "drive-harddisk";
 
-    "annixion-3-delivery.directory" = dir "3. Delivery" "mail-send";
+    "annixion-3-delivery.directory" = dir "03. Delivery" "mail-send";
     "annixion-3-delivery-proxy.directory" = dir "Web Proxy" "network-proxy";
     "annixion-3-delivery-injection.directory" = dir "Web Injection" "emblem-important";
 
-    "annixion-4-exploit.directory" = dir "4. Exploitation" "dialog-warning";
+    "annixion-4-exploit.directory" = dir "04. Exploitation" "dialog-warning";
     "annixion-4-exploit-frameworks.directory" = dir "Frameworks" "applications-development";
     "annixion-4-exploit-creds.directory" = dir "Credential Attacks" "dialog-password";
     "annixion-4-exploit-wireless.directory" = dir "Wireless" "network-wireless";
 
-    "annixion-5-install.directory" = dir "5. Installation" "system-run";
+    "annixion-5-install.directory" = dir "05. Installation" "system-run";
     "annixion-5-install-tunneling.directory" = dir "Tunneling & Shells" "utilities-terminal";
 
-    "annixion-6-c2.directory" = dir "6. C2" "network-server";
+    "annixion-6-c2.directory" = dir "06. C2" "network-server";
     "annixion-6-c2-frameworks.directory" = dir "Frameworks" "applications-development";
 
-    "annixion-7-postex.directory" = dir "7. Post-Exploitation" "emblem-system";
+    "annixion-7-postex.directory" = dir "07. Post-Exploitation" "emblem-system";
     "annixion-7-postex-lateral.directory" = dir "Lateral Movement" "network-workgroup";
 
-    "annixion-8-forensics.directory" = dir "8. Forensics" "system-file-manager";
+    "annixion-8-forensics.directory" = dir "08. Forensics" "system-file-manager";
     "annixion-8-forensics-memory.directory" = dir "Memory Analysis" "media-flash";
     "annixion-8-forensics-disk.directory" = dir "Disk Analysis" "drive-harddisk";
 
-    "annixion-9-re.directory" = dir "9. Reverse Engineering" "applications-engineering";
+    "annixion-9-re.directory" = dir "09. Reverse Engineering" "applications-engineering";
     "annixion-9-re-disasm.directory" = dir "Disassemblers" "applications-engineering";
     "annixion-9-re-firmware.directory" = dir "Firmware" "drive-harddisk";
 
