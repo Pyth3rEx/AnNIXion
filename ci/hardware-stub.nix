@@ -1,3 +1,4 @@
+# Stand-in disk layout so CI and fresh clones can evaluate and build.
 {
   modulesPath,
   lib,

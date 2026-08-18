@@ -1,3 +1,4 @@
+# Red Team profile — Burp interception set at profile level, web tooling.
 {
   inputs,
   config,
@@ -86,9 +87,8 @@ in
       "extensions.autoDisableScopes" = 0;
       "browser.privatebrowsing.autostart" = true;
 
-      # ── Burp — profile-level proxy (issue #25) ─────────────────
-      # Native, so interception does not depend on an addon staying
-      # installed. FoxyProxy ships disabled; see the end of this file.
+      # ── Burp — profile-level proxy (#25) ───────────────────────
+      # Native, so interception survives an addon being disabled.
       "network.proxy.type" = 1;
       "network.proxy.http" = "127.0.0.1";
       "network.proxy.http_port" = 8080;
@@ -98,16 +98,14 @@ in
       # Intercept localhost targets too — testing local apps is routine.
       "network.proxy.allow_hijacking_localhost" = true;
       "network.proxy.no_proxies_on" = "";
-      # Never silently fall back to a direct connection if Burp is down;
-      # an unproxied request during a test is worse than a failed one.
+      # Fail rather than connect directly when Burp is down.
       "network.proxy.failover_direct" = false;
       # Burp resolves hostnames, so Firefox must not resolve them itself.
       "network.proxy.proxy_over_tls" = false;
 
       # ── DNS over HTTPS ─────────────────────────────────────────
-      # Covers what bypasses Burp. bootstrapAddr pins the resolver's IP
-      # or mode 3 deadlocks; the pre-89 spelling is ignored. Unfiltered
-      # Quad9 — a blocklist would hide the target.
+      # bootstrapAddr pins the resolver's IP or mode 3 deadlocks; the
+      # pre-89 spelling is ignored. Unfiltered Quad9 (docs/usage.md#dns).
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
@@ -186,11 +184,9 @@ in
   };
 
   # ── FoxyProxy — shipped, seeded, switched off ────────────────────
-  # Interception is the network.proxy.* block above, not this. Here for
-  # ad-hoc work; the entry below is an example, not an active route.
-  #
-  # Enabling it hands FoxyProxy the proxy API, overriding network.proxy.*
-  # wholesale — failover_direct included.
+  # For ad-hoc work only; the entry below is an example, not a route.
+  # Enabling it overrides network.proxy.* wholesale, failover_direct
+  # included. See "Red Team — Burp Suite setup" in docs/usage.md.
   programs.firefox.policies."3rdparty".Extensions."${addons.foxyproxy-standard.addonId}" = {
     mode = "disabled";
     sync = false;

@@ -4,20 +4,18 @@
   pkgs,
   ...
 }:
-# KDE Plasma desktop: plasma-manager config (panels, shortcuts, kwinrc/
-# kdeglobals via configFile) plus the activation hooks that write kwinrc
-# keys KWin resets at runtime and restart plasmashell after a rebuild.
+# KDE Plasma desktop: panels, shortcuts and kwinrc/kdeglobals via
+# plasma-manager, plus the activation hooks that re-apply what KWin resets.
 {
   programs.plasma = {
     enable = lib.mkDefault true;
-    # Force plasma-manager to overwrite KDE config files on every rebuild.
-    # Without this, KDE's own writes to kwinrc/kdeglobals etc. survive the
-    # rebuild on old installs and the declared state is silently ignored.
+    # Without this, KDE's own writes survive the rebuild and the declared
+    # state is silently ignored.
     overrideConfig = lib.mkDefault true;
 
-    # ── Global astetics ──────────────────────────────────────
+    # ── Global aesthetics ────────────────────────────────────
     workspace = lib.mkDefault {
-      clickItemTo = "open"; # If you liked the click-to-open default from plasma 5
+      clickItemTo = "open";
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
         theme = "Nordzy-cursors";
@@ -151,8 +149,7 @@
           }
 
           # ── Tiled Menu — far right edge ───────────────────────────────
-          # Installed via home.activation.installTiledMenu (cp into
-          # ~/.local/share/plasma/plasmoids/).
+          # Installed by home.activation.installTiledMenu.
           {
             name = "com.github.zren.tiledmenu";
             config.General = {
@@ -171,19 +168,19 @@
 
     # ── Global shortcuts ──────────────────────────────────────
     shortcuts = lib.mkDefault {
-      # KRunner — your app launcher (like wofi/rofi)
+      # KRunner
       "org.kde.krunner.desktop"."_launch" = [
         "Alt+Space"
         "Alt+F2"
       ];
 
-      # Tiled Menu — Meta+F1 via kglobalaccel (bare Meta handled by
-      # ModifierOnlyShortcuts in configFile below; both are needed)
+      # Tiled Menu — bare Meta is handled by ModifierOnlyShortcuts
+      # in configFile below; both bindings are needed.
       "com.github.zren.tiledmenu.desktop"."_launch" = [ "Meta+F1" ];
 
-      # KWin window management
+      # ── KWin ────────────────────────────────────────────────
       kwin = {
-        # Virtual desktops — switch with Meta+number
+        # Virtual desktops
         "Switch to Desktop 1" = "Meta+1";
         "Switch to Desktop 2" = "Meta+2";
         "Switch to Desktop 3" = "Meta+3";
@@ -201,52 +198,48 @@
         "Window Close" = "Meta+Q";
         "Window Fullscreen" = "Meta+F";
 
-        # Focus switching (Krohnkite uses these)
+        # Focus switching — Krohnkite uses these
         "Switch Window Up" = "Meta+Shift+Up";
         "Switch Window Down" = "Meta+Shift+Down";
         "Switch Window Left" = "Meta+Shift+Left";
         "Switch Window Right" = "Meta+Shift+Right";
       };
 
-      # Launch terminal with Meta+Return
+      # Terminal
       "org.kde.kglobalaccel.desktop"."run command" = "Meta+Return";
     };
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
-    # No lib.mkDefault here: configFile is opaque attrs that
-    # plasma-manager also writes at normal priority, so mkDefault loses
-    # the whole block instead of merging.
+    # No lib.mkDefault: configFile is opaque attrs that plasma-manager
+    # also writes at normal priority, so mkDefault loses the whole block
+    # instead of merging.
     configFile = {
-      # Enable Krohnkite tiling script
       "kwinrc"."Plugins"."krohnkiteEnabled" = true;
 
-      # Virtual desktops — 4 desktops like a proper tiling setup
+      # Virtual desktops
       "kwinrc"."Desktops"."Number" = 4;
       "kwinrc"."Desktops"."Rows" = 1;
 
-      # Window behavior
+      # Window behaviour
       "kwinrc"."Windows"."FocusPolicy" = "FocusFollowsMouse";
       "kwinrc"."Windows"."FocusStealingPreventionLevel" = 1;
 
-      # Compositor — keep effects minimal for VM performance
+      # Compositor — minimal effects for VM performance
       "kwinrc"."Compositing"."AnimationSpeed" = 3;
       "kwinrc"."Compositing"."Enabled" = true;
 
-      # Baloo indexes file contents in the background. On a machine that
-      # collects other people's files, that means parsing them.
+      # Indexing file contents means parsing them.
       "baloofilerc"."Basic Settings"."Indexing-Enabled" = false;
 
-      # Show dotfiles in every KDE open/save dialog. Dolphin's own view
-      # is set separately, in home/file-visibility.nix.
+      # Dolphin's own view is set in home/file-visibility.nix.
       "kdeglobals"."KFileDialog Settings"."Show Hidden Files" = true;
 
-      # Bare Meta → activateLauncherMenu → TiledMenu toggles open/closed.
-      # TiledMenu registers as an Application Launcher applet, so plasmashell
-      # targets it when this D-Bus method is called.
+      # TiledMenu registers as an Application Launcher applet, so this
+      # D-Bus method toggles it.
       "kwinrc"."ModifierOnlyShortcuts"."Meta" =
         "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu";
 
-      # Krohnkite tiling settings
+      # ── Krohnkite ───────────────────────────────────────────
       "kwinrc"."Script-krohnkite"."enableTileLayout" = true;
       "kwinrc"."Script-krohnkite"."screenGapTop" = 8;
       "kwinrc"."Script-krohnkite"."screenGapBottom" = 8;
@@ -257,17 +250,13 @@
     };
   };
 
-  # Write kwinrc keys that KWin resets at runtime (plasma-manager configFile
-  # is overwritten by KWin's own session-state writes each logout).
-  # kwriteconfig6 writes directly to ~/.config/kwinrc before plasmashell
-  # restarts, so KWin picks them up on the next load.
+  # KWin's session-state writes overwrite configFile on every logout, so
+  # re-apply those keys before plasmashell restarts.
   home.activation.configureKwin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if [ -n "''${DISPLAY:-}" ]; then
-      # Bare Meta → activateLauncherMenu → TiledMenu
       $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
         --file kwinrc --group ModifierOnlyShortcuts --key Meta \
         "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
-      # 4 virtual desktops
       $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
         --file kwinrc --group Desktops --key Number 4
       $DRY_RUN_CMD ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
@@ -275,8 +264,7 @@
     fi
   '';
 
-  # Restart plasmashell after rebuild — depends on both widget install and
-  # kwinrc being written so KWin loads with the correct config.
+  # Ordered after the widget install and the kwinrc writes.
   home.activation.restartPlasmashell =
     lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" "configureTiledMenu" ]
       ''

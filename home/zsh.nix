@@ -5,52 +5,49 @@
   ...
 }:
 
+# Shell environment. Keybindings, aliases and plugins are documented in
+# docs/zsh.md.
 {
-  # ───────────────────────────────────────────────────────────────────────────
-  # Zsh — core settings
-  # ───────────────────────────────────────────────────────────────────────────
+  # ── Zsh — core settings ────────────────────────────────────────────────────
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true; # grey inline suggestions as you type
+    autosuggestion.enable = true;
     enableCompletion = true;
-    # Syntax highlighting is handled by zsh-fast-syntax-highlighting at mkOrder 1190
+    # Syntax highlighting is fast-syntax-highlighting, at mkOrder 1190.
 
     # ── External plugins from nixpkgs ────────────────────────────────────────
     plugins = [
-      # Reminds you of existing aliases after typing a full command
       {
         name = "you-should-use";
         src = "${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use";
       }
-      # Auto-closes brackets and quotes while typing; useful for payload crafting
       {
         name = "zsh-autopair";
         src = "${pkgs.zsh-autopair}/share/zsh/zsh-autopair";
         file = "autopair.zsh";
       }
     ];
-    autocd = true; # type a directory name to cd into it
+    autocd = true;
 
     # ── oh-my-zsh framework ─────────────────────────────────────────────────
-    # Only bundled plugins go here — external packages (autosuggestions,
-    # syntax-highlighting) are handled by the HM options above.
+    # Bundled plugins only; external ones go in plugins above.
     oh-my-zsh = {
       enable = true;
-      theme = ""; # oh-my-posh owns the prompt; leave this empty
+      theme = ""; # oh-my-posh owns the prompt
       plugins = [
-        "git" # git aliases (gst, gco, gp …) + status info
-        "docker" # docker subcommand completion
-        "colorize" # ccat / cless — syntax-highlighted file viewing (needs chroma pkg)
-        "sudo" # ESC ESC — prepend sudo to the current/previous command
-        "extract" # `x archive.tar.gz` — one command for any archive format
-        "history" # h = history  hs = grep history  hsi = case-insensitive
-        "nmap" # nmap shortcuts: nmap_open_ports, nmap_full_udp, nmap_os …
-        "rsync" # rsync-copy / rsync-move with progress bar
-        "urltools" # urlencode / urldecode — encode payloads, decode responses
-        "jsontools" # pp_json, is_json, json_grep — parse curl/API output
-        "dirhistory" # Alt+← / Alt+→ — walk backward/forward through cd history
-        "magic-enter" # Enter on empty prompt → git status in repo, ls elsewhere
-        # "z" removed — replaced by programs.zoxide above (smarter + zi picker)
+        "git"
+        "docker"
+        "colorize"
+        "sudo"
+        "extract"
+        "history"
+        "nmap"
+        "rsync"
+        "urltools"
+        "jsontools"
+        "dirhistory"
+        "magic-enter"
+        # "z" is replaced by programs.zoxide below.
       ];
     };
 
@@ -92,7 +89,7 @@
       b64e = "base64";
       b64d = "base64 -d";
       hashfile = "sha256sum";
-      serve = "python3 -m http.server"; # quick HTTP file server
+      serve = "python3 -m http.server";
 
       # ── SecLists explorer ──────────────────────────────────
       seclists = ''
@@ -106,14 +103,12 @@
 
     # ── Shell init content ───────────────────────────────────────────────────
     initContent = lib.mkMerge [
-      # fzf-tab at 1150 — must load after oh-my-zsh runs compinit (1100)
-      # Replaces the default completion menu with an fzf popup.
-      # Tab on `kill ` fuzzes running processes; tab on `ssh ` fuzzes known hosts.
+      # fzf-tab at 1150 — after oh-my-zsh runs compinit at 1100.
       (lib.mkOrder 1150 ''
         source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
       '')
 
-      # Key bindings at 1200 — after oh-my-zsh loads at 1100
+      # Key bindings at 1200 — after oh-my-zsh loads at 1100.
       (lib.mkOrder 1200 ''
         bindkey "^[[1;5C" forward-word          # Ctrl+Right  jump word forward
         bindkey "^[[1;5D" backward-word         # Ctrl+Left   jump word back
@@ -129,20 +124,18 @@
         bindkey "^[[A" up-line-or-beginning-search    # Up   — history prefix search
         bindkey "^[[B" down-line-or-beginning-search  # Down — history prefix search
 
-        # Expose last command char count to oh-my-posh via $OMP_CMD_LEN
+        # Last command's char count, read by oh-my-posh below.
         function _omp_track_cmd_len() { export OMP_CMD_LEN=''${#1}; }
         add-zsh-hook preexec _omp_track_cmd_len
       '')
 
-      # fast-syntax-highlighting at 1190 — after all plugins, before key bindings
-      # Faster and richer than zsh-syntax-highlighting: colors args, strings, globs
+      # fast-syntax-highlighting at 1190 — after plugins, before bindings.
       (lib.mkOrder 1190 ''
         source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
       '')
 
-      # Banner at 1500 — last thing printed before the first prompt
+      # ── AnNIXion banner — last thing before the first prompt ──────────────
       (lib.mkAfter ''
-        # ── AnNIXion banner ──────────────────────────────────────────────────
         echo ""
         echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
         echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
@@ -157,7 +150,7 @@
         printf "  \e[0;90mkernel\e[0m %s\n" "$(uname -r)"
         echo ""
 
-        # Network interfaces — VPN interfaces highlighted in green
+        # VPN interfaces highlighted in green.
         ip -4 addr show scope global 2>/dev/null | awk '
           /inet/ {
             ip = $2
@@ -174,33 +167,19 @@
     ];
   };
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # fzf — fuzzy finder with full ZSH widget integration
-  #   Ctrl+R  interactive history search with preview
-  #   Ctrl+T  fuzzy file picker inserted at cursor
-  #   Alt+C   fuzzy cd into any subdirectory
-  # ───────────────────────────────────────────────────────────────────────────
+  # ── fzf — fuzzy finder with ZSH widget integration ─────────────────────────
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
   };
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # zoxide — smarter frecency directory jumping (replaces the z OMZ plugin)
-  #   z <query>   jump to most-frecent match
-  #   zi          interactive fuzzy picker over jump history
-  # ───────────────────────────────────────────────────────────────────────────
+  # ── zoxide — frecency directory jumping ────────────────────────────────────
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # oh-my-posh — AnNIXion red-team prompt
-  #   LEFT   [ user @ HOST ][ ~/path ][ ⎇ branch ●N +N ↑N ↓N ⚑N ]
-  #   RIGHT  [ Nc ][ ⏱ 1m3s ][ ✗ N ][ HH:MM:SS ]
-  #   LINE2  ❯  (# when root)
-  # ───────────────────────────────────────────────────────────────────────────
+  # ── oh-my-posh — AnNIXion red-team prompt ──────────────────────────────────
   programs.oh-my-posh = {
     enable = true;
 
@@ -217,8 +196,7 @@
           alignment = "left";
           newline = true;
           segments = [
-            # User @ Host
-            # bg #252525 normally; flips to neon red when root (text goes black for contrast)
+            # User @ host — flips to neon red when root.
             {
               type = "session";
               style = "powerline";
@@ -244,9 +222,8 @@
                 home_icon = "~";
               };
             }
-            # Git — comprehensive dev data
-            # Clean: muted red.  Any change: neon red.
-            # Shows: branch · staged(●) · working(+) · ahead(↑) · behind(↓) · stash(⚑)
+            # Git — branch · staged(●) · working(+) · ahead(↑) · behind(↓) ·
+            # stash(⚑). Muted red when clean, neon red on any change.
             {
               type = "git";
               style = "powerline";

@@ -1,25 +1,14 @@
+# annixion-cc — a kdialog control center for Wi-Fi, Bluetooth and the
+# network killswitch — plus a D-Bus handler (org.annixion.MetaKey) that
+# splits single from double Meta presses at 400 ms. Nothing calls the
+# handler today: kwinrc binds bare Meta straight to plasmashell's
+# launcher, in home/plasma.nix.
 {
   config,
   lib,
   pkgs,
   ...
 }:
-
-# ============================================================
-# CONTROL CENTER + META KEY HANDLER
-# ============================================================
-# Architecture:
-#   Single Meta  → opens the AnNIXion Control Center (kdialog menu)
-#   Double Meta  → opens Kickoff (start menu)
-#
-# How it works:
-#   kwinrc[ModifierOnlyShortcuts].Meta calls our D-Bus service
-#   (org.annixion.MetaKey). The Python service tracks timing:
-#   two presses within 400 ms → kickoff, otherwise → control center.
-#
-# The control center is a kdialog menu that toggles WiFi, BT,
-# and hosts the network killswitch. VPN controls are planned.
-# ============================================================
 
 let
   py = pkgs.python3.withPackages (
@@ -95,8 +84,6 @@ let
   };
 
   # ── Meta key D-Bus handler ────────────────────────────────────────────
-  # Receives every Meta key press from kwin via D-Bus and decides
-  # single vs double press based on a 400 ms window.
   metaKeyHandler = pkgs.writeScript "annixion-meta-key-handler" ''
     #!${py}/bin/python3
     import dbus
@@ -155,7 +142,6 @@ in
 {
   home.packages = [ controlCenter ];
 
-  # Start the handler automatically with the graphical session
   systemd.user.services.annixion-meta-key = {
     Unit = {
       Description = "AnNIXion Meta Key Handler";

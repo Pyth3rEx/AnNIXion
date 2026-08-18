@@ -1,3 +1,4 @@
+# Hyper-V guest support and Enhanced Session over vsock.
 {
   config,
   lib,
@@ -6,21 +7,16 @@
 }:
 
 {
-  # ── HYPER-V GUEST SUPPORT ─────────────────────────────────
-
-  # Tell NixOS it's running inside Hyper-V.
-  # Loads the right kernel drivers automatically.
+  # ── Hyper-V guest support ─────────────────────────────────
   virtualisation.hypervGuest.enable = lib.mkDefault true;
 
-  # Kill the old broken Hyper-V display driver.
-  # Forces the system to use hyperv_drm (the modern one) instead.
+  # Blacklisted so the modern hyperv_drm driver is used instead.
   boot.blacklistedKernelModules = lib.mkDefault [ "hyperv_fb" ];
 
-  # Load the Hyper-V vsock kernel module at boot.
-  # This is the virtual cable Enhanced Session uses.
+  # The virtual cable Enhanced Session runs over.
   boot.kernelModules = lib.mkDefault [ "hv_sock" ];
 
-  # ── XRDP — ENHANCED SESSION ───────────────────────────────
+  # ── xrdp — Enhanced Session ───────────────────────────────
   # Enhanced Session connects over vsock, not the network.
 
   services.xrdp = {
@@ -32,7 +28,6 @@
     # startplasma-x11 is the session launcher xrdp knows how to set up.
     defaultWindowManager = lib.mkDefault "${pkgs.writeShellScript "annixion-start-plasma-rdp" ''
       # ── Runtime directory ────────────────────────────────────────────
-      # systemd creates this at boot when linger is enabled (see below).
       export XDG_RUNTIME_DIR=/run/user/$(id -u)
       export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
 
@@ -44,9 +39,8 @@
       fi
 
       # ── Inject display environment into systemd user session ─────────
-      # Plasma 6 starts plasmashell as a systemd user unit, which inherits
-      # systemd --user's environment rather than this script's. Without
-      # this push, plasmashell never launches: black screen with a cursor.
+      # plasmashell is a systemd user unit and inherits systemd --user's
+      # environment, not this script's. Without it: black screen.
       systemctl --user import-environment \
         DISPLAY XAUTHORITY \
         XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS \
@@ -55,8 +49,7 @@
         2>/dev/null || true
 
       # ── Force X11 for Qt and KDE ─────────────────────────────────────
-      # Qt 6 prefers Wayland when its libraries are present. There is no
-      # compositor in an xrdp session, so probing hangs.
+      # Qt 6 probes for Wayland, and an xrdp session has no compositor.
       unset WAYLAND_DISPLAY
       export QT_QPA_PLATFORM=xcb
 
@@ -64,8 +57,7 @@
       export DESKTOP_SESSION=plasma
       export XDG_CURRENT_DESKTOP=KDE
 
-      # KWin rewrites kwinrc on session exit, stomping plasma-manager's config.
-      # Re-apply the keys we care about on every session start, before Plasma loads.
+      # ── Re-apply keys KWin stomps on session exit ────────────────────
       ${pkgs.kdePackages.kconfig}/bin/kwriteconfig6 \
         --file kwinrc --group ModifierOnlyShortcuts --key Meta \
         "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
@@ -82,13 +74,10 @@
   # without linger the Plasma 6 shell units never launch.
   users.users.operator.linger = lib.mkDefault true;
 
-  # Override xrdp's ExecStart to listen on vsock://-1:3389 instead
-  # of TCP. -1 means VMADDR_CID_ANY — accept from any CID.
-  # This is what makes Enhanced Session actually connect.
-  #
-  # lib.mkForce is intentional here — it must beat xrdp's own default
-  # ExecStart. This is not a user-configurable default; it is a
-  # required system-level override for vsock transport to work.
+  # ── vsock transport ───────────────────────────────────────
+  # Listen on vsock://-1:3389 (VMADDR_CID_ANY) rather than TCP — this is
+  # what Enhanced Session connects to. mkForce must beat xrdp's own
+  # ExecStart; it is required, not a user-tunable default.
   systemd.services.xrdp = {
     preStart = lib.mkAfter ''
       cfg=/etc/xrdp/xrdp.ini

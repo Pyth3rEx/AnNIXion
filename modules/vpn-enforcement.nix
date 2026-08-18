@@ -1,3 +1,7 @@
+# ── VPN enforcement — kernel-level killswitch ────────────────────────────
+# Enforced processes run in a persistent user slice; an nftables rule
+# matches that cgroup and permits egress only through a live tunnel.
+# Design and constraints: "VPN enforcement" in docs/usage.md.
 {
   config,
   lib,
@@ -5,33 +9,13 @@
   ...
 }:
 
-# ============================================================
-# VPN ENFORCEMENT — KERNEL-LEVEL KILLSWITCH
-# ============================================================
-# Enforced processes run in a persistent user slice; an nftables rule
-# matches that cgroup and permits egress only through a live tunnel.
-# Prefs were the wrong layer — they miss WebRTC, OCSP and probes, and
-# fall back to the default route in the clear.
-#
-# Constraints, all of which cost time to rediscover:
-#   * nft resolves the cgroup to an inode at load time, so the slice
-#     must exist first and stay persistent. The launcher arms it.
-#   * nft matches oifname, not device type, and takes no wildcards in a
-#     set — so the ruleset is a snapshot of live tunnels at arm time.
-#   * Tunnels are found by device type plus a route in any table. Globs
-#     miss vendor names; main is empty for wg-quick and Mullvad.
-#   * WireGuard's outer packets keep the inner socket, so the cgroup
-#     match catches them on the physical interface. Must be accepted.
-#   * glibc delegates lookups to nscd, outside the cgroup.
-# ============================================================
-
 let
   cfg = config.annixion.vpnEnforcement;
 
   sliceBare = lib.removeSuffix ".slice" cfg.sliceName;
 
-  # systemd nests "-"-separated names: annixion-vpn.slice lives at
-  # annixion.slice/annixion-vpn.slice. Wrong depth matches nothing.
+  # systemd nests "-"-separated names: annixion-vpn.slice sits inside
+  # annixion.slice, and the wrong depth matches nothing.
   sliceParts = lib.splitString "-" sliceBare;
   sliceSubPath = lib.concatStringsSep "/" (
     lib.imap1 (i: _: (lib.concatStringsSep "-" (lib.take i sliceParts)) + ".slice") sliceParts
@@ -59,8 +43,6 @@ let
 
   # ── Tunnel enumeration ────────────────────────────────────────────────
   # Read by both the detector and the loader, so they cannot disagree.
-  # Must be up, a tunnel, and carrying a route — one that routes nothing
-  # would pass detection and then be blocked.
   tunnelList = pkgs.writeShellApplication {
     name = "annixion-vpn-tunnels";
     runtimeInputs = [
@@ -99,8 +81,7 @@ let
               esac
             }
 
-            # All tables, both families; main alone is empty for wg-quick
-            # and Mullvad. Link-local scaffolding filtered out.
+            # All tables: main alone is empty for wg-quick and Mullvad.
             has_route() {
               {
                 ip route show table all dev "$1" 2>/dev/null
@@ -113,8 +94,7 @@ let
             for iface in $(ip -o link show up | awk -F': ' '{print $2}' | cut -d@ -f1); do
               [ "$iface" = "lo" ] && continue
 
-              # Reaches a root-built ruleset. Device creation needs
-              # CAP_NET_ADMIN, but unquotable names are never legitimate.
+              # This name reaches a root-built ruleset.
               case "$iface" in
                 *[!A-Za-z0-9_.@-]*) continue ;;
               esac
@@ -147,8 +127,7 @@ let
   };
 
   # ── Privileged killswitch loader ──────────────────────────────────────
-  # Argument-free: the only NOPASSWD command, so it derives tunnel names
-  # itself rather than taking them from the caller.
+  # Argument-free by design: it is the one NOPASSWD command.
   killswitchLoad = pkgs.writeShellApplication {
     name = "annixion-vpn-killswitch-load";
     runtimeInputs = [
@@ -185,9 +164,8 @@ let
               [ -n "$iface" ] || continue
               accepts="$accepts    oifname \"$iface\" accept"$'\n'
 
-              # The tunnel's own encapsulated packets. Already encrypted, and
-              # forging the mark needs CAP_NET_ADMIN. `wg` fails on non-wg
-              # devices, which is how userspace tunnels skip this.
+              # The tunnel's own encapsulated packets, already encrypted.
+              # `wg` fails on non-wg devices: userspace tunnels skip this.
               mark="$(wg show "$iface" fwmark 2>/dev/null || true)"
               if [ -n "$mark" ] && [ "$mark" != "off" ] && [ "$mark" != "0" ]; then
                 accepts="$accepts    meta mark $mark accept"$'\n'
@@ -215,10 +193,9 @@ let
             # printf, not a heredoc: the terminator's indentation depends
             # on how Nix strips this string.
             #
-            # `table` + `delete table` = idempotent load. Hook sits ahead
-            # of the main firewall chain. Loopback stays reachable except
-            # for DNS, which a local resolver would forward from outside
-            # the cgroup. Reject, not drop, so leaks fail fast.
+            # `table` + `delete table` makes the load idempotent. Loopback
+            # DNS is rejected — a local resolver would forward it from
+            # outside the cgroup. Reject, not drop, so leaks fail fast.
             {
               printf 'table inet annixion_vpn_killswitch\n'
               printf 'delete table inet annixion_vpn_killswitch\n\n'
@@ -243,8 +220,8 @@ let
   };
 
   # ── Generic launcher ──────────────────────────────────────────────────
-  # Any command, not just browsers: behind an intercepting proxy the
-  # browser only reaches loopback, so Burp has to be in the slice too.
+  # Any command, not just browsers: behind an intercepting proxy it is
+  # Burp that makes the real requests, so it belongs in the slice too.
   vpnRun = pkgs.writeShellApplication {
     name = "annixion-vpn-run";
     runtimeInputs = [
@@ -293,8 +270,7 @@ let
               fail "refusing to launch '$LABEL' — could not arm the VPN killswitch"
             fi
 
-            # 4. glibc hands lookups to nscd, outside this cgroup. Masking
-            #    its socket makes the process resolve through the tunnel.
+            # 4. glibc hands lookups to nscd, outside this cgroup.
             ${lib.optionalString dnsConfined ''
               RESOLV_DIR="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/annixion-vpn"
               mkdir -p "$RESOLV_DIR"
@@ -396,8 +372,8 @@ in
       default = 1000;
       description = ''
         uid of the enforced account. Baked into the cgroup path the
-        nftables rule matches, so it must be the real uid of the desktop
-        user or the killswitch matches nothing.
+        nftables rule matches, so it must be the desktop user's real uid
+        or the killswitch matches nothing.
       '';
     };
 
@@ -418,12 +394,10 @@ in
         "mullvad*"
       ];
       description = ''
-        Extra interface name patterns to treat as VPN tunnels.
-
-        Tunnels are normally identified by device type (wireguard, tun,
-        tap, ppp, xfrm, ...), so these are only needed for a tunnel
-        presenting as some other type. An unrecognised tunnel fails
-        closed.
+        Extra interface name patterns to treat as VPN tunnels. Tunnels are
+        normally identified by device type (wireguard, tun, tap, ppp,
+        xfrm, ...), so these are only needed for a tunnel presenting as
+        some other type. An unrecognised tunnel fails closed.
       '';
     };
 
@@ -435,16 +409,12 @@ in
       ];
       description = ''
         Resolvers for enforced processes, supplied as a private
-        /etc/resolv.conf. They must be reachable only through the tunnel,
-        so lookups fail closed with everything else.
+        /etc/resolv.conf. Reachable only through the tunnel, so lookups
+        fail closed with everything else. Unfiltered Quad9 by default: a
+        blocklist would hide the infrastructure these tools exist to reach.
 
-        Unfiltered Quad9 by default, matching the Red Team and OSINT
-        profiles: a blocklist would hide the infrastructure those tools
-        exist to reach.
-
-        Set to [ ] to leave DNS alone. Queries then go through nscd,
-        outside the cgroup, and resolve in the clear once the tunnel is
-        gone.
+        Set to [ ] to leave DNS alone — queries then go through nscd,
+        outside the cgroup, and resolve in the clear once the tunnel drops.
       '';
     };
 
@@ -454,11 +424,9 @@ in
       description = ''
         Browser package the launcher execs. Must be the wrapped package
         carrying distribution/policies.json — under Home Manager that is
-        programs.firefox.finalPackage, which flake.nix wires in.
-
-        Bare pkgs.firefox has an empty policy set and fails silently: the
-        browser opens with no certificate trust, no ExtensionSettings and
-        no 3rdparty config.
+        programs.firefox.finalPackage, which flake.nix wires in. Bare
+        pkgs.firefox fails silently: no certificate trust, no
+        ExtensionSettings, no 3rdparty config.
       '';
     };
 
@@ -492,21 +460,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # The killswitch is nftables, so the backend must be too; NixOS
-    # still defaults to iptables.
+    # NixOS still defaults to iptables; the killswitch needs nftables.
     networking.nftables.enable = lib.mkDefault true;
 
-    # Persistent slice: enforced processes launch into it and the
-    # nftables rule matches this cgroup.
+    # Persistent slice — the cgroup the nftables rule matches.
     systemd.user.slices.${sliceBare} = {
       description = "AnNIXion VPN-enforced applications";
       # No IPAddressDeny/Allow: those filter on destination, and
-      # tunnelled traffic is bound for public addresses. Interface-level
-      # enforcement is the nftables rule's job.
+      # tunnelled traffic is bound for public addresses.
     };
 
-    # Arming needs root. Scope NOPASSWD to that one argument-free
-    # script and nothing else.
+    # Arming needs root; NOPASSWD is scoped to that one script.
     security.sudo.extraRules = [
       {
         users = [ config.users.users.operator.name ];
