@@ -42,19 +42,6 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      # hardware-configuration.nix is gitignored (machine-specific).
-      # CI uses a minimal QEMU-guest stub so the flake evaluates cleanly.
-      - name: Stub hardware configuration
-        run: |
-          # Single source of truth: ci/hardware-stub.nix (the devShell uses the
-          # same file). Copy it in place of the gitignored, machine-specific
-          # hardware-configuration.nix so the flake evaluates cleanly.
-          cp ci/hardware-stub.nix hardware-configuration.nix
-          # Nix only sees git-tracked files when evaluating a local flake.
-          # The stub is gitignored, so force-add it (this index-only change is
-          # never committed and stays local to the runner).
-          git add --force hardware-configuration.nix
-
       # L1 — flake evaluation: catches syntax errors, bad option types,
       # undefined references. --no-build keeps this step fast.
       - name: "[L1] Flake evaluation"
@@ -62,9 +49,11 @@ jobs:
 
       # L2 — full system closure: proves every package in the config
       # resolves and all modules compose without conflicts.
+      # AnNIXion-ci is the real config with ci/hardware-stub.nix as its disk
+      # layout — the only part CI cannot know.
       - name: "[L2] System closure build"
         run: |
-          nix build .#nixosConfigurations.AnNIXion.config.system.build.toplevel \
+          nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
             --print-build-logs --no-link
 
       # L3 — VM tests: boot + service behaviour, security tool presence.
@@ -162,19 +151,6 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-
-      # AnNIXion-iso doesn't use hardware-configuration.nix, but nix build
-      # evaluates the whole flake, including nixosConfigurations.AnNIXion.
-      - name: Stub hardware configuration
-        run: |
-          # Single source of truth: ci/hardware-stub.nix (the devShell uses the
-          # same file). Copy it in place of the gitignored, machine-specific
-          # hardware-configuration.nix so the flake evaluates cleanly.
-          cp ci/hardware-stub.nix hardware-configuration.nix
-          # Nix only sees git-tracked files when evaluating a local flake.
-          # The stub is gitignored, so force-add it (this index-only change is
-          # never committed and stays local to the runner).
-          git add --force hardware-configuration.nix
 
       - name: Build ISO
         run: |

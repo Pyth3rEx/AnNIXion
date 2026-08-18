@@ -45,6 +45,174 @@
         config.allowUnfree = true;
       };
       version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile "${self}/VERSION");
+
+      # Everything bar the machine's disk layout. Shared by the real system
+      # and the CI stand-in so the two cannot drift apart.
+      baseModules = [
+        # ── Feature modules ──────────────────────────────────
+        ./modules/desktop.nix
+        ./modules/xrdp.nix
+        ./modules/security-tools.nix
+        ./modules/vpn-enforcement.nix
+        ./modules/hardening.nix
+
+        # Only the HM-wrapped Firefox carries policies.json (CA
+        # trust, extensions); bare pkgs.firefox drops them silently.
+        (
+          { config, ... }:
+          {
+            annixion.vpnEnforcement.browserPackage =
+              config.home-manager.users.operator.programs.firefox.finalPackage;
+          }
+        )
+
+        # ── Wire Home Manager into the NixOS build ───────────
+        # "nixos-rebuild switch" handles both system AND user config
+        # in one command — no separate "home-manager switch" step needed.
+        home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            useGlobalPkgs = true; # share system pkgs
+            useUserPackages = true; # install to user profile
+            # Back up any file HM wants to write that already exists on disk.
+            # Without this, HM aborts if a file exists but wasn't created by HM
+            # (e.g. KDE wrote it, or a previous partial activation left it).
+            backupFileExtension = "backup";
+            # Give Home Manager access to the plasma-manager module
+            sharedModules = [ plasma-manager.homeModules.plasma-manager ];
+
+            # Extra arguments to Home Manager modules
+            extraSpecialArgs = { inherit inputs; };
+
+            # home.nix is all mkDefault, so user/home.nix wins
+            # without lib.mkForce.
+            users.operator = {
+              imports = [
+                ./home.nix
+              ]
+              ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
+            };
+          };
+        }
+
+        # ── Core system configuration ────────────────────────
+        # All mkDefault, so user/configuration.nix overrides freely.
+        (
+          {
+            config,
+            lib,
+            pkgs,
+            ...
+          }:
+          {
+
+            # ── BOOT LOADER ─────────────────────────────
+            boot.loader.systemd-boot.enable = lib.mkDefault true;
+            boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
+
+            # ── OS DEFINITION ───────────────────────────
+            environment.etc."os-release".text = lib.mkForce ''
+              NAME=AnNIXion
+              ID=annixion
+              VERSION="${version}"
+              VERSION_ID="${version}"
+              PRETTY_NAME="AnNIXion v${version}"
+              HOME_URL="https://github.com/Pyth3rEx/AnNIXion/"
+              SUPPORT_URL="https://github.com/Pyth3rEx/AnNIXion/tree/main/docs"
+              BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
+            '';
+
+            # ── NETWORKING ──────────────────────────────
+            networking = {
+              hostName = lib.mkDefault "AnNIXion";
+              networkmanager.enable = lib.mkDefault true;
+              networkmanager.plugins = with pkgs; [
+                networkmanager-openvpn
+              ];
+            };
+
+            # ── NIX SETTINGS ────────────────────────────
+            nix.settings.experimental-features = lib.mkDefault [
+              "nix-command"
+              "flakes"
+            ];
+
+            # Auto-delete old system generations older than 15 days.
+            # NixOS keeps every old version for rollback — this prevents
+            # your disk filling up over time.
+            nix.gc = {
+              automatic = lib.mkDefault true;
+              dates = lib.mkDefault "weekly";
+              options = lib.mkDefault "--delete-older-than 15d";
+            };
+
+            # ── LOCALE & TIME ───────────────────────────
+            time.timeZone = lib.mkDefault "Europe/Paris";
+            i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
+
+            # ── AUDIO (Pipewire) ────────────────────────
+            # Enhanced Session passes audio from the VM to Windows.
+            services.pipewire = {
+              enable = lib.mkDefault true;
+              alsa.enable = lib.mkDefault true;
+              alsa.support32Bit = lib.mkDefault true;
+              pulse.enable = lib.mkDefault true;
+            };
+
+            # ── SECURITY & SUDO ─────────────────────────
+            # Allow users in the "wheel" group to use sudo.
+            security.sudo.wheelNeedsPassword = lib.mkDefault true;
+
+            # ── USER ACCOUNT ────────────────────────────
+            users.users.operator = {
+              isNormalUser = lib.mkDefault true;
+              extraGroups = lib.mkDefault [
+                "wheel" # sudo access
+                "networkmanager" # manage network connections
+                "video" # needed for some hardware tools
+                "input" # needed for input devices
+              ];
+              hashedPassword = lib.mkDefault "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
+            };
+
+            # ── SYSTEM PACKAGES ─────────────────────────
+            # Tool-specific packages live in their own module.
+            nixpkgs.config.allowUnfree = lib.mkDefault true;
+
+            environment.systemPackages = with pkgs; [
+              networkmanager
+              networkmanagerapplet
+              openvpn
+              wireguard-tools
+              kdePackages.kservice
+            ];
+
+            # makes /etc/hosts writable
+            environment.etc.hosts.mode = "0700";
+
+            # ── STATE VERSION — do not change this ever ───
+            # Controls stateful defaults. Changing it breaks things.
+            system.stateVersion = lib.mkDefault "26.05";
+
+          }
+        )
+      ]
+      # ── User overrides (system level) ────────────────────────────
+      # user/configuration.nix is imported only if the file exists.
+      # Because all base options above use lib.mkDefault (priority 1000),
+      # anything you write in that file at normal priority (100) wins
+      # automatically — no lib.mkForce needed.
+      ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
+
+      # The disk layout is the only thing that varies between a real install
+      # and CI.
+      mkAnnixion =
+        hardwareModule:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs; };
+          modules = [ hardwareModule ] ++ baseModules;
+        };
     in
     {
       packages.${system}.iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
@@ -59,167 +227,16 @@
           ];
         };
 
-        AnNIXion = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./hardware-configuration.nix
-
-            # ── Feature modules ──────────────────────────────────
-            ./modules/desktop.nix
-            ./modules/xrdp.nix
-            ./modules/security-tools.nix
-            ./modules/vpn-enforcement.nix
-            ./modules/hardening.nix
-
-            # Only the HM-wrapped Firefox carries policies.json (CA
-            # trust, extensions); bare pkgs.firefox drops them silently.
-            (
-              { config, ... }:
-              {
-                annixion.vpnEnforcement.browserPackage =
-                  config.home-manager.users.operator.programs.firefox.finalPackage;
-              }
-            )
-
-            # ── Wire Home Manager into the NixOS build ───────────
-            # "nixos-rebuild switch" handles both system AND user config
-            # in one command — no separate "home-manager switch" step needed.
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true; # share system pkgs
-                useUserPackages = true; # install to user profile
-                # Back up any file HM wants to write that already exists on disk.
-                # Without this, HM aborts if a file exists but wasn't created by HM
-                # (e.g. KDE wrote it, or a previous partial activation left it).
-                backupFileExtension = "backup";
-                # Give Home Manager access to the plasma-manager module
-                sharedModules = [ plasma-manager.homeModules.plasma-manager ];
-
-                # Extra arguments to Home Manager modules
-                extraSpecialArgs = { inherit inputs; };
-
-                # home.nix is all mkDefault, so user/home.nix wins
-                # without lib.mkForce.
-                users.operator = {
-                  imports = [
-                    ./home.nix
-                  ]
-                  ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
-                };
-              };
-            }
-
-            # ── Core system configuration ────────────────────────
-            # All mkDefault, so user/configuration.nix overrides freely.
-            (
-              {
-                config,
-                lib,
-                pkgs,
-                ...
-              }:
-              {
-
-                # ── BOOT LOADER ─────────────────────────────
-                boot.loader.systemd-boot.enable = lib.mkDefault true;
-                boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
-
-                # ── OS DEFINITION ───────────────────────────
-                environment.etc."os-release".text = lib.mkForce ''
-                  NAME=AnNIXion
-                  ID=annixion
-                  VERSION="${version}"
-                  VERSION_ID="${version}"
-                  PRETTY_NAME="AnNIXion v${version}"
-                  HOME_URL="https://github.com/Pyth3rEx/AnNIXion/"
-                  SUPPORT_URL="https://github.com/Pyth3rEx/AnNIXion/tree/main/docs"
-                  BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
-                '';
-
-                # ── NETWORKING ──────────────────────────────
-                networking = {
-                  hostName = lib.mkDefault "AnNIXion";
-                  networkmanager.enable = lib.mkDefault true;
-                  networkmanager.plugins = with pkgs; [
-                    networkmanager-openvpn
-                  ];
-                };
-
-                # ── NIX SETTINGS ────────────────────────────
-                nix.settings.experimental-features = lib.mkDefault [
-                  "nix-command"
-                  "flakes"
-                ];
-
-                # Auto-delete old system generations older than 15 days.
-                # NixOS keeps every old version for rollback — this prevents
-                # your disk filling up over time.
-                nix.gc = {
-                  automatic = lib.mkDefault true;
-                  dates = lib.mkDefault "weekly";
-                  options = lib.mkDefault "--delete-older-than 15d";
-                };
-
-                # ── LOCALE & TIME ───────────────────────────
-                time.timeZone = lib.mkDefault "Europe/Paris";
-                i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
-
-                # ── AUDIO (Pipewire) ────────────────────────
-                # Enhanced Session passes audio from the VM to Windows.
-                services.pipewire = {
-                  enable = lib.mkDefault true;
-                  alsa.enable = lib.mkDefault true;
-                  alsa.support32Bit = lib.mkDefault true;
-                  pulse.enable = lib.mkDefault true;
-                };
-
-                # ── SECURITY & SUDO ─────────────────────────
-                # Allow users in the "wheel" group to use sudo.
-                security.sudo.wheelNeedsPassword = lib.mkDefault true;
-
-                # ── USER ACCOUNT ────────────────────────────
-                users.users.operator = {
-                  isNormalUser = lib.mkDefault true;
-                  extraGroups = lib.mkDefault [
-                    "wheel" # sudo access
-                    "networkmanager" # manage network connections
-                    "video" # needed for some hardware tools
-                    "input" # needed for input devices
-                  ];
-                  hashedPassword = lib.mkDefault "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
-                };
-
-                # ── SYSTEM PACKAGES ─────────────────────────
-                # Tool-specific packages live in their own module.
-                nixpkgs.config.allowUnfree = lib.mkDefault true;
-
-                environment.systemPackages = with pkgs; [
-                  networkmanager
-                  networkmanagerapplet
-                  openvpn
-                  wireguard-tools
-                  kdePackages.kservice
-                ];
-
-                # makes /etc/hosts writable
-                environment.etc.hosts.mode = "0700";
-
-                # ── STATE VERSION — do not change this ever ───
-                # Controls stateful defaults. Changing it breaks things.
-                system.stateVersion = lib.mkDefault "26.05";
-
-              }
-            )
-            # ── User overrides (system level) ────────────────────────────
-            # user/configuration.nix is imported only if the file exists.
-            # Because all base options above use lib.mkDefault (priority 1000),
-            # anything you write in that file at normal priority (100) wins
-            # automatically — no lib.mkForce needed.
-          ]
-          ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
-        };
+        # Stand-in disk layout for CI and fresh clones. Referenced where it
+        # lives, never copied to hardware-configuration.nix, so it can never
+        # be rebuilt onto a real machine.
+        AnNIXion-ci = mkAnnixion ./ci/hardware-stub.nix;
+      }
+      # Only offered once the machine has a real hardware-configuration.nix.
+      # Absent, "nixos-rebuild --flake .#AnNIXion" fails on the missing
+      # attribute rather than silently building someone else's disk layout.
+      // nixpkgs.lib.optionalAttrs (builtins.pathExists ./hardware-configuration.nix) {
+        AnNIXion = mkAnnixion ./hardware-configuration.nix;
       };
 
       checks.${system} = {
@@ -238,10 +255,6 @@
           nix-output-monitor
         ];
         shellHook = ''
-          if [ ! -f hardware-configuration.nix ]; then
-            cp "$(git rev-parse --show-toplevel)/ci/hardware-stub.nix" hardware-configuration.nix
-            echo "[dev] Stubbed hardware-configuration.nix from ci/hardware-stub.nix"
-          fi
           echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check."
         '';
       };
