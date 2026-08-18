@@ -122,6 +122,40 @@ jobs:
           fi
           echo "Version bumped: ${BASE_VERSION} → ${CURRENT_VERSION}"
 
+      - name: Require release name (PR)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          # Every release carries its own codename. Read the base branch's name
+          # the same way the version gate does; a missing one is fine (the first
+          # release to use this), a reused one is not.
+          git fetch --depth=1 origin "$BASE_REF"
+          BASE_NAME=$(git show FETCH_HEAD:RELEASE_NAME 2>/dev/null || echo "")
+          if [ ! -f RELEASE_NAME ]; then
+            echo "::error file=RELEASE_NAME::RELEASE_NAME is missing — name this release before merging."
+            exit 1
+          fi
+          CURRENT_NAME=$(head -1 RELEASE_NAME | tr -d '\r')
+          if [ -z "$CURRENT_NAME" ]; then
+            echo "::error file=RELEASE_NAME::RELEASE_NAME is empty — name this release before merging."
+            exit 1
+          fi
+          if [ "$(wc -l < RELEASE_NAME)" -gt 1 ]; then
+            echo "::error file=RELEASE_NAME::RELEASE_NAME must be a single line."
+            exit 1
+          fi
+          # Short and punchy: the name shares a release title with the version.
+          if [ "${#CURRENT_NAME}" -gt 24 ]; then
+            echo "::error file=RELEASE_NAME::\"${CURRENT_NAME}\" is ${#CURRENT_NAME} characters — keep it under 24."
+            exit 1
+          fi
+          if [ "$BASE_NAME" = "$CURRENT_NAME" ]; then
+            echo "::error file=RELEASE_NAME::RELEASE_NAME is still \"${CURRENT_NAME}\" — give this release its own name."
+            exit 1
+          fi
+          echo "Release name: ${CURRENT_NAME}"
+
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -176,7 +210,18 @@ jobs:
 
       - name: Read version
         id: version
-        run: echo "tag=v$(cat VERSION)" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSION=$(cat VERSION)
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "number=${VERSION}" >> "$GITHUB_OUTPUT"
+          # Releases before RELEASE_NAME existed have no codename; fall back to
+          # the bare version rather than publishing a title with a dangling dash.
+          NAME=$(head -1 RELEASE_NAME 2>/dev/null | tr -d '\r' || echo "")
+          if [ -n "$NAME" ]; then
+            echo "title=AnNIXion ${VERSION} — ${NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "title=AnNIXion ${VERSION}" >> "$GITHUB_OUTPUT"
+          fi
 
       # On PRs: upload as a downloadable artifact so you can test the ISO
       # before merging. Find it under Actions → your run → Artifacts.
@@ -240,6 +285,6 @@ jobs:
           } > "$NOTES_FILE"
 
           gh release create "$TAG" \
-            --title "AnNIXion $TAG" \
+            --title "${{ steps.version.outputs.title }}" \
             --notes-file "$NOTES_FILE" \
             "${{ steps.iso.outputs.path }}"

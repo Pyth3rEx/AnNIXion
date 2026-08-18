@@ -23,6 +23,9 @@
   - Write for end users and operators, not reviewers.
   - Bump VERSION in the same PR (minor for features, patch for fixes, major for
     breaking changes) — CI rejects the merge if VERSION is unchanged.
+  - Name the release in RELEASE_NAME: one line, under 24 characters, its own
+    name every time. It becomes the release title — "AnNIXion 0.3.0 —
+    Killswitch" — so make it short and punchy. CI rejects a reused name.
 -->
 
 Short one-paragraph summary of what this release delivers and who it's for.

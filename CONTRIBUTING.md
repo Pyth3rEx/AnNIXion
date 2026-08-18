@@ -17,6 +17,10 @@ feature-branch  →  dev  →  (maintainer)  →  main
 - The maintainer merges `dev` → `main` and owns the release.
 - **Do not** bump the `VERSION` file yourself and **do not** open PRs directly
   against `main`. CI enforces a version bump only on the `dev` → `main` merge.
+- Each release also carries a codename in `RELEASE_NAME` — one line, under 24
+  characters, never reused. It forms the release title (`AnNIXion 0.3.0 —
+  Killswitch`), so keep it short and punchy. The maintainer sets it with the
+  version bump; CI rejects the release PR if it is missing, empty or unchanged.
 
 ---
 
