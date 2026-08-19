@@ -79,6 +79,32 @@ body:
     validations:
       required: false
 
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How urgent is this from where you sit? The maintainer may adjust it.
+      options:
+        - P0 — blocks installing, booting or an engagement, with no workaround
+        - P1 — a core workflow is broken or badly degraded
+        - P2 — annoyance, cosmetic, or nice to have
+    validations:
+      required: true
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      description: Your guess at the work involved. The maintainer may adjust it.
+      options:
+        - XS — a line or two
+        - S — a single file
+        - M — a new module, or several files
+        - L — cross-module work, or a new flake input
+        - XL — a phase of its own
+    validations:
+      required: false
+
   - type: checkboxes
     id: checklist
     attributes:
