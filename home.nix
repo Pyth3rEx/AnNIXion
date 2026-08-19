@@ -184,6 +184,7 @@ in
     ./home/fastfetch.nix
     ./home/zsh.nix
     ./home/file-visibility.nix
+    ./home/konsole.nix
   ];
 
   home.username = lib.mkDefault "operator";
