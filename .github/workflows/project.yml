@@ -1,0 +1,171 @@
+name: Project
+
+# Keeps the project board in step with issues and pull requests.
+#
+#   issue opened          → Backlog, labelled for triage, milestone assigned
+#   triage label removed  → Ready
+#   issue assigned        → In progress
+#   PR opened             → In progress, milestone assigned
+#   PR merged into dev    → In review, with the issues it closes
+#   PR merged into main   → Done, with everything else in review
+#
+# pull_request_target runs in the base repository so the project token is
+# available on pull requests from forks. No step checks out or runs PR code —
+# these jobs only call the API — so that exposure is deliberate and contained.
+
+on:
+  issues:
+    types: [opened, assigned, unlabeled]
+  pull_request_target:
+    types: [opened, closed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+env:
+  PROJECT_OWNER: Pyth3rEx
+  PROJECT_NUMBER: "3"
+  TRIAGE_LABEL: needs-triage
+
+jobs:
+  # ── New issue ─────────────────────────────────────────────────────────
+  issue-opened:
+    name: Issue opened
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Flag for triage
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: gh issue edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$TRIAGE_LABEL"
+
+      - name: Assign the upcoming milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.issue.number }}
+          HAS_MILESTONE: ${{ github.event.issue.milestone != null }}
+        run: .github/scripts/assign-milestone.sh
+
+      - name: Read priority and size from the form
+        id: form
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: .github/scripts/parse-form-fields.py >> "$GITHUB_OUTPUT"
+
+      - name: Add to the board
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.issue.node_id }}" \
+            --status Backlog \
+            ${{ steps.form.outputs.priority && format('--priority {0}', steps.form.outputs.priority) }} \
+            ${{ steps.form.outputs.size && format('--size {0}', steps.form.outputs.size) }} \
+            --only-if-empty
+
+  # ── Triaged ───────────────────────────────────────────────────────────
+  issue-triaged:
+    name: Issue triaged
+    if: >-
+      github.event_name == 'issues' && github.event.action == 'unlabeled'
+      && github.event.label.name == 'needs-triage'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Move to Ready
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+        # Guarded: an issue already being worked on must not be pulled back.
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.issue.node_id }}" \
+            --status Ready --only-if-status Backlog
+
+  # ── Assigned ──────────────────────────────────────────────────────────
+  issue-assigned:
+    name: Issue assigned
+    if: github.event_name == 'issues' && github.event.action == 'assigned'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Move to In progress
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.issue.node_id }}" \
+            --status "In progress"
+
+  # ── New pull request ──────────────────────────────────────────────────
+  pr-opened:
+    name: Pull request opened
+    if: github.event_name == 'pull_request_target' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assign the upcoming milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          HAS_MILESTONE: ${{ github.event.pull_request.milestone != null }}
+        run: .github/scripts/assign-milestone.sh
+
+      - name: Add to the board
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.pull_request.node_id }}" \
+            --status "In progress"
+
+  # ── Merged into dev ───────────────────────────────────────────────────
+  pr-merged-dev:
+    name: Merged into dev
+    if: >-
+      github.event_name == 'pull_request_target' && github.event.action == 'closed'
+      && github.event.pull_request.merged == true
+      && github.event.pull_request.base.ref == 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Move the pull request and its issues to In review
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          PR_NODE: ${{ github.event.pull_request.node_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          .github/scripts/project-sync.sh sync --content "$PR_NODE" --status "In review"
+          for issue in $(.github/scripts/closing-issues.sh "$PR_NUMBER"); do
+            .github/scripts/project-sync.sh sync --content "$issue" --status "In review"
+          done
+
+  # ── Merged into main ──────────────────────────────────────────────────
+  pr-merged-main:
+    name: Merged into main
+    if: >-
+      github.event_name == 'pull_request_target' && github.event.action == 'closed'
+      && github.event.pull_request.merged == true
+      && github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Move everything released to Done
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          PR_NODE: ${{ github.event.pull_request.node_id }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        # A release PR closes the issues its feature PRs referenced, so the
+        # sweep is what actually retires the work: everything that reached
+        # dev is in review, and merging to main ships it.
+        run: |
+          .github/scripts/project-sync.sh sync --content "$PR_NODE" --status Done
+          for issue in $(.github/scripts/closing-issues.sh "$PR_NUMBER"); do
+            .github/scripts/project-sync.sh sync --content "$issue" --status Done
+          done
+          .github/scripts/project-sync.sh sweep --from "In review" --to Done
