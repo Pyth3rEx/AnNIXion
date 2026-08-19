@@ -124,6 +124,55 @@ Before pushing your branch or opening a PR:
 
 ---
 
+## Project board automation
+
+`.github/workflows/project.yml` keeps the [project board](https://github.com/users/Pyth3rEx/projects/3)
+in step with issues and pull requests, so status is a consequence of the work
+rather than something to remember:
+
+| Event | Effect |
+|---|---|
+| Issue opened | Added to the board as **Backlog**, labelled `needs-triage`, put on the upcoming milestone. Priority and Size are read from the issue form. |
+| `needs-triage` removed | **Ready** — only if the issue is still in Backlog, so triaging something already underway does not pull it back |
+| Issue assigned | **In progress** |
+| PR opened | **In progress**, put on the upcoming milestone |
+| PR merged into `dev` | **In review**, along with every issue the PR closes |
+| PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review |
+
+That last rule is what retires the work. A feature PR merging into `dev` does
+not close its issues, because closing keywords only fire on the default branch;
+the release PR into `main` does. Everything that reached `dev` is in review by
+then, so the sweep moves the whole release to Done at once.
+
+Priority and Size come from dropdowns in the issue forms and are written **only
+when empty**, so a maintainer's correction on the board is never overwritten by
+a re-run.
+
+### Required secret
+
+Project boards are not repository objects, and the built-in `GITHUB_TOKEN`
+cannot write to them. The workflow reads `secrets.PROJECT_PAT` — a fine-grained
+personal access token with **read and write** on your projects. Repository-level
+work (labels, milestones) still uses `GITHUB_TOKEN`, so the PAT is only ever
+handed to the board steps.
+
+Without that secret the board jobs fail; nothing else in CI is affected.
+
+### Changing the board
+
+`.github/scripts/project-sync.sh` resolves field and option IDs **by name** at
+run time, so renaming the project or rebuilding it does not silently break the
+automation — a missing name fails loudly instead. Adding a status means adding
+its name to the workflow, not chasing IDs.
+
+```bash
+export GH_TOKEN=<token with project scope>
+.github/scripts/project-sync.sh sync --content <issue-node-id> --status Ready
+.github/scripts/project-sync.sh sweep --from "In review" --to Done
+```
+
+---
+
 ## Hardware configuration
 
 `hardware-configuration.nix` is machine-specific and gitignored. The disk layout
