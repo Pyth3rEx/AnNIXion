@@ -1,7 +1,7 @@
 name: Tool Request
 description: Request a security tool, OSINT utility, or SDR package to be added to AnNIXion.
 title: "[Tool]: "
-labels: ["tool-request"]
+labels: ["tool request"]
 body:
   - type: markdown
     attributes:

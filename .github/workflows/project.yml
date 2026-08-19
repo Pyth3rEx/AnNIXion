@@ -27,7 +27,7 @@ permissions:
 env:
   PROJECT_OWNER: Pyth3rEx
   PROJECT_NUMBER: "3"
-  TRIAGE_LABEL: needs-triage
+  TRIAGE_LABEL: needs triage
 
 jobs:
   # ── New issue ─────────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ jobs:
     name: Issue triaged
     if: >-
       github.event_name == 'issues' && github.event.action == 'unlabeled'
-      && github.event.label.name == 'needs-triage'
+      && github.event.label.name == 'needs triage'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
