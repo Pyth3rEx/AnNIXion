@@ -76,6 +76,7 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | `ll` | `ls -la` |
 | `grep` | `grep --color=auto` |
 | `cat` | `bat` (syntax-highlighted pager) |
+| `b` | Clears the screen and reprints the startup banner |
 
 ## Aliases — NixOS
 
@@ -233,5 +234,9 @@ Each new terminal session prints the AnNIXion ASCII banner followed by:
 - Hostname, current date/time, kernel version
 - All global IPv4 addresses — VPN interfaces highlighted in green
 
-The banner is defined at the end of `initContent` in `home/zsh.nix`.
+The banner is the `annixion-banner` function, defined at the end of `initContent`
+in `home/zsh.nix` and called once on startup. Run `annixion-banner` to reprint it
+in place, or `b` to clear the screen first — useful after a `clear` has scrolled
+the addresses away.
+
 To override it per-machine without touching the shared config, use `user/examples/zsh.nix`.

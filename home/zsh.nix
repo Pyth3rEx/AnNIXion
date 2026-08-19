@@ -57,6 +57,7 @@
       ll = "ls -la";
       grep = "grep --color=auto";
       cat = "bat";
+      b = "clear && annixion-banner";
 
       # ── NixOS rebuild ──────────────────────────────────────
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
@@ -134,35 +135,39 @@
         source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
       '')
 
-      # ── AnNIXion banner — last thing before the first prompt ──────────────
+      # ── AnNIXion banner — defined here, run before the first prompt ──────
       (lib.mkAfter ''
-        echo ""
-        echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
-        echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
-        echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
-        echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
-        echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
-        echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
-        echo ""
+        annixion-banner() {
+          echo ""
+          echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
+          echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
+          echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
+          echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
+          echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
+          echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
+          echo ""
 
-        printf "  \e[0;90mhost  \e[0m %s\n" "$(hostname)"
-        printf "  \e[0;90mdate  \e[0m %s\n" "$(date '+%A %d %B %Y  %H:%M')"
-        printf "  \e[0;90mkernel\e[0m %s\n" "$(uname -r)"
-        echo ""
+          printf "  \e[0;90mhost  \e[0m %s\n" "$(hostname)"
+          printf "  \e[0;90mdate  \e[0m %s\n" "$(date '+%A %d %B %Y  %H:%M')"
+          printf "  \e[0;90mkernel\e[0m %s\n" "$(uname -r)"
+          echo ""
 
-        # VPN interfaces highlighted in green.
-        ip -4 addr show scope global 2>/dev/null | awk '
-          /inet/ {
-            ip = $2
-            split($NF, a, "@")
-            iface = a[length(a)]
-            if (iface ~ /^(tun|wg|vpn|ppp)/)
-              printf "  \033[0;32mvpn   \033[0m \033[0;32m%-20s (%s) VPN\033[0m\n", ip, iface
-            else
-              printf "  \033[0;90mip    \033[0m %-20s (%s)\n", ip, iface
-          }
-        '
-        echo ""
+          # VPN interfaces highlighted in green.
+          ip -4 addr show scope global 2>/dev/null | awk '
+            /inet/ {
+              ip = $2
+              split($NF, a, "@")
+              iface = a[length(a)]
+              if (iface ~ /^(tun|wg|vpn|ppp)/)
+                printf "  \033[0;32mvpn   \033[0m \033[0;32m%-20s (%s) VPN\033[0m\n", ip, iface
+              else
+                printf "  \033[0;90mip    \033[0m %-20s (%s)\n", ip, iface
+            }
+          '
+          echo ""
+        }
+
+        annixion-banner
       '')
     ];
   };
