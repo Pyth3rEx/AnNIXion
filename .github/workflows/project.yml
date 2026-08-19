@@ -134,14 +134,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Find the issues this pull request closes
+        id: closes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "ids=$(.github/scripts/closing-issues.sh "$PR_NUMBER" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+
       - name: Move the pull request and its issues to In review
         env:
           GH_TOKEN: ${{ secrets.PROJECT_PAT }}
           PR_NODE: ${{ github.event.pull_request.node_id }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_IDS: ${{ steps.closes.outputs.ids }}
         run: |
           .github/scripts/project-sync.sh sync --content "$PR_NODE" --status "In review"
-          for issue in $(.github/scripts/closing-issues.sh "$PR_NUMBER"); do
+          for issue in $ISSUE_IDS; do
             .github/scripts/project-sync.sh sync --content "$issue" --status "In review"
           done
 
@@ -155,17 +162,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Find the issues this pull request closes
+        id: closes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "ids=$(.github/scripts/closing-issues.sh "$PR_NUMBER" | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+
       - name: Move everything released to Done
         env:
           GH_TOKEN: ${{ secrets.PROJECT_PAT }}
           PR_NODE: ${{ github.event.pull_request.node_id }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_IDS: ${{ steps.closes.outputs.ids }}
         # A release PR closes the issues its feature PRs referenced, so the
         # sweep is what actually retires the work: everything that reached
         # dev is in review, and merging to main ships it.
         run: |
           .github/scripts/project-sync.sh sync --content "$PR_NODE" --status Done
-          for issue in $(.github/scripts/closing-issues.sh "$PR_NUMBER"); do
+          for issue in $ISSUE_IDS; do
             .github/scripts/project-sync.sh sync --content "$issue" --status Done
           done
           .github/scripts/project-sync.sh sweep --from "In review" --to Done
