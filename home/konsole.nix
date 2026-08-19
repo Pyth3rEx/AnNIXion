@@ -1,5 +1,4 @@
 # home/konsole.nix
-#
 {
   config,
   lib,
