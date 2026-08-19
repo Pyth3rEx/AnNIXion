@@ -151,10 +151,17 @@ a re-run.
 ### Required secret
 
 Project boards are not repository objects, and the built-in `GITHUB_TOKEN`
-cannot write to them. The workflow reads `secrets.PROJECT_PAT` — a fine-grained
-personal access token with **read and write** on your projects. Repository-level
-work (labels, milestones) still uses `GITHUB_TOKEN`, so the PAT is only ever
-handed to the board steps.
+cannot write to them. The workflow reads `secrets.PROJECT_PAT`.
+
+It has to be a **classic** token with the `project` scope. Fine-grained tokens
+carry no Projects permission for a personal account — that permission exists
+only for organization-owned projects — so a fine-grained token authenticates and
+then fails every board mutation. Moving the board to an organization is the only
+way to use a fine-grained token here.
+
+`project` is the sole scope required. Everything that touches the repository —
+labels, milestones, resolving the issues a PR closes — runs under `GITHUB_TOKEN`
+instead, so the classic token's reach stops at the board.
 
 Without that secret the board jobs fail; nothing else in CI is affected.
 
