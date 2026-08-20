@@ -143,10 +143,10 @@ rather than something to remember:
 
 | Event | Effect |
 |---|---|
-| Issue opened | Added to the board as **Backlog**, labelled `needs triage`, put on the upcoming milestone. Priority and Size are read from the issue form. |
+| Issue opened | Added to the board as **Backlog**, labelled `needs triage`, put on the furthest milestone. Priority and Size are read from the issue form. |
 | `needs triage` removed | **Ready** — only if the issue is still in Backlog, so triaging something already underway does not pull it back |
 | Issue assigned | **In progress** |
-| PR opened | **In progress**, put on the upcoming milestone |
+| PR opened | **In progress**, put on the furthest milestone |
 | PR merged into `dev` | **In review**, along with every issue the PR closes |
 | PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review |
 
