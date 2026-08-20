@@ -2,9 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "CI: L0 \u2014 Lint",
+      "label": "CI: L0 \u2014 Lint + script tests",
       "type": "shell",
-      "command": "nix develop --command bash .github/scripts/lint.sh",
+      "command": "nix develop --command bash -c '.github/scripts/lint.sh && tests/milestone.sh'",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -76,7 +76,7 @@
     {
       "label": "CI: Full (L0 + L1)",
       "dependsOn": [
-        "CI: L0 \u2014 Lint",
+        "CI: L0 \u2014 Lint + script tests",
         "CI: L1 \u2014 Flake Check"
       ],
       "dependsOrder": "parallel",

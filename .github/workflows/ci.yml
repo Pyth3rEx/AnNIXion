@@ -30,6 +30,10 @@ jobs:
       - name: "[L0] Lint"
         run: nix develop --command bash .github/scripts/lint.sh
 
+      # Fixture tests for the scripts in .github/scripts. No network, no build.
+      - name: "[L0] Script tests"
+        run: nix develop --command bash tests/milestone.sh
+
   check:
     name: Nix CI
     runs-on: ubuntu-latest
