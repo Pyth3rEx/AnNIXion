@@ -2,7 +2,19 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "CI: L1 — Flake Check",
+      "label": "CI: L0 \u2014 Lint",
+      "type": "shell",
+      "command": "nix develop --command bash .github/scripts/lint.sh",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "CI: L1 \u2014 Flake Check",
       "type": "shell",
       "command": "nix flake check --no-build",
       "group": "test",
@@ -14,7 +26,7 @@
       "problemMatcher": []
     },
     {
-      "label": "CI: L2 — System Build",
+      "label": "CI: L2 \u2014 System Build",
       "type": "shell",
       "command": "nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --print-build-logs --no-link",
       "group": "build",
@@ -26,33 +38,9 @@
       "problemMatcher": []
     },
     {
-      "label": "CI: L3 — VM Tests",
+      "label": "CI: L3 \u2014 VM Tests",
       "type": "shell",
       "command": "nix build .#checks.x86_64-linux.boot .#checks.x86_64-linux.security-tools --print-build-logs --no-link",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Lint: statix",
-      "type": "shell",
-      "command": "statix check .",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": false
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Lint: deadnix",
-      "type": "shell",
-      "command": "deadnix .",
       "group": "test",
       "presentation": {
         "reveal": "always",
@@ -86,11 +74,10 @@
       "problemMatcher": []
     },
     {
-      "label": "CI: Full (L1 + Lint)",
+      "label": "CI: Full (L0 + L1)",
       "dependsOn": [
-        "CI: L1 — Flake Check",
-        "Lint: statix",
-        "Lint: deadnix"
+        "CI: L0 \u2014 Lint",
+        "CI: L1 \u2014 Flake Check"
       ],
       "dependsOrder": "parallel",
       "group": {

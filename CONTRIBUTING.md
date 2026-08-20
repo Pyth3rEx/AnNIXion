@@ -44,14 +44,15 @@ gitignored, and CI rejects PRs that add it.
 
 ## Before you push
 
-Run at least L1 + lint locally (see [docs/dev.md](docs/dev.md) for all levels):
+Run at least L0 + L1 locally (see [docs/dev.md](docs/dev.md) for all levels):
 
 ```bash
+.github/scripts/lint.sh        # L0 — nixfmt, statix, deadnix, shellcheck
 nix flake check --no-build     # L1 — syntax / type / references
-statix check .                 # anti-pattern linter
-deadnix .                      # unused bindings
-nixfmt --check .               # formatting (run `nixfmt .` to fix)
 ```
+
+L0 is the same script CI runs as the **Lint** check, so a clean run locally
+means a clean run there. Run `nixfmt <file>` to apply formatting.
 
 Building the full system closure (L2) before opening a PR is recommended:
 
@@ -59,7 +60,7 @@ Building the full system closure (L2) before opening a PR is recommended:
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link
 ```
 
-CI runs L1–L3 on every PR, whatever the target branch. The ISO build, the size
+CI runs L0–L3 on every PR, whatever the target branch. The ISO build, the size
 gate and the version/release-name gates only run on PRs into `main` and on
 pushes to `main`.
 

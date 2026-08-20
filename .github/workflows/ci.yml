@@ -8,6 +8,28 @@ on:
     branches: [main]
 
 jobs:
+  # Lint is its own job so it reports separately from the build and finishes in
+  # about a minute, rather than waiting behind the closure build.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # nixfmt, statix, deadnix and shellcheck, all from the dev shell so this
+      # matches what `nix develop` gives a contributor locally. Findings are
+      # emitted as annotations and land on the diff.
+      - name: "[L0] Lint"
+        run: nix develop --command bash .github/scripts/lint.sh
+
   check:
     name: Nix CI
     runs-on: ubuntu-latest
