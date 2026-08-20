@@ -1,8 +1,6 @@
 # home.nix — the operator user's environment.
 # All mkDefault, so user/home.nix wins without lib.mkForce.
 {
-  inputs,
-  config,
   lib,
   pkgs,
   ...

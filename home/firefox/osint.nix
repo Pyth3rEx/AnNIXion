@@ -1,7 +1,6 @@
 # OSINT profile — VPN-enforced, investigation engines and fingerprint evasion.
 {
   inputs,
-  config,
   lib,
   pkgs,
   ...

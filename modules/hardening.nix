@@ -3,7 +3,6 @@
 # user/configuration.nix (100), so restoring anything is one line.
 # What is disabled, and what is deliberately left alone: docs/hardening.md
 {
-  config,
   lib,
   pkgs,
   ...

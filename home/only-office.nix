@@ -1,5 +1,5 @@
 # OnlyOffice document editor.
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   programs.onlyoffice = {

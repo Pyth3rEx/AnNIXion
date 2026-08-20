@@ -1,6 +1,5 @@
 # Desktop session: Plasma 6 on X11, SDDM, KDE extras.
 {
-  config,
   lib,
   pkgs,
   ...

@@ -1,7 +1,6 @@
 # Puppet Master profile — VPN-enforced, persona and container management.
 {
   inputs,
-  config,
   lib,
   pkgs,
   ...

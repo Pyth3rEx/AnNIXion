@@ -29,7 +29,6 @@
       nixpkgs,
       home-manager,
       plasma-manager,
-      firefox-addons,
       ...
     }@inputs:
     let
@@ -86,7 +85,6 @@
         # All mkDefault, so user/configuration.nix overrides freely.
         (
           {
-            config,
             lib,
             pkgs,
             ...

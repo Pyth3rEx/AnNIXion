@@ -2,7 +2,7 @@
   name = "annixion-vpn-enforcement";
 
   nodes.machine =
-    { pkgs, lib, ... }:
+    { pkgs, ... }:
     {
       imports = [ ../modules/vpn-enforcement.nix ];
 

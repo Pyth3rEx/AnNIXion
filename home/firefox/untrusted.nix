@@ -1,7 +1,6 @@
 # Unsafe Browser profile — clearnet fallback, hardened, no proxy.
 {
   inputs,
-  config,
   lib,
   pkgs,
   ...

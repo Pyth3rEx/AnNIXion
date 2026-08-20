@@ -1,10 +1,5 @@
 # home/konsole.nix
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+_:
 
 {
   programs.konsole = {
