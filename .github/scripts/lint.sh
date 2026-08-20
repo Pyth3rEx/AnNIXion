@@ -2,7 +2,9 @@
 # Runs every linter, annotates each finding, and writes a summary table.
 # Errors and warnings fail the run; info-level findings are reported only.
 # A tool that cannot run counts as an error — silence must not read as clean.
-# Set LINT_SUMMARY to a path to capture the table as markdown.
+# Set LINT_SUMMARY to a path to capture the table as markdown, LINT_COUNTS to
+# record the tallies, and LINT_BASELINE to a counts file from another revision
+# to show how this one moves each number.
 set -uo pipefail
 
 cd "$(dirname "$0")/../.." || exit 1
@@ -17,6 +19,34 @@ done
 
 ERRLOG=$(mktemp)
 trap 'rm -f "$ERRLOG"' EXIT
+
+declare -A BASE
+if [ -n "${LINT_BASELINE:-}" ] && [ -f "${LINT_BASELINE}" ]; then
+  while read -r tool e w i; do
+    [ -n "$tool" ] || continue
+    BASE[$tool.error]=$e
+    BASE[$tool.warning]=$w
+    BASE[$tool.info]=$i
+  done <"$LINT_BASELINE"
+fi
+
+# "2 (+1)" when the count moved against the baseline, plain "2" otherwise.
+delta() {
+  local key=$1 cur=$2 base d
+  base=${BASE[$key]:-}
+  if [ -z "$base" ]; then
+    printf '%s' "$cur"
+    return
+  fi
+  d=$((cur - base))
+  if [ "$d" -gt 0 ]; then
+    printf '%s (+%s)' "$cur" "$d"
+  elif [ "$d" -lt 0 ]; then
+    printf '%s (%s)' "$cur" "$d"
+  else
+    printf '%s' "$cur"
+  fi
+}
 
 # Actions understands error, warning and notice only; info maps to notice.
 annotate() {
@@ -137,6 +167,9 @@ fi
 
 section nix-eval
 if [ "${LINT_SKIP_EVAL:-0}" = 1 ]; then
+  # Without a measurement there is nothing to compare, so drop the baseline
+  # rather than report a fall to zero.
+  unset 'BASE[nix-eval.error]' 'BASE[nix-eval.warning]' 'BASE[nix-eval.info]'
   echo "skipped"
 else
   # Module-system warnings are emitted only on a cold evaluation, so the eval
@@ -170,11 +203,26 @@ done
 
 section summary
 printf '%s Nix files, %s shell files\n\n' "${#nix_files[@]}" "${#sh_files[@]}"
-printf '%-12s %7s %9s %6s\n' tool errors warnings info
+printf '%-12s %12s %12s %12s\n' tool errors warnings info
 for t in "${TOOLS[@]}"; do
-  printf '%-12s %7s %9s %6s\n' "$t" "${ERR[$t]}" "${WARN[$t]}" "${INFO[$t]}"
+  printf '%-12s %12s %12s %12s\n' "$t" \
+    "$(delta "$t.error" "${ERR[$t]}")" \
+    "$(delta "$t.warning" "${WARN[$t]}")" \
+    "$(delta "$t.info" "${INFO[$t]}")"
 done
-printf '%-12s %7s %9s %6s\n' total "$total_err" "$total_warn" "$total_info"
+printf '%-12s %12s %12s %12s\n' total \
+  "$(delta total.error "$total_err")" \
+  "$(delta total.warning "$total_warn")" \
+  "$(delta total.info "$total_info")"
+
+if [ -n "${LINT_COUNTS:-}" ]; then
+  {
+    for t in "${TOOLS[@]}"; do
+      printf '%s %s %s %s\n' "$t" "${ERR[$t]}" "${WARN[$t]}" "${INFO[$t]}"
+    done
+    printf 'total %s %s %s\n' "$total_err" "$total_warn" "$total_info"
+  } >"$LINT_COUNTS"
+fi
 
 if [ -n "${LINT_SUMMARY:-}" ]; then
   {
@@ -187,10 +235,16 @@ if [ -n "${LINT_SUMMARY:-}" ]; then
     fi
     printf '| Tool | Errors | Warnings | Info |\n|---|--:|--:|--:|\n'
     for t in "${TOOLS[@]}"; do
-      printf '| %s | %s | %s | %s |\n' "$t" "${ERR[$t]}" "${WARN[$t]}" "${INFO[$t]}"
+      printf '| %s | %s | %s | %s |\n' "$t" \
+        "$(delta "$t.error" "${ERR[$t]}")" \
+        "$(delta "$t.warning" "${WARN[$t]}")" \
+        "$(delta "$t.info" "${INFO[$t]}")"
     done
     printf '| **Total** | **%s** | **%s** | **%s** |\n\n' \
-      "$total_err" "$total_warn" "$total_info"
+      "$(delta total.error "$total_err")" \
+      "$(delta total.warning "$total_warn")" \
+      "$(delta total.info "$total_info")"
+    [ "${#BASE[@]}" -gt 0 ] && printf 'Change against the base branch in brackets. '
     printf 'Scanned %s Nix files and %s shell files.\n' \
       "${#nix_files[@]}" "${#sh_files[@]}"
   } >"$LINT_SUMMARY"
