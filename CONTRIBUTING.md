@@ -48,6 +48,7 @@ Run at least L0 + L1 locally (see [docs/dev.md](docs/dev.md) for all levels):
 
 ```bash
 .github/scripts/lint.sh        # L0 — nixfmt, statix, deadnix, shellcheck
+tests/milestone.sh             # L0 — script fixture tests
 nix flake check --no-build     # L1 — syntax / type / references
 ```
 

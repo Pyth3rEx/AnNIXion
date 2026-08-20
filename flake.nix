@@ -230,6 +230,8 @@
           statix
           deadnix
           shellcheck
+          # project-sync.sh and the milestone tests parse JSON with it.
+          jq
           nil
           nix-output-monitor
         ];

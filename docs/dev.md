@@ -26,7 +26,7 @@ cd ~/.dotfiles
 nix develop
 ```
 
-The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
+The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `jq`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
 
 If you are running AnNIXion, your real `hardware-configuration.nix` is already present and the `AnNIXion` configuration is offered alongside it.
 
@@ -36,7 +36,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 
 | Level | Command | What it checks | Typical runtime |
 |---|---|---|---|
-| **L0** | `.github/scripts/lint.sh` | Formatting, Nix anti-patterns, dead code, shell bugs | ~30 s |
+| **L0** | `.github/scripts/lint.sh`, `tests/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, script fixtures | ~30 s |
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
@@ -69,6 +69,21 @@ Two details worth knowing if you run the tools by hand:
   or `services` block merged into one attribute set; the tree deliberately
   groups them under their own section headers instead.
 
+**Script tests**
+
+```bash
+tests/milestone.sh
+```
+
+Fixture tests for `.github/scripts/assign-milestone.sh`, covering which
+milestone new work lands on. They drive the real script through its `--select`
+mode rather than reimplementing the selection, so they cannot drift from it.
+No network, no GitHub, no Nix build — they run in well under a second, and CI
+runs them in the same **Lint** job.
+
+The VM tests under `tests/*.nix` are a different thing: those are nixosTests
+built by L1 and L3.
+
 L0 and L1 before every push. L2 before opening a PR. L3 is optional locally —
 CI runs it on every PR. The ISO build and its size gate run only on PRs into
 `main` and on pushes to `main`.
@@ -81,7 +96,7 @@ Open `~/.dotfiles` as the workspace root in VSCodium. The repo ships a `.vscode/
 
 | Shortcut / action | What runs |
 |---|---|
-| `Ctrl+Shift+B` | **Full check** — L0 lint + L1 in parallel |
+| `Ctrl+Shift+B` | **Full check** — L0 lint + script tests + L1 in parallel |
 | `Tasks: Run Task` → `CI: L2 — System Build` | Full system closure |
 | `Tasks: Run Task` → `CI: L3 — VM Tests` | VM tests (requires KVM) |
 | `Tasks: Run Task` → `Format: apply` | Auto-format all Nix files |
@@ -102,8 +117,9 @@ Same commands, without VSCodium:
 # L1 — fast, always run before pushing
 nix flake check --no-build
 
-# L0 — every linter, same script CI runs
+# L0 — every linter, plus the script fixture tests
 .github/scripts/lint.sh
+tests/milestone.sh
 
 # L2 — recommended before opening a PR
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
@@ -131,6 +147,7 @@ Before pushing your branch or opening a PR:
 
 - [ ] `nix flake check --no-build` passes
 - [ ] `.github/scripts/lint.sh` clean (CI runs it as the **Lint** check)
+- [ ] `tests/milestone.sh` passes
 - [ ] `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link` succeeds (recommended)
 
 ---
