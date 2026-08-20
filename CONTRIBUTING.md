@@ -150,7 +150,8 @@ drive it.
 Immediately, without anyone touching it:
 
 - It is labelled **`needs triage`** and lands on the board in **Backlog**.
-- It is put on the upcoming milestone.
+- It is put on the **furthest** open milestone — with 0.4.0 and 0.5.0 open,
+  new work lands on 0.5.0, so the current release stays as scoped.
 - **Priority** and **Size** are read from the form and written to the board —
   but **only when those fields are empty**, so a maintainer's correction is
   never overwritten by a later re-run.

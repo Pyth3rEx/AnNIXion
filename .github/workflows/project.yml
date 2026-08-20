@@ -44,7 +44,7 @@ jobs:
           NUMBER: ${{ github.event.issue.number }}
         run: gh issue edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$TRIAGE_LABEL"
 
-      - name: Assign the upcoming milestone
+      - name: Assign the furthest milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
@@ -109,7 +109,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Assign the upcoming milestone
+      - name: Assign the furthest milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.pull_request.number }}
