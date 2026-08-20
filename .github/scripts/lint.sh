@@ -120,7 +120,9 @@ else
 fi
 
 section deadnix
-dead_json=$(deadnix --output-format json . 2>"$ERRLOG")
+# user/ is the install profile a person edits by hand: the full
+# { config, lib, pkgs, ... } head is there so the next edit has what it needs.
+dead_json=$(deadnix --exclude user --output-format json . 2>"$ERRLOG")
 rc=$?
 dead_out=$(jq -r '.file as $f | .results[] | "\($f)\t\(.line)\t\(.column)\t\(.message)"' <<<"$dead_json" 2>/dev/null)
 if [ -s "$ERRLOG" ]; then
@@ -128,8 +130,8 @@ if [ -s "$ERRLOG" ]; then
 elif [ -n "$dead_out" ]; then
   while IFS=$'\t' read -r file ln col msg; do
     [ -z "$file" ] && continue
-    # The { config, lib, pkgs, ... } module signature is convention, not a
-    # defect, so it is reported without blocking. Other dead code blocks.
+    # An unused argument is untidy, not broken, so it is reported without
+    # blocking. Other dead code blocks.
     case $msg in
       "Unused lambda pattern"*) level=info ;;
       *) level=warning ;;
