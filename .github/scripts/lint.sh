@@ -1,47 +1,60 @@
 #!/usr/bin/env bash
-# Runs every linter and reports each finding as a GitHub annotation.
-#
-# Runs the same way locally and in CI. Every tool runs even if an earlier one
-# fails, so one pass reports everything rather than one problem at a time.
+# Runs every linter, annotates each finding, and writes a summary table.
+# Errors and warnings fail the run; info-level findings are reported only.
+# Set LINT_SUMMARY to a path to capture the table as markdown.
 set -uo pipefail
 
 cd "$(dirname "$0")/../.." || exit 1
 
-status=0
+TOOLS=(nixfmt statix deadnix shellcheck)
+declare -A ERR WARN INFO
+for t in "${TOOLS[@]}"; do
+  ERR[$t]=0
+  WARN[$t]=0
+  INFO[$t]=0
+done
 
-# GitHub renders these on the diff. Outside Actions they are just log lines.
+# Actions understands error, warning and notice only; info maps to notice.
 annotate() {
-  printf '::error file=%s,line=%s,col=%s,title=%s::%s\n' "$1" "$2" "$3" "$4" "$5"
+  local level=$1
+  [ "$level" = info ] && level=notice
+  printf '::%s file=%s,line=%s,col=%s,title=%s::%s\n' "$level" "$2" "$3" "$4" "$5" "$6"
 }
 
 section() {
-  printf '\n\033[1m── %s ─────────────────────────────────\033[0m\n' "$1"
+  printf '\n\033[1m── %s ───────────────────────────\033[0m\n' "$1"
+}
+
+count() {
+  local tool=$1 level=$2
+  case $level in
+    error) ERR[$tool]=$((ERR[$tool] + 1)) ;;
+    warning) WARN[$tool]=$((WARN[$tool] + 1)) ;;
+    *) INFO[$tool]=$((INFO[$tool] + 1)) ;;
+  esac
 }
 
 mapfile -t nix_files < <(git ls-files '*.nix')
 mapfile -t sh_files < <(git ls-files '*.sh')
-# The installer has no extension; git tracks it executable.
+# The installer carries no extension.
 [ -f scripts/annixion-install ] && sh_files+=(scripts/annixion-install)
 
-# ── nixfmt ───────────────────────────────────────────────────────────────────
-# Passing a directory is deprecated, so the file list is explicit.
-section "nixfmt"
-if unformatted=$(nixfmt --check "${nix_files[@]}" 2>&1 >/dev/null); then
+section nixfmt
+if unformatted=$(nixfmt --check "${nix_files[@]}" 2>&1 >/dev/null) && [ -z "$unformatted" ]; then
   echo "formatting ok"
 else
   echo "$unformatted"
-  # nixfmt reports one path per line; there is no line number to point at.
   while IFS= read -r line; do
     file=${line%%:*}
-    [ -f "$file" ] && annotate "$file" 1 1 "nixfmt" "Not formatted. Run 'nixfmt $file'."
+    [ -f "$file" ] || continue
+    count nixfmt error
+    annotate error "$file" 1 1 nixfmt "Not formatted. Run 'nixfmt $file'."
   done <<<"$unformatted"
-  status=1
 fi
 
-# ── statix ───────────────────────────────────────────────────────────────────
-# Lints disabled in statix.toml are excluded here too; it reads the config.
-section "statix"
-if statix_out=$(statix check . --format errfmt 2>/dev/null); then
+section statix
+statix_out=$(statix check . --format errfmt 2>/dev/null)
+if [ -z "$statix_out" ]; then
   echo "no anti-patterns"
 else
   echo "$statix_out"
@@ -49,53 +62,73 @@ else
   while IFS= read -r line; do
     [ -z "$line" ] && continue
     file=${line%%>*}
-    rest=${line#*>}
-    IFS=: read -r ln col sev code msg <<<"$rest"
-    annotate "${file#./}" "$ln" "$col" "statix ${sev}${code}" "$msg"
+    IFS=: read -r ln col sev code msg <<<"${line#*>}"
+    [ "$sev" = E ] && level=error || level=warning
+    count statix "$level"
+    annotate "$level" "${file#./}" "$ln" "$col" "statix ${sev}${code}" "$msg"
   done <<<"$statix_out"
-  status=1
 fi
 
-# ── deadnix ──────────────────────────────────────────────────────────────────
-# --fail is required: deadnix exits 0 even when it finds dead code.
-# -L keeps the conventional { config, lib, pkgs, ... } module signature.
-section "deadnix"
-if deadnix --fail --no-lambda-pattern-names . >/dev/null 2>&1; then
+section deadnix
+dead_out=$(deadnix --no-lambda-pattern-names --output-format json . 2>/dev/null |
+  jq -r '.file as $f | .results[] | "\($f)\t\(.line)\t\(.column)\t\(.message)"')
+if [ -z "$dead_out" ]; then
   echo "no dead code"
 else
-  deadnix --no-lambda-pattern-names .
-  deadnix --no-lambda-pattern-names --output-format json . 2>/dev/null |
-    python3 -c '
-import json, sys
-for line in sys.stdin:
-    line = line.strip()
-    if not line.startswith("{"):
-        continue
-    doc = json.loads(line)
-    for r in doc.get("results", []):
-        print("%s\t%s\t%s\t%s" % (doc["file"].lstrip("./"), r["line"], r["column"], r["message"]))
-' | while IFS=$'\t' read -r file ln col msg; do
-    annotate "$file" "$ln" "$col" "deadnix" "$msg"
-  done
-  status=1
+  while IFS=$'\t' read -r file ln col msg; do
+    [ -z "$file" ] && continue
+    printf '%s:%s:%s: %s\n' "${file#./}" "$ln" "$col" "$msg"
+    count deadnix warning
+    annotate warning "${file#./}" "$ln" "$col" deadnix "$msg"
+  done <<<"$dead_out"
 fi
 
-# ── shellcheck ───────────────────────────────────────────────────────────────
-section "shellcheck"
-if shellcheck --severity=style "${sh_files[@]}" >/dev/null 2>&1; then
+section shellcheck
+sc_out=$(shellcheck --severity=style --format=json "${sh_files[@]}" 2>/dev/null |
+  jq -r '.[] | "\(.file)\t\(.line)\t\(.column)\t\(.level)\t[SC\(.code)] \(.message)"')
+if [ -z "$sc_out" ]; then
   echo "no findings"
 else
-  shellcheck --severity=style "${sh_files[@]}"
-  # path:line:col: level: message [SCnnnn]
-  shellcheck --severity=style --format=gcc "${sh_files[@]}" 2>/dev/null |
-    while IFS= read -r line; do
-      [ -z "$line" ] && continue
-      IFS=: read -r file ln col rest <<<"$line"
-      annotate "$file" "$ln" "$col" "shellcheck" "${rest# }"
-    done
-  status=1
+  while IFS=$'\t' read -r file ln col level msg; do
+    [ -z "$file" ] && continue
+    printf '%s:%s:%s: %s: %s\n' "${file#./}" "$ln" "$col" "$level" "$msg"
+    [ "$level" = style ] && level=info
+    count shellcheck "$level"
+    annotate "$level" "${file#./}" "$ln" "$col" shellcheck "$msg"
+  done <<<"$sc_out"
 fi
 
-section "result"
-[ "$status" -eq 0 ] && echo "all linters clean" || echo "linters reported findings"
-exit "$status"
+total_err=0 total_warn=0 total_info=0
+for t in "${TOOLS[@]}"; do
+  total_err=$((total_err + ERR[$t]))
+  total_warn=$((total_warn + WARN[$t]))
+  total_info=$((total_info + INFO[$t]))
+done
+
+section summary
+printf '%-12s %7s %9s %6s\n' tool errors warnings info
+for t in "${TOOLS[@]}"; do
+  printf '%-12s %7s %9s %6s\n' "$t" "${ERR[$t]}" "${WARN[$t]}" "${INFO[$t]}"
+done
+printf '%-12s %7s %9s %6s\n' total "$total_err" "$total_warn" "$total_info"
+
+if [ -n "${LINT_SUMMARY:-}" ]; then
+  {
+    if [ "$total_err" -eq 0 ] && [ "$total_warn" -eq 0 ]; then
+      printf '**Clean** — no errors or warnings'
+      [ "$total_info" -gt 0 ] && printf ', %s info-level finding(s)' "$total_info"
+      printf '.\n\n'
+    else
+      printf '**%s error(s), %s warning(s)** across %s files.\n\n' \
+        "$total_err" "$total_warn" "$((${#nix_files[@]} + ${#sh_files[@]}))"
+    fi
+    printf '| Tool | Errors | Warnings | Info |\n|---|--:|--:|--:|\n'
+    for t in "${TOOLS[@]}"; do
+      printf '| %s | %s | %s | %s |\n' "$t" "${ERR[$t]}" "${WARN[$t]}" "${INFO[$t]}"
+    done
+    printf '| **Total** | **%s** | **%s** | **%s** |\n' \
+      "$total_err" "$total_warn" "$total_info"
+  } >"$LINT_SUMMARY"
+fi
+
+[ "$total_err" -eq 0 ] && [ "$total_warn" -eq 0 ]

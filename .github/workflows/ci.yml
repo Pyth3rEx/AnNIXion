@@ -13,6 +13,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v6
@@ -24,15 +27,25 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      # nixfmt, statix, deadnix and shellcheck, all from the dev shell so this
-      # matches what `nix develop` gives a contributor locally. Findings are
-      # emitted as annotations and land on the diff.
+      # Same tools the dev shell gives a contributor locally.
       - name: "[L0] Lint"
+        env:
+          LINT_SUMMARY: ${{ runner.temp }}/lint-summary.md
         run: nix develop --command bash .github/scripts/lint.sh
 
-      # Fixture tests for the scripts in .github/scripts. No network, no build.
       - name: "[L0] Script tests"
         run: nix develop --command bash tests/milestone.sh
+
+      # Runs even when linting failed — that is when the summary matters most.
+      # A fork's token cannot comment, so a failure here must not fail the job.
+      - name: Post code quality summary
+        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          SUMMARY: ${{ runner.temp }}/lint-summary.md
+        run: bash .github/scripts/lint-comment.sh
 
   check:
     name: Nix CI

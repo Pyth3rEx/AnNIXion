@@ -100,6 +100,35 @@ python3 .github/scripts/check-release-form.py my-draft.md
 
 ---
 
+## Comments
+
+Keep them minimal, and let the code carry what it can.
+
+- **A short line where the reason is not obvious.** Prefer explaining *why*
+  something is the way it is over restating *what* the line does.
+- **No multi-line comment blocks.** If an explanation needs a paragraph, it
+  belongs in `docs/`, and the code gets a one-line pointer to it.
+- **No banner headers inside functions**, no commented-out code, no changelog
+  or attribution comments — that is what `git log` is for.
+- **Section headers** (`# ── Networking ──`) are the exception. The Nix modules
+  use them to group related settings, and that grouping is deliberate enough
+  that `statix.toml` disables the lint which would flatten it.
+
+A comment earns its place by saving the next reader a detour. One that repeats
+the code costs a line and pays nothing, and drifts out of date the first time
+the code changes without it.
+
+```nix
+# Good — the reason is not visible from the code.
+environment.etc.hosts.mode = "0700"; # Makes /etc/hosts writable.
+
+# Noise — the code already says this.
+# Set the hostname to AnNIXion
+networking.hostName = "AnNIXion";
+```
+
+---
+
 ## Adding tools
 
 System-wide security tools live in `modules/security-tools.nix`. Add the

@@ -59,6 +59,11 @@ files, keeps going after the first failure so one pass reports everything, and
 prints each finding as a GitHub annotation — in CI those land on the pull
 request diff. Run `nixfmt <file>` to apply formatting.
 
+**Errors and warnings fail the run. Info-level findings are reported but do
+not.** The tail of the output is a per-tool table of the three counts; on a
+pull request the same table is posted as a single comment that updates in
+place, so the state of a branch is visible without opening the log.
+
 Two details worth knowing if you run the tools by hand:
 
 - **`deadnix` exits 0 even when it finds dead code.** It needs `--fail` to gate
