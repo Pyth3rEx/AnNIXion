@@ -7,7 +7,7 @@ set -uo pipefail
 
 cd "$(dirname "$0")/../.." || exit 1
 
-TOOLS=(nixfmt statix deadnix shellcheck)
+TOOLS=(nixfmt statix deadnix shellcheck nix-eval)
 declare -A ERR WARN INFO
 for t in "${TOOLS[@]}"; do
   ERR[$t]=0
@@ -90,7 +90,7 @@ else
 fi
 
 section deadnix
-dead_json=$(deadnix --no-lambda-pattern-names --output-format json . 2>"$ERRLOG")
+dead_json=$(deadnix --output-format json . 2>"$ERRLOG")
 rc=$?
 dead_out=$(jq -r '.file as $f | .results[] | "\($f)\t\(.line)\t\(.column)\t\(.message)"' <<<"$dead_json" 2>/dev/null)
 if [ -s "$ERRLOG" ]; then
@@ -98,9 +98,15 @@ if [ -s "$ERRLOG" ]; then
 elif [ -n "$dead_out" ]; then
   while IFS=$'\t' read -r file ln col msg; do
     [ -z "$file" ] && continue
-    printf '%s:%s:%s: %s\n' "${file#./}" "$ln" "$col" "$msg"
-    count deadnix warning
-    annotate warning "${file#./}" "$ln" "$col" deadnix "$msg"
+    # The { config, lib, pkgs, ... } module signature is convention, not a
+    # defect, so it is reported without blocking. Other dead code blocks.
+    case $msg in
+      "Unused lambda pattern"*) level=info ;;
+      *) level=warning ;;
+    esac
+    printf '%s:%s:%s: %s: %s\n' "${file#./}" "$ln" "$col" "$level" "$msg"
+    count deadnix "$level"
+    annotate "$level" "${file#./}" "$ln" "$col" deadnix "$msg"
   done <<<"$dead_out"
 elif [ "$rc" -ne 0 ]; then
   broke deadnix "$rc"
@@ -127,6 +133,32 @@ elif [ "$rc" -gt 1 ]; then
   broke shellcheck "$rc"
 else
   echo "no findings"
+fi
+
+section nix-eval
+if [ "${LINT_SKIP_EVAL:-0}" = 1 ]; then
+  echo "skipped"
+else
+  # Module-system warnings are emitted only on a cold evaluation, so the eval
+  # cache is bypassed to make them show up every run rather than once.
+  eval_out=$(nix flake check --no-build --option eval-cache false 2>&1)
+  rc=$?
+  eval_warnings=$(grep '^evaluation warning:' <<<"$eval_out" || true)
+  if [ "$rc" -ne 0 ]; then
+    printf '%s\n' "$eval_out" | tail -20
+    count nix-eval error
+    printf '::error title=nix-eval::flake check failed\n'
+  elif [ -n "$eval_warnings" ]; then
+    while IFS= read -r line; do
+      [ -z "$line" ] && continue
+      msg=${line#evaluation warning: }
+      printf 'info: %s\n' "$msg"
+      count nix-eval info
+      printf '::notice title=nix-eval::%s\n' "$msg"
+    done <<<"$eval_warnings"
+  else
+    echo "no evaluation warnings"
+  fi
 fi
 
 total_err=0 total_warn=0 total_info=0
