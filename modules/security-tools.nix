@@ -1,7 +1,5 @@
 # System-wide offensive, OSINT, RF and forensics tooling.
 {
-  config,
-  lib,
   pkgs,
   ...
 }:

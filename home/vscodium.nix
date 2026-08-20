@@ -1,5 +1,5 @@
 # VSCodium with the Nix toolchain: language server, formatter, linters.
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   github-local-actions = pkgs.vscode-utils.buildVscodeExtension {

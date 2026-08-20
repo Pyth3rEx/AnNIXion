@@ -4,8 +4,6 @@
 # handler today: kwinrc binds bare Meta straight to plasmashell's
 # launcher, in home/plasma.nix.
 {
-  config,
-  lib,
   pkgs,
   ...
 }:

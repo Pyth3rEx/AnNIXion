@@ -1,7 +1,7 @@
 {
   name = "annixion-security-tools";
 
-  nodes.machine = { pkgs, lib, ... }: {
+  nodes.machine = { ... }: {
     imports = [ ../modules/security-tools.nix ];
 
     users.users.operator = {

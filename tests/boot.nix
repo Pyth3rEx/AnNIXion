@@ -1,7 +1,7 @@
 {
   name = "annixion-boot";
 
-  nodes.machine = { pkgs, lib, ... }: {
+  nodes.machine = { pkgs, ... }: {
     networking.networkmanager.enable = true;
 
     services.openssh = {

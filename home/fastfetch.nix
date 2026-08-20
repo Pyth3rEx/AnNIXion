@@ -1,5 +1,5 @@
 # Fastfetch system-info banner.
-{ config, pkgs, ... }:
+_:
 
 {
   programs.fastfetch = {

@@ -1,6 +1,5 @@
 # Hyper-V guest support and Enhanced Session over vsock.
 {
-  config,
   lib,
   pkgs,
   ...

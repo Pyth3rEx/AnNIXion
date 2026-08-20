@@ -1,9 +1,7 @@
 # File visibility: KDE, GTK and the search tools hide dotfiles
 # independently, so each needs its own switch (docs/hardening.md).
 {
-  config,
   lib,
-  pkgs,
   ...
 }:
 
