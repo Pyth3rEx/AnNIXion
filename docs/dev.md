@@ -26,7 +26,7 @@ cd ~/.dotfiles
 nix develop
 ```
 
-The dev shell provides `nixfmt`, `statix`, `deadnix`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
+The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
 
 If you are running AnNIXion, your real `hardware-configuration.nix` is already present and the `AnNIXion` configuration is offered alongside it.
 
@@ -36,6 +36,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 
 | Level | Command | What it checks | Typical runtime |
 |---|---|---|---|
+| **L0** | `.github/scripts/lint.sh` | Formatting, Nix anti-patterns, dead code, shell bugs | ~30 s |
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
@@ -45,17 +46,31 @@ evaluates all three; CI's L3 step builds the first two. Run the killswitch
 regression suite locally with
 `nix build .#checks.x86_64-linux.vpn-enforcement`.
 
-**Lint**
+**Lint (L0)**
+
+One script runs every linter, so local, editor and CI agree:
 
 ```bash
-statix check .    # Nix anti-pattern linter
-deadnix .         # Find unused bindings
-nixfmt --check .  # Format check
-nixfmt .          # Auto-format (apply)
+.github/scripts/lint.sh
 ```
 
-Run L1 + lint before every push. L2 before opening a PR. L3 is optional locally
-— CI runs it on every PR. The ISO build and its size gate run only on PRs into
+It runs `nixfmt --check`, `statix`, `deadnix` and `shellcheck` over the tracked
+files, keeps going after the first failure so one pass reports everything, and
+prints each finding as a GitHub annotation — in CI those land on the pull
+request diff. Run `nixfmt <file>` to apply formatting.
+
+Two details worth knowing if you run the tools by hand:
+
+- **`deadnix` exits 0 even when it finds dead code.** It needs `--fail` to gate
+  anything. The script passes it.
+- **`deadnix` is run with `-L`**, so the conventional
+  `{ config, lib, pkgs, ... }` module signature is not reported as unused.
+- **`statix.toml` disables `repeated_keys`.** That lint wants each `environment`
+  or `services` block merged into one attribute set; the tree deliberately
+  groups them under their own section headers instead.
+
+L0 and L1 before every push. L2 before opening a PR. L3 is optional locally —
+CI runs it on every PR. The ISO build and its size gate run only on PRs into
 `main` and on pushes to `main`.
 
 ---
@@ -66,7 +81,7 @@ Open `~/.dotfiles` as the workspace root in VSCodium. The repo ships a `.vscode/
 
 | Shortcut / action | What runs |
 |---|---|
-| `Ctrl+Shift+B` | **Full check** — L1 + statix + deadnix in parallel |
+| `Ctrl+Shift+B` | **Full check** — L0 lint + L1 in parallel |
 | `Tasks: Run Task` → `CI: L2 — System Build` | Full system closure |
 | `Tasks: Run Task` → `CI: L3 — VM Tests` | VM tests (requires KVM) |
 | `Tasks: Run Task` → `Format: apply` | Auto-format all Nix files |
@@ -87,10 +102,8 @@ Same commands, without VSCodium:
 # L1 — fast, always run before pushing
 nix flake check --no-build
 
-# Lint
-statix check .
-deadnix .
-nixfmt --check .
+# L0 — every linter, same script CI runs
+.github/scripts/lint.sh
 
 # L2 — recommended before opening a PR
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
@@ -117,9 +130,7 @@ nix build .#... --print-build-logs --no-link 2>&1 | nom
 Before pushing your branch or opening a PR:
 
 - [ ] `nix flake check --no-build` passes
-- [ ] `statix check .` clean
-- [ ] `deadnix .` clean
-- [ ] `nixfmt --check .` passes (or run `nixfmt .` to fix)
+- [ ] `.github/scripts/lint.sh` clean (CI runs it as the **Lint** check)
 - [ ] `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link` succeeds (recommended)
 
 ---

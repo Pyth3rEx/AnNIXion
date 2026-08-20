@@ -229,6 +229,7 @@
           nixfmt
           statix
           deadnix
+          shellcheck
           nil
           nix-output-monitor
         ];

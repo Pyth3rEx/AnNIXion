@@ -1,0 +1,4 @@
+# repeated_keys wants `environment = { ... }` merged into a single block. The
+# tree deliberately groups those assignments under their own section headers,
+# so the lint fights the layout rather than finding a defect.
+disabled = [ "repeated_keys" ]
