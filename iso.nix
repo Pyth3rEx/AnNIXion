@@ -19,6 +19,10 @@ in
     squashfsCompression = "xz -Xdict-size 100%";
   };
 
+  # The new default from 26.11; the live image never imports a root pool it
+  # did not create.
+  boot.zfs.forceImportRoot = false;
+
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
     "nix-command"
