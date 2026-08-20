@@ -117,5 +117,91 @@ keeps working without `lib.mkForce`. See
 
 ## Reporting bugs and requesting features
 
-Use the issue templates under **Issues → New issue**. For anything security
-sensitive, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
+Use the issue templates under **Issues → New issue**. Blank issues are turned
+off, so pick the one that fits:
+
+| Template | Use it for |
+|---|---|
+| **Bug Report** | Something is broken — config errors, tools crashing, build failures |
+| **Feature Request** | A new capability, workflow, or system-level improvement |
+| **Tool Request** | Packaging a new security tool. Tool additions have their own form; do not use Feature Request |
+| **Documentation** | Something undocumented, wrong, or unclear |
+
+For anything security sensitive, follow [SECURITY.md](SECURITY.md) and use
+GitHub's private advisory flow instead of opening a public issue. The issue
+chooser links straight to it.
+
+Fill in the **Priority** and **Size** dropdowns honestly — they are read
+straight off the form and written to the project board, so a filled-in form
+saves a round trip. They are your estimate from where you sit; the maintainer
+may adjust them.
+
+---
+
+## Issue triage
+
+Every issue moves through the [project board](https://github.com/users/Pyth3rEx/projects/3),
+and most of the movement is automatic. You do not need to update anything by
+hand — opening the issue, getting assigned, and opening a pull request are what
+drive it.
+
+### What happens when you open an issue
+
+Immediately, without anyone touching it:
+
+- It is labelled **`needs triage`** and lands on the board in **Backlog**.
+- It is put on the upcoming milestone.
+- **Priority** and **Size** are read from the form and written to the board —
+  but **only when those fields are empty**, so a maintainer's correction is
+  never overwritten by a later re-run.
+
+### What triage actually is
+
+The maintainer reads the issue, adjusts Priority and Size if your estimate was
+off, and **removes the `needs triage` label**. That removal is the triage
+decision, and it moves the issue to **Ready**.
+
+Removing the label is guarded: it only promotes an issue that is still in
+Backlog. Triaging something already being worked on will not drag it backwards.
+
+An issue that is rejected is closed with `wontfix`, `duplicate` or `invalid`
+rather than being left to rot in Backlog.
+
+### The statuses
+
+| Status | Means | Set by |
+|---|---|---|
+| **Backlog** | Filed, not yet triaged | Opening the issue |
+| **Ready** | Triaged, agreed, nobody has started | Removing `needs triage` |
+| **In progress** | Someone is on it | Assigning the issue, or opening a PR |
+| **In review** | Merged into `dev`, awaiting release | Merging a PR into `dev` |
+| **Done** | Shipped in a release | Merging the release PR into `main` |
+
+### Picking something up
+
+Anything in **Ready** is fair game, and `good first issue` marks the gentler
+ones. Say so on the issue and get it assigned to you — assignment is what moves
+it to **In progress**, so it is also how everyone else knows not to duplicate
+your work.
+
+### Why your issue stays open after your PR merges
+
+Link the issue from your pull request with a closing keyword — `Closes #12`,
+not a bare `(#12)`, which reads like a link but closes nothing.
+
+Even so, **merging into `dev` will not close it.** GitHub only acts on closing
+keywords when a pull request merges into the default branch, which is `main`.
+So a feature PR moves its issues to **In review**, and the `dev → main` release
+PR is what actually closes them and sweeps everything still in review to
+**Done**. An issue sitting open in **In review** after your work merged is the
+system working, not a missed link.
+
+### Labels
+
+`bug`, `enhancement`, `documentation` and `tool request` are applied by the
+templates. The rest are triage decisions: `good first issue`, `help wanted`,
+`question`, `duplicate`, `invalid`, `wontfix`, and `needs triage` itself.
+
+The exact workflow rules, the scripts behind them, and the token the board
+automation needs are documented in
+[docs/dev.md](docs/dev.md#project-board-automation).
