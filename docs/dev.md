@@ -60,9 +60,12 @@ prints each finding as a GitHub annotation — in CI those land on the pull
 request diff. Run `nixfmt <file>` to apply formatting.
 
 **Errors and warnings fail the run. Info-level findings are reported but do
-not.** The tail of the output is a per-tool table of the three counts; on a
-pull request the same table is posted as a single comment that updates in
-place, so the state of a branch is visible without opening the log.
+not.** The tail of the output is a per-tool table of the three counts. On a
+pull request CI lints the base revision as well and shows the movement in
+brackets — `2 (+1)` means this branch added one — then posts the table as a
+comment, replacing the previous one so it stays at the end of the discussion.
+
+`LINT_SKIP_EVAL=1` skips the flake evaluation, which is the slow part.
 
 Two details worth knowing if you run the tools by hand:
 

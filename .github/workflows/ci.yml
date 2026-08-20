@@ -20,6 +20,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # The base revision, linted separately so the summary can report what
+      # this branch changes rather than only where it stands.
+      - name: Check out the base revision
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: .lint-base
+
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -27,10 +36,20 @@ jobs:
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
+      # Output is dropped: its annotations would point at the base revision.
+      # A base that does not lint cleanly must not fail this branch either.
+      - name: "[L0] Baseline"
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          LINT_COUNTS: ${{ runner.temp }}/base-counts.txt
+        run: nix develop --command bash .lint-base/.github/scripts/lint.sh >/dev/null
+
       # Same tools the dev shell gives a contributor locally.
       - name: "[L0] Lint"
         env:
           LINT_SUMMARY: ${{ runner.temp }}/lint-summary.md
+          LINT_BASELINE: ${{ runner.temp }}/base-counts.txt
         run: nix develop --command bash .github/scripts/lint.sh
 
       - name: "[L0] Script tests"

@@ -1,3 +1,7 @@
 # repeated_keys wants each environment or services block merged into one
 # attribute set; the tree groups them under section headers instead.
 disabled = [ "repeated_keys" ]
+
+# CI checks out the base revision here to diff the counts. statix recurses into
+# it otherwise and reports that copy as if it were this branch.
+ignore = [ ".lint-base" ]
