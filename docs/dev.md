@@ -36,7 +36,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 
 | Level | Command | What it checks | Typical runtime |
 |---|---|---|---|
-| **L0** | `.github/scripts/lint.sh`, `tests/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, script fixtures | ~30 s |
+| **L0** | `.github/scripts/lint.sh`, `tests/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, eval warnings, script fixtures | ~2 min |
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
@@ -55,7 +55,7 @@ One script runs every linter, so local, editor and CI agree:
 ```
 
 It runs `nixfmt --check`, `statix`, `deadnix` and `shellcheck` over the tracked
-files, keeps going after the first failure so one pass reports everything, and
+files, plus a `nix flake check` pass for module evaluation warnings, keeps going after the first failure so one pass reports everything, and
 prints each finding as a GitHub annotation — in CI those land on the pull
 request diff. Run `nixfmt <file>` to apply formatting.
 
@@ -66,10 +66,15 @@ place, so the state of a branch is visible without opening the log.
 
 Two details worth knowing if you run the tools by hand:
 
-- **`deadnix` exits 0 even when it finds dead code.** It needs `--fail` to gate
-  anything. The script passes it.
-- **`deadnix` is run with `-L`**, so the conventional
-  `{ config, lib, pkgs, ... }` module signature is not reported as unused.
+- **A tool that cannot run counts as an error.** `statix` reports a bad config
+  on stderr and still exits 0, so an empty result is not taken as a clean one —
+  stderr is checked as well as the exit code.
+- **`deadnix` reports the `{ config, lib, pkgs, ... }` module signature as
+  info.** That signature is convention rather than a defect, so it is visible
+  without blocking. Any other dead code is a warning and blocks.
+- **`nix-eval` runs `nix flake check` with the eval cache off.** NixOS module
+  warnings are emitted only on a cold evaluation, so without that they appear
+  once and never again. They are reported as info.
 - **`statix.toml` disables `repeated_keys`.** That lint wants each `environment`
   or `services` block merged into one attribute set; the tree deliberately
   groups them under their own section headers instead.
