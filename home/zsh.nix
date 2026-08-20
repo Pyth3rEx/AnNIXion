@@ -73,7 +73,7 @@
       ip_local = "ip -4 addr show scope global | awk '/inet/{print $2}'";
       myip = "ip -4 addr | awk '/inet/ && !/127.0.0.1/{printf \"%-12s %s\\n\", $NF\":\", $2}'";
       ports = "ss -tulnp";
-      vpn = "ip link 2>/dev/null | awk '/tun[0-9]|wg[0-9]|vpn/{printf \"VPN ACTIVE: %s\\n\", $2}' | grep . || echo 'No VPN detected'";
+      vpn = "annixion-tunnels | awk '{printf \"VPN ACTIVE: %s\\n\", $1}' | grep . || echo 'No VPN detected'";
 
       # ── Quick config edit ──────────────────────────────────
       enix = "kate ~/.dotfiles/flake.nix";
@@ -136,6 +136,23 @@
 
       # ── AnNIXion banner — defined here, run before the first prompt ──────
       (lib.mkAfter ''
+        # The kernel knows which links are tunnels; the name does not. Providers
+        # hand out WireGuard interfaces like ee-tll-wg-001, which no prefix match
+        # catches, and a bridge named vpn0 is not a tunnel.
+        annixion-tunnels() {
+          ip -d -o link show 2>/dev/null | awk '
+            {
+              iface = $2
+              sub(/:$/, "", iface)
+              # Drop index and name so an interface cannot match on its own name.
+              $1 = ""
+              $2 = ""
+              if ($0 ~ /(^| )(wireguard|tun|tap|ppp|gre|gretap|ipip|sit|vti|xfrm)( |$)/)
+                print iface
+            }
+          '
+        }
+
         annixion-banner() {
           echo ""
           echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
@@ -152,12 +169,13 @@
           echo ""
 
           # VPN interfaces highlighted in green.
-          ip -4 addr show scope global 2>/dev/null | awk '
+          ip -4 addr show scope global 2>/dev/null |
+            awk -v tunnels=" $(annixion-tunnels | tr '\n' ' ')" '
             /inet/ {
               ip = $2
               split($NF, a, "@")
               iface = a[length(a)]
-              if (iface ~ /^(tun|wg|vpn|ppp)/)
+              if (index(tunnels, " " iface " "))
                 printf "  \033[0;32mvpn   \033[0m \033[0;32m%-20s (%s) VPN\033[0m\n", ip, iface
               else
                 printf "  \033[0;90mip    \033[0m %-20s (%s)\n", ip, iface
