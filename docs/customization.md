@@ -39,7 +39,8 @@ See `user/README.md` for the full override system documentation.
 
 ## Shell environment
 
-ZSH configuration lives entirely in `home/zsh.nix`. See [docs/zsh.md](zsh.md) for the full shortcut and alias reference, and [docs/tools.md](tools.md) for enhanced CLI tools included in the environment.
+ZSH configuration lives in `home/zsh/` — `default.nix` for the shell,
+`oh-my-posh.nix` for the prompt. See [docs/zsh.md](zsh.md) for the full shortcut and alias reference, and [docs/tools.md](tools.md) for enhanced CLI tools included in the environment.
 
 ---
 

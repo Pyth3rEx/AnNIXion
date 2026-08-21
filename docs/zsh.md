@@ -1,12 +1,18 @@
 # ZSH Reference
 
-AnNIXion ships a fully configured ZSH environment. All configuration lives in `home/zsh.nix`.
+AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/zsh/`:
+
+| File | Contents |
+|---|---|
+| `home/zsh/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
+| `home/zsh/oh-my-posh.nix` | The prompt — block layout, segments and colours |
 
 ---
 
 ## Prompt — oh-my-posh
 
-Two-line powerline-style prompt with a neon red / dark grey palette.
+Defined in `home/zsh/oh-my-posh.nix`. Two-line powerline-style prompt with a
+neon red / dark grey palette.
 
 ```
   user @ HOST    ~/path/to/dir    ⎇ main  ●2  +1  ↑3        42c  ⏱ 5s  ✗ 1  14:32:07
@@ -89,7 +95,7 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | `emod` | Open `modules/` in Kate |
 | `euser` | Open `user/` in Kate |
 | `ehome` | Open `home.nix` in Kate |
-| `ezsh` | Open `home/zsh.nix` in Kate |
+| `ezsh` | Open `home/zsh/default.nix` in Kate |
 
 ## Aliases — Git
 
@@ -235,7 +241,7 @@ Each new terminal session prints the AnNIXion ASCII banner followed by:
 - All global IPv4 addresses — VPN interfaces highlighted in green
 
 The banner is the `annixion-banner` function, defined at the end of `initContent`
-in `home/zsh.nix` and called once on startup. Run `annixion-banner` to reprint it
+in `home/zsh/default.nix` and called once on startup. Run `annixion-banner` to reprint it
 in place, or `b` to clear the screen first — useful after a `clear` has scrolled
 the addresses away.
 

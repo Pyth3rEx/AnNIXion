@@ -119,7 +119,9 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona and containers
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
 │   ├── plasma.nix                 # KDE Plasma: panels, shortcuts, Krohnkite tiling
-│   ├── zsh.nix                    # ZSH: oh-my-zsh, oh-my-posh, aliases, plugins
+│   ├── zsh/
+│   │   ├── default.nix            # ZSH: oh-my-zsh, aliases, plugins, banner
+│   │   └── oh-my-posh.nix         # Prompt: blocks, segments, colours
 │   ├── fastfetch.nix              # Fastfetch system-info banner
 │   ├── vscodium.nix               # VSCodium with the Nix toolchain
 │   ├── only-office.nix            # OnlyOffice document editor

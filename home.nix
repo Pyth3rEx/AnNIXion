@@ -180,7 +180,7 @@ in
     ./home/apps-menu.nix
     ./home/control-center.nix
     ./home/fastfetch.nix
-    ./home/zsh.nix
+    ./home/zsh
     ./home/file-visibility.nix
     ./home/konsole.nix
   ];
@@ -212,7 +212,7 @@ in
     ripgrep
     fd
     bat
-    # fzf is managed by programs.fzf in home/zsh.nix
+    # fzf is managed by programs.fzf in home/zsh/default.nix
     jq
     unzip
     p7zip
