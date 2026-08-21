@@ -49,7 +49,7 @@ _:
 
     profiles."Default" = {
       colorScheme = "BreezeTransparent";
-      font.name = "Hack";
+      font.name = "JetBrainsMono Nerd Font";
       font.size = 10;
     };
 
