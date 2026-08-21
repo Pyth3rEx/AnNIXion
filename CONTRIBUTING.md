@@ -181,7 +181,8 @@ Immediately, without anyone touching it:
 
 - It is labelled **`needs triage`** and lands on the board in **Backlog**.
 - It is put on the **furthest** open milestone — with 0.4.0 and 0.5.0 open,
-  new work lands on 0.5.0, so the current release stays as scoped.
+  new work lands on 0.5.0, so the current release stays as scoped. That is also
+  why it lands in Ready rather than Up next once triaged.
 - **Priority** and **Size** are read from the form and written to the board —
   but **only when those fields are empty**, so a maintainer's correction is
   never overwritten by a later re-run.
@@ -190,7 +191,8 @@ Immediately, without anyone touching it:
 
 The maintainer reads the issue, adjusts Priority and Size if your estimate was
 off, and **removes the `needs triage` label**. That removal is the triage
-decision, and it moves the issue to **Ready**.
+decision, and it moves the issue out of Backlog — to **Ready**, or to **Up
+next** if it is already on the release being built.
 
 Removing the label is guarded: it only promotes an issue that is still in
 Backlog. Triaging something already being worked on will not drag it backwards.
@@ -203,17 +205,33 @@ rather than being left to rot in Backlog.
 | Status | Means | Set by |
 |---|---|---|
 | **Backlog** | Filed, not yet triaged | Opening the issue |
-| **Ready** | Triaged, agreed, nobody has started | Removing `needs triage` |
+| **Ready** | Triaged and agreed, but not scoped into the next release | Removing `needs triage` |
+| **Up next** | Scoped into the release being built, nobody has started | Putting it on the nearest open milestone |
 | **In progress** | Someone is on it | Assigning the issue, or opening a PR |
 | **In review** | Merged into `dev`, awaiting release | Merging a PR into `dev` |
 | **Done** | Shipped in a release | Merging the release PR into `main` |
 
+### Ready versus Up next
+
+Both hold triaged work nobody has started; the **milestone** is what separates
+them. The nearest open milestone is the release being built, so its issues sit
+in **Up next**. Everything on a further milestone waits in **Ready**.
+
+Because new issues land on the *furthest* milestone, your issue starts in Ready.
+The maintainer moving it onto the current milestone is what pulls it into Up
+next — the board follows the milestone, so there is no separate scoping step.
+Moving it back out sends it back to Ready.
+
+When a release ships and its milestone is closed, everything in Ready on the
+next milestone rises to Up next on its own.
+
 ### Picking something up
 
-Anything in **Ready** is fair game, and `good first issue` marks the gentler
-ones. Say so on the issue and get it assigned to you — assignment is what moves
-it to **In progress**, so it is also how everyone else knows not to duplicate
-your work.
+Anything in **Ready** or **Up next** is fair game, and `good first issue` marks
+the gentler ones. **Up next** is the more useful place to look: it is the work
+wanted for the next release. Say so on the issue and get it assigned to you —
+assignment is what moves it to **In progress**, so it is also how everyone else
+knows not to duplicate your work.
 
 ### Why your issue stays open after your PR merges
 

@@ -25,14 +25,16 @@ die() {
 usage() {
   cat <<'USAGE'
 usage: project-sync.sh sync  --content <node-id> [--status NAME] [--priority NAME]
-                             [--size NAME] [--only-if-status NAME] [--only-if-empty]
-       project-sync.sh sweep --from NAME --to NAME
+                             [--size NAME] [--only-if-status NAME[,NAME...]]
+                             [--only-if-empty]
+       project-sync.sh sweep --from NAME --to NAME [--milestone TITLE]
 
   --content         node ID of the issue or pull request
   --status          status to set
   --priority/--size single-select values to set
-  --only-if-status  only set the status when the item currently holds this one
+  --only-if-status  only set the status when the item currently holds one of these
   --only-if-empty   only set priority/size when they are still empty
+  --milestone       restrict a sweep to items on this milestone
   -h, --help        show this help
 USAGE
 }
@@ -116,6 +118,15 @@ set_select() {
   echo "  $field → $value"
 }
 
+# Is the current status one of the comma-separated names the guard allows?
+guard_allows() {
+  local current="$1" allowed
+  while IFS= read -r allowed; do
+    [ "$current" = "$allowed" ] && return 0
+  done <<< "${2//,/$'\n'}"
+  return 1
+}
+
 # ── sync ──────────────────────────────────────────────────────────────────
 cmd_sync() {
   local content="" status="" priority="" size="" guard="" only_if_empty=""
@@ -138,8 +149,8 @@ cmd_sync() {
   echo "item $item"
 
   if [ -n "$status" ]; then
-    if [ -n "$guard" ] && [ "$(current_value "$item" Status)" != "$guard" ]; then
-      echo "  Status left alone — not currently '$guard'"
+    if [ -n "$guard" ] && ! guard_allows "$(current_value "$item" Status)" "$guard"; then
+      echo "  Status left alone — not currently one of '$guard'"
     else
       set_select "$item" Status "$status"
     fi
@@ -158,15 +169,23 @@ cmd_sync() {
 
 # ── sweep ─────────────────────────────────────────────────────────────────
 cmd_sweep() {
-  local from="" to=""
+  local from="" to="" milestone=""
   while [ $# -gt 0 ]; do
     case "$1" in
-      --from) from="$2"; shift 2 ;;
-      --to)   to="$2"; shift 2 ;;
+      --from)      from="$2"; shift 2 ;;
+      --to)        to="$2"; shift 2 ;;
+      --milestone) milestone="$2"; shift 2 ;;
       *) die "unknown argument: $1" ;;
     esac
   done
   [ -n "$from" ] && [ -n "$to" ] || die "--from and --to are required"
+
+  # An empty --milestone would match only items that have none, which is never
+  # what a caller resolving a release title meant.
+  local scope=""
+  if [ -n "$milestone" ]; then
+    scope="| select(.content.milestone.title == \"$milestone\")"
+  fi
 
   load_project
   local items
@@ -178,6 +197,10 @@ cmd_sweep() {
             pageInfo { hasNextPage endCursor }
             nodes {
               id
+              content {
+                ... on Issue { milestone { title } }
+                ... on PullRequest { milestone { title } }
+              }
               fieldValues(first: 50) {
                 nodes {
                   ... on ProjectV2ItemFieldSingleSelectValue {
@@ -193,10 +216,11 @@ cmd_sweep() {
     }' --jq ".data.node.items.nodes[]
               | select(any(.fieldValues.nodes[]?;
                   .field.name == \"Status\" and .name == \"$from\"))
+              $scope
               | .id")"
 
   if [ -z "$items" ]; then
-    echo "nothing in '$from'"
+    echo "nothing in '$from'${milestone:+ on '$milestone'}"
     return 0
   fi
 
