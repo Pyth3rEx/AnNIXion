@@ -2,6 +2,7 @@
 _:
 
 {
+  # The space inside each trailing diamond is the gap between segments.
   programs.oh-my-posh = {
     enable = true;
 
@@ -23,6 +24,7 @@ _:
               type = "session";
               style = "diamond";
               leading_diamond = "<transparent,#252525></>";
+              trailing_diamond = " ";
               foreground = "#ffffff";
               background = "#252525";
               foreground_templates = [ "{{ if .Root }}#000000{{ end }}" ];
@@ -33,8 +35,9 @@ _:
             # Path
             {
               type = "path";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "<transparent,#181818></>";
+              trailing_diamond = " ";
               foreground = "#d4d4d4";
               background = "#181818";
               template = "   {{ .Path }}   ";
@@ -49,8 +52,9 @@ _:
             # stash(⚑). Muted red when clean, neon red on any change.
             {
               type = "git";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "<transparent,#0e0e0e></>";
+              trailing_diamond = " ";
               foreground = "#cc1122";
               background = "#0e0e0e";
               foreground_templates = [
@@ -77,7 +81,7 @@ _:
               type = "time";
               style = "diamond";
               leading_diamond = "";
-              trailing_diamond = "";
+              trailing_diamond = " ";
               foreground = "#cc1122";
               background = "#2d2d2d";
               template = ''{{ .CurrentDate | date "15:04:05" }}   '';
@@ -87,7 +91,7 @@ _:
               type = "exit";
               style = "diamond";
               leading_diamond = "";
-              trailing_diamond = "";
+              trailing_diamond = " ";
               foreground = "#ff0033";
               background = "#1e1e1e";
               template = "   ✗ {{ .Code }}   ";
@@ -98,7 +102,7 @@ _:
               type = "executiontime";
               style = "diamond";
               leading_diamond = "";
-              trailing_diamond = "";
+              trailing_diamond = " ";
               foreground = "#ff1a1a";
               background = "#151515";
               template = "   ⏱ {{ .FormattedMs }}   ";
