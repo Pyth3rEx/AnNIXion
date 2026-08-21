@@ -21,8 +21,8 @@ _:
             # User @ host — flips to neon red when root.
             {
               type = "session";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "<transparent,#252525></>";
               foreground = "#ffffff";
               background = "#252525";
               foreground_templates = [ "{{ if .Root }}#000000{{ end }}" ];
@@ -34,7 +34,7 @@ _:
             {
               type = "path";
               style = "powerline";
-              powerline_symbol = "";
+              powerline_symbol = "";
               foreground = "#d4d4d4";
               background = "#181818";
               template = "   {{ .Path }}   ";
@@ -42,6 +42,7 @@ _:
                 style = "agnoster_short";
                 max_depth = 4;
                 home_icon = "~";
+                folder_separator_icon = "<transparent>  </>";
               };
             }
             # Git — branch · staged(●) · working(+) · ahead(↑) · behind(↓) ·
@@ -49,7 +50,7 @@ _:
             {
               type = "git";
               style = "powerline";
-              powerline_symbol = "";
+              powerline_symbol = "";
               foreground = "#cc1122";
               background = "#0e0e0e";
               foreground_templates = [
@@ -74,8 +75,9 @@ _:
             # Clock — always visible; anchors far right
             {
               type = "time";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "";
+              trailing_diamond = "";
               foreground = "#cc1122";
               background = "#2d2d2d";
               template = ''{{ .CurrentDate | date "15:04:05" }}   '';
@@ -83,8 +85,9 @@ _:
             # Exit code — only when non-zero
             {
               type = "exit";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "";
+              trailing_diamond = "";
               foreground = "#ff0033";
               background = "#1e1e1e";
               template = "   ✗ {{ .Code }}   ";
@@ -93,8 +96,9 @@ _:
             # Execution time — only when last command ran > 3 s
             {
               type = "executiontime";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "";
+              trailing_diamond = "";
               foreground = "#ff1a1a";
               background = "#151515";
               template = "   ⏱ {{ .FormattedMs }}   ";
@@ -107,8 +111,8 @@ _:
             # Command char count — hidden until first command runs
             {
               type = "text";
-              style = "powerline";
-              powerline_symbol = "";
+              style = "diamond";
+              leading_diamond = "";
               foreground = "#555555";
               background = "#0e0e0e";
               template = "{{ if .Env.OMP_CMD_LEN }}   {{ .Env.OMP_CMD_LEN }}c   {{ end }}";

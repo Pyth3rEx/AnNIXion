@@ -12,7 +12,12 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 ## Prompt — oh-my-posh
 
 Defined in `home/zsh/oh-my-posh.nix`. Two-line powerline-style prompt with a
-neon red / dark grey palette.
+neon red / dark grey palette. Segments are separated by powerline arrows, and
+the path uses a thin separator between components.
+
+The separator glyphs live in the Private Use Area, so the terminal font must be
+a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
+a plain font renders the separators as empty boxes.
 
 ```
   user @ HOST    ~/path/to/dir    ⎇ main  ●2  +1  ↑3        42c  ⏱ 5s  ✗ 1  14:32:07
