@@ -49,7 +49,7 @@
         ./modules/security-tools.nix
         ./modules/vpn-enforcement.nix
         ./modules/hardening.nix
-        ./modules/prompt.nix
+        ./modules/shell.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
@@ -201,6 +201,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+            ./modules/shell.nix
             ./iso.nix
           ];
         };

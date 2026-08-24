@@ -9,7 +9,8 @@
 
 let
   term = cmd: "konsole -e ${cmd}";
-  termHold = cmd: ''konsole -e bash -c "${cmd}; exec bash"'';
+  # Exported so the shell that takes over after the tool skips the banner.
+  termHold = cmd: ''konsole -e zsh -c "export ANNIXION_NO_BANNER=1; ${cmd}; exec zsh"'';
 
   dir = name: icon: ''
     [Desktop Entry]

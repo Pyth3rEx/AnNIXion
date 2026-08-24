@@ -35,10 +35,6 @@
     "x-scheme-handler/unknown" = "firefox-red.desktop";
   };
 
-  # ── Shell ───────────────────────────────────────────────────────────────
-  programs.zsh.enable = lib.mkDefault true;
-  users.users.operator.shell = pkgs.zsh;
-
   # ── KWallet ─────────────────────────────────────────────────────────────
   # Unlock the secret store on login.
   security.pam.services.sddm.enableKwallet = lib.mkDefault true;

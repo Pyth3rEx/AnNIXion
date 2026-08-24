@@ -65,6 +65,17 @@
             fetch_stash_count = true;
           };
         }
+        # Nix shell — only inside nix-shell, nix develop or nix run.
+        {
+          type = "nix-shell";
+          style = "diamond";
+          min_width = 125;
+          leading_diamond = "<#ff0033,transparent></>";
+          trailing_diamond = "<#ff0033,transparent></> ";
+          foreground = "#ff1a1a";
+          background = "#131313";
+          template = ''{{ if ne .Type "unknown" }}   ❄ {{ .Type }}   {{ end }}'';
+        }
       ];
     }
 

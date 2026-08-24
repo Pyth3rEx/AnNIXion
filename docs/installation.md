@@ -136,7 +136,7 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   ├── security-tools.nix         # Offensive, OSINT, RF and forensics packages
 │   ├── vpn-enforcement.nix        # Kernel killswitch: egress confined to the VPN
 │   ├── hardening.nix              # Attack surface reduction
-│   └── prompt.nix                 # The prompt for shells Home Manager does not own
+│   └── shell.nix                  # Zsh for every login, prompt for shells HM does not own
 │
 ├── tests/
 │   ├── boot.nix                   # VM test: system boots, services start
