@@ -41,6 +41,9 @@
           properties = {
             style = "agnoster_short";
             max_depth = 4;
+            # Without this, agnoster_short eats the leading / on absolute
+            # paths — very visible for root, whose cwd is rarely under ~.
+            display_root = true;
             home_icon = "~";
             folder_separator_icon = "<#ff0033>/</>";
           };
