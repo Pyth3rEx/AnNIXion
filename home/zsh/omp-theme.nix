@@ -19,7 +19,7 @@
         {
           type = "session";
           style = "diamond";
-          leading_diamond = "<#ff0033,transparent></><transparent,#252525></>";
+          leading_diamond = "<#ff0033,transparent></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#ffffff";
           background = "#252525";
@@ -33,7 +33,7 @@
           type = "path";
           style = "diamond";
           min_width = 70;
-          leading_diamond = "<#ff0033,transparent></><transparent,#181818></>";
+          leading_diamond = "<#ff0033,transparent></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#d4d4d4";
           background = "#181818";
@@ -51,7 +51,7 @@
           type = "git";
           style = "diamond";
           min_width = 105;
-          leading_diamond = "<#ff0033,transparent></><transparent,#0e0e0e></>";
+          leading_diamond = "<#ff0033,transparent></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#cc1122";
           background = "#0e0e0e";
