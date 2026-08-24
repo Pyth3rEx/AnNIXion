@@ -12,8 +12,26 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 ## Prompt — oh-my-posh
 
 Defined in `home/zsh/oh-my-posh.nix`. Two-line powerline-style prompt with a
-neon red / dark grey palette. Segments are separated by powerline arrows, and
-the path uses a thin separator between components.
+neon red / dark grey palette. Segments are separated by powerline arrows, each
+traced by a neon red thin arrow that outlines it, and path components are split
+by a plain `/` in neon red. The second line is a single neon red `$>` prompt
+(`#>` when root) with the cursor immediately after it.
+
+Every segment except `user @ host` carries a `min_width`, so a narrow terminal
+sheds them one at a time instead of wrapping onto a second line:
+
+| terminal width | segments shown |
+| --- | --- |
+| < 70 | `user @ host` |
+| 70 | `+ path` |
+| 105 | `+ git` |
+| 120 | `+ exit code` |
+| 135 | `+ clock` |
+| 150 | `+ execution time` |
+| 165 | `+ command length` |
+
+The thresholds assume a path of about 20 characters; a much longer one can still
+wrap at the low end of a band.
 
 The separator glyphs live in the Private Use Area, so the terminal font must be
 a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
@@ -21,13 +39,13 @@ a plain font renders the separators as empty boxes.
 
 ```
   user @ HOST    ~/path/to/dir    ⎇ main  ●2  +1  ↑3        42c  ⏱ 5s  ✗ 1  14:32:07
-❯
+$> 
 ```
 
 | Segment | When shown | Meaning |
 |---|---|---|
 | `user @ HOST` | Always | Username and hostname. Flips to `☠ ROOT` on red bg when root |
-| `~/path` | Always | Current directory, shortened to 4 levels. `~` for home |
+| `~/path` | Terminal ≥ 70 cols | Current directory, shortened to 4 levels. `~` for home |
 | `⎇ branch` | Inside a git repo | Branch or commit SHA |
 | `●N` | Staged changes | N files staged |
 | `+N` | Working changes | N modified/untracked files |
@@ -36,7 +54,8 @@ a plain font renders the separators as empty boxes.
 | `Nc` (right) | After every command | Character count of the last command |
 | `⏱ Xs` (right) | Command ran > 3 s | Execution time, rounded |
 | `✗ N` (right) | Non-zero exit | Exit code of the last command |
-| `HH:MM:SS` (right) | Always | Current time |
+| `HH:MM:SS` (right) | Terminal ≥ 135 cols | Current time |
+| `$>` (line 2) | Always | Where you type; `#>` when root |
 
 ---
 
