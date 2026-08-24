@@ -121,7 +121,8 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   ├── plasma.nix                 # KDE Plasma: panels, shortcuts, Krohnkite tiling
 │   ├── zsh/
 │   │   ├── default.nix            # ZSH: oh-my-zsh, aliases, plugins, banner
-│   │   └── oh-my-posh.nix         # Prompt: blocks, segments, colours
+│   │   ├── oh-my-posh.nix         # Prompt: enabled for zsh and bash
+│   │   └── omp-theme.nix          # Prompt: blocks, segments, colours
 │   ├── fastfetch.nix              # Fastfetch system-info banner
 │   ├── vscodium.nix               # VSCodium with the Nix toolchain
 │   ├── only-office.nix            # OnlyOffice document editor
@@ -134,7 +135,8 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   ├── xrdp.nix                   # Hyper-V guest support, Enhanced Session via vsock
 │   ├── security-tools.nix         # Offensive, OSINT, RF and forensics packages
 │   ├── vpn-enforcement.nix        # Kernel killswitch: egress confined to the VPN
-│   └── hardening.nix              # Attack surface reduction
+│   ├── hardening.nix              # Attack surface reduction
+│   └── prompt.nix                 # The prompt for shells Home Manager does not own
 │
 ├── tests/
 │   ├── boot.nix                   # VM test: system boots, services start
