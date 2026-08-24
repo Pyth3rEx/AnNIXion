@@ -79,6 +79,30 @@ Flakes only see git-tracked files. Run `git add` on the new file before
 
 ---
 
+## Hyper-V Enhanced Session
+
+### I have no audio in the guest
+
+Two things have to be true, and the second one is easy to miss.
+
+The guest side is handled by `modules/xrdp.nix`: Hyper-V emulates no sound
+card, so audio only travels over xrdp's redirection channel, which the module
+enables. See [Installation](installation.md#audio) for why that requires
+PulseAudio rather than PipeWire.
+
+The host side is not automatic. The Enhanced Session connection must be allowed
+to play the guest's audio on the host — in Hyper-V Manager, connect to the VM,
+choose **Show Options → Local Resources**, and direct audio playback to the
+local computer. Without it there is no channel to redirect into and the guest
+shows no audio device, however the guest is configured. The exact wording moves
+around between Windows versions.
+
+The setting is per connection, so check it again after connecting from a
+different machine or Windows profile. A console login has no redirection
+channel at all and will never have audio.
+
+---
+
 ## Browsers & proxies
 
 ### A browser profile won't connect to anything
