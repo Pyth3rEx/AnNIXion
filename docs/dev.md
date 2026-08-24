@@ -88,11 +88,13 @@ Two details worth knowing if you run the tools by hand:
 tests/milestone.sh
 ```
 
-Fixture tests for `.github/scripts/assign-milestone.sh`, covering which
-milestone new work lands on. They drive the real script through its `--select`
-mode rather than reimplementing the selection, so they cannot drift from it.
-No network, no GitHub, no Nix build — they run in well under a second, and CI
-runs them in the same **Lint** job.
+Fixture tests for `.github/scripts/assign-milestone.sh` and
+`.github/scripts/board-status.sh`, covering which milestone new work lands on,
+which milestone is the release being built, and which column that puts a
+triaged issue in. They drive the real scripts through their `--select`,
+`--select-nearest` and `--decide` modes rather than reimplementing the choice,
+so they cannot drift from it. No network, no GitHub, no Nix build — they run in
+well under a second, and CI runs them in the same **Lint** job.
 
 The VM tests under `tests/*.nix` are a different thing: those are nixosTests
 built by L1 and L3.
@@ -174,16 +176,40 @@ rather than something to remember:
 | Event | Effect |
 |---|---|
 | Issue opened | Added to the board as **Backlog**, labelled `needs triage`, put on the furthest milestone. Priority and Size are read from the issue form. |
-| `needs triage` removed | **Ready** — only if the issue is still in Backlog, so triaging something already underway does not pull it back |
+| `needs triage` removed | **Up next** if the issue sits on the nearest open milestone, otherwise **Ready** — only if the issue is still in Backlog, so triaging something already underway does not pull it back |
+| Milestone set or cleared | **Up next** or **Ready**, by the same rule — only from those two columns, so scoping a release never drags back work already underway |
 | Issue assigned | **In progress** |
 | PR opened | **In progress**, put on the furthest milestone |
 | PR merged into `dev` | **In review**, along with every issue the PR closes |
-| PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review |
+| PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review. Then the new release's Ready work is swept into **Up next**. |
+| Milestone closed | The now-nearest milestone's Ready work is swept into **Up next** |
 
-That last rule is what retires the work. A feature PR merging into `dev` does
+The `main` rule is what retires the work. A feature PR merging into `dev` does
 not close its issues, because closing keywords only fire on the default branch;
 the release PR into `main` does. Everything that reached `dev` is in review by
 then, so the sweep moves the whole release to Done at once.
+
+### Ready and Up next
+
+The two columns split triaged work by release, and the milestone is what
+decides which one an issue is in:
+
+| Column | Milestone |
+|---|---|
+| **Ready** | Any open milestone further out than the next release, or none at all |
+| **Up next** | The **nearest** open milestone — the release being built |
+
+New work is assigned the **furthest** milestone, so it lands in Ready and the
+current release stays as scoped. Pulling something into the release is a single
+act — set its milestone to the nearest one, and the board follows. Both scripts
+read "nearest" the same way `assign-milestone.sh` reads "furthest": the lowest
+version among the versioned milestones, falling back to the earliest due date
+when none are versioned.
+
+Closing a milestone is what makes the next one nearest, so that is when its
+Ready work becomes Up next. Merging into `main` runs the same sweep, for the
+case where the milestone is closed before the release PR merges — the sweep is
+idempotent, so running it twice costs nothing.
 
 Priority and Size come from dropdowns in the issue forms and are written **only
 when empty**, so a maintainer's correction on the board is never overwritten by
@@ -213,11 +239,22 @@ run time, so renaming the project or rebuilding it does not silently break the
 automation — a missing name fails loudly instead. Adding a status means adding
 its name to the workflow, not chasing IDs.
 
+The **Up next** option has to exist on the board's Status field, spelled exactly
+that way, before the workflow can use it. Add it between Ready and In progress;
+every board job fails loudly until it is there.
+
 ```bash
 export GH_TOKEN=<token with project scope>
 .github/scripts/project-sync.sh sync --content <issue-node-id> --status Ready
+.github/scripts/project-sync.sh sync --content <issue-node-id> \
+  --status "Up next" --only-if-status "Ready,Up next"
 .github/scripts/project-sync.sh sweep --from "In review" --to Done
+.github/scripts/project-sync.sh sweep --from Ready --to "Up next" \
+  --milestone "0.4.0 - Nebula"
 ```
+
+`--only-if-status` takes a comma-separated list, and `sweep --milestone`
+restricts a sweep to one release.
 
 ---
 
