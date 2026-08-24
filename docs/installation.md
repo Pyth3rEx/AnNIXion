@@ -185,5 +185,7 @@ them, and no PipeWire equivalent is packaged. The Hyper-V profile therefore
 turns PipeWire off and runs PulseAudio, overriding the flake default. Nothing
 is lost by it — with no sound card present, PipeWire has no device to manage.
 
-Audio appears only inside an Enhanced Session. A plain RDP or console login has
-no redirection channel, so the guest shows no audio device there.
+Audio appears only inside an Enhanced Session, and only when the connection is
+allowed to play the guest's audio on the host — see the
+[FAQ](faq.md#i-have-no-audio-in-the-guest). A plain RDP or console login has no
+redirection channel, so the guest shows no audio device there.

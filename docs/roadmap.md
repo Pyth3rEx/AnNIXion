@@ -150,7 +150,7 @@ Rationale:
 - [x] Tested on Hyper-V with Windows 10 / Windows Server hosts
 - [ ] Performance tuning — compositor settings, RDP color depth, animation speed
 - [ ] Multi-monitor configuration declared in Nix
-- [ ] Audio passthrough verified end-to-end
+- [x] Audio passthrough verified end-to-end
 
 ---
 
