@@ -5,7 +5,7 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 | File | Contents |
 |---|---|
 | `home/zsh/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
-| `home/zsh/oh-my-posh.nix` | Turns the prompt on for zsh and bash |
+| `home/zsh/oh-my-posh.nix` | Turns the prompt on for the Home Manager user |
 | `home/zsh/omp-theme.nix` | The prompt itself — block layout, segments and colours |
 
 ---
@@ -13,8 +13,8 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 ## Prompt — oh-my-posh
 
 Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt with a
-neon red / dark grey palette. Segments are separated by powerline arrows, each
-traced by a neon red thin arrow that outlines it, and path components are split
+neon red / dark grey palette. Each segment opens and closes on a powerline arrow
+in its own colour, traced by a neon red thin arrow, and path components are split
 by a plain `/` in neon red. The second line is a single neon red `$>` prompt
 (`#>` when root) with the cursor immediately after it.
 
@@ -27,6 +27,7 @@ sheds them one at a time instead of wrapping onto a second line:
 | 70 | `+ path` |
 | 105 | `+ git` |
 | 120 | `+ exit code` |
+| 125 | `+ nix-shell` (only inside one) |
 | 135 | `+ clock` |
 | 150 | `+ execution time` |
 | 165 | `+ command length` |
@@ -34,10 +35,19 @@ sheds them one at a time instead of wrapping onto a second line:
 The thresholds assume a path of about 20 characters; a much longer one can still
 wrap at the low end of a band.
 
-Every shell on the machine uses it. Home Manager starts it in zsh and in bash,
-the shell `nix-shell` and `nix develop` drop into; `modules/prompt.nix` installs
-the same theme system-wide for users Home Manager does not manage, so `sudo su`
-gets it too — with the session segment flipped to `☠ ROOT`.
+Every shell on the machine is zsh and every one of them uses this prompt.
+`modules/shell.nix` makes zsh the default login shell for every user including
+root — `sudo su` lands in zsh with the session segment flipped to `☠ ROOT` — and
+installs the same theme into `/etc/zshrc` and `/etc/bashrc` for anyone Home
+Manager does not manage.
+
+Bash cannot be removed from NixOS: it is `/bin/sh`, every build sandbox and
+every activation script. What it no longer is, is a shell you land in.
+`nix-shell`, `nix develop` and `nix run` all start bash, so `any-nix-shell`
+(loaded from `home/zsh/default.nix`) rewrites them to hand the session straight
+to zsh. The `❄` segment marks such a shell. The `/etc/bashrc` copy of the prompt
+covers the leftovers — `nix-shell --pure`, a bare `bash` — so even those keep the
+red prompt.
 
 The separator glyphs live in the Private Use Area, so the terminal font must be
 a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
@@ -61,6 +71,7 @@ $>
 | `⏱ Xs` (right) | Command ran > 3 s | Execution time, rounded |
 | `✗ N` (right) | Non-zero exit | Exit code of the last command |
 | `HH:MM:SS` (right) | Terminal ≥ 135 cols | Current time |
+| `❄ impure` | Inside nix-shell / nix develop | The shell is a Nix environment |
 | `$>` (line 2) | Always | Where you type; `#>` when root |
 
 ---

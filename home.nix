@@ -201,6 +201,8 @@ in
   home.packages = with pkgs; [
     # ── Terminal & shell ──────────────────────────────────────
     zsh
+    # nix-shell and nix develop start bash; this hands them back to zsh.
+    any-nix-shell
 
     # ── Development ───────────────────────────────────────────
     gh

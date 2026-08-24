@@ -131,6 +131,12 @@
         add-zsh-hook preexec _omp_track_cmd_len
       '')
 
+      # any-nix-shell at 1250 — rewrites nix-shell, nix develop and nix run to
+      # hand the session to zsh instead of leaving you in bash.
+      (lib.mkOrder 1250 ''
+        ${pkgs.any-nix-shell}/bin/any-nix-shell zsh | source /dev/stdin
+      '')
+
       # fast-syntax-highlighting at 1190 — after plugins, before bindings.
       (lib.mkOrder 1190 ''
         source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
@@ -186,7 +192,11 @@
           echo ""
         }
 
-        annixion-banner
+        # Nested shells (nix-shell, the tool menu) skip the banner. An if
+        # block, not &&, so .zshrc does not end on a non-zero status.
+        if [[ -z "$IN_NIX_SHELL$IN_NIX_RUN$ANNIXION_NO_BANNER" ]]; then
+          annixion-banner
+        fi
       '')
     ];
   };
