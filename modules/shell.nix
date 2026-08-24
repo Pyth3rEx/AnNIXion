@@ -13,6 +13,22 @@ let
 in
 
 {
+  # What the shared shell config actually calls: aliases (cat, ftp, serve,
+  # gs), the oh-my-zsh colorize plugin, and the nix-shell hand-off.
+  environment.systemPackages = with pkgs; [
+    any-nix-shell
+    bat
+    chroma
+    curl
+    fd
+    git
+    jq
+    inetutils
+    lftp
+    python3
+    ripgrep
+  ];
+
   programs.zsh.enable = lib.mkDefault true;
 
   # 900 beats the mkDefault bashInteractive nixpkgs sets, without blocking a

@@ -79,6 +79,15 @@
               ]
               ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
             };
+
+            # Root gets the same shell as the operator — prompt, aliases,
+            # plugins, keybindings, banner — but none of the desktop half of
+            # home.nix. Cheaper than mirroring the config into NixOS options,
+            # and the two cannot drift.
+            users.root = {
+              imports = [ ./home/zsh ];
+              home.stateVersion = "26.05";
+            };
           };
         }
 
