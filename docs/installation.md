@@ -171,3 +171,19 @@ Set-VMHost -EnableEnhancedSessionMode $true
 ```
 
 Full clipboard, audio, and dynamic resolution will be available after reconnecting from Hyper-V Manager.
+
+### Audio
+
+Hyper-V emulates no sound card, so the guest has no audio hardware to speak of.
+Sound reaches the Windows host over xrdp's redirection channel instead, which
+`modules/xrdp.nix` enables with `services.xrdp.audio.enable`.
+
+That channel only works over PulseAudio: xrdp redirects through
+`module-xrdp-sink` and `module-xrdp-source`, native modules of the PulseAudio
+daemon. `pipewire-pulse` reimplements the PulseAudio protocol but cannot load
+them, and no PipeWire equivalent is packaged. The Hyper-V profile therefore
+turns PipeWire off and runs PulseAudio, overriding the flake default. Nothing
+is lost by it — with no sound card present, PipeWire has no device to manage.
+
+Audio appears only inside an Enhanced Session. A plain RDP or console login has
+no redirection channel, so the guest shows no audio device there.

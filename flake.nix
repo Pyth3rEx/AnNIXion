@@ -144,7 +144,8 @@
             i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
             # ── Audio (Pipewire) ────────────────────────
-            # Enhanced Session passes audio from the VM to Windows.
+            # Hyper-V has no sound card: modules/xrdp.nix swaps this for
+            # PulseAudio, the only stack xrdp can redirect audio through.
             services.pipewire = {
               enable = lib.mkDefault true;
               alsa.enable = lib.mkDefault true;
