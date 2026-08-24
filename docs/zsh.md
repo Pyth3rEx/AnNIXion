@@ -12,11 +12,14 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 
 ## Prompt — oh-my-posh
 
-Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt with a
-neon red / dark grey palette. Each segment opens on an arrow cut out of its own
-colour and closes on a solid one traced by a neon red thin arrow, and path
-components are split by a plain `/` in neon red. The second line is a single neon
-red `$>` prompt (`#>` when root) with the cursor immediately after it.
+Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt in accent
+red (`#FF4757`) over dark slate greys (`#0E0F13`, `#1A1D24`, `#2E323D`) with
+`#DFE4EA` text. Left-block segments open on a solid arrow in their own colour
+and close on a solid one traced by an accent red thin arrow; right-block
+segments have no opening cap and are split by an accent red `//`.
+Path components are split by a plain `/` in accent red, the leading one on
+absolute paths included. The second line is a single accent red `$>` prompt
+(`#>` when root) with the cursor immediately after it.
 
 Every segment except `user @ host` carries a `min_width`, so a narrow terminal
 sheds them one at a time instead of wrapping onto a second line:
@@ -42,7 +45,7 @@ Manager does not manage.
 
 Root is managed too: `flake.nix` gives it a Home Manager configuration importing
 `home/zsh`, so `sudo su` lands in the same shell — same aliases, plugins,
-keybindings and banner — with the session segment flipped to `☠ ROOT`. The CLI
+keybindings and banner — with the session segment flipped to ` ROOT`. The CLI
 those aliases call lives in `environment.systemPackages` rather than
 `home.packages` so both users have it. Aliases written against `~/.dotfiles`
 (`rebuild`, `enix`) look under `/root` when run as root.
@@ -66,7 +69,7 @@ $>
 
 | Segment | When shown | Meaning |
 |---|---|---|
-| `user @ HOST` | Always | Username and hostname. Flips to `☠ ROOT` on red bg when root |
+| `user @ HOST` | Always | Username and hostname. Flips to ` ROOT` on red bg when root |
 | `~/path` | Terminal ≥ 70 cols | Current directory, shortened to 4 levels. `~` for home |
 | `⎇ branch` | Inside a git repo | Branch or commit SHA |
 | `●N` | Staged changes | N files staged |
