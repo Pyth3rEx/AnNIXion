@@ -19,7 +19,7 @@
         {
           type = "session";
           style = "diamond";
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#ffffff";
           background = "#252525";
@@ -33,7 +33,7 @@
           type = "path";
           style = "diamond";
           min_width = 70;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#d4d4d4";
           background = "#181818";
@@ -51,7 +51,7 @@
           type = "git";
           style = "diamond";
           min_width = 105;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#cc1122";
           background = "#0e0e0e";
@@ -70,7 +70,7 @@
           type = "nix-shell";
           style = "diamond";
           min_width = 125;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#ff1a1a";
           background = "#131313";
@@ -90,7 +90,7 @@
           type = "time";
           style = "diamond";
           min_width = 135;
-          leading_diamond = "";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#cc1122";
           background = "#2d2d2d";
@@ -101,7 +101,7 @@
           type = "exit";
           style = "diamond";
           min_width = 120;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#ff0033";
           background = "#1e1e1e";
@@ -113,7 +113,7 @@
           type = "executiontime";
           style = "diamond";
           min_width = 150;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#ff1a1a";
           background = "#151515";
@@ -129,7 +129,7 @@
           type = "text";
           style = "diamond";
           min_width = 165;
-          leading_diamond = "<#ff0033,transparent></>";
+          leading_diamond = "<transparent,background></>";
           foreground = "#555555";
           background = "#0e0e0e";
           template = "{{ if .Env.OMP_CMD_LEN }}   {{ .Env.OMP_CMD_LEN }}c   {{ end }}";

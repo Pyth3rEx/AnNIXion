@@ -13,10 +13,10 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 ## Prompt — oh-my-posh
 
 Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt with a
-neon red / dark grey palette. Each segment opens and closes on a powerline arrow
-in its own colour, traced by a neon red thin arrow, and path components are split
-by a plain `/` in neon red. The second line is a single neon red `$>` prompt
-(`#>` when root) with the cursor immediately after it.
+neon red / dark grey palette. Each segment opens on an arrow cut out of its own
+colour and closes on a solid one traced by a neon red thin arrow, and path
+components are split by a plain `/` in neon red. The second line is a single neon
+red `$>` prompt (`#>` when root) with the cursor immediately after it.
 
 Every segment except `user @ host` carries a `min_width`, so a narrow terminal
 sheds them one at a time instead of wrapping onto a second line:
