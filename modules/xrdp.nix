@@ -69,6 +69,22 @@
     ''}";
   };
 
+  # ── Audio — redirected over RDP ───────────────────────────
+  # Hyper-V emulates no sound card, so xrdp's channel is the only way out.
+  # PulseAudio, not PipeWire: module-xrdp-sink is a native daemon module and
+  # pipewire-pulse cannot load it. See docs/installation.md.
+  services.pipewire = {
+    enable = false;
+    pulse.enable = false;
+  };
+
+  services.pulseaudio = {
+    enable = lib.mkDefault true;
+    support32Bit = lib.mkDefault true;
+  };
+
+  services.xrdp.audio.enable = lib.mkDefault true;
+
   # xrdp bypasses the PAM/logind flow that starts systemd --user, so
   # without linger the Plasma 6 shell units never launch.
   users.users.operator.linger = lib.mkDefault true;
