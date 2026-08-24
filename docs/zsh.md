@@ -37,9 +37,15 @@ wrap at the low end of a band.
 
 Every shell on the machine is zsh and every one of them uses this prompt.
 `modules/shell.nix` makes zsh the default login shell for every user including
-root — `sudo su` lands in zsh with the session segment flipped to `☠ ROOT` — and
-installs the same theme into `/etc/zshrc` and `/etc/bashrc` for anyone Home
+root, and installs the theme into `/etc/zshrc` and `/etc/bashrc` for anyone Home
 Manager does not manage.
+
+Root is managed too: `flake.nix` gives it a Home Manager configuration importing
+`home/zsh`, so `sudo su` lands in the same shell — same aliases, plugins,
+keybindings and banner — with the session segment flipped to `☠ ROOT`. The CLI
+those aliases call lives in `environment.systemPackages` rather than
+`home.packages` so both users have it. Aliases written against `~/.dotfiles`
+(`rebuild`, `enix`) look under `/root` when run as root.
 
 Bash cannot be removed from NixOS: it is `/bin/sh`, every build sandbox and
 every activation script. What it no longer is, is a shell you land in.

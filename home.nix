@@ -198,35 +198,22 @@ in
 
   # ── User packages ─────────────────────────────────────────
   # Offensive/OSINT/SDR tooling is system-wide, in modules/security-tools.nix.
+  # The CLI the shell config leans on is system-wide, in modules/shell.nix,
+  # so root's shell works the same as this one.
   home.packages = with pkgs; [
-    # ── Terminal & shell ──────────────────────────────────────
-    zsh
-    # nix-shell and nix develop start bash; this hands them back to zsh.
-    any-nix-shell
-
     # ── Development ───────────────────────────────────────────
     gh
     github-desktop
-    python3
     python3Packages.pip
 
     # ── Utilities ─────────────────────────────────────────────
-    ripgrep
-    fd
-    bat
-    # fzf is managed by programs.fzf in home/zsh/default.nix
-    jq
     unzip
     p7zip
     file
-    inetutils
     wirelesstools
     net-tools
     dnsmasq
-    lftp
-    git
     wget
-    curl
     htop
     tree
     act
@@ -253,8 +240,6 @@ in
     # ── Plasma widgets ────────────────────────────────────────
     TiledMenu
 
-    # ── Color engines ─────────────────────────────────────────
-    chroma # needed by the oh-my-zsh "colorize" plugin
   ];
 
   services = {
