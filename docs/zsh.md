@@ -5,13 +5,14 @@ AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/
 | File | Contents |
 |---|---|
 | `home/zsh/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
-| `home/zsh/oh-my-posh.nix` | The prompt — block layout, segments and colours |
+| `home/zsh/oh-my-posh.nix` | Turns the prompt on for zsh and bash |
+| `home/zsh/omp-theme.nix` | The prompt itself — block layout, segments and colours |
 
 ---
 
 ## Prompt — oh-my-posh
 
-Defined in `home/zsh/oh-my-posh.nix`. Two-line powerline-style prompt with a
+Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt with a
 neon red / dark grey palette. Segments are separated by powerline arrows, each
 traced by a neon red thin arrow that outlines it, and path components are split
 by a plain `/` in neon red. The second line is a single neon red `$>` prompt
@@ -32,6 +33,11 @@ sheds them one at a time instead of wrapping onto a second line:
 
 The thresholds assume a path of about 20 characters; a much longer one can still
 wrap at the low end of a band.
+
+Every shell on the machine uses it. Home Manager starts it in zsh and in bash,
+the shell `nix-shell` and `nix develop` drop into; `modules/prompt.nix` installs
+the same theme system-wide for users Home Manager does not manage, so `sudo su`
+gets it too — with the session segment flipped to `☠ ROOT`.
 
 The separator glyphs live in the Private Use Area, so the terminal font must be
 a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
