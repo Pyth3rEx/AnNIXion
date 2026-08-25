@@ -1,0 +1,76 @@
+name: PR summary
+
+# Publishes the lint result to the pull request. CI runs under `pull_request`,
+# whose token is read-only on forks and so cannot comment; this workflow runs in
+# the base repository afterwards and does the posting.
+#
+# No step checks out or runs pull request code, and the summary is only ever
+# passed to `gh` as a file — never interpolated. The flake warning is derived
+# here from the pull request's own file list, so it holds even when the summary,
+# which a fork's own lint.sh produced, does not.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+jobs:
+  comment:
+    name: Code quality comment
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # Matched against open pull requests in this repository, never taken from
+      # the run: a fork controls its own branch names but not this list.
+      - name: Resolve the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          match=$(gh api "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" \
+            --paginate --jq "[.[] | select(.head.sha == \"$SHA\")
+              | {number, repo: .head.repo.full_name}] | first // empty")
+          if [ -z "$match" ]; then
+            echo "no open pull request at $SHA"
+            exit 0
+          fi
+          echo "number=$(jq -r .number <<<"$match")" >>"$GITHUB_OUTPUT"
+          if [ "$(jq -r .repo <<<"$match")" != "$GITHUB_REPOSITORY" ]; then
+            echo "fork=true" >>"$GITHUB_OUTPUT"
+          fi
+
+      - name: Download the lint summary
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          mkdir -p summary
+          gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" \
+            --name lint-summary --dir summary || echo "no summary artifact"
+
+      # Only forks are guarded, so only forks get the warning.
+      - name: Describe any flake change
+        if: steps.pr.outputs.number && steps.pr.outputs.fork
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.number }}
+          MODE: markdown
+        run: bash .github/scripts/check-flake-inputs.sh >flake-note.md
+
+      - name: Post code quality summary
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.pr.outputs.number }}
+          SUMMARY: summary/lint-summary.md
+          NOTE: flake-note.md
+        run: bash .github/scripts/lint-comment.sh
