@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
 
     steps:
       - uses: actions/checkout@v6
@@ -28,6 +27,16 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: .lint-base
+
+      # Runs before Nix is installed: a rejected lock must never be fetched.
+      - name: Guard flake inputs
+        if: >-
+          github.event_name == 'pull_request'
+          && github.event.pull_request.head.repo.full_name != github.repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: bash .github/scripts/check-flake-inputs.sh
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -55,16 +64,15 @@ jobs:
       - name: "[L0] Script tests"
         run: nix develop --command bash tests/milestone.sh
 
-      # Runs even when linting failed — that is when the summary matters most.
-      # A fork's token cannot comment, so a failure here must not fail the job.
-      - name: Post code quality summary
+      # Uploaded even when linting failed — that is when the summary matters
+      # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
+      - name: Upload the lint summary
         if: always() && github.event_name == 'pull_request'
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ github.event.pull_request.number }}
-          SUMMARY: ${{ runner.temp }}/lint-summary.md
-        run: bash .github/scripts/lint-comment.sh
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-summary
+          path: ${{ runner.temp }}/lint-summary.md
+          if-no-files-found: ignore
 
   check:
     name: Nix CI
