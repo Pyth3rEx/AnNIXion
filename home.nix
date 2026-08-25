@@ -183,6 +183,7 @@ in
     ./home/zsh
     ./home/file-visibility.nix
     ./home/konsole.nix
+    ./home/window-raise.nix
   ];
 
   home.username = lib.mkDefault "operator";
