@@ -9,6 +9,9 @@
 
 let
   term = cmd: "konsole -e ${cmd}";
+  # -name sets the WM_CLASS instance, so the window is tellable from a
+  # plain Konsole — annixion-raise and the task manager both key on it.
+  termNamed = wmName: cmd: "konsole -name ${wmName} -e ${cmd}";
   # Exported so the shell that takes over after the tool skips the banner.
   termHold = cmd: ''konsole -e zsh -c "export ANNIXION_NO_BANNER=1; ${cmd}; exec zsh"'';
 
@@ -32,6 +35,7 @@ let
       comment ? null,
       mimeType ? null,
       noDisplay ? false,
+      wmClass ? null,
     }:
     lib.concatStringsSep "\n" (
       [
@@ -48,6 +52,7 @@ let
       ]
       ++ lib.optional (comment != null) "Comment=${comment}"
       ++ lib.optional (mimeType != null) "MimeType=${lib.concatStringsSep ";" mimeType};"
+      ++ lib.optional (wmClass != null) "StartupWMClass=${wmClass}"
       ++ lib.optional noDisplay "NoDisplay=true"
     )
     + "\n";
@@ -426,7 +431,8 @@ let
       name = "Metasploit";
       genericName = "Exploitation & C2 Framework";
       icon = "security-high";
-      exec = term "msfconsole";
+      exec = termNamed "konsole-msf" "msfconsole";
+      wmClass = "konsole-msf";
       categories = [
         "X-AnNIXion-Exploit-Frameworks"
         "X-AnNIXion-C2-Frameworks"
@@ -531,6 +537,7 @@ let
       genericName = "Text Editor";
       icon = "codium";
       exec = "codium";
+      wmClass = "vscodium";
       categories = [ "X-AnNIXion-Dev" ];
       comment = "Code Editing. Redefined.";
     };
@@ -612,6 +619,15 @@ let
       icon = "utilities-terminal";
       exec = "konsole";
       categories = [ "X-AnNIXion-System" ];
+    };
+    "annixion-konsole-root" = de {
+      name = "Konsole (root)";
+      genericName = "Root Terminal";
+      icon = "utilities-terminal";
+      exec = "konsole -name konsole-root --profile Root -e sudo -i";
+      wmClass = "konsole-root";
+      categories = [ "X-AnNIXion-System" ];
+      comment = "Terminal running a root login shell, on a red background";
     };
     "annixion-dolphin" = de {
       name = "Dolphin";
