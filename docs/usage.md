@@ -21,6 +21,7 @@ lot. Every one of them takes `-h` / `--help`.
 | `annixion-vpn-tunnels` | List every interface that qualifies as a live tunnel |
 | `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
 | `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
+| `annixion-raise` | Focus a running window by `WM_CLASS`, or launch the app |
 
 The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
 `annixion-htb-vpn` once imported.
