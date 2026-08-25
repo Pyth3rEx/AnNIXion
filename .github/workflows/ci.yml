@@ -8,6 +8,72 @@ on:
     branches: [main]
 
 jobs:
+  # Lint is its own job so it reports separately from the build and finishes in
+  # about a minute, rather than waiting behind the closure build.
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # The base revision, linted separately so the summary can report what
+      # this branch changes rather than only where it stands.
+      - name: Check out the base revision
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: .lint-base
+
+      # Runs before Nix is installed: a rejected lock must never be fetched.
+      - name: Guard flake inputs
+        if: >-
+          github.event_name == 'pull_request'
+          && github.event.pull_request.head.repo.full_name != github.repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: bash .github/scripts/check-flake-inputs.sh
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # Output is dropped: its annotations would point at the base revision.
+      # A base that does not lint cleanly must not fail this branch either.
+      - name: "[L0] Baseline"
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          LINT_COUNTS: ${{ runner.temp }}/base-counts.txt
+        run: nix develop --command bash .lint-base/.github/scripts/lint.sh >/dev/null
+
+      # Same tools the dev shell gives a contributor locally.
+      - name: "[L0] Lint"
+        env:
+          LINT_SUMMARY: ${{ runner.temp }}/lint-summary.md
+          LINT_BASELINE: ${{ runner.temp }}/base-counts.txt
+        run: nix develop --command bash .github/scripts/lint.sh
+
+      - name: "[L0] Script tests"
+        run: nix develop --command bash tests/milestone.sh
+
+      # Uploaded even when linting failed — that is when the summary matters
+      # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
+      - name: Upload the lint summary
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-summary
+          path: ${{ runner.temp }}/lint-summary.md
+          if-no-files-found: ignore
+
   check:
     name: Nix CI
     runs-on: ubuntu-latest

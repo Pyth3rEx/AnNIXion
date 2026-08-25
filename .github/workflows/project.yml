@@ -3,11 +3,16 @@ name: Project
 # Keeps the project board in step with issues and pull requests.
 #
 #   issue opened          → Backlog, labelled for triage, milestone assigned
-#   triage label removed  → Ready
+#   triage label removed  → Ready, or Up next when it is on the next release
+#   milestone changed     → Up next or Ready, for work nobody has started
 #   issue assigned        → In progress
 #   PR opened             → In progress, milestone assigned
 #   PR merged into dev    → In review, with the issues it closes
 #   PR merged into main   → Done, with everything else in review
+#   milestone closed      → the next release's Ready work rises to Up next
+#
+# Ready and Up next split triaged work by release: the nearest open milestone
+# is the one being built, everything further out waits in Ready.
 #
 # pull_request_target runs in the base repository so the project token is
 # available on pull requests from forks. No step checks out or runs PR code —
@@ -15,9 +20,11 @@ name: Project
 
 on:
   issues:
-    types: [opened, assigned, unlabeled]
+    types: [opened, assigned, unlabeled, milestoned, demilestoned]
   pull_request_target:
-    types: [opened, closed]
+    types: [opened, closed, milestoned, demilestoned]
+  milestone:
+    types: [closed]
 
 permissions:
   contents: read
@@ -44,7 +51,7 @@ jobs:
           NUMBER: ${{ github.event.issue.number }}
         run: gh issue edit "$NUMBER" --repo "$GITHUB_REPOSITORY" --add-label "$TRIAGE_LABEL"
 
-      - name: Assign the upcoming milestone
+      - name: Assign the furthest milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.issue.number }}
@@ -77,14 +84,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Move to Ready
+
+      - name: Read the column its milestone implies
+        id: column
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MILESTONE: ${{ github.event.issue.milestone.title }}
+        run: echo "status=$(.github/scripts/board-status.sh "$MILESTONE")" >> "$GITHUB_OUTPUT"
+
+      - name: Move out of Backlog
         env:
           GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          STATUS: ${{ steps.column.outputs.status }}
         # Guarded: an issue already being worked on must not be pulled back.
         run: |
           .github/scripts/project-sync.sh sync \
             --content "${{ github.event.issue.node_id }}" \
-            --status Ready --only-if-status Backlog
+            --status "$STATUS" --only-if-status Backlog
+
+  # ── Milestone changed ─────────────────────────────────────────────────
+  milestone-changed:
+    name: Milestone changed
+    if: github.event.action == 'milestoned' || github.event.action == 'demilestoned'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read the column its milestone implies
+        id: column
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MILESTONE: ${{ github.event.issue.milestone.title || github.event.pull_request.milestone.title }}
+        run: echo "status=$(.github/scripts/board-status.sh "$MILESTONE")" >> "$GITHUB_OUTPUT"
+
+      - name: Move between Ready and Up next
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          STATUS: ${{ steps.column.outputs.status }}
+        # Guarded to the two columns ahead of the work, so scoping something
+        # into a release never drags back what is already underway or shipped.
+        # A new issue is still in Backlog when its milestone lands, so triage
+        # stays the only way out of Backlog.
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.issue.node_id || github.event.pull_request.node_id }}" \
+            --status "$STATUS" --only-if-status "Ready,Up next"
 
   # ── Assigned ──────────────────────────────────────────────────────────
   issue-assigned:
@@ -109,7 +153,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Assign the upcoming milestone
+      - name: Assign the furthest milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUMBER: ${{ github.event.pull_request.number }}
@@ -183,3 +227,44 @@ jobs:
             .github/scripts/project-sync.sh sync --content "$issue" --status Done
           done
           .github/scripts/project-sync.sh sweep --from "In review" --to Done
+
+      - name: Read the upcoming release
+        id: upcoming
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "milestone=$(.github/scripts/assign-milestone.sh --nearest)" >> "$GITHUB_OUTPUT"
+
+      - name: Scope its Ready work into Up next
+        if: steps.upcoming.outputs.milestone != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          MILESTONE: ${{ steps.upcoming.outputs.milestone }}
+        run: |
+          .github/scripts/project-sync.sh sweep \
+            --from Ready --to "Up next" --milestone "$MILESTONE"
+
+  # ── Milestone closed ──────────────────────────────────────────────────
+  # Closing the shipped milestone is what makes the next one upcoming, so this
+  # is the moment its Ready work becomes the release being built. Merging into
+  # main runs the same sweep, for when the milestone is closed first.
+  milestone-closed:
+    name: Milestone closed
+    if: github.event_name == 'milestone' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read the upcoming release
+        id: upcoming
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "milestone=$(.github/scripts/assign-milestone.sh --nearest)" >> "$GITHUB_OUTPUT"
+
+      - name: Scope its Ready work into Up next
+        if: steps.upcoming.outputs.milestone != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          MILESTONE: ${{ steps.upcoming.outputs.milestone }}
+        run: |
+          .github/scripts/project-sync.sh sweep \
+            --from Ready --to "Up next" --milestone "$MILESTONE"

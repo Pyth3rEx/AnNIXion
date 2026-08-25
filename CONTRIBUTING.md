@@ -44,14 +44,16 @@ gitignored, and CI rejects PRs that add it.
 
 ## Before you push
 
-Run at least L1 + lint locally (see [docs/dev.md](docs/dev.md) for all levels):
+Run at least L0 + L1 locally (see [docs/dev.md](docs/dev.md) for all levels):
 
 ```bash
+.github/scripts/lint.sh        # L0 — nixfmt, statix, deadnix, shellcheck, eval
+tests/milestone.sh             # L0 — script fixture tests
 nix flake check --no-build     # L1 — syntax / type / references
-statix check .                 # anti-pattern linter
-deadnix .                      # unused bindings
-nixfmt --check .               # formatting (run `nixfmt .` to fix)
 ```
+
+L0 is the same script CI runs as the **Lint** check, so a clean run locally
+means a clean run there. Run `nixfmt <file>` to apply formatting.
 
 Building the full system closure (L2) before opening a PR is recommended:
 
@@ -59,7 +61,7 @@ Building the full system closure (L2) before opening a PR is recommended:
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link
 ```
 
-CI runs L1–L3 on every PR, whatever the target branch. The ISO build, the size
+CI runs L0–L3 on every PR, whatever the target branch. The ISO build, the size
 gate and the version/release-name gates only run on PRs into `main` and on
 pushes to `main`.
 
@@ -98,6 +100,35 @@ python3 .github/scripts/check-release-form.py my-draft.md
 
 ---
 
+## Comments
+
+Keep them minimal, and let the code carry what it can.
+
+- **A short line where the reason is not obvious.** Prefer explaining *why*
+  something is the way it is over restating *what* the line does.
+- **No multi-line comment blocks.** If an explanation needs a paragraph, it
+  belongs in `docs/`, and the code gets a one-line pointer to it.
+- **No banner headers inside functions**, no commented-out code, no changelog
+  or attribution comments — that is what `git log` is for.
+- **Section headers** (`# ── Networking ──`) are the exception. The Nix modules
+  use them to group related settings, and that grouping is deliberate enough
+  that `statix.toml` disables the lint which would flatten it.
+
+A comment earns its place by saving the next reader a detour. One that repeats
+the code costs a line and pays nothing, and drifts out of date the first time
+the code changes without it.
+
+```nix
+# Good — the reason is not visible from the code.
+environment.etc.hosts.mode = "0700"; # Makes /etc/hosts writable.
+
+# Noise — the code already says this.
+# Set the hostname to AnNIXion
+networking.hostName = "AnNIXion";
+```
+
+---
+
 ## Adding tools
 
 System-wide security tools live in `modules/security-tools.nix`. Add the
@@ -116,5 +147,110 @@ keeps working without `lib.mkForce`. See
 
 ## Reporting bugs and requesting features
 
-Use the issue templates under **Issues → New issue**. For anything security
-sensitive, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
+Use the issue templates under **Issues → New issue**. Blank issues are turned
+off, so pick the one that fits:
+
+| Template | Use it for |
+|---|---|
+| **Bug Report** | Something is broken — config errors, tools crashing, build failures |
+| **Feature Request** | A new capability, workflow, or system-level improvement |
+| **Tool Request** | Packaging a new security tool. Tool additions have their own form; do not use Feature Request |
+| **Documentation** | Something undocumented, wrong, or unclear |
+
+For anything security sensitive, follow [SECURITY.md](SECURITY.md) and use
+GitHub's private advisory flow instead of opening a public issue. The issue
+chooser links straight to it.
+
+Fill in the **Priority** and **Size** dropdowns honestly — they are read
+straight off the form and written to the project board, so a filled-in form
+saves a round trip. They are your estimate from where you sit; the maintainer
+may adjust them.
+
+---
+
+## Issue triage
+
+Every issue moves through the [project board](https://github.com/users/Pyth3rEx/projects/3),
+and most of the movement is automatic. You do not need to update anything by
+hand — opening the issue, getting assigned, and opening a pull request are what
+drive it.
+
+### What happens when you open an issue
+
+Immediately, without anyone touching it:
+
+- It is labelled **`needs triage`** and lands on the board in **Backlog**.
+- It is put on the **furthest** open milestone — with 0.4.0 and 0.5.0 open,
+  new work lands on 0.5.0, so the current release stays as scoped. That is also
+  why it lands in Ready rather than Up next once triaged.
+- **Priority** and **Size** are read from the form and written to the board —
+  but **only when those fields are empty**, so a maintainer's correction is
+  never overwritten by a later re-run.
+
+### What triage actually is
+
+The maintainer reads the issue, adjusts Priority and Size if your estimate was
+off, and **removes the `needs triage` label**. That removal is the triage
+decision, and it moves the issue out of Backlog — to **Ready**, or to **Up
+next** if it is already on the release being built.
+
+Removing the label is guarded: it only promotes an issue that is still in
+Backlog. Triaging something already being worked on will not drag it backwards.
+
+An issue that is rejected is closed with `wontfix`, `duplicate` or `invalid`
+rather than being left to rot in Backlog.
+
+### The statuses
+
+| Status | Means | Set by |
+|---|---|---|
+| **Backlog** | Filed, not yet triaged | Opening the issue |
+| **Ready** | Triaged and agreed, but not scoped into the next release | Removing `needs triage` |
+| **Up next** | Scoped into the release being built, nobody has started | Putting it on the nearest open milestone |
+| **In progress** | Someone is on it | Assigning the issue, or opening a PR |
+| **In review** | Merged into `dev`, awaiting release | Merging a PR into `dev` |
+| **Done** | Shipped in a release | Merging the release PR into `main` |
+
+### Ready versus Up next
+
+Both hold triaged work nobody has started; the **milestone** is what separates
+them. The nearest open milestone is the release being built, so its issues sit
+in **Up next**. Everything on a further milestone waits in **Ready**.
+
+Because new issues land on the *furthest* milestone, your issue starts in Ready.
+The maintainer moving it onto the current milestone is what pulls it into Up
+next — the board follows the milestone, so there is no separate scoping step.
+Moving it back out sends it back to Ready.
+
+When a release ships and its milestone is closed, everything in Ready on the
+next milestone rises to Up next on its own.
+
+### Picking something up
+
+Anything in **Ready** or **Up next** is fair game, and `good first issue` marks
+the gentler ones. **Up next** is the more useful place to look: it is the work
+wanted for the next release. Say so on the issue and get it assigned to you —
+assignment is what moves it to **In progress**, so it is also how everyone else
+knows not to duplicate your work.
+
+### Why your issue stays open after your PR merges
+
+Link the issue from your pull request with a closing keyword — `Closes #12`,
+not a bare `(#12)`, which reads like a link but closes nothing.
+
+Even so, **merging into `dev` will not close it.** GitHub only acts on closing
+keywords when a pull request merges into the default branch, which is `main`.
+So a feature PR moves its issues to **In review**, and the `dev → main` release
+PR is what actually closes them and sweeps everything still in review to
+**Done**. An issue sitting open in **In review** after your work merged is the
+system working, not a missed link.
+
+### Labels
+
+`bug`, `enhancement`, `documentation` and `tool request` are applied by the
+templates. The rest are triage decisions: `good first issue`, `help wanted`,
+`question`, `duplicate`, `invalid`, `wontfix`, and `needs triage` itself.
+
+The exact workflow rules, the scripts behind them, and the token the board
+automation needs are documented in
+[docs/dev.md](docs/dev.md#project-board-automation).
