@@ -1,4 +1,6 @@
 # Firefox: shared policies, desktop launchers, and the four profiles.
+# MOZ_APP_REMOTINGNAME gives each profile its own WM_CLASS, so the panel
+# and annixion-raise can tell the windows apart.
 {
   config,
   lib,
@@ -29,7 +31,8 @@
       Name=Firefox - Unsafe Browser
       GenericName=Unsafe Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png
-      Exec=firefox -P "Unsafe Browser" --no-remote
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-untrusted firefox -P "Unsafe Browser" --no-remote
+      StartupWMClass=firefox-untrusted
       Terminal=false
       Categories=X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -40,7 +43,8 @@
       Name=Firefox - Red Team
       GenericName=Assault Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
-      Exec=firefox -P "Red Team" --no-remote
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote
+      StartupWMClass=firefox-red
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -51,7 +55,8 @@
       Name=Firefox - OSINT
       GenericName=Search Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
-      Exec=annixion-vpn-browser "OSINT"
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT"
+      StartupWMClass=firefox-osint
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -62,7 +67,8 @@
       Name=Firefox - Puppet Master
       GenericName=Persona Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
-      Exec=annixion-vpn-browser "Puppet Master"
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master"
+      StartupWMClass=firefox-puppet
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
