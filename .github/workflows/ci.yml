@@ -32,14 +32,14 @@ jobs:
           path: .lint-base
 
       # Runs before Nix is installed: a rejected lock must never be fetched.
-      - name: Guard flake inputs
+      - name: Guard what a fork changes
         if: >-
           github.event_name == 'pull_request'
           && github.event.pull_request.head.repo.full_name != github.repository
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
-        run: bash .github/scripts/check-flake-inputs.sh
+        run: bash .github/scripts/check-fork-changes.sh
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31

@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# Guards what a pull request from a fork can make CI fetch and build.
+# Reports what a pull request from a fork changes about how CI itself runs.
 # flake.lock is rejected: a redirected `locked` entry reads as legitimate.
-# flake.nix is reported only, since adding packages is ordinary contribution.
+# flake.nix and anything under .github are reported only — fixing a workflow is
+# ordinary contribution, and a fork cannot reach the privileged jobs anyway:
+# workflow_run and pull_request_target always read from the default branch.
+# What the report buys is that a changed script or workflow is noticed at all,
+# which a large diff makes easy to miss.
 # MODE=annotate gates the lint job; MODE=markdown writes a note for the comment.
 set -euo pipefail
 
@@ -35,7 +39,18 @@ changed() {
 lock=0
 nix=0
 inputs=0
+ci=0
+ci_files=""
 changed flake.lock && lock=1
+
+# Everything CI executes or is configured by, tests included: the lint job runs
+# them, so a fork's copy is a fork's code running. It lands for real on merge.
+ci_files=$(jq -r '[.[] | .filename
+  | select(startswith(".github/workflows/")
+        or startswith(".github/scripts/")
+        or startswith("tests/"))]
+  | join(", ")' "$FILES")
+[ -n "$ci_files" ] && ci=1
 if changed flake.nix; then
   nix=1
   patch=$(jq -r '.[] | select(.filename == "flake.nix") | .patch // ""' "$FILES")
@@ -72,6 +87,16 @@ MD
 
 MD
   fi
+  if [ "$ci" -eq 1 ]; then
+    printf '> [!WARNING]\n> **This pull request changes how CI runs.** It touches %s.\n' \
+      "$ci_files"
+    cat <<'MD'
+> Read those before removing `needs triage`. A fork cannot reach the privileged
+> jobs — they always run from the default branch — but this code executes in the
+> lint job, and lands for real once merged.
+
+MD
+  fi
   exit 0
 fi
 
@@ -83,6 +108,10 @@ if [ "$inputs" -eq 1 ]; then
 elif [ "$nix" -eq 1 ]; then
   echo "::warning file=flake.nix,line=1::This PR changes flake.nix. Confirm it only touches packages and adds no inputs before removing 'needs triage'."
 fi
-[ "$lock" -eq 0 ] && [ "$nix" -eq 0 ] && echo "this fork changes no flake files ✓"
+if [ "$ci" -eq 1 ]; then
+  echo "::warning::This PR changes how CI runs: $ci_files. Read those before removing 'needs triage' — they execute in the lint job and land for real once merged."
+fi
+[ "$lock" -eq 0 ] && [ "$nix" -eq 0 ] && [ "$ci" -eq 0 ] &&
+  echo "this fork changes no flake or CI files ✓"
 
 exit "$lock"
