@@ -245,6 +245,8 @@
           jq
           # tests/prompt-width.sh renders the real theme to check the ladder.
           oh-my-posh
+          # tests/workflow-injection.sh reads the workflows' run: blocks.
+          yq-go
           nil
           nix-output-monitor
         ];
