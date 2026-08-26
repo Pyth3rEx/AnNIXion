@@ -18,6 +18,7 @@ in
 {
   programs.firefox.profiles."osint" = {
     id = 2;
+    isDefault = true;
     name = "OSINT";
     search = {
       default = "ddg";
