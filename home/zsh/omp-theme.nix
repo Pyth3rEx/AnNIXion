@@ -18,7 +18,10 @@
       alignment = "left";
       newline = true;
       segments = [
-        # User @ host — flips to accent red when root.
+        # User @ host — the shell's identity, and never shed at any width.
+        # Flips to accent red as root and to Nix blue inside a Nix shell.
+        # Root is listed first: it is the more dangerous of the two to miss,
+        # so it wins when a Nix shell is entered as root.
         {
           type = "session";
           style = "diamond";
@@ -26,8 +29,14 @@
           trailing_diamond = "<#ff0033,transparent></> ";
           foreground = "#DFE4EA";
           background = "#0E0F13";
-          foreground_templates = [ "{{ if .Root }}#0E0F13{{ end }}" ];
-          background_templates = [ "{{ if .Root }}#ff0033{{ end }}" ];
+          foreground_templates = [
+            "{{ if .Root }}#0E0F13{{ end }}"
+            "{{ if .Env.IN_NIX_SHELL }}#0E0F13{{ end }}"
+          ];
+          background_templates = [
+            "{{ if .Root }}#ff0033{{ end }}"
+            "{{ if .Env.IN_NIX_SHELL }}#7EBAE4{{ end }}"
+          ];
           template = "   {{ if .Root }}  ROOT{{ else }}{{ .UserName }}{{ end }} @ {{ .HostName }}   ";
           properties.display_host = true;
         }
