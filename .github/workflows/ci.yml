@@ -66,6 +66,7 @@ jobs:
           nix develop --command bash tests/milestone.sh
           nix develop --command bash tests/prompt-width.sh
           nix develop --command bash tests/firefox-profiles.sh
+          nix develop --command bash tests/workflow-injection.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
@@ -244,8 +245,10 @@ jobs:
           echo "Found ISO: $ISO ($(du -sh "$ISO" | cut -f1))"
 
       - name: Check ISO size
+        env:
+          ISO_PATH: ${{ steps.iso.outputs.path }}
         run: |
-          ISO="${{ steps.iso.outputs.path }}"
+          ISO="$ISO_PATH"
           MAX_MB=1900
           MAX_BYTES=$((MAX_MB * 1024 * 1024))
           ISO_BYTES=$(stat -c%s "$ISO")
@@ -288,25 +291,37 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
-          BODY=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
-            --jq '.[0].body // ""')
+          BODY=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].body // ""')
           if [ -z "$BODY" ]; then
             BODY="_No changelog provided._"
             echo "::warning::No merged PR found for this commit — release notes will be empty."
           fi
+          # Random delimiter: a body containing the marker would otherwise be
+          # able to close the heredoc and write further outputs of its own.
+          DELIM="body_$(openssl rand -hex 16)"
           {
-            echo "body<<__EOF__"
-            echo "$BODY"
-            echo "__EOF__"
+            printf 'body<<%s\n' "$DELIM"
+            printf '%s\n' "$BODY"
+            printf '%s\n' "$DELIM"
           } >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+          TAG: ${{ steps.version.outputs.tag }}
+          TITLE: ${{ steps.version.outputs.title }}
+          ISO_PATH: ${{ steps.iso.outputs.path }}
+          # Via env, never interpolated into the shell, exactly as pr-form.yml
+          # takes the body: ${{ }} is pasted in before bash runs, so backticks
+          # in a changelog would be command substitution rather than markup.
+          CHANGELOG: ${{ steps.changelog.outputs.body }}
         run: |
-          TAG="${{ steps.version.outputs.tag }}"
 
           if gh release view "$TAG" > /dev/null 2>&1; then
             echo "Release $TAG already exists — bump VERSION to publish a new release."
@@ -315,7 +330,7 @@ jobs:
 
           # Auto-generated PR list since the previous tag
           PREV_TAG=$(git tag --sort=-version:refname | head -1)
-          AUTO_NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+          AUTO_NOTES=$(gh api "repos/$REPO/releases/generate-notes" \
             -X POST \
             -f tag_name="$TAG" \
             ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
@@ -323,16 +338,16 @@ jobs:
 
           NOTES_FILE=$(mktemp)
           {
-            echo "${{ steps.changelog.outputs.body }}"
+            printf '%s\n' "$CHANGELOG"
             if [ -n "$AUTO_NOTES" ]; then
               printf '\n---\n\n## All changes in this release\n\n%s\n' "$AUTO_NOTES"
             fi
             printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
             printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
-            printf 'Built from commit `${{ github.sha }}`.\n'
+            printf 'Built from commit `%s`.\n' "$COMMIT_SHA"
           } > "$NOTES_FILE"
 
           gh release create "$TAG" \
-            --title "${{ steps.version.outputs.title }}" \
+            --title "$TITLE" \
             --notes-file "$NOTES_FILE" \
-            "${{ steps.iso.outputs.path }}"
+            "$ISO_PATH"
