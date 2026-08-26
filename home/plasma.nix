@@ -227,7 +227,10 @@
         # Window controls
         "Window Maximize" = "Meta+Up";
         "Window Minimize" = "Meta+Down";
-        "Window Close" = "Meta+Q";
+        # Alt+F4, not a Meta chord: Q sits under 1 and 2, so a slip off a
+        # desktop switch closed the window. Closing is the one control here
+        # worth breaking the Meta pattern for.
+        "Window Close" = "Alt+F4";
         "Window Fullscreen" = "Meta+F";
 
         # Focus switching — Krohnkite uses these

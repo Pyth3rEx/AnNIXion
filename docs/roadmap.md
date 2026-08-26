@@ -128,7 +128,7 @@ Rationale:
 - [x] KDE Plasma 6 declared in `modules/desktop.nix`; per-user Plasma settings extracted to `home/plasma.nix` (plasma-manager)
 - [x] SDDM login manager with Breeze theme
 - [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
-- [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
+- [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Alt+F4 close
 - [x] Breeze Dark theme set as default
 - [x] 4 virtual desktops preconfigured
 - [x] Theming pass — Breeze Dark, Slot Nord Dark icons, Nordzy cursor, JetBrains Mono
