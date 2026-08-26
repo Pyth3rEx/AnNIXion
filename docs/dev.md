@@ -189,6 +189,27 @@ not close its issues, because closing keywords only fire on the default branch;
 the release PR into `main` does. Everything that reached `dev` is in review by
 then, so the sweep moves the whole release to Done at once.
 
+---
+
+## Unanswered reviews
+
+`.github/workflows/stale-reviews.yml` runs daily and closes pull requests that
+were asked for changes and never answered. The clock starts at the most recent
+*changes requested* review and is reset by anything the author does after it —
+a push, a comment, a reply on the diff. A warning lands at 21 days and the close
+at 30, so the close is never the first anyone hears of it, and closing is not a
+rejection: reopening costs nothing.
+
+Only the review matters, not general activity. A pull request being discussed by
+other people does not keep an unanswered review alive, and a pull request nobody
+has touched is left alone until a review actually asks for something.
+
+Run it by hand from the Actions tab to see what it would do; the manual trigger
+defaults to a dry run, which reports each verdict and touches nothing. Worth
+doing after changing `WARN_DAYS` or `CLOSE_DAYS`, since this closes other
+people's work. `tests/stale-reviews.sh` drives the same decision through
+`--decide`, so the thresholds are covered without a network.
+
 ### Ready and Up next
 
 The two columns split triaged work by release, and the milestone is what
