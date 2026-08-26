@@ -73,14 +73,16 @@
             fetch_stash_count = true;
           };
         }
-        # Nix shell — only inside nix-shell, nix develop or nix run.
+        # Nix shell — only inside nix-shell, nix develop or nix run. Carries no
+        # min_width: like the root marker on the session segment, a throwaway
+        # shell must stay identifiable at every terminal width. Nix blue sets it
+        # apart from the accent red the rest of the prompt is built on.
         {
           type = "nix-shell";
           style = "diamond";
-          min_width = 125;
           leading_diamond = "<background,transparent></>";
           trailing_diamond = "<#ff0033,transparent></> ";
-          foreground = "#ff0033";
+          foreground = "#7EBAE4";
           background = "#1A1D24";
           template = ''{{ if ne .Type "unknown" }}   ❄ {{ .Type }}   {{ end }}'';
         }
