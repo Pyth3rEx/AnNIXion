@@ -62,7 +62,9 @@ jobs:
         run: nix develop --command bash .github/scripts/lint.sh
 
       - name: "[L0] Script tests"
-        run: nix develop --command bash tests/milestone.sh
+        run: |
+          nix develop --command bash tests/milestone.sh
+          nix develop --command bash tests/prompt-width.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
@@ -124,11 +126,14 @@ jobs:
 
       # L3 — VM tests: boot + service behaviour, security tool presence.
       # Runs in QEMU via the NixOS test framework.
+      # Every check the flake defines, discovered rather than listed: a test
+      # that is written and wired in must not be able to never run.
       - name: "[L3] VM tests"
         run: |
-          nix build \
-            .#checks.x86_64-linux.boot \
-            .#checks.x86_64-linux.security-tools \
+          mapfile -t checks < <(nix eval --json '.#checks.x86_64-linux' \
+            --apply builtins.attrNames | jq -r '.[]')
+          printf 'running %s VM test(s): %s\n' "${#checks[@]}" "${checks[*]}"
+          nix build "${checks[@]/#/.#checks.x86_64-linux.}" \
             --print-build-logs --no-link
 
   iso:
