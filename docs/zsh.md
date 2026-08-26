@@ -21,19 +21,28 @@ Path components are split by a plain `/` in accent red, the leading one on
 absolute paths included. The second line is a single accent red `$>` prompt
 (`#>` when root) with the cursor immediately after it.
 
-Every segment except `user @ host` carries a `min_width`, so a narrow terminal
-sheds them one at a time instead of wrapping onto a second line:
+Every segment except `user @ host` and `nix-shell` carries a `min_width`, so a
+narrow terminal sheds them one at a time instead of wrapping onto a second line:
 
 | terminal width | segments shown |
 | --- | --- |
-| < 70 | `user @ host` |
+| < 70 | `user @ host`, `nix-shell` (only inside one) |
 | 70 | `+ path` |
 | 105 | `+ git` |
 | 120 | `+ exit code` |
-| 125 | `+ nix-shell` (only inside one) |
 | 135 | `+ clock` |
 | 150 | `+ execution time` |
 | 165 | `+ command length` |
+
+Which shell you are in is not decoration, so neither marker sheds. `user @ host`
+carries it in its background — accent red as root, Nix blue inside a Nix shell,
+the default slate otherwise — and `nix-shell` adds the `❄` with the kind of
+environment. Root is checked first, so a Nix shell entered as root still reads
+red: the more dangerous state wins.
+
+`tests/prompt-width.sh` renders the theme across the whole range and fails if
+the top line wraps, the `❄` goes missing, or the background stops flipping;
+`tests/shells.nix` asserts the same three states in a VM.
 
 The thresholds assume a path of about 20 characters; a much longer one can still
 wrap at the low end of a band.
@@ -58,6 +67,7 @@ to zsh. The `❄` segment marks such a shell. The `/etc/bashrc` copy of the prom
 covers the leftovers — `nix-shell --pure`, a bare `bash` — so even those keep the
 red prompt.
 
+
 The separator glyphs live in the Private Use Area, so the terminal font must be
 a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
 a plain font renders the separators as empty boxes.
@@ -80,7 +90,7 @@ $>
 | `⏱ Xs` (right) | Command ran > 3 s | Execution time, rounded |
 | `✗ N` (right) | Non-zero exit | Exit code of the last command |
 | `HH:MM:SS` (right) | Terminal ≥ 135 cols | Current time |
-| `❄ impure` | Inside nix-shell / nix develop | The shell is a Nix environment |
+| `❄ impure` | Inside nix-shell / nix develop | The shell is a Nix environment; Nix blue, not accent red |
 | `$>` (line 2) | Always | Where you type; `#>` when root |
 
 ---
