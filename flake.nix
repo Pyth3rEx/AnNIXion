@@ -231,6 +231,7 @@
         boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
         security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
         vpn-enforcement = pkgs.testers.nixosTest (import ./tests/vpn-enforcement.nix);
+        shells = pkgs.testers.nixosTest (import ./tests/shells.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -242,6 +243,8 @@
           shellcheck
           # project-sync.sh and the milestone tests parse JSON with it.
           jq
+          # tests/prompt-width.sh renders the real theme to check the ladder.
+          oh-my-posh
           nil
           nix-output-monitor
         ];
