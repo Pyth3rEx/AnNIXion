@@ -1,4 +1,7 @@
 # Firefox: shared policies, desktop launchers, and the four profiles.
+# Every Exec carries %U: these entries claim text/html and the http
+# scheme handlers, and without a field code the URL is never passed —
+# Firefox then reads the bare argument as a path and opens file://.
 # MOZ_APP_REMOTINGNAME gives each profile its own WM_CLASS, so the panel
 # and annixion-raise can tell the windows apart.
 {
@@ -31,7 +34,7 @@
       Name=Firefox - Unsafe Browser
       GenericName=Unsafe Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png
-      Exec=env MOZ_APP_REMOTINGNAME=firefox-untrusted firefox -P "Unsafe Browser" --no-remote
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-untrusted firefox -P "Unsafe Browser" --no-remote %U
       StartupWMClass=firefox-untrusted
       Terminal=false
       Categories=X-AnNIXion-Internet;Network;WebBrowser;
@@ -43,7 +46,7 @@
       Name=Firefox - Red Team
       GenericName=Assault Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
-      Exec=env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote %U
       StartupWMClass=firefox-red
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
@@ -55,7 +58,7 @@
       Name=Firefox - OSINT
       GenericName=Search Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
-      Exec=env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT"
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT" %U
       StartupWMClass=firefox-osint
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
@@ -67,7 +70,7 @@
       Name=Firefox - Puppet Master
       GenericName=Persona Browser
       Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
-      Exec=env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master"
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master" %U
       StartupWMClass=firefox-puppet
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
