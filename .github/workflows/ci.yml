@@ -65,6 +65,7 @@ jobs:
         run: |
           nix develop --command bash tests/milestone.sh
           nix develop --command bash tests/prompt-width.sh
+          nix develop --command bash tests/firefox-profiles.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
