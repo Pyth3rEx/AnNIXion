@@ -7,14 +7,17 @@ on:
   push:
     branches: [main]
 
+# Read-only floor for every job. Build ISO raises its own to publish a release;
+# nothing else writes, so nothing else declares more.
+permissions:
+  contents: read
+
 jobs:
   # Lint is its own job so it reports separately from the build and finishes in
   # about a minute, rather than waiting behind the closure build.
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v6
@@ -67,6 +70,7 @@ jobs:
           nix develop --command bash tests/prompt-width.sh
           nix develop --command bash tests/firefox-profiles.sh
           nix develop --command bash tests/workflow-injection.sh
+          nix develop --command bash tests/workflow-permissions.sh
           nix develop --command bash tests/stale-reviews.sh
 
       # Uploaded even when linting failed — that is when the summary matters
