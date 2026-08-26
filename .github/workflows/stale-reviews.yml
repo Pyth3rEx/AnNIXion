@@ -1,0 +1,36 @@
+name: Stale reviews
+
+# Closes pull requests the maintainer asked changes on and nobody answered.
+# A warning goes out first, and anything the author does resets the clock, so
+# the close only ever lands on work that has genuinely been abandoned.
+#
+# Runs on a schedule rather than on pull request events: what matters is time
+# passing, which no event announces.
+
+on:
+  schedule:
+    # 07:00 UTC daily — before the working day, after the night's activity.
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: Report the verdicts without commenting or closing
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  sweep:
+    name: Close unanswered reviews
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Sweep open pull requests
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry-run || 'false' }}
+        run: bash .github/scripts/stale-reviews.sh
