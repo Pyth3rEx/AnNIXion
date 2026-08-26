@@ -18,7 +18,9 @@ in
 {
   programs.firefox.profiles."untrusted" = {
     id = 0;
-    isDefault = true;
+    # Explicit: Home Manager treats id 0 as the default profile unless
+    # told otherwise, and the default is OSINT.
+    isDefault = false;
     name = "Unsafe Browser";
     search = {
       default = "ddg";

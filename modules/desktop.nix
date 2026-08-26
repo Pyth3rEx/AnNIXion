@@ -28,11 +28,11 @@
 
   # ── Default applications ────────────────────────────────────────────────
   xdg.mime.defaultApplications = {
-    "text/html" = "firefox-red.desktop";
-    "x-scheme-handler/http" = "firefox-red.desktop";
-    "x-scheme-handler/https" = "firefox-red.desktop";
-    "x-scheme-handler/about" = "firefox-red.desktop";
-    "x-scheme-handler/unknown" = "firefox-red.desktop";
+    "text/html" = "firefox-osint.desktop";
+    "x-scheme-handler/http" = "firefox-osint.desktop";
+    "x-scheme-handler/https" = "firefox-osint.desktop";
+    "x-scheme-handler/about" = "firefox-osint.desktop";
+    "x-scheme-handler/unknown" = "firefox-osint.desktop";
   };
 
   # ── KWallet ─────────────────────────────────────────────────────────────
