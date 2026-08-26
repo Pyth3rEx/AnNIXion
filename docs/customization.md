@@ -125,7 +125,7 @@ the target desktop and you stay where you are.
 | `Meta+Up` | Maximize |
 | `Meta+Down` | Minimize |
 | `Meta+F` | Fullscreen |
-| `Meta+Q` | Close |
+| `Alt+F4` | Close |
 | `Meta+Shift+↑↓←→` | Move focus between windows — Krohnkite uses these |
 
 ### Applications
