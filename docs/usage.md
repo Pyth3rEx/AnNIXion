@@ -37,13 +37,15 @@ typing shortcuts, and several deliberately shadow standard tools.
 
 ## Firefox profiles
 
-Four isolated profiles launch from the desktop. Each has its own cookies, cache, and extensions.
+Four isolated profiles launch from the desktop. Each has its own cookies, cache,
+and extensions. OSINT is the default: it owns `http`, `https` and `text/html`, so
+a link clicked in any other application opens there.
 
 | Profile | Egress | Purpose |
 |---|---|---|
-| **Unsafe Browser** | Direct (no proxy) | Captive portals, clearnet sessions. Default when running bare `firefox`. |
+| **Unsafe Browser** | Direct (no proxy) | Captive portals, clearnet sessions. Keeps nothing: permanent private browsing, a blank page every launch, no history, cache or session carried across restarts. |
 | **Red Team** | Burp Suite — `127.0.0.1:8080` | Web app testing, interception. Blocks if Burp is not running. No VPN required — internal targets are reachable. |
-| **OSINT** | VPN tunnel — kernel-enforced | Source gathering, investigations. Refuses to launch without a VPN tunnel. |
+| **OSINT** | VPN tunnel — kernel-enforced | Source gathering, investigations. The default profile, and where links from other applications open. Refuses to launch without a VPN tunnel. |
 | **Puppet Master** | VPN tunnel — kernel-enforced | Persona management, containers. Refuses to launch without a VPN tunnel. |
 
 ---
