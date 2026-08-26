@@ -67,6 +67,7 @@ jobs:
           nix develop --command bash tests/prompt-width.sh
           nix develop --command bash tests/firefox-profiles.sh
           nix develop --command bash tests/workflow-injection.sh
+          nix develop --command bash tests/stale-reviews.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
