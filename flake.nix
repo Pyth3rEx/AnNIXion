@@ -232,6 +232,7 @@
         security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
         vpn-enforcement = pkgs.testers.nixosTest (import ./tests/vpn-enforcement.nix);
         shells = pkgs.testers.nixosTest (import ./tests/shells.nix);
+        xrdp-session = pkgs.testers.nixosTest (import ./tests/xrdp-session.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {

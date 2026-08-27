@@ -101,6 +101,33 @@ The setting is per connection, so check it again after connecting from a
 different machine or Windows profile. A console login has no redirection
 channel at all and will never have audio.
 
+### Reconnecting hangs, or vmconnect says to contact the admin
+
+Fixed in `modules/xrdp.nix` — rebuild and the next login is clean. Generations
+before the fix set the operator account to linger, so `systemd --user` outlived
+the session it belonged to. It kept `graphical-session.target` active pointing
+at a `DISPLAY` that had gone away with the old X server, and the next login
+asked systemd for a Plasma session it already believed was running: Enhanced
+Session drops the connection, and a console login sits on the loading screen.
+
+To recover a machine still running an affected generation, log in on the
+console and clear the stale manager:
+
+```sh
+loginctl disable-linger operator
+loginctl terminate-user operator
+```
+
+Rebooting works too. Rebuilding clears the linger flag for good.
+
+If a reconnect fails after the fix, xrdp now logs to the journal — nixpkgs
+sends its log to `/dev/null` by default, so before this there was nothing to
+read:
+
+```sh
+journalctl -u xrdp -u xrdp-sesman -b
+```
+
 ---
 
 ## Browsers & proxies
