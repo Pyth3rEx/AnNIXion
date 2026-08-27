@@ -6,6 +6,9 @@
 }:
 # KDE Plasma desktop: panels, shortcuts and kwinrc/kdeglobals via
 # plasma-manager, plus the activation hooks that re-apply what KWin resets.
+let
+  tileModel = import ./start-menu.nix { inherit lib; };
+in
 {
   programs.plasma = {
     enable = lib.mkDefault true;
@@ -187,6 +190,10 @@
               showRecentApps = "false";
               icon = "${../assets/icons/AnNIXion.png}";
               fixedPanelIcon = "true";
+              # Written here rather than by an activation hook: plasma-manager
+              # deletes the appletsrc before replaying its layout script, so a
+              # hook that edits that file loses whatever it wrote.
+              inherit tileModel;
             };
           }
 
@@ -356,13 +363,11 @@
   '';
 
   # Ordered after the widget install and the kwinrc writes.
-  home.activation.restartPlasmashell =
-    lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" "configureTiledMenu" ]
-      ''
-        if [ -n "''${DISPLAY:-}" ]; then
-          ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
-            > /dev/null 2>&1 &
-          disown 2>/dev/null || true
-        fi
-      '';
+  home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" ] ''
+    if [ -n "''${DISPLAY:-}" ]; then
+      ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
+        > /dev/null 2>&1 &
+      disown 2>/dev/null || true
+    fi
+  '';
 }
