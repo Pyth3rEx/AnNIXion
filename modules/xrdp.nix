@@ -24,15 +24,35 @@
     # metal RDP needs this back to true.
     openFirewall = lib.mkDefault false;
 
+    # vmconnect widens the security protocols Enhanced Session negotiates.
+    # Console logging is the only route xrdp's own log has to the journal:
+    # nixpkgs points LogFile at /dev/null and turns syslog off, which is why
+    # a failed connection leaves nothing behind to read.
+    extraConfDirCommands = ''
+      substituteInPlace $out/xrdp.ini \
+        --replace-fail "#vmconnect=true" "vmconnect=true" \
+        --replace-fail "#EnableConsole=false" "EnableConsole=true"
+      substituteInPlace $out/sesman.ini \
+        --replace-fail "#EnableConsole=false" "EnableConsole=true"
+    '';
+
     # startplasma-x11 is the session launcher xrdp knows how to set up.
     defaultWindowManager = lib.mkDefault "${pkgs.writeShellScript "annixion-start-plasma-rdp" ''
       # ── Runtime directory ────────────────────────────────────────────
       export XDG_RUNTIME_DIR=/run/user/$(id -u)
       export DBUS_SESSION_BUS_ADDRESS=unix:path=$XDG_RUNTIME_DIR/bus
 
+      # ── systemd --user ───────────────────────────────────────────────
+      # pam_systemd starts the manager when the session opens, but not
+      # synchronously, and everything below needs it reachable first.
+      for _ in $(seq 100); do
+        systemctl --user show-environment >/dev/null 2>&1 && break
+        sleep 0.1
+      done
+
       # ── D-Bus ────────────────────────────────────────────────────────
-      # linger means systemd --user owns the bus socket; dbus-launch is
-      # the fallback for first boot.
+      # systemd --user owns the bus socket; dbus-launch is the fallback
+      # for a session that reaches here without one.
       if ! [ -S "$XDG_RUNTIME_DIR/bus" ]; then
         eval $(${pkgs.dbus}/bin/dbus-launch --sh-syntax --exit-with-session)
       fi
@@ -85,21 +105,19 @@
 
   services.xrdp.audio.enable = lib.mkDefault true;
 
-  # xrdp bypasses the PAM/logind flow that starts systemd --user, so
-  # without linger the Plasma 6 shell units never launch.
-  users.users.operator.linger = lib.mkDefault true;
+  # pam_systemd registers the xrdp session with logind, so the user manager
+  # starts with the session and must die with it: left lingering it holds
+  # graphical-session.target active against a dead DISPLAY, and the next
+  # login finds Plasma already started and never gets a shell. Explicitly
+  # false, not absent — NixOS only runs disable-linger for users set false,
+  # so unsetting it would strand the stamp file on machines that have one.
+  users.users.operator.linger = lib.mkDefault false;
 
   # ── vsock transport ───────────────────────────────────────
   # Listen on vsock://-1:3389 (VMADDR_CID_ANY) rather than TCP — this is
   # what Enhanced Session connects to. mkForce must beat xrdp's own
   # ExecStart; it is required, not a user-tunable default.
   systemd.services.xrdp = {
-    preStart = lib.mkAfter ''
-      cfg=/etc/xrdp/xrdp.ini
-      if [ -f "$cfg" ]; then
-        sed -i 's|^#vmconnect=true|vmconnect=true|' "$cfg"
-      fi
-    '';
     serviceConfig = {
       ExecStart = lib.mkForce "${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://-1:3389 --config /etc/xrdp/xrdp.ini";
     };
