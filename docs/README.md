@@ -27,6 +27,7 @@ day-to-day operation.
 |---|---|
 | [Hardening](hardening.md) | What is disabled, what is deliberately left alone, how to restore any of it |
 | [Developer guide](dev.md) | Local CI levels, VSCodium tasks, hardware configuration, pre-push checklist |
+| [Testing](testing.md) | The test suite, which kind of test a change needs, and the rule that every feature ships with its tests |
 | [Roadmap](roadmap.md) | Phase-by-phase progress and planned features |
 
 ---

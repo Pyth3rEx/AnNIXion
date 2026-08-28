@@ -41,10 +41,15 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
 
-Three VM tests exist — `boot`, `security-tools` and `vpn-enforcement`. L1
-evaluates all three; CI's L3 step builds the first two. Run the killswitch
-regression suite locally with
+Six VM tests exist — `boot`, `security-tools`, `vpn-enforcement`, `shells`,
+`xrdp-session` and `bind-axfr`. L1 evaluates all of them; CI's L3 step
+discovers and builds every check the flake defines, so a test that is wired in
+cannot fail to run. Run one on its own with
 `nix build .#checks.x86_64-linux.vpn-enforcement`.
+
+**[testing.md](testing.md) covers the suite itself** — what each test is for,
+which kind a change needs, and how to wire a new one in. Every feature ships
+with its tests.
 
 **Lint (L0)**
 
@@ -140,12 +145,11 @@ tests/milestone.sh
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
   --print-build-logs --no-link
 
-# L3 — optional locally, runs in CI
-nix build \
-  .#checks.x86_64-linux.boot \
-  .#checks.x86_64-linux.security-tools \
-  .#checks.x86_64-linux.vpn-enforcement \
-  --print-build-logs --no-link
+# L3 — optional locally, runs in CI. Discovered the way CI discovers them,
+# so this does not go stale as tests are added.
+mapfile -t checks < <(nix eval --json '.#checks.x86_64-linux' \
+  --apply builtins.attrNames | jq -r '.[]')
+nix build "${checks[@]/#/.#checks.x86_64-linux.}" --print-build-logs --no-link
 ```
 
 Use `nom` (nix-output-monitor) for a cleaner build display:
@@ -164,6 +168,8 @@ Before pushing your branch or opening a PR:
 - [ ] `.github/scripts/lint.sh` clean (CI runs it as the **Lint** check)
 - [ ] `tests/milestone.sh` passes
 - [ ] `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link` succeeds (recommended)
+- [ ] **The change ships with its tests** — see [testing.md](testing.md). If it
+      genuinely needs none, say so in the PR.
 
 ---
 
