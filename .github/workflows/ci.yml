@@ -73,6 +73,11 @@ jobs:
           nix develop --command bash tests/workflow-permissions.sh
           nix develop --command bash tests/stale-reviews.sh
 
+      # Its own step: the only test here that leaves the runner, so a red
+      # build points at the network rather than at the hermetic tests above.
+      - name: "[L0] Zone transfer"
+        run: nix develop --command bash tests/dns-axfr.sh
+
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
       - name: Upload the lint summary

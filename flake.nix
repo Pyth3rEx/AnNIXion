@@ -233,6 +233,7 @@
         vpn-enforcement = pkgs.testers.nixosTest (import ./tests/vpn-enforcement.nix);
         shells = pkgs.testers.nixosTest (import ./tests/shells.nix);
         xrdp-session = pkgs.testers.nixosTest (import ./tests/xrdp-session.nix);
+        bind-axfr = pkgs.testers.nixosTest (import ./tests/bind-axfr.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -248,6 +249,8 @@
           oh-my-posh
           # tests/workflow-injection.sh reads the workflows' run: blocks.
           yq-go
+          # tests/dns-axfr.sh needs dig; runners do not reliably carry it.
+          dnsutils
           nil
           nix-output-monitor
         ];
