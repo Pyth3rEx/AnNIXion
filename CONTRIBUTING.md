@@ -52,6 +52,9 @@ tests/milestone.sh             # L0 — script fixture tests
 nix flake check --no-build     # L1 — syntax / type / references
 ```
 
+Plus the fixture tests for whatever you touched, and any VM test covering it —
+[docs/testing.md](docs/testing.md) lists the suite and what each test is for.
+
 L0 is the same script CI runs as the **Lint** check, so a clean run locally
 means a clean run there. Run `nixfmt <file>` to apply formatting.
 
@@ -74,6 +77,11 @@ pushes to `main`.
 - Keep each commit focused on one logical change — small, reviewable diffs.
 - Write PR descriptions that state the **problem**, the **fix**, and how you
   **tested** it.
+- **Every feature ships with its tests, in the same PR as the feature.** See
+  [docs/testing.md](docs/testing.md) for which kind a change needs and how to
+  wire it in. Where a change genuinely needs no test — docs, comments, cosmetic
+  theming, a version bump — say so in one line, so a reviewer knows it was
+  considered rather than forgotten.
 - Link the issue with a **closing keyword** — `Closes #12`, `Fixes #12`. A bare
   `(#12)` reads like a link but closes nothing on merge.
 - Do not add `Co-Authored-By` trailers.
