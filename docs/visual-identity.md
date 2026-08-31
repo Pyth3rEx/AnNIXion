@@ -102,16 +102,21 @@ class became a coloured hexagon with a smudge inside. Filling the canvas gives
 
 ### The hand
 
-Marks are drawn fast, by someone who does not care to close a shape neatly.
-These are the only four devices. Apply one or two per mark, never all four, and
-never at the cost of reading it at 22px.
+Adding a drip to a machine-perfect rectangle does not make it graffiti — it
+makes it a rectangle with a drip. The hand has to be in the geometry itself.
 
-| Device | Rule |
-|---|---|
-| Overshoot | Strokes run past their joins by about one unit. The strongest signal a drawing was not made with a mouse. |
-| Broken stroke | One deliberate gap where the marker lifted. Always on a curve, never on a straight run, never more than one per mark. |
-| The drip | One run of wet paint from the lowest edge, 3–4.5 units, same stroke weight, rounded tip. The signature move. |
-| The X | Struck across anything the tool defeats. Semantic, not decorative — if the tool does not break the thing, it does not get the X. |
+Rules 1 and 2 are universal and apply to every mark in the set. Rules 3 and 4
+are semantic and are earned.
+
+| # | Device | Rule |
+|---|---|---|
+| 1 | No straight lines | Every "straight" run bows by about half a unit, and no two are parallel. A hand cannot draw a true horizontal, and the eye reads the difference before it can name it. This does the most work. |
+| 2 | No closed circles | Radii vary by up to half a unit around the turn, and the shape never quite meets itself — one gap where the marker lifted. Always on a curve, never on a straight run, never more than one per mark. |
+| 3 | The drip | One run of wet paint from the lowest edge that has room, 3–4.5 units, same stroke weight, rounded tip. The signature move. |
+| 4 | The X | Struck across anything the tool defeats, overshooting the shape it crosses. If the tool does not break the thing, it does not get the X. |
+
+Corners and crossings overshoot their joins by up to a unit throughout — the
+marker keeps moving after the shape has ended.
 
 Rotating marks off-axis was tried and rejected: it reads as hand-drawn at 96px
 and as a rendering bug at 22px, and a menu column all leaning the same way looks
@@ -151,7 +156,8 @@ achieved.
 | Grid | 24 × 24, drawing fills 21 × 21 | 1.5 units of air each side so round caps never clip |
 | Stroke | 2.1, round cap and join | Lands at 1.93px when the menu draws 22px |
 | Detail budget | Five strokes or fewer | Spend the sixth on silhouette, never on texture |
-| Hand | One or two devices | All four at once reads as noise, not as a tag |
+| Hand | Bowed lines and open curves, always | Devices 1 and 2 are not optional — a true horizontal anywhere breaks the set |
+| Drip and X | Earned, not decorative | The drip goes on the lowest edge with room; the X only where the tool breaks something |
 | Silhouette | Must differ from its classmates | Inside a class the colour is identical, so shape is the only differentiator |
 | Subject | What the tool does, never its logo | Upstream logos break the set; most of these tools have none |
 | Naming | `annixion-<tool>` | Namespaced against upstream hicolor icons |
