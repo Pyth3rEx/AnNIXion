@@ -85,6 +85,7 @@ a path a module chose.
 | `tests/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
 | `tests/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects. A name that resolves nowhere draws a blank placeholder rather than erroring. |
 | `tests/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
+| `tests/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
 | `tests/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
 | `tests/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
 | `tests/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
@@ -116,6 +117,7 @@ tests/prompt-width.sh
 tests/firefox-profiles.sh
 tests/menu-icons.sh
 tests/branding.sh
+tests/etc-hosts.sh
 tests/workflow-injection.sh
 tests/workflow-permissions.sh
 tests/stale-reviews.sh
