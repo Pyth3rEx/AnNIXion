@@ -77,6 +77,49 @@ the control centre killswitch goes through polkit.
 the panel launches some, the zsh aliases edit with `kate`, and the rest are how
 you read what you collect.
 
+## Docker
+
+`modules/docker.nix` runs the daemon **rootless** — as the desktop user, not as
+root. That is the whole reason the module exists rather than a one-line
+`virtualisation.docker.enable = true`.
+
+A rootful daemon listens on a socket owned by root, and everyone who may talk to
+it is in the `docker` group. That group is not a lesser privilege: a member runs
+`docker run -v /:/host` and reads or writes the entire filesystem as root, with
+no password and no polkit prompt. Adding the operator to it would hand every
+process in the session a way around everything else on this page. Rootless keeps
+containers at exactly the privilege of the account that started them, and
+creates no `docker` group at all.
+
+What rootless costs, and when to give it up:
+
+| Needs rootful | Why |
+|---|---|
+| `--net=host` against the real host stack | rootless containers live in their own network namespace |
+| Binding a port below 1024 | no `CAP_NET_BIND_SERVICE` on the host side |
+| Raw sockets — a container running `nmap -sS`, `arpspoof`, a sniffer | no `CAP_NET_RAW` on the host interface |
+
+Those are real needs on this machine, so the escape hatch is one line:
+
+```nix
+# user/configuration.nix
+annixion.docker.rootless = false;
+```
+
+It enables the root daemon and puts the operator in the `docker` group. Take it
+when a container genuinely needs the host network — not to make a permission
+error go away.
+
+**Containers are outside the VPN killswitch.** `modules/vpn-enforcement.nix`
+matches one cgroup, `annixion-vpn.slice` under the user manager, and arms
+nftables against it. A container is not in that cgroup under either daemon:
+rootful containers sit under `system.slice`, and even the rootless daemon runs
+as its own user unit rather than inside the enforced slice. So a container's
+traffic leaves through whatever route the host has, tunnel or not, and it keeps
+leaving after the tunnel drops. If what runs in the container must be tunnelled,
+tunnel it inside the container or start the whole daemon under
+`annixion-vpn-run` — do not assume the killswitch reaches it.
+
 ## File visibility
 
 A hidden file is one you cannot judge, and this machine exists to handle other
