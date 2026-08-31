@@ -29,10 +29,12 @@
 #   time.timeZone = "America/New_York";
 #
 #   # Add a package system-wide
-#   environment.systemPackages = with pkgs; [ docker ];
+#   environment.systemPackages = with pkgs; [ tcpdump ];
 #
-#   # Add yourself to docker group
-#   users.users.operator.extraGroups = [ "wheel" "networkmanager" "docker" ];
+#   # Docker ships rootless. Switch to a root daemon only if a container
+#   # needs the host network or a raw socket — it also puts you in the
+#   # docker group, which is root-equivalent. See docs/hardening.md.
+#   annixion.docker.rootless = false;
 #
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;

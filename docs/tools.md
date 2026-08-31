@@ -220,3 +220,71 @@ hydra -L /run/current-system/sw/share/wordlists/seclists/Usernames/top-usernames
 ```
 
 Set `SECLISTS_PATH` in your environment to override the default path for the `seclists` alias.
+
+---
+
+## Docker — containers and images
+
+The daemon is rootless: it runs as you, and `DOCKER_HOST` already points at your
+own socket. Nothing needs `sudo`, and there is no `docker` group to join. What
+that costs, and how to switch to a rootful daemon when a container needs the
+host network or a raw socket, is in [hardening.md](hardening.md#docker).
+
+```bash
+docker ps                        # your containers, not root's
+docker compose up -d             # v2 plugin, shipped with the CLI
+docker-compose up -d             # standalone v2, same thing
+docker buildx build .            # also a shipped plugin
+```
+
+### lazydocker — TUI over everything running
+
+```bash
+lazydocker
+```
+
+Containers, images, volumes and live logs in one screen. Faster than
+`docker ps` + `docker logs -f` when you are watching a lab come up.
+
+### dive — read an image layer by layer
+
+```bash
+dive nginx:latest                # explore a pulled image
+dive <image-id>
+```
+
+Shows what each layer added and what it wasted. The reason to reach for it on
+this machine is inspection: it is how you find the key, the `.env` or the source
+tree someone baked into a published image.
+
+### ctop — live per-container metrics
+
+```bash
+ctop
+```
+
+CPU, memory, network and disk per container, sorted live. Useful for spotting
+which container in a compose stack is the one actually doing work.
+
+### skopeo — registries without pulling
+
+```bash
+skopeo inspect docker://nginx:latest            # manifest, no download
+skopeo list-tags docker://registry/image        # enumerate tags
+skopeo copy docker://img oci-archive:img.tar    # pull to a file
+```
+
+No daemon involved, so it works against a registry you have only credentials
+for. Reading tags and manifests before pulling gigabytes is the recon case.
+
+### trivy — scan an image for known-vulnerable packages
+
+```bash
+trivy image nginx:latest                        # CVEs by package
+trivy image --severity HIGH,CRITICAL <image>
+trivy fs .                                      # a source tree instead
+```
+
+Reports the CVEs in an image's packages, and `trivy fs` does the same for a
+checkout. It reads package manifests — it finds published vulnerabilities in
+known components, not a backdoor someone wrote by hand.

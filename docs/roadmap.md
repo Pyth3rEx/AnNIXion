@@ -306,4 +306,4 @@ Everything below is what remains; the next pass gets its own branch.
 - Auto-updating tool definitions via flake inputs and pinned tool versions
 - Dedicated OSINT VM image — lighter, browser-forward, no pentest tools
 - Offline package cache for air-gapped deployments
-- Containerized tool environments (podman) for isolation
+- Rootless container tool environments — shipped as Docker in `modules/docker.nix`; podman remains the option if a daemonless runtime is wanted instead
