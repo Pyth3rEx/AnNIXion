@@ -188,8 +188,8 @@ true rather than decorating.
 
 | Surface | State | Notes |
 |---|---|---|
-| Boot loader | **stock** | No Plymouth theme. First thing seen at power-on and entirely un-branded — the largest gap |
-| Login (SDDM) | **stock** | `modules/desktop.nix:15` enables it but themes nothing |
+| Boot loader | themed | systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash. `modules/branding.nix` |
+| Login (SDDM) | themed | Breeze's greeter rebranded through `theme.conf` alone — no QML of our own |
 | Lock screen | themed | `wallpaper_2.png` via `home/plasma.nix:33` |
 | Desktop | themed | `wallpaper_1.png`, `preserveAspectFit` on pure black |
 | Panel | themed | 32px, AnNIXion mark as launcher icon |
@@ -199,7 +199,25 @@ true rather than decorating.
 | fastfetch | themed | AnNIXion mark at width 30, keys and title in red |
 | Browser profiles | themed | Four colour-coded Firefox profiles |
 | README / GitHub | themed | Glitch banner, wordmark lockup, badge row |
-| ISO | **stock** | Inherits the boot loader gap |
+| ISO | themed | Banner on black for both the syslinux and GRUB menus, plus the same Plymouth splash |
+
+### Boot and greeter
+
+The boot splash is a Plymouth `script` theme: the mark on the void ground with
+one red progress rule, and a password prompt for an encrypted root. It lives in
+`branding/default.nix` and is copied into the initrd, so it must stay small.
+
+`boot.loader.timeout` stays at 3 seconds. A splash that cannot be interrupted
+is a machine with no way back to an older generation.
+
+The greeter is Breeze's, rebranded entirely through `theme.conf` — background,
+logo and the `#FF0033` accent. Writing QML of our own was rejected: a greeter
+that fails to load leaves no way into the machine, and Breeze's is already
+tested by everyone running Plasma.
+
+Note that `plasma6.nix` also sets the SDDM theme with `mkDefault`, so
+`modules/branding.nix` uses `lib.mkOverride 900` — `mkDefault` there is a
+conflict rather than an override, and 900 still yields to `user/`.
 
 ### Elevation
 

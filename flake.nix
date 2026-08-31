@@ -45,6 +45,7 @@
       baseModules = [
         # ── Feature modules ──────────────────────────────────
         ./modules/desktop.nix
+        ./modules/branding.nix
         ./modules/xrdp.nix
         ./modules/security-tools.nix
         ./modules/vpn-enforcement.nix
