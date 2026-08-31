@@ -183,8 +183,9 @@
               kdePackages.kservice
             ];
 
-            # Makes /etc/hosts writable.
-            environment.etc.hosts.mode = "0700";
+            # A real file so root can edit it; world-readable or every non-root
+            # name lookup and the rootless container runtime lose /etc/hosts.
+            environment.etc.hosts.mode = "0644";
 
             # ── State version — never change this ───────
             system.stateVersion = lib.mkDefault "26.05";

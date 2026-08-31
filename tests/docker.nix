@@ -12,6 +12,12 @@
         uid = 1000;
       };
 
+      # The real system makes /etc/hosts a mutable file rather than the store
+      # symlink. rootlesskit copies it into the container namespace on the way
+      # up, so that mode decides whether the daemon starts at all — and the
+      # default symlink would never exercise it.
+      environment.etc.hosts.mode = "0644";
+
       # Image tooling closure plus a daemon.
       virtualisation.memorySize = 2048;
     };

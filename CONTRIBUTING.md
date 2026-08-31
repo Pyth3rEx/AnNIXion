@@ -128,7 +128,7 @@ the code changes without it.
 
 ```nix
 # Good — the reason is not visible from the code.
-environment.etc.hosts.mode = "0700"; # Makes /etc/hosts writable.
+environment.etc.hosts.mode = "0644"; # A real file, so root can edit it.
 
 # Noise — the code already says this.
 # Set the hostname to AnNIXion
