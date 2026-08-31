@@ -48,34 +48,51 @@ Category strings and paths keep the mono face — they are things you type.
 
 ---
 
-## The badge system
+## The mark system
 
-Every AnNIXion application and menu directory gets a flat-top hexagon carrying
-a semantic colour, with a near-white glyph inside.
+Every AnNIXion application and menu directory gets a single-colour line drawing
+filling its whole canvas. No container, no plate — the colour classifies, the
+silhouette identifies.
 
 | Property | Value |
 |---|---|
-| Canvas | 32 × 32, flat-top hexagon |
-| Plate fill | Semantic colour at 16% |
-| Rim | Semantic colour, width 1.3 |
-| Glyph inset | 5.2 per side, scale 0.567 |
-| Glyph grid | 24 × 24, stroke 2.6, round cap and join |
-| Glyph colour | `#F0F3F6` — never the semantic colour |
+| Canvas | 24 × 24, drawing fills 21 × 21 |
+| Stroke | 2.1, round cap and join |
+| Colour | Whole mark in one class colour |
+| Fills | Only for dots under 2.5 units |
+| On the wallpaper | 1.5 outer stroke in `#0E0F13`; the menu does not need it |
 | Export | `scalable/apps/annixion-<tool>.svg` |
+
+An earlier revision seated each glyph inside a hexagonal badge. It was dropped:
+the container spent 82% of the canvas on itself, leaving the drawing at 18% of
+the area and a 1.01px stroke once the menu rendered 22px. Two tools in the same
+class became a coloured hexagon with a smudge inside. Filling the canvas gives
+4.2× the drawn area and 1.9× the stroke weight from the same drawings.
+
+The hexagon had been buying a family resemblance and a hard edge against a busy
+wallpaper. The colour system carries the family resemblance on its own, and the
+menu draws on a solid `#14171D` panel rather than on the wallpaper — so only
+desktop shortcuts need the edge, which the outer stroke supplies for free.
 
 ### Semantic classes
 
 Colour encodes what running the tool does to the target, not which kill-chain
-phase it sits in — the menu already tells you the phase.
+phase it sits in — the menu already tells you the phase. Contrast ratios are
+measured as a stroke against the `#14171D` menu ground.
 
-| Class | Colour | Rule | Examples |
-|---|---|---|---|
-| Passive | `#33E62B` | Sends nothing to the target | theHarvester, Whois, SecLists |
-| Probe | `#FFD000` | Touches the target and shows in their logs, no access attempted | Nmap, dig, WhatWeb, Gobuster, ffuf, Gqrx |
-| Offensive | `#FF0033` | Attempts access, execution or credential compromise | Metasploit, sqlmap, Hydra, Hashcat, Aircrack-ng |
-| Forensic | `#0F5AE6` | Reads evidence after the fact, never reaches the network | Volatility 3, Autopsy, Wireshark |
-| Reverse | `#F213A0` | Pulls a compiled artifact apart | Ghidra, Binwalk |
-| Utility | `#7A8494` | Not a tool of the trade | Kate, Ark, KCalc, Dolphin, Konsole |
+| Class | Colour | Contrast | Rule | Examples |
+|---|---|---|---|---|
+| Passive | `#33E62B` | 10.7:1 | Sends nothing to the target | theHarvester, Whois, SecLists |
+| Probe | `#FFD000` | 12.2:1 | Touches the target and shows in their logs, no access attempted | Nmap, dig, WhatWeb, Gobuster, ffuf, Gqrx |
+| Offensive | `#FF0033` | 4.5:1 | Attempts access, execution or credential compromise | Metasploit, sqlmap, Hydra, Hashcat, Aircrack-ng |
+| Forensic | `#4A90FF` | 5.8:1 | Reads evidence after the fact, never reaches the network | Volatility 3, Autopsy, Wireshark |
+| Reverse | `#F213A0` | 4.6:1 | Pulls a compiled artifact apart | Ghidra, Binwalk |
+| Utility | `#7A8494` | 4.8:1 | Not a tool of the trade | Kate, Ark, KCalc, Dolphin, Konsole |
+
+Forensic is the wallpaper's cobalt `#0F5AE6` lifted to `#4A90FF`. The wallpaper
+value works as a large filled figure on pure black but reaches only 3.1:1 as a
+2px stroke — the one colour in the set that fails. Keep `#0F5AE6` for fills and
+`#4A90FF` for marks.
 
 Red means the tool needs written authorisation behind it. That is the one class
 where the badge is a check on muscle memory rather than decoration.
@@ -85,18 +102,20 @@ band down its middle — the stretch where you are inside someone else's estate.
 If that proves too heavy, move 03 Delivery to probe amber so red means access
 achieved.
 
-### Drawing a new glyph
+### Drawing a new mark
 
 | Rule | Value | Why |
 |---|---|---|
-| Grid | 24 × 24, glyph inside 21 × 21 | Leaves air so the hexagon never crops a stroke end |
-| Stroke | 2.6, round cap and join | Survives the 0.567 downscale and stays solid at 22px |
-| Fills | Only for dots under 2.5 units | Filled areas go muddy over the plate wash |
-| Detail budget | Four strokes or fewer | Busier reads as texture at menu size |
+| Grid | 24 × 24, drawing fills 21 × 21 | 1.5 units of air each side so round caps never clip |
+| Stroke | 2.1, round cap and join | Lands at 1.93px when the menu draws 22px |
+| Detail budget | Five strokes or fewer | Busier reads as texture at menu size |
+| Silhouette | Must differ from its classmates | Inside a class the colour is identical, so shape is the only differentiator |
 | Subject | What the tool does, never its logo | Upstream logos break the set; most of these tools have none |
 | Naming | `annixion-<tool>` | Namespaced against upstream hicolor icons |
 
-Test at 22px first. If a glyph fails there, delete a stroke — do not thicken it.
+Test at 22px, next to its classmates — not alone and not at 96px. A mark is
+finished when you can pick it out of its own class colour at menu size. If you
+cannot, change the shape rather than adding detail.
 
 ---
 
@@ -106,7 +125,9 @@ The wallpapers carry a fixed cast: dead-eyed smiley, jester, skull, snowflake,
 `404`, the throw-up tag. Reuse these rather than inventing new ones.
 
 Motifs live on pure black and nowhere else. They drip downward, never upward.
-One spray colour per motif, never two in the same mark.
+One spray colour per motif, never two in the same mark. Motifs are drawn looser
+than tool marks: stroke 1.7, hand-weighted curves, allowed to overshoot. Tool
+marks borrow the wall's palette, never its hand.
 
 Allowed: wallpaper, lock screen, ISO boot splash, fastfetch banner, README
 header, release art. Not allowed: the menu, the panel, or any badge.
