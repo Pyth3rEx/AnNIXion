@@ -184,7 +184,9 @@ rather than something to remember:
 | `needs triage` removed | **Up next** if the issue sits on the nearest open milestone, otherwise **Ready** — only if the issue is still in Backlog, so triaging something already underway does not pull it back |
 | Milestone set or cleared | **Up next** or **Ready**, by the same rule — only from those two columns, so scoping a release never drags back work already underway |
 | Issue assigned | **In progress** |
-| PR opened | **In progress**, put on the furthest milestone |
+| PR opened | **In progress**, put on the furthest milestone — **Ready** while it is a draft |
+| PR marked ready for review, or sent back to draft | **In progress**, or **Ready** again |
+| PR closed without merging | **Done**. Nothing else moves: an unmerged PR closes no issues |
 | PR merged into `dev` | **In review**, along with every issue the PR closes |
 | PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review. Then the new release's Ready work is swept into **Up next**. |
 | Milestone closed | The now-nearest milestone's Ready work is swept into **Up next** |

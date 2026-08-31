@@ -215,7 +215,8 @@ rather than being left to rot in Backlog.
 | **Backlog** | Filed, not yet triaged | Opening the issue |
 | **Ready** | Triaged and agreed, but not scoped into the next release | Removing `needs triage` |
 | **Up next** | Scoped into the release being built, nobody has started | Putting it on the nearest open milestone |
-| **In progress** | Someone is on it | Assigning the issue, or opening a PR |
+| **In progress** | Someone is on it | Assigning the issue, or opening a PR that is not a draft |
+| **Ready** (a PR) | Opened as a draft, not ready to be looked at | Opening a draft PR, or converting one back to draft |
 | **In review** | Merged into `dev`, awaiting release | Merging a PR into `dev` |
 | **Done** | Shipped in a release | Merging the release PR into `main` |
 
