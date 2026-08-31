@@ -208,6 +208,25 @@ NXDOMAIN in another.
 
 ## CI & contributing
 
+### `gh auth login` worked, but pushing still can't authenticate
+
+AnNIXion wires the gh credential helper into `/etc/gitconfig` for every user
+(`modules/git.nix`), so `gh auth login` is the only step there is.
+
+Do not run `gh auth setup-git`. It writes the store path of whichever `gh` ran
+it into your `~/.gitconfig`, and the next garbage collection deletes that path.
+The helper then fails to start — `git push` prints
+`.gh-wrapped auth git-credential get: No such file or directory` and falls back
+to asking for a password nobody has.
+
+`~/.gitconfig` overrides `/etc/gitconfig`, so a machine that has already been
+through that needs the stale line removed:
+
+```bash
+git config --global --unset-all credential.https://github.com.helper
+git config --global --unset-all credential.https://gist.github.com.helper
+```
+
 ### CI rejects my PR for committing `hardware-configuration.nix`
 
 It's machine-specific and gitignored. Remove it from your commit; CI and the dev
