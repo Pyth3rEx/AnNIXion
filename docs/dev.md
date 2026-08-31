@@ -39,7 +39,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | **L0** | `.github/scripts/lint.sh`, `tests/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, eval warnings, script fixtures | ~2 min |
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
-| **L3** | `nix build .#checks.x86_64-linux.{boot,security-tools}` | VM boot + tool presence (needs KVM) | ~10 min |
+| **L3** | `nix build .#checks.x86_64-linux.<test>` — CI builds every check the flake defines | VM boot + service behaviour + tool presence (needs KVM) | ~10 min |
 
 Six VM tests exist — `boot`, `security-tools`, `vpn-enforcement`, `shells`,
 `xrdp-session` and `bind-axfr`. L1 evaluates all of them; CI's L3 step
@@ -147,9 +147,8 @@ nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
 
 # L3 — optional locally, runs in CI. Discovered the way CI discovers them,
 # so this does not go stale as tests are added.
-mapfile -t checks < <(nix eval --json '.#checks.x86_64-linux' \
-  --apply builtins.attrNames | jq -r '.[]')
-nix build "${checks[@]/#/.#checks.x86_64-linux.}" --print-build-logs --no-link
+nix build $(nix eval --json '.#checks.x86_64-linux' --apply builtins.attrNames \
+  | jq -r '.[] | ".#checks.x86_64-linux." + .') --print-build-logs --no-link
 ```
 
 Use `nom` (nix-output-monitor) for a cleaner build display:

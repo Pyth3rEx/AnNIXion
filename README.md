@@ -183,6 +183,7 @@ Full guide including Hyper-V Enhanced Session setup →
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, and the full alias and plugin list |
 | [CLI tools](docs/tools.md) | Enhanced command-line tools (bat, rg, fd, fzf, jq…) |
 | [Developer guide](docs/dev.md) | Local CI levels, VSCodium tasks, contributor workflow |
+| [Testing](docs/testing.md) | The test suite, which kind of test a change needs, and the rule that every feature ships with its tests |
 | [Hardening](docs/hardening.md) | What is disabled to reduce attack surface, and how to restore it |
 | [FAQ](docs/faq.md) | Common setup and troubleshooting questions |
 | [Roadmap](docs/roadmap.md) | Phase-by-phase progress, planned features |

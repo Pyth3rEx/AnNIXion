@@ -112,7 +112,7 @@ tests/firefox-profiles.sh
 tests/workflow-injection.sh
 tests/workflow-permissions.sh
 tests/stale-reviews.sh
-tests/dns-axfr.sh
+tests/dns-axfr.sh   # the one that needs the internet
 
 # L1 — evaluates every VM test without building any of them.
 nix flake check --no-build
@@ -121,9 +121,8 @@ nix flake check --no-build
 nix build .#checks.x86_64-linux.bind-axfr --print-build-logs --no-link
 
 # L3 — all of them, the same way CI discovers them
-mapfile -t checks < <(nix eval --json '.#checks.x86_64-linux' \
-  --apply builtins.attrNames | jq -r '.[]')
-nix build "${checks[@]/#/.#checks.x86_64-linux.}" --print-build-logs --no-link
+nix build $(nix eval --json '.#checks.x86_64-linux' --apply builtins.attrNames \
+  | jq -r '.[] | ".#checks.x86_64-linux." + .') --print-build-logs --no-link
 ```
 
 VM tests need KVM. `ls /dev/kvm` — if it is missing, they will not run locally
