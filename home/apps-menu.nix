@@ -248,51 +248,52 @@ let
 
   # ── Directory label & icon files ─────────────────────────────────────────
   directories = {
-    "annixion.directory" = dir "AnNIXion" "security-high";
+    "annixion.directory" = dir "AnNIXion" "annixion-menu-root";
 
-    "annixion-1-recon.directory" = dir "01. Reconnaissance" "system-search";
-    "annixion-1-recon-osint.directory" = dir "Passive OSINT" "applications-internet";
-    "annixion-1-recon-scanning.directory" = dir "Active Scanning" "network-wired";
-    "annixion-1-recon-rf.directory" = dir "RF / Signal Intel" "audio-input-microphone";
+    "annixion-1-recon.directory" = dir "01. Reconnaissance" "annixion-menu-recon";
+    "annixion-1-recon-osint.directory" = dir "Passive OSINT" "annixion-menu-recon-osint";
+    "annixion-1-recon-scanning.directory" = dir "Active Scanning" "annixion-menu-recon-scanning";
+    "annixion-1-recon-rf.directory" = dir "RF / Signal Intel" "annixion-menu-recon-rf";
 
-    "annixion-2-weapon.directory" = dir "02. Weaponization" "package-x-generic";
-    "annixion-2-weapon-disasm.directory" = dir "Disassembly" "applications-engineering";
-    "annixion-2-weapon-firmware.directory" = dir "Firmware Analysis" "drive-harddisk";
+    "annixion-2-weapon.directory" = dir "02. Weaponization" "annixion-menu-weapon";
+    "annixion-2-weapon-disasm.directory" = dir "Disassembly" "annixion-menu-weapon-disasm";
+    "annixion-2-weapon-firmware.directory" = dir "Firmware Analysis" "annixion-menu-weapon-firmware";
 
-    "annixion-3-delivery.directory" = dir "03. Delivery" "mail-send";
-    "annixion-3-delivery-proxy.directory" = dir "Web Proxy" "network-proxy";
-    "annixion-3-delivery-injection.directory" = dir "Web Injection" "emblem-important";
+    "annixion-3-delivery.directory" = dir "03. Delivery" "annixion-menu-delivery";
+    "annixion-3-delivery-proxy.directory" = dir "Web Proxy" "annixion-menu-delivery-proxy";
+    "annixion-3-delivery-injection.directory" = dir "Web Injection" "annixion-menu-delivery-injection";
 
-    "annixion-4-exploit.directory" = dir "04. Exploitation" "dialog-warning";
-    "annixion-4-exploit-frameworks.directory" = dir "Frameworks" "applications-development";
-    "annixion-4-exploit-creds.directory" = dir "Credential Attacks" "dialog-password";
-    "annixion-4-exploit-wireless.directory" = dir "Wireless" "network-wireless";
+    "annixion-4-exploit.directory" = dir "04. Exploitation" "annixion-menu-exploit";
+    "annixion-4-exploit-frameworks.directory" = dir "Frameworks" "annixion-menu-exploit-frameworks";
+    "annixion-4-exploit-creds.directory" = dir "Credential Attacks" "annixion-menu-exploit-creds";
+    "annixion-4-exploit-wireless.directory" = dir "Wireless" "annixion-menu-exploit-wireless";
 
-    "annixion-5-install.directory" = dir "05. Installation" "system-run";
-    "annixion-5-install-tunneling.directory" = dir "Tunneling & Shells" "utilities-terminal";
+    "annixion-5-install.directory" = dir "05. Installation" "annixion-menu-install";
+    "annixion-5-install-tunneling.directory" =
+      dir "Tunneling & Shells" "annixion-menu-install-tunneling";
 
-    "annixion-6-c2.directory" = dir "06. C2" "network-server";
-    "annixion-6-c2-frameworks.directory" = dir "Frameworks" "applications-development";
+    "annixion-6-c2.directory" = dir "06. C2" "annixion-menu-c2";
+    "annixion-6-c2-frameworks.directory" = dir "Frameworks" "annixion-menu-c2-frameworks";
 
-    "annixion-7-postex.directory" = dir "07. Post-Exploitation" "emblem-system";
-    "annixion-7-postex-lateral.directory" = dir "Lateral Movement" "network-workgroup";
+    "annixion-7-postex.directory" = dir "07. Post-Exploitation" "annixion-menu-postex";
+    "annixion-7-postex-lateral.directory" = dir "Lateral Movement" "annixion-menu-postex-lateral";
 
-    "annixion-8-forensics.directory" = dir "08. Forensics" "system-file-manager";
-    "annixion-8-forensics-memory.directory" = dir "Memory Analysis" "media-flash";
-    "annixion-8-forensics-disk.directory" = dir "Disk Analysis" "drive-harddisk";
+    "annixion-8-forensics.directory" = dir "08. Forensics" "annixion-menu-forensics";
+    "annixion-8-forensics-memory.directory" = dir "Memory Analysis" "annixion-menu-forensics-memory";
+    "annixion-8-forensics-disk.directory" = dir "Disk Analysis" "annixion-menu-forensics-disk";
 
-    "annixion-9-re.directory" = dir "09. Reverse Engineering" "applications-engineering";
-    "annixion-9-re-disasm.directory" = dir "Disassemblers" "applications-engineering";
-    "annixion-9-re-firmware.directory" = dir "Firmware" "drive-harddisk";
+    "annixion-9-re.directory" = dir "09. Reverse Engineering" "annixion-menu-re";
+    "annixion-9-re-disasm.directory" = dir "Disassemblers" "annixion-menu-re-disasm";
+    "annixion-9-re-firmware.directory" = dir "Firmware" "annixion-menu-re-firmware";
 
-    "annixion-10-sniffing.directory" = dir "10. Sniffing & Analysis" "network-transmit-receive";
+    "annixion-10-sniffing.directory" = dir "10. Sniffing & Analysis" "annixion-menu-sniffing";
 
-    "annixion-tools.directory" = dir "Tools" "applications-other";
-    "annixion-internet.directory" = dir "Internet" "applications-internet";
-    "annixion-dev.directory" = dir "Development" "applications-development";
-    "annixion-productivity.directory" = dir "Productivity" "applications-office";
-    "annixion-utils.directory" = dir "Utilities" "applications-utilities";
-    "annixion-system.directory" = dir "System" "applications-system";
+    "annixion-tools.directory" = dir "Tools" "annixion-menu-tools";
+    "annixion-internet.directory" = dir "Internet" "annixion-menu-internet";
+    "annixion-dev.directory" = dir "Development" "annixion-menu-dev";
+    "annixion-productivity.directory" = dir "Productivity" "annixion-menu-productivity";
+    "annixion-utils.directory" = dir "Utilities" "annixion-menu-utils";
+    "annixion-system.directory" = dir "System" "annixion-menu-system";
   };
 
   # ── Desktop entries ───────────────────────────────────────────────────────
@@ -302,7 +303,7 @@ let
     "annixion-theharvester" = de {
       name = "theHarvester";
       genericName = "OSINT Harvester";
-      icon = "system-search";
+      icon = "annixion-theharvester";
       exec = termHold "theHarvester";
       categories = [ "X-AnNIXion-Recon-OSINT" ];
       comment = "Email, domain and IP intelligence gathering";
@@ -310,21 +311,21 @@ let
     "annixion-whois" = de {
       name = "Whois";
       genericName = "Domain Lookup";
-      icon = "network-wired";
+      icon = "annixion-whois";
       exec = termHold "whois";
       categories = [ "X-AnNIXion-Recon-OSINT" ];
     };
     "annixion-dig" = de {
       name = "dig";
       genericName = "DNS Lookup";
-      icon = "network-wired";
+      icon = "annixion-dig";
       exec = termHold "dig";
       categories = [ "X-AnNIXion-Recon-OSINT" ];
     };
     "annixion-whatweb" = de {
       name = "WhatWeb";
       genericName = "Web Recon";
-      icon = "folder-remote";
+      icon = "annixion-whatweb";
       exec = termHold "whatweb";
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Web server fingerprinting and technology detection";
@@ -334,7 +335,7 @@ let
     "annixion-nmap" = de {
       name = "Nmap";
       genericName = "Network Scanner";
-      icon = "network-wired";
+      icon = "annixion-nmap";
       exec = termHold "nmap";
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Network exploration and security auditing";
@@ -342,7 +343,7 @@ let
     "annixion-gobuster" = de {
       name = "Gobuster";
       genericName = "Directory Brute Forcer";
-      icon = "folder-remote";
+      icon = "annixion-gobuster";
       exec = termHold "gobuster";
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Directory, DNS and virtual host brute-forcing";
@@ -350,7 +351,7 @@ let
     "annixion-ffuf" = de {
       name = "ffuf";
       genericName = "Web Fuzzer";
-      icon = "folder-remote";
+      icon = "annixion-ffuf";
       exec = termHold "ffuf";
       categories = [ "X-AnNIXion-Recon-Scanning" ];
       comment = "Fast web fuzzer";
@@ -360,7 +361,7 @@ let
     "annixion-gqrx" = de {
       name = "Gqrx";
       genericName = "SDR Receiver";
-      icon = "gqrx";
+      icon = "annixion-gqrx";
       exec = "gqrx";
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "Software defined radio receiver";
@@ -368,7 +369,7 @@ let
     "annixion-gnuradio" = de {
       name = "GNU Radio Companion";
       genericName = "SDR Signal Processing";
-      icon = "audio-input-microphone";
+      icon = "annixion-gnuradio";
       exec = "gnuradio-companion";
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "SDR flow-graph signal processing toolkit";
@@ -376,7 +377,7 @@ let
     "annixion-hackrf" = de {
       name = "HackRF Tools";
       genericName = "HackRF Utilities";
-      icon = "audio-input-microphone";
+      icon = "annixion-hackrf";
       exec = termHold "hackrf_info";
       categories = [ "X-AnNIXion-Recon-RF" ];
       comment = "HackRF hardware interface and diagnostics";
@@ -386,7 +387,7 @@ let
     "annixion-ghidra" = de {
       name = "Ghidra";
       genericName = "Reverse Engineering Suite";
-      icon = "ghidra";
+      icon = "annixion-ghidra";
       exec = "ghidra";
       categories = [
         "X-AnNIXion-Weapon-Disasm"
@@ -397,7 +398,7 @@ let
     "annixion-binwalk" = de {
       name = "Binwalk";
       genericName = "Firmware Analyzer";
-      icon = "media-removable";
+      icon = "annixion-binwalk";
       exec = termHold "binwalk";
       categories = [
         "X-AnNIXion-Weapon-Firmware"
@@ -410,7 +411,7 @@ let
     "annixion-burpsuite" = de {
       name = "Burp Suite";
       genericName = "Web App Security Proxy";
-      icon = "burpsuite";
+      icon = "annixion-burpsuite";
       # Not VPN-enforced, for the same reason Red Team is not (#37).
       # Use annixion-vpn-run burpsuite when the tunnel is wanted.
       exec = "burpsuite";
@@ -420,7 +421,7 @@ let
     "annixion-sqlmap" = de {
       name = "sqlmap";
       genericName = "SQL Injection Tool";
-      icon = "dialog-warning";
+      icon = "annixion-sqlmap";
       exec = termHold "sqlmap";
       categories = [ "X-AnNIXion-Delivery-Injection" ];
       comment = "Automatic SQL injection and database takeover";
@@ -430,7 +431,7 @@ let
     "annixion-metasploit" = de {
       name = "Metasploit";
       genericName = "Exploitation & C2 Framework";
-      icon = "security-high";
+      icon = "annixion-metasploit";
       exec = termNamed "konsole-msf" "msfconsole";
       wmClass = "konsole-msf";
       categories = [
@@ -442,7 +443,7 @@ let
     "annixion-john" = de {
       name = "John the Ripper";
       genericName = "Password Cracker";
-      icon = "dialog-password";
+      icon = "annixion-john";
       exec = termHold "john";
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Offline password cracking tool";
@@ -450,7 +451,7 @@ let
     "annixion-hashcat" = de {
       name = "Hashcat";
       genericName = "GPU Password Cracker";
-      icon = "dialog-password";
+      icon = "annixion-hashcat";
       exec = termHold "hashcat";
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Advanced GPU-accelerated password recovery";
@@ -458,7 +459,7 @@ let
     "annixion-hydra" = de {
       name = "Hydra";
       genericName = "Network Login Brute Forcer";
-      icon = "dialog-password";
+      icon = "annixion-hydra";
       exec = termHold "hydra";
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Online network service brute-forcing";
@@ -466,7 +467,7 @@ let
     "annixion-seclists" = de {
       name = "SecLists";
       genericName = "Curated Wordlists";
-      icon = "folder-documents";
+      icon = "annixion-seclists";
       exec = termHold "seclists";
       categories = [ "X-AnNIXion-Exploit-Creds" ];
       comment = "Curated list of wordlists for dictionary attacks";
@@ -474,7 +475,7 @@ let
     "annixion-aircrack" = de {
       name = "Aircrack-ng";
       genericName = "WiFi Security Auditing";
-      icon = "network-wireless";
+      icon = "annixion-aircrack";
       exec = termHold "aircrack-ng";
       categories = [ "X-AnNIXion-Exploit-Wireless" ];
       comment = "802.11 WEP and WPA/WPA2 cracking suite";
@@ -484,7 +485,7 @@ let
     "annixion-netcat" = de {
       name = "Netcat";
       genericName = "Network Swiss Army Knife";
-      icon = "network-transmit-receive";
+      icon = "annixion-netcat";
       exec = term "nc";
       categories = [
         "X-AnNIXion-Install-Tunneling"
@@ -497,7 +498,7 @@ let
     "annixion-impacket" = de {
       name = "Impacket";
       genericName = "Windows Post-Exploitation Suite";
-      icon = "network-server";
+      icon = "annixion-impacket";
       exec = "konsole";
       categories = [ "X-AnNIXion-PostEx-Lateral" ];
       comment = "Python tools for Windows protocols — run impacket-<tool>";
@@ -507,7 +508,7 @@ let
     "annixion-volatility" = de {
       name = "Volatility 3";
       genericName = "Memory Forensics";
-      icon = "media-flash";
+      icon = "annixion-volatility";
       exec = term "vol";
       categories = [ "X-AnNIXion-Forensics-Memory" ];
       comment = "Memory acquisition and forensics framework";
@@ -515,7 +516,7 @@ let
     "annixion-autopsy" = de {
       name = "Autopsy";
       genericName = "Digital Forensics Platform";
-      icon = "drive-harddisk";
+      icon = "annixion-autopsy";
       exec = "autopsy";
       categories = [ "X-AnNIXion-Forensics-Disk" ];
       comment = "GUI frontend for The Sleuth Kit disk forensics";
@@ -525,7 +526,7 @@ let
     "annixion-wireshark" = de {
       name = "Wireshark";
       genericName = "Packet Analyzer";
-      icon = "wireshark";
+      icon = "annixion-wireshark";
       exec = "wireshark";
       categories = [ "X-AnNIXion-Sniffing" ];
       comment = "Network protocol capture and analysis";
@@ -535,7 +536,7 @@ let
     "annixion-vscodium" = de {
       name = "VSCodium";
       genericName = "Text Editor";
-      icon = "codium";
+      icon = "annixion-vscodium";
       exec = "codium";
       wmClass = "vscodium";
       categories = [ "X-AnNIXion-Dev" ];
@@ -544,14 +545,14 @@ let
     "annixion-github-desktop" = de {
       name = "GitHub Desktop";
       genericName = "Git GUI";
-      icon = "github-desktop";
+      icon = "annixion-github-desktop";
       exec = "github-desktop";
       categories = [ "X-AnNIXion-Dev" ];
     };
     "annixion-gh" = de {
       name = "GitHub CLI";
       genericName = "Git CLI";
-      icon = "utilities-terminal";
+      icon = "annixion-gh";
       exec = term "gh";
       categories = [ "X-AnNIXion-Dev" ];
     };
@@ -560,7 +561,7 @@ let
     "annixion-obsidian" = de {
       name = "Obsidian";
       genericName = "Note-Taking & Knowledge Base";
-      icon = "obsidian";
+      icon = "annixion-obsidian";
       exec = "obsidian";
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
@@ -568,7 +569,7 @@ let
     "annixion-onlyoffice" = de {
       name = "OnlyOffice";
       genericName = "Office Suite";
-      icon = "onlyoffice-desktopeditors";
+      icon = "annixion-onlyoffice";
       exec = "onlyoffice-desktopeditors";
       categories = [ "X-AnNIXion-Productivity" ];
       comment = "Office productivity suite — documents, spreadsheets, presentations";
@@ -578,35 +579,35 @@ let
     "annixion-kate" = de {
       name = "Kate";
       genericName = "Text Editor";
-      icon = "kate";
+      icon = "annixion-kate";
       exec = "kate";
       categories = [ "X-AnNIXion-Utils" ];
     };
     "annixion-ark" = de {
       name = "Ark";
       genericName = "Archive Manager";
-      icon = "ark";
+      icon = "annixion-ark";
       exec = "ark";
       categories = [ "X-AnNIXion-Utils" ];
     };
     "annixion-kcalc" = de {
       name = "KCalc";
       genericName = "Calculator";
-      icon = "kcalc";
+      icon = "annixion-kcalc";
       exec = "kcalc";
       categories = [ "X-AnNIXion-Utils" ];
     };
     "annixion-filelight" = de {
       name = "Filelight";
       genericName = "Disk Usage Analyzer";
-      icon = "filelight";
+      icon = "annixion-filelight";
       exec = "filelight";
       categories = [ "X-AnNIXion-Utils" ];
     };
     "annixion-kleopatra" = de {
       name = "Kleopatra";
       genericName = "PGP & Certificate Manager";
-      icon = "kleopatra";
+      icon = "annixion-kleopatra";
       exec = "kleopatra";
       categories = [ "X-AnNIXion-Utils" ];
       comment = "OpenPGP and X.509 certificate management";
@@ -616,14 +617,14 @@ let
     "annixion-konsole" = de {
       name = "Konsole";
       genericName = "Terminal Emulator";
-      icon = "utilities-terminal";
+      icon = "annixion-konsole";
       exec = "konsole";
       categories = [ "X-AnNIXion-System" ];
     };
     "annixion-konsole-root" = de {
       name = "Konsole (root)";
       genericName = "Root Terminal";
-      icon = "utilities-terminal";
+      icon = "annixion-konsole-root";
       exec = "konsole -name konsole-root --profile Root -e sudo -i";
       wmClass = "konsole-root";
       categories = [ "X-AnNIXion-System" ];
@@ -632,21 +633,21 @@ let
     "annixion-dolphin" = de {
       name = "Dolphin";
       genericName = "File Manager";
-      icon = "system-file-manager";
+      icon = "annixion-dolphin";
       exec = "dolphin";
       categories = [ "X-AnNIXion-System" ];
     };
     "annixion-systemsettings" = de {
       name = "System Settings";
       genericName = "System Configuration";
-      icon = "preferences-system";
+      icon = "annixion-systemsettings";
       exec = "systemsettings";
       categories = [ "X-AnNIXion-System" ];
     };
     "annixion-kwalletmanager" = de {
       name = "KWallet Manager";
       genericName = "Credential Store";
-      icon = "kwalletmanager";
+      icon = "annixion-kwalletmanager";
       exec = "kwalletmanager";
       categories = [ "X-AnNIXion-System" ];
       comment = "Manage stored passwords and secrets";
@@ -654,7 +655,7 @@ let
     "annixion-htop" = de {
       name = "htop";
       genericName = "System Monitor";
-      icon = "utilities-system-monitor";
+      icon = "annixion-htop";
       exec = term "htop";
       categories = [ "X-AnNIXion-System" ];
       comment = "Interactive process viewer";

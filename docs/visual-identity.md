@@ -249,20 +249,35 @@ not teaching.
 
 ---
 
-## Current state
+## How it is built
 
-`home/plasma.nix:27` selects `Slot-Nord-Dark-Colorize-Icons`, which ships 195
-place icons and no `apps`, `actions` or `devices` directories — so application
-icons fall through to stock `breeze-dark`. Of the 32 distinct icon names in
-`home/apps-menu.nix`, that theme resolves 4.
+`home/icons/marks.nix` holds one entry per mark — a semantic class and the
+24-grid drawing. `home/icons/default.nix` renders each into
+`scalable/apps/annixion-<name>.svg`, the class supplying the stroke colour, and
+emits an `index.theme` inheriting `Slot-Dark-Icons`, `breeze-dark`, `Adwaita`
+and `hicolor`. Anything the set does not draw still falls back to a real icon.
 
-Four names resolve nowhere in the chain and render as a placeholder:
+`home.nix` joins that theme with `SlotIcons` into the single directory
+`xdg.dataFile."icons"` owns, and `home/plasma.nix` selects `AnNIXion`.
 
-| Entry | Current | Correct |
+Reclassifying a tool is a one-word change to its `class`. Redrawing one is a
+change to its `body`. Neither touches `home/apps-menu.nix`, which names marks
+only by `annixion-<tool>` and `annixion-menu-<slug>`.
+
+Adding a menu entry means adding its mark in the same commit —
+`tests/menu-icons.sh` fails on any `Icon=` that resolves nowhere, which is the
+check that would have caught the four dead names below.
+
+The theme this replaced, `Slot-Nord-Dark-Colorize-Icons`, shipped 195 place
+icons and no `apps`, `actions` or `devices` directories, so every application
+icon fell through to stock `breeze-dark` — it resolved 4 of the 32 names the
+menu used. Four resolved nowhere at all and drew a blank placeholder:
+
+| Entry | Was | Now |
 |---|---|---|
-| VSCodium | `codium` | `vscodium` |
-| Wireshark | `wireshark` | `org.wireshark.Wireshark` |
-| Netcat | `network-transmit-receive` | dropped from Breeze 6, needs replacing |
-| Binwalk | `media-removable` | dropped from Breeze 6, needs replacing |
+| VSCodium | `codium` — resolved nowhere | `annixion-vscodium` |
+| Wireshark | `wireshark` — resolved nowhere | `annixion-wireshark` |
+| Netcat | `network-transmit-receive` — dropped from Breeze 6 | `annixion-netcat` |
+| Binwalk | `media-removable` — dropped from Breeze 6 | `annixion-binwalk` |
 
 See [roadmap.md](roadmap.md) for where this sits in 0.4.0.
