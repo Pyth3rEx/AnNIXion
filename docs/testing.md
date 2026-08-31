@@ -98,6 +98,7 @@ a path a module chose.
 | `tests/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
 | `tests/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, and Enhanced Session stays configured. |
 | `tests/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
+| `tests/git-credential-helper.nix` | That a push can find its credentials: the gh helper is configured for every user, and the binary it names is one the system still has. |
 
 ---
 
