@@ -24,7 +24,10 @@ in
         theme = "Nordzy-cursors";
         size = 32;
       };
-      iconTheme = "Slot-Nord-Dark-Colorize-Icons";
+      # AnNIXion carries the menu marks and inherits Slot-Dark-Icons for
+      # everything else. The Colorize theme it replaced shipped places only,
+      # so every application icon fell through to stock breeze-dark.
+      iconTheme = "AnNIXion";
       wallpaper = "${config.home.homeDirectory}/.dotfiles/assets/wallpaper/wallpaper_1.png";
       wallpaperFillMode = "preserveAspectFit";
       wallpaperBackground.color = "#000000";

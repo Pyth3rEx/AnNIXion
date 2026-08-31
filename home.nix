@@ -46,6 +46,18 @@ let
       runHook postInstall
     '';
   };
+
+  AnNIXionIcons = import ./home/icons { inherit pkgs lib; };
+
+  # Both themes have to land in one directory: xdg.dataFile."icons" owns the
+  # whole path, so it cannot take two sources.
+  IconSet = pkgs.symlinkJoin {
+    name = "annixion-icon-set";
+    paths = [
+      "${SlotIcons}/share/icons"
+      "${AnNIXionIcons}/share/icons"
+    ];
+  };
 in
 {
   imports = [
@@ -70,8 +82,8 @@ in
 
   programs.home-manager.enable = lib.mkDefault true;
 
-  # Symlink so KDE picks the icon theme up.
-  xdg.dataFile."icons".source = "${SlotIcons}/share/icons";
+  # Symlink so KDE picks the icon themes up.
+  xdg.dataFile."icons".source = IconSet;
 
   # ── User packages ─────────────────────────────────────────
   # Offensive/OSINT/SDR tooling is system-wide, in modules/security-tools.nix.
@@ -112,6 +124,7 @@ in
 
     # ── Icons & cursors ───────────────────────────────────────
     SlotIcons
+    AnNIXionIcons
     nordzy-cursor-theme
 
     # ── Plasma widgets ────────────────────────────────────────
