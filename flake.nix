@@ -51,6 +51,7 @@
         ./modules/hardening.nix
         ./modules/shell.nix
         ./modules/git.nix
+        ./modules/docker.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
@@ -236,6 +237,7 @@
         xrdp-session = pkgs.testers.nixosTest (import ./tests/xrdp-session.nix);
         bind-axfr = pkgs.testers.nixosTest (import ./tests/bind-axfr.nix);
         git-credential-helper = pkgs.testers.nixosTest (import ./tests/git-credential-helper.nix);
+        docker = pkgs.testers.nixosTest (import ./tests/docker.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {
