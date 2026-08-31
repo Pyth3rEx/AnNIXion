@@ -2,6 +2,7 @@
 { lib, pkgs, ... }:
 let
   version = lib.removeSuffix "\n" (builtins.readFile ./VERSION);
+  branding = import ./branding { inherit pkgs; };
 
   # Build the installer script as an ordinary executable
   installScript = pkgs.writeShellScriptBin "annixion-install" (
@@ -17,11 +18,32 @@ in
   isoImage = {
     volumeID = lib.mkForce "ANNIXION";
     squashfsCompression = "xz -Xdict-size 100%";
+
+    # syslinux draws the BIOS menu over the first, GRUB the EFI one. Both
+    # default to NixOS artwork fetched from GitHub, so overriding them also
+    # drops two fetchurls from the ISO's evaluation.
+    splashImage = lib.mkForce branding.isoSplashBios;
+    efiSplashImage = lib.mkForce branding.isoSplashEfi;
   };
 
-  # The new default from 26.11; the live image never imports a root pool it
-  # did not create.
-  boot.zfs.forceImportRoot = false;
+  boot = {
+    # The new default from 26.11; the live image never imports a root pool it
+    # did not create.
+    zfs.forceImportRoot = false;
+
+    # The live image is a console session, so the splash is the only place the
+    # mark appears between the boot menu and the installer prompt.
+    plymouth = {
+      enable = true;
+      themePackages = [ branding.plymouthTheme ];
+      theme = "annixion";
+    };
+    kernelParams = [
+      "quiet"
+      "splash"
+      "udev.log_priority=3"
+    ];
+  };
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
