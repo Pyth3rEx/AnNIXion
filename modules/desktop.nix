@@ -8,12 +8,15 @@
 {
   # ── Display & desktop — KDE Plasma 6 ────────────────────────────────────
   # X11 by default: Enhanced Session runs over xrdp, which has no Wayland
-  # backend. Both sessions are offered at SDDM.
+  # backend. Both sessions are offered at SDDM. "plasma" is the Wayland
+  # session — the X11 one is "plasmax11". Not mkDefault: plasma6 already
+  # claims the option at that priority, which is how this came to read
+  # "plasma" and quietly agree with it.
 
   services = {
     xserver.enable = lib.mkDefault true;
     displayManager.sddm.enable = lib.mkDefault true;
-    displayManager.defaultSession = lib.mkDefault "plasma";
+    displayManager.defaultSession = "plasmax11";
     desktopManager.plasma6.enable = lib.mkDefault true;
   };
 
