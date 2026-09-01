@@ -21,9 +21,15 @@ In the wordmark, the three letters of NIX carry the signature red and the rest
 stays light, so the Nix lineage is legible without saying it. Letterspacing is
 wide (0.30em), weight is light: it is a wordmark, not a headline.
 
+The lockup carries **no lowercase**. AN and ION are set as small capitals at
+0.62em; NIX stays full size in the signature red. Both parts are capitals, so
+they share a baseline and the colour does all the emphasis. In running text the
+name is still written AnNIXion — the small-cap treatment belongs to the lockup
+alone, which appears once per surface and never inside a sentence.
+
 | Element | Value |
 |---|---|
-| Wordmark | `anNIXion`, NIX in `#FF0033` |
+| Wordmark | `AN`·**NIX**·`ION` — small caps either side, NIX in `#FF0033` |
 | Descriptor | OFFENSIVE SECURITY DISTRIBUTION, boxed in a hairline red rule |
 | Tagline | "The environment for operators who refuse to wing it" — README and release notes only, never the lockup |
 | Logo | Nix snowflake under a datamosh glitch, `assets/icons/AnNIXion.png` |
@@ -42,6 +48,18 @@ Shipping today is **0.3.1 "Tripwire"**. Next is **0.4.0 "Nebula"**.
 > snowflake drawn to the mark rules, one stroke colour, legible at 16px. Because
 > it is a stroke rather than baked pixels, it is also the first form of the mark
 > that can be recoloured for a light surface.
+
+### Independent of Nix
+
+AnNIXion is built on NixOS and proud of that lineage — the name says so out
+loud. It is **not made by, affiliated with, endorsed by, sponsored by or
+connected to** the NixOS Foundation, the Nix project, or anyone who works on
+them. Nix and NixOS are the work of their own community and owe this project
+nothing.
+
+Say this wherever the name might be read as a claim of endorsement: the design
+board carries it on its first page. The name is a statement of lineage, never
+of affiliation.
 
 ### The X
 
