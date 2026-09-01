@@ -5,7 +5,6 @@
 # MOZ_APP_REMOTINGNAME gives each profile its own WM_CLASS, so the panel
 # and annixion-raise can tell the windows apart.
 {
-  config,
   lib,
   ...
 }:
@@ -33,7 +32,7 @@
       Type=Application
       Name=Firefox - Unsafe Browser
       GenericName=Unsafe Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png
+      Icon=annixion-firefox-untrusted
       Exec=env MOZ_APP_REMOTINGNAME=firefox-untrusted firefox -P "Unsafe Browser" --no-remote %U
       StartupWMClass=firefox-untrusted
       Terminal=false
@@ -45,7 +44,7 @@
       Type=Application
       Name=Firefox - Red Team
       GenericName=Assault Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
+      Icon=annixion-firefox-redteam
       Exec=env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote %U
       StartupWMClass=firefox-red
       Terminal=false
@@ -57,7 +56,7 @@
       Type=Application
       Name=Firefox - OSINT
       GenericName=Search Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
+      Icon=annixion-firefox-osint
       Exec=env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT" %U
       StartupWMClass=firefox-osint
       Terminal=false
@@ -69,7 +68,7 @@
       Type=Application
       Name=Firefox - Puppet Master
       GenericName=Persona Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
+      Icon=annixion-firefox-puppet
       Exec=env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master" %U
       StartupWMClass=firefox-puppet
       Terminal=false

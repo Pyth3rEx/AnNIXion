@@ -21,14 +21,21 @@ wide (0.30em), weight is light: it is a wordmark, not a headline.
 | Descriptor | OFFENSIVE SECURITY DISTRIBUTION, boxed in a hairline red rule |
 | Tagline | "The environment for operators who refuse to wing it" — README and release notes only, never the lockup |
 | Logo | Nix snowflake under a datamosh glitch, `assets/icons/AnNIXion.png` |
+| Launcher mark | The same snowflake drawn to the mark rules, `annixion-logo` |
 | Codename | One word in `RELEASE_NAME` beside the number in `VERSION` |
 
 Shipping today is **0.3.1 "Tripwire"**. Next is **0.4.0 "Nebula"**.
 
-> The logo is **dark-ground only** — light artwork on transparency, it vanishes
-> on any light surface. Used as the panel launcher (`home/plasma.nix:191`) and
-> the fastfetch logo. No light variant exists; one must be drawn before any
-> light surface can.
+> The datamosh logo is **dark-ground only** — light artwork on transparency, it
+> vanishes on any light surface. It is a hero image: the Plymouth splash, the
+> fastfetch banner, the ISO menus and the README header, all of which draw it
+> large.
+>
+> It is **not** an icon. At the 32px the panel gives it, the glitch bars collapse
+> into a smear, so the launcher wears `annixion-logo` instead — the same
+> snowflake drawn to the mark rules, one stroke colour, legible at 16px. Because
+> it is a stroke rather than baked pixels, it is also the first form of the mark
+> that can be recoloured for a light surface.
 
 ### The X
 
@@ -90,9 +97,23 @@ silhouette identifies.
 | Canvas | 24 × 24, drawing fills 21 × 21 |
 | Stroke | 2.1, round cap and join |
 | Colour | Whole mark in one class colour |
+| Families | One application in several colours shares one body — see below |
 | Fills | Only for dots under 2.5 units |
 | On the wallpaper | 1.5 outer stroke in `#0E0F13`; the menu does not need it |
 | Export | `scalable/apps/annixion-<tool>.svg` |
+
+### Families
+
+Where one application appears several times under different colours, every
+copy shares a single drawing and the colour carries the whole difference. Two
+families exist: the four browser profiles and the three terminals. Their
+bodies are bound once at the top of `home/icons/marks.nix`, so a redraw cannot
+drift between the variants and a fifth variant costs no artwork at all.
+
+This is the rule that decided the browser mark. A globe is the more obvious
+browser drawing, but at 22px it is indistinguishable from the Internet
+directory's own globe, which sits directly above it. The window and tab is one
+stroke less obvious and unmistakably not that.
 
 An earlier revision seated each glyph inside a hexagonal badge. It was dropped:
 the container spent 82% of the canvas on itself, leaving the drawing at 18% of
@@ -139,6 +160,24 @@ measured as a stroke against the `#14171D` menu ground.
 
 Red means the tool needs written authorisation behind it. That is the one class
 where the mark is a check on muscle memory rather than decoration.
+
+### Session colours
+
+The six classes above say what a tool does to a target. A terminal does
+nothing to a target, so the terminal family is coloured by the session you are
+standing in instead — and the values are the prompt's own, so the launcher and
+the shell it opens agree before you have typed anything.
+
+| Colour | Value | Contrast | Session | Declared |
+|---|---|---|---|---|
+| Utility | `#7A8494` | 4.8:1 | The operator's own shell | the class table above |
+| Elevated | `#FF0033` | 4.5:1 | root | `home/zsh/omp-theme.nix:37` |
+| Nix | `#7EBAE4` | 8.6:1 | Inside `nix develop` or `nix-shell` | `home/zsh/omp-theme.nix:38` |
+
+Elevated repeats the signature red rather than introducing a seventh value:
+root is the one session that is dangerous to miss, and it should read as the
+same red the root Konsole background and the prompt already use. These two
+colours are the terminal family's alone — no tool mark may take them.
 
 Forensic is the wallpaper's cobalt `#0F5AE6` lifted to `#4A90FF`. The wallpaper
 value works as a large filled figure on pure black but reaches only 3.1:1 as a
@@ -190,14 +229,14 @@ true rather than decorating.
 |---|---|---|
 | Boot loader | themed | systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash. `modules/branding.nix` |
 | Login (SDDM) | themed | Breeze's greeter rebranded through `theme.conf` alone — no QML of our own |
-| Lock screen | themed | `wallpaper_2.png` via `home/plasma.nix:33` |
+| Lock screen | themed | `wallpaper_2.png` via `home/plasma.nix:36` |
 | Desktop | themed | `wallpaper_1.png`, `preserveAspectFit` on pure black |
-| Panel | themed | 32px, AnNIXion mark as launcher icon |
-| Application menu | in progress | 41 entries, 34 directories |
+| Panel | themed | 32px, `annixion-logo` as launcher icon |
+| Application menu | themed | 42 entries, 34 directories, 81 marks |
 | Terminal | themed | Konsole, 85% opacity with blur |
 | Prompt | themed | oh-my-posh, chrome palette, red accent diamonds |
 | fastfetch | themed | AnNIXion mark at width 30, keys and title in red |
-| Browser profiles | themed | Four colour-coded Firefox profiles |
+| Browser profiles | themed | One mark in four class colours |
 | README / GitHub | themed | Glitch banner, wordmark lockup, badge row |
 | ISO | themed | Banner on black for both the syslinux and GRUB menus, plus the same Plymouth splash |
 
@@ -229,17 +268,17 @@ changes the surface you are standing on, never a decoration bolted onto it.
 
 ## Browser profiles
 
-The four Firefox profiles were colour-coded before the semantic classes existed
-and map cleanly onto them.
+Four profiles, one drawing. The mark is a browser window with a tab, and the
+class colour is the only thing that changes between them — the same rule the
+recoloured Firefox logos followed before them, held to the mark system instead
+of to a raster of somebody else's artwork.
 
-| Profile | Asset | Class |
-|---|---|---|
-| Unsafe Browser | `firefox-grey.png` | utility |
-| Red Team | `firefox-red.png` | offensive |
-| OSINT | `firefox-yellow.png` | probe |
-| Puppet Master | `firefox-green.png` | passive |
-| — unused — | `firefox-blue.png` | reserve for forensic |
-| — unused — | `firefox-purple.png` | recolour to `#F213A0` for reverse |
+| Profile | Mark | Class | Colour |
+|---|---|---|---|
+| Unsafe Browser | `annixion-firefox-untrusted` | utility | `#7A8494` |
+| Red Team | `annixion-firefox-redteam` | offensive | `#FF0033` |
+| OSINT | `annixion-firefox-osint` | probe | `#FFD000` |
+| Puppet Master | `annixion-firefox-puppet` | passive | `#33E62B` |
 
 OSINT is amber rather than green deliberately: the profile drives a real browser
 at a real target through `annixion-vpn-browser`, fetching their pages and
@@ -247,10 +286,27 @@ landing in their logs. That is probe, not passive. Puppet Master takes green
 because persona work touches archives and social surfaces, not the target
 estate.
 
-`firefox-blue.png` and `firefox-purple.png` exist in `assets/icons/` and are
-referenced nowhere.
+A fifth or sixth profile needs no artwork — forensic `#4A90FF` and reverse
+`#F213A0` are two lines in `marks.nix`. That is what the six recoloured PNGs
+were paying a megabyte for, and two of the six (`firefox-blue.png`,
+`firefox-purple.png`) were never referenced at all. All six are gone.
 
 ---
+
+## Terminals
+
+The same rule, on the other family. One terminal drawing, three sessions,
+coloured by the [session colours](#session-colours) above.
+
+| Entry | Mark | Session |
+|---|---|---|
+| Konsole | `annixion-konsole` | The operator's own shell |
+| Konsole (root) | `annixion-konsole-root` | `sudo -i`, on the `#301212` root profile |
+| Konsole (Nix shell) | `annixion-konsole-nix` | `nix develop`, where the checks run |
+
+This is the [elevation rule](#elevation) reaching one surface earlier. The root
+Konsole already changes the ground you are standing on once the window is open;
+colouring the launcher says it while the pointer is still over the menu.
 
 ## Voice
 
@@ -269,8 +325,10 @@ not teaching.
 
 ## How it is built
 
-`home/icons/marks.nix` holds one entry per mark — a semantic class and the
-24-grid drawing. `home/icons/default.nix` renders each into
+`home/icons/marks.nix` holds one entry per mark — a class and the 24-grid
+drawing. The two family bodies are bound in a `let` at the top of that file and
+referenced by name, so the four browsers and the three terminals cannot drift
+apart. `home/icons/default.nix` renders each into
 `scalable/apps/annixion-<name>.svg`, the class supplying the stroke colour, and
 emits an `index.theme` inheriting `Slot-Dark-Icons`, `breeze-dark`, `Adwaita`
 and `hicolor`. Anything the set does not draw still falls back to a real icon.
@@ -279,7 +337,8 @@ and `hicolor`. Anything the set does not draw still falls back to a real icon.
 `xdg.dataFile."icons"` owns, and `home/plasma.nix` selects `AnNIXion`.
 
 Reclassifying a tool is a one-word change to its `class`. Redrawing one is a
-change to its `body`. Neither touches `home/apps-menu.nix`, which names marks
+change to its `body` — or, for a family member, to the shared body every
+variant reads. Neither touches `home/apps-menu.nix`, which names marks
 only by `annixion-<tool>` and `annixion-menu-<slug>`.
 
 Adding a menu entry means adding its mark in the same commit —

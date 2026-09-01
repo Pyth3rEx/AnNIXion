@@ -3,7 +3,10 @@
 { pkgs, lib }:
 
 let
-  # Stroke colours per semantic class. Contrast-checked on the #14171D menu ground.
+  # Stroke colours per class. Contrast-checked on the #14171D menu ground.
+  # The first six say what running the tool does to the target. The last two
+  # say what session you are standing in, and only the terminal family uses
+  # them; both values are the prompt's (home/zsh/omp-theme.nix:37).
   classColour = {
     passive = "#33E62B";
     probe = "#FFD000";
@@ -11,6 +14,8 @@ let
     forensic = "#4A90FF";
     reverse = "#F213A0";
     utility = "#7A8494";
+    elevated = "#FF0033";
+    nixenv = "#7EBAE4";
   };
 
   marks = import ./marks.nix;

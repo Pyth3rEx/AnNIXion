@@ -93,6 +93,27 @@ report "$([ -z "$missing" ] && echo 0 || echo 1)" \
   "every menu icon resolves in $theme" \
   "$checked checked, these resolve nowhere:$(printf '%b' "$missing")"
 
+# ── The panel launcher names a mark too ────────────────────────────────────
+# It is not a menu file, so the sweep above never sees it. It used to be an
+# absolute path to a PNG, which could not go stale; a theme name can, and a
+# launcher whose icon resolves nowhere is a blank square on the panel.
+launcher=$(nix eval --raw "$HM.programs.plasma.panels" --apply '
+  ps:
+  let
+    widgets = builtins.concatLists (map (p: p.widgets) ps);
+    tiled = builtins.filter (w: (w.name or "") == "com.github.zren.tiledmenu") widgets;
+  in
+    if tiled == [ ] then "" else (builtins.head tiled).config.General.icon
+' 2>/dev/null)
+
+report "$([ -n "$launcher" ] && echo 0 || echo 1)" \
+  "the panel launcher declares an icon" "found no tiled menu widget carrying one"
+
+if [ -n "$launcher" ]; then
+  report "$(resolve "$launcher" && echo 0 || echo 1)" \
+    "the panel launcher icon resolves in $theme" "$launcher resolves nowhere"
+fi
+
 # ── The marks are namespaced, so a collision with an upstream icon cannot ──
 # silently win the lookup.
 stray=$(find "$icons/$theme" -name '*.svg' ! -name 'annixion-*' 2>/dev/null | head -1)
