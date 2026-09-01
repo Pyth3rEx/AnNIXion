@@ -278,10 +278,31 @@ achieved.
 | | | `gh` shipped as a terminal window with a prompt in it — the same drawing as Konsole, in the same grey. Two unrelated tools may not share a silhouette; it now takes the branch graph in a window. No test catches this, so it is on review. |
 | Subject | What the tool does, never its logo | Upstream logos break the set; most of these tools have none |
 | Naming | `annixion-<tool>` | Namespaced against upstream hicolor icons |
+| Stock alias | Add to `aliases` in `home/icons/default.nix` | Only if the tool ships its own `.desktop` entry — see below |
 
 Test at 22px, next to its classmates — not alone and not at 96px. A mark is
 finished when you can pick it out of its own class colour at menu size. If you
 cannot, change the shape rather than adding detail.
+
+### Stock icon names
+
+A tool packaged with its own `.desktop` entry asks for the icon name that entry
+declares, not for ours, and `home/plasma.nix` pins those entries deliberately —
+Plasma matches a window to its launcher by class, and only the stock name
+resolves. A mark named `annixion-<tool>` is therefore never consulted for them:
+Konsole asks for `utilities-terminal`, Dolphin for `org.kde.dolphin`, and both
+fall through to the inherited theme.
+
+The `aliases` set in `home/icons/default.nix` installs those marks under the
+stock names as well, as symlinks onto the namespaced file. Three of the names
+are generic freedesktop ones rather than app-specific — `utilities-terminal`,
+`accessories-calculator` and `preferences-system` — so the mark answers for any
+application of that kind, which is the intent here but is worth knowing before
+adding a fourth.
+
+`tests/menu-icons.sh` requires every un-namespaced file in the theme to be one
+of these symlinks pointing at a mark that exists. Whether a given alias names
+the right mark is not tested, and stays on review.
 
 ---
 
