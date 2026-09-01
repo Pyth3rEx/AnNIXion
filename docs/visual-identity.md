@@ -120,10 +120,12 @@ silhouette identifies.
 
 | Property | Value |
 |---|---|
-| Canvas | 24 × 24, drawing fills 21 × 21 |
-| Stroke | 2.1, round cap and join |
+| Grid | 24 × 24, and the drawing may use all of it |
+| Canvas | The grid padded 1.3 units all round — see below |
+| Stroke | 2.3275, round cap and join |
 | Colour | Whole mark in one class colour |
 | Families | One application in several colours shares one body — see below |
+| Crossing | A symbol that crosses another is knocked out — see below |
 | Fills | Only for dots under 2.5 units |
 | On the wallpaper | 1.5 outer stroke in `#0E0F13`; the menu does not need it |
 | Export | `scalable/apps/annixion-<tool>.svg` |
@@ -146,6 +148,55 @@ the container spent 82% of the canvas on itself, leaving the drawing at 18% of
 the area and a 1.01px stroke once the menu rendered 22px. Two tools in the same
 class became a coloured hexagon with a smudge inside. Filling the canvas gives
 4.2× the drawn area and 1.9× the stroke weight from the same drawings.
+
+### Crossing symbols
+
+The lightning through the signal arcs, the blade through the datastore, the
+lens laid over the page: a symbol that crosses another is the same colour at
+the same weight as the thing it crosses, so at menu size the crossing fuses and
+both shapes are lost. Aircrack was three arcs and a lightning bolt, and at 22px
+it was a red smudge.
+
+A crossing symbol is therefore drawn **twice** — once in the ground colour
+`#14171D` at stroke 4.2, then normally at 2.3275 on top. The wide pass cuts a
+gap either side of the crossing symbol. On the menu ground that gap is
+invisible and the two shapes simply separate; on the wallpaper it reads as the
+dark outline the marks take there anyway.
+
+In `marks.nix` this is the mark's `over` attribute. Order matters: body, then
+knockout, then the symbol.
+
+| Rule | Value |
+|---|---|
+| Knockout stroke | 4.2 in `#14171D` — a gap of about 0.9 either side |
+| Applies to | A symbol that **crosses** another shape's stroke |
+| Does not apply to | A symbol that sits **inside** one |
+
+That last line is the one that costs you. Knocking out the X inside John's key
+head only eats the head, and knocking out Metasploit's spokes eats its core —
+both are drawn flat for that reason. Note also that the knockout is nearly
+twice the normal stroke, so a crossing symbol needs correspondingly more room
+from the edge; `mark-bbox.py` caught WhatWeb's lens handle the moment it was
+promoted.
+
+### The canvas is bigger than the grid
+
+A round cap or join reaches **half a stroke width** past the geometry that
+draws it. A drip that ends on the bottom of the grid therefore has its tip
+sliced flat by the viewBox — and a sliced cap does not read as a short drip, it
+reads as a cut. Round tip at the top where the drip leaves the shape, square
+end at the bottom: exactly backwards.
+
+So the rendered canvas is the grid plus 1.3 units on every side, and the stroke
+is scaled by the same ratio (2.1 → 2.3275) so the weight on screen is
+unchanged. The drawing still lives on the 24-unit grid; the pad exists only to
+hold the ink the stroke throws beyond it.
+
+Both halves are enforced. `branding/mark-bbox.py` walks every path in the built
+theme — Bézier extrema included, not just the control points — and fails if any
+mark's geometry leaves the grid or any mark's ink leaves the canvas.
+`tests/menu-icons.sh` runs it. It was written after 32 of 81 marks turned out
+to be losing ink off the edge, twelve of them drips.
 
 ### The hand
 
@@ -218,12 +269,13 @@ achieved.
 
 | Rule | Value | Why |
 |---|---|---|
-| Grid | 24 × 24, drawing fills 21 × 21 | 1.5 units of air each side so round caps never clip |
-| Stroke | 2.1, round cap and join | Lands at 1.93px when the menu draws 22px |
+| Grid | 24 × 24, edge to edge | The pad below is what keeps caps off the edge |
+| Stroke | 2.3275, round cap and join | Lands at 1.93px when the menu draws 22px |
 | Detail budget | Five strokes or fewer | Spend the sixth on silhouette, never on texture |
 | Hand | Bowed lines and open curves, always | Devices 1 and 2 are not optional — a true horizontal anywhere breaks the set |
 | Drip and X | Earned, not decorative | The drip goes on the lowest edge with room; the X only where the tool breaks something |
 | Silhouette | Must differ from its classmates | Inside a class the colour is identical, so shape is the only differentiator |
+| | | `gh` shipped as a terminal window with a prompt in it — the same drawing as Konsole, in the same grey. Two unrelated tools may not share a silhouette; it now takes the branch graph in a window. No test catches this, so it is on review. |
 | Subject | What the tool does, never its logo | Upstream logos break the set; most of these tools have none |
 | Naming | `annixion-<tool>` | Namespaced against upstream hicolor icons |
 
@@ -258,7 +310,7 @@ true rather than decorating.
 | Lock screen | themed | `wallpaper_2.png` via `home/plasma.nix:36` |
 | Desktop | themed | `wallpaper_1.png`, `preserveAspectFit` on pure black |
 | Panel | themed | 32px, `annixion-logo` as launcher icon |
-| Application menu | themed | 42 entries, 34 directories, 81 marks |
+| Application menu | themed | 46 entries across 33 categories, 81 marks |
 | Terminal | themed | Konsole, 85% opacity with blur |
 | Prompt | themed | oh-my-posh, chrome palette, red accent diamonds |
 | fastfetch | themed | AnNIXion mark at width 30, keys and title in red |

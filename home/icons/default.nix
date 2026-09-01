@@ -19,18 +19,44 @@ let
   };
 
   marks = import ./marks.nix;
+  # Marks are drawn on a 24-unit grid, but a round cap or join reaches half a
+  # stroke width past the geometry — so a drip that ends on the bottom edge has
+  # its tip sliced flat by the viewBox and reads as a cut, not a drawn end.
+  # The viewBox is padded by that margin and the stroke scaled to match, so the
+  # rendered weight is unchanged and nothing can be clipped.
+  # branding/mark-bbox.py enforces both halves of this.
+  # pad 1.3 = half the scaled stroke, rounded up; 24 + 2*1.3 = 26.6;
+  # 2.1 * 26.6 / 24 = 2.3275, which keeps the apparent weight unchanged.
+  vbMin = "-1.3";
+  vbSide = "26.6";
+  strokeW = "2.3275";
+
+  # Where one symbol crosses another, both are the same colour and the same
+  # weight, so the crossing reads as a single blob once the menu draws 22px.
+  # An `over` symbol is therefore drawn twice: once wide in the ground colour
+  # to cut a gap, then normally on top. On the menu ground the gap is
+  # invisible; on the wallpaper it is the dark outline the marks take anyway.
+  ground = "#14171D";
+  knockoutW = "4.2";
 
   render =
     name: mark:
     let
       colour = classColour.${mark.class} or (throw "icon ${name}: unknown class ${mark.class}");
       body = builtins.replaceStrings [ "@c@" ] [ colour ] mark.body;
+      over = mark.over or "";
+      overInk = builtins.replaceStrings [ "@c@" ] [ colour ] over;
+      overCut = builtins.replaceStrings [ "@c@" ] [ ground ] over;
+      layer = stroke: width: content: ''
+        <g fill="none" stroke="${stroke}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round">
+        ${content}  </g>
+      '';
     in
     pkgs.writeText "annixion-${name}.svg" ''
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-        <g fill="none" stroke="${colour}" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-      ${body}  </g>
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="${vbMin} ${vbMin} ${vbSide} ${vbSide}" width="24" height="24">
+      ${layer colour strokeW body}${
+        lib.optionalString (over != "") (layer ground knockoutW overCut + layer colour strokeW overInk)
+      }</svg>
     '';
 
   copies = lib.mapAttrsToList (

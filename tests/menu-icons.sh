@@ -93,6 +93,12 @@ report "$([ -z "$missing" ] && echo 0 || echo 1)" \
   "every menu icon resolves in $theme" \
   "$checked checked, these resolve nowhere:$(printf '%b' "$missing")"
 
+# ── No mark may lose ink off the edge of its canvas ────────────────────────
+# A round cap reaches half a stroke past the geometry, so a drip that ends on
+# the grid edge is sliced flat and reads as a cut rather than a drawn end.
+bbox=$(python3 "$ROOT/branding/mark-bbox.py" "$icons/$theme/scalable/apps" --quiet 2>&1)
+report "$?" "no mark loses ink off its canvas" "$bbox"
+
 # ── The panel launcher names a mark too ────────────────────────────────────
 # It is not a menu file, so the sweep above never sees it. It used to be an
 # absolute path to a PNG, which could not go stale; a theme name can, and a
