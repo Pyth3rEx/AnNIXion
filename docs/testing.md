@@ -100,7 +100,7 @@ a path a module chose.
 | `tests/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
 | `tests/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
 | `tests/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
-| `tests/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, and Enhanced Session stays configured. |
+| `tests/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
 | `tests/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
 | `tests/git-credential-helper.nix` | That a push can find its credentials: the gh helper is configured for every user, and the binary it names is one the system still has. |
 | `tests/docker.nix` | That the container runtime is the rootless one: the daemon belongs to the user, its socket is the one the CLI is pointed at, and neither a root daemon nor a `docker` group exists. |
