@@ -46,7 +46,7 @@ in
 
       # ── Single top panel ──────────────────────────────────────────────────
       # Layout (left → right), described in docs/customization.md:
-      #   [desktops] [tasks] ── [menu] [app name] ── [cam] [net] [BT] [vol] [bat] [tray] [clock] [◆]
+      #   [desktops] | [tasks] ── [menu] [app name] ── [cam] [net] [BT] [vol] [bat] [tray] [clock] [◆]
       {
         location = "top";
         screen = 0;
@@ -63,32 +63,33 @@ in
               };
             };
           }
+
+          # Divides the desktop pager from the launchers, which otherwise read
+          # as one run of squares. home/panel-separator.nix.
+          "com.annixion.separator"
+
           {
             iconTasks = {
-              # Same set as hotkeys.commands, in Meta+F<N> order, so the
-              # Nth icon is the Nth key. Where a stock entry and an
-              # annixion-* one both exist the stock one is pinned: Plasma
-              # matches a window to a launcher by class, and only the stock
-              # name resolves. Their marks reach them through the alias set in
-              # home/icons/default.nix, since a stock entry asks for a stock
-              # icon name. The rest have no stock equivalent and carry their
-              # own StartupWMClass.
+              # The everyday five, not the whole hotkey set: a pinned icon is
+              # worth its width only for what is opened without thinking, and
+              # the rest stay a Meta+F<N> or a menu entry away. Order still
+              # follows hotkeys.commands, so these are F1, F2, F4, F5 and F6.
+              #
+              # Where a stock entry and an annixion-* one both exist the stock
+              # one is pinned: Plasma matches a window to a launcher by class,
+              # and only the stock name resolves. Their marks reach them through
+              # the alias set in home/icons/default.nix, since a stock entry asks
+              # for a stock icon name. The rest have no stock equivalent and
+              # carry their own StartupWMClass.
               launchers = [
-                # Heavy use
+                # Terminals
                 "applications:org.kde.konsole.desktop"
                 "applications:annixion-konsole-root.desktop"
-                "applications:org.kde.dolphin.desktop"
+                # Browser profiles. Red Team also brings up Burp — see
+                # home/redteam-launch.nix.
                 "applications:firefox-red.desktop"
-                # Offensive
                 "applications:firefox-osint.desktop"
                 "applications:firefox-puppet.desktop"
-                "applications:burpsuite.desktop"
-                "applications:annixion-metasploit.desktop"
-                "applications:org.wireshark.Wireshark.desktop"
-                "applications:ghidra.desktop"
-                # Work
-                "applications:annixion-vscodium.desktop"
-                "applications:obsidian.desktop"
               ];
             };
           }
@@ -285,10 +286,9 @@ in
 
         dolphin = raise "Meta+F3" "Dolphin" "dolphin" "dolphin";
 
-        # MOZ_APP_REMOTINGNAME is what gives each profile its own WM_CLASS.
-        firefox-red =
-          raise "Meta+F4" "Firefox — Red Team" "firefox-red"
-            ''env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote'';
+        # annixion-redteam sets MOZ_APP_REMOTINGNAME, which is what gives each
+        # profile its own WM_CLASS, and starts Burp alongside the browser.
+        firefox-red = raise "Meta+F4" "Firefox — Red Team" "firefox-red" "annixion-redteam";
 
         # ── Offensive ───────────────────────────────────────────
         firefox-osint =

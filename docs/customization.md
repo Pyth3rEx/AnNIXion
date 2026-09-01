@@ -50,12 +50,12 @@ The top bar is declared in `home/plasma.nix` under `programs.plasma.panels`, and
 is organised by function into three groups:
 
 ```
-[desktops][tasks]───[☰][app name]───[cam][net][BT][vol][bat][tray][clock][◆]
+[desktops]│[tasks]───[☰][app name]───[cam][net][BT][vol][bat][tray][clock][◆]
 ```
 
 | Group | Contents |
 |---|---|
-| Left | Virtual desktop pager, icon-only task manager pinned to the quicklaunch set |
+| Left | Virtual desktop pager, a rule, icon-only task manager pinned to the everyday five |
 | Centre | Compact app menu, then the focused app's name |
 | Right | Camera indicator, system categories, status tray, clock, application menu |
 
@@ -69,14 +69,31 @@ Two things to know before editing the widget list:
 An applet placed on the bar directly must **also** appear in the tray's
 `items.hidden`, or it renders twice — once standalone, once in the tray.
 
-The task manager's `launchers` mirror `hotkeys.commands` in `Meta+F<N>` order,
-so the Nth icon is the Nth key. Adding a quicklaunch key means adding its
-`.desktop` id here too. Where an app has both a stock entry and an `annixion-*`
-one, pin the stock id: Plasma matches a running window to a launcher by window
-class, and `annixion-wireshark` does not resolve against a window whose class is
-`wireshark`. The ids with no stock equivalent — the root and Metasploit
-terminals, the Firefox profiles, VSCodium — carry their own `StartupWMClass`
-instead.
+The task manager pins five launchers — the two terminals and the three Firefox
+profiles — in `Meta+F<N>` order, so they read as `F1`, `F2`, `F4`, `F5`, `F6`.
+That is a subset of `hotkeys.commands`, not a mirror of it: everything else
+keeps its key and its menu entry without spending panel width. Adding a
+quicklaunch key does not oblige you to pin it. Where an app has both a stock
+entry and an `annixion-*` one, pin the stock id: Plasma matches a running window
+to a launcher by window class, and `annixion-wireshark` does not resolve against
+a window whose class is `wireshark`. The ids with no stock equivalent — the root
+terminal, the Firefox profiles — carry their own `StartupWMClass` instead.
+
+The rule between the pager and the launchers is `com.annixion.separator`, a
+two-file KPackage written by `home/panel-separator.nix`. Plasma 5's
+`org.kde.plasma.marginsseparator` is gone in Plasma 6 with nothing in its place,
+so it is ours. It draws a hairline in the theme's text colour and costs about
+six pixels; being fixed-length and left of the first spacer, it shifts the
+centre group right by half that.
+
+`Meta+F4` and the Red Team icon both run `annixion-redteam`
+(`home/redteam-launch.nix`), which starts Burp Suite if `pgrep -f burpsuite`
+finds none running and then execs the browser profile. Burp is matched on its
+command line, not its window: the JVM shows nothing for several seconds, and a
+window test would start a second copy for every click in that gap. Note that
+Plasma raises an existing window rather than re-running `Exec`, so a Red Team
+window that is already open will not pull Burp up behind it — close it first, or
+launch Burp from the menu.
 
 A panel change does not appear on `rebuild`. plasma-manager applies panels with a
 Plasma desktop script that runs at login, and it deletes and regenerates
@@ -86,9 +103,10 @@ Plasma desktop script that runs at login, and it deletes and regenerates
 
 The two expanding spacers do the work. Plasma sizes a pair of them so that
 whatever sits between them lands on the panel centre, whatever the flanking
-groups weigh — so the centre group stays put as the task manager grows. Put
-nothing else between the left group and the first spacer: a fixed-length pad
-there is added on top of the centring, and pushes the centre group right.
+groups weigh — so the centre group stays put as the task manager grows. Be
+sparing with anything else left of the first spacer: a fixed-length pad there is
+added on top of the centring, and pushes the centre group right by half its
+width. The separator is the one such pad, and it is a hairline for that reason.
 
 `applicationTitleBar` is pinned to a constant width so the group does not
 shuffle as app names change length, and the name is centred inside that width
@@ -137,7 +155,7 @@ Grouped in three bands: heavy use, offensive, then work.
 | `Meta+F1` | Konsole |
 | `Meta+F2` | Konsole as root — red background, `sudo -i` |
 | `Meta+F3` | Dolphin |
-| `Meta+F4` | Firefox — Red Team |
+| `Meta+F4` | Firefox — Red Team, with Burp Suite behind it |
 | `Meta+F5` | Firefox — OSINT |
 | `Meta+F6` | Firefox — Puppet Master |
 | `Meta+F7` | Burp Suite |
