@@ -18,7 +18,8 @@ day-to-day operation.
 | Document | What it covers |
 |---|---|
 | [Customization](customization.md) | The `user/` override system, adding tools, versioning |
-| [Visual identity](visual-identity.md) | Palette, typography, the icon badge system and its semantic colours, motif vocabulary |
+| [Visual identity](visual-identity.md) | Palette, typography, the mark system and its semantic colours, motif vocabulary |
+| [Visual identity — design board](visual-identity.pdf) | The same system as a 16-page print board: lockup, palette, specimen, the full mark set and the reasoning |
 | [Shell reference](zsh.md) | Prompt, keybindings, aliases, oh-my-zsh plugins |
 | [CLI tools](tools.md) | bat, ripgrep, fd, fzf, jq and the rest of the enhanced toolset |
 

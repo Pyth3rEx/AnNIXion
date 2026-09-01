@@ -4,6 +4,12 @@ The name, palette, typography, marks and motif vocabulary AnNIXion draws from,
 and the rule for every surface it puts in front of you. Read this before adding
 an icon, a wallpaper, a theme or any user-facing asset.
 
+This file is the normative reference. [visual-identity.pdf](visual-identity.pdf)
+presents the same system as a 16-page design board — the lockup, the specimen,
+the full mark set and the rejected directions — and is regenerated from a built
+icon theme by `branding/identity-board.sh`, so it cannot show a set that is not
+the one shipping.
+
 ---
 
 ## Name and mark
