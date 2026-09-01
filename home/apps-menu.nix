@@ -630,6 +630,16 @@ let
       categories = [ "X-AnNIXion-System" ];
       comment = "Terminal running a root login shell, on a red background";
     };
+    "annixion-konsole-nix" = de {
+      name = "Konsole (Nix shell)";
+      genericName = "Nix Dev Shell";
+      icon = "annixion-konsole-nix";
+      # Exec is not shell-expanded, so ~ would be taken literally.
+      exec = termNamed "konsole-nix" "nix develop ${config.home.homeDirectory}/.dotfiles";
+      wmClass = "konsole-nix";
+      categories = [ "X-AnNIXion-System" ];
+      comment = "Terminal inside the flake dev shell, where the checks run";
+    };
     "annixion-dolphin" = de {
       name = "Dolphin";
       genericName = "File Manager";

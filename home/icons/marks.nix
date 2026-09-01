@@ -1,5 +1,20 @@
 # One entry per menu mark: semantic class plus the 24-grid drawing.
 # @c@ expands to the class colour. Drawing rules: docs/visual-identity.md.
+let
+  # Families where one application wears several colours share a body, so a
+  # redraw cannot drift between the variants. Colour is the only difference.
+  browser = ''
+    <path d="M1.8 3.6 22.2 3.1c.5 5.8.5 11.6.1 17.4l-20.3.4C1.5 15.2 1.4 9.4 1.8 3.6z"/>
+    <path d="M2.1 9.1q10.1-.5 20.2 0"/>
+    <path d="M4.6 9q-.2-2.8 0-5.6 4-.3 8 0 .2 2.8 0 5.6"/>
+    <path d="M6.8 20.9v2.9"/>
+  '';
+  terminal = ''
+    <path d="M1.6 3.4 22.4 2.9c.5 5.7.5 11.4.1 17.1l-20.7.4C1.3 14.8 1.2 9.1 1.6 3.4z"/>
+    <path d="M5.4 8.4 9.2 11.8 5.3 15"/>
+    <path d="M11.6 15.2q3.8-.3 7.6 0"/>
+  '';
+in
 {
   # ── Reconnaissance — Passive OSINT ────────────────────────────────────────
   theharvester = {
@@ -340,21 +355,21 @@
   };
 
   # ── System ────────────────────────────────────────────────────────────────
+  # One terminal, three sessions. The colours are the prompt's own: the
+  # session segment flips to accent red as root and to Nix blue inside a Nix
+  # shell (home/zsh/omp-theme.nix:37). The launcher says the same thing before
+  # the shell is open.
   konsole = {
     class = "utility";
-    body = ''
-      <path d="M1.6 3.4 22.4 2.9c.5 5.7.5 11.4.1 17.1l-20.7.4C1.3 14.8 1.2 9.1 1.6 3.4z"/>
-      <path d="M5.4 8.4 9.2 11.8 5.3 15"/>
-      <path d="M11.6 15.2q3.8-.3 7.6 0"/>
-    '';
+    body = terminal;
   };
   konsole-root = {
-    class = "utility";
-    body = ''
-      <path d="M1.6 3.4 22.4 2.9c.5 5.7.5 11.4.1 17.1l-20.7.4C1.3 14.8 1.2 9.1 1.6 3.4z"/>
-      <path d="M9.4 6.6q-1 5-2 10M15 6.5q-1 5-2 10"/>
-      <path d="M5.6 9.8q4.2-.4 8.4 0M4.8 13.6q4.4-.4 8.8 0"/>
-    '';
+    class = "elevated";
+    body = terminal;
+  };
+  konsole-nix = {
+    class = "nixenv";
+    body = terminal;
   };
   dolphin = {
     class = "utility";
@@ -385,6 +400,39 @@
     body = ''
       <path d="M1.8 21.6q10.2-.5 20.4 0"/>
       <path d="M4.4 21.4q.3-4.6.1-9.2M9.4 21.4q.3-8.2.1-16.4M14.4 21.3q.3-6.2.1-12.4M19.4 21.3q.3-3.4.1-6.8"/>
+    '';
+  };
+
+  # ── Browser profiles ──────────────────────────────────────────────────────
+  # One browser, four postures. Same drawing every time; the class colour is
+  # the whole difference, so a profile is re-classified without redrawing and
+  # the two reserve classes cost no new artwork.
+  firefox-untrusted = {
+    class = "utility";
+    body = browser;
+  };
+  firefox-redteam = {
+    class = "offensive";
+    body = browser;
+  };
+  firefox-osint = {
+    class = "probe";
+    body = browser;
+  };
+  firefox-puppet = {
+    class = "passive";
+    body = browser;
+  };
+
+  # ── The mark itself ───────────────────────────────────────────────────────
+  # The Nix snowflake reduced to its six arms, four of which are the X. Drawn
+  # rather than raster so the panel launcher survives being 32px.
+  logo = {
+    class = "offensive";
+    body = ''
+      <path d="M11.9 2.4q.4 9.7.2 19.4"/>
+      <path d="M3.7 7.4 20.2 16.5M20.3 7.3 3.8 16.6"/>
+      <path d="M4.1 17v3.6"/>
     '';
   };
 

@@ -191,7 +191,9 @@ in
               defaultAppListView = "JumpToCategory";
               sidebarShortcuts = "org.kde.konsole.desktop,org.kde.dolphin.desktop,systemsettings.desktop";
               showRecentApps = "false";
-              icon = "${../assets/icons/AnNIXion.png}";
+              # The vector mark, not the datamosh PNG: the panel draws this
+              # at 32px, where the glitch bars collapse into a smear.
+              icon = "annixion-logo";
               fixedPanelIcon = "true";
               # Written here rather than by an activation hook: plasma-manager
               # deletes the appletsrc before replaying its layout script, so a
