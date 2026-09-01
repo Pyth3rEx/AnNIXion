@@ -69,8 +69,10 @@ in
               # Nth icon is the Nth key. Where a stock entry and an
               # annixion-* one both exist the stock one is pinned: Plasma
               # matches a window to a launcher by class, and only the stock
-              # name resolves. The rest have no stock equivalent and carry
-              # their own StartupWMClass.
+              # name resolves. Their marks reach them through the alias set in
+              # home/icons/default.nix, since a stock entry asks for a stock
+              # icon name. The rest have no stock equivalent and carry their
+              # own StartupWMClass.
               launchers = [
                 # Heavy use
                 "applications:org.kde.konsole.desktop"
