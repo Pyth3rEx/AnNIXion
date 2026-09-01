@@ -120,12 +120,32 @@ if [ -n "$launcher" ]; then
     "the panel launcher icon resolves in $theme" "$launcher resolves nowhere"
 fi
 
-# ── The marks are namespaced, so a collision with an upstream icon cannot ──
-# silently win the lookup.
-stray=$(find "$icons/$theme" -name '*.svg' ! -name 'annixion-*' 2>/dev/null | head -1)
-report "$([ -z "$stray" ] && echo 0 || echo 1)" \
-  "the AnNIXion theme holds only namespaced marks" \
-  "found an un-namespaced icon: ${stray:-}"
+# ── Every un-namespaced icon is a deliberate alias ─────────────────────────
+# Marks are namespaced so a collision with an upstream icon cannot silently
+# win the lookup. The exception is the alias set: an application that ships
+# its own .desktop entry asks for the name that entry declares, so the mark
+# is installed under it too. Each of those must be a symlink onto a mark that
+# exists — a stray regular file is an accidental collision, and a dangling
+# link is a mark that was renamed out from under its alias.
+aliases=0
+broken=""
+while IFS= read -r link; do
+  aliases=$((aliases + 1))
+  target=$(readlink "$link" 2>/dev/null)
+  case "$target" in
+    annixion-*.svg) [ -f "$icons/$theme/scalable/apps/$target" ] || broken="$broken\n    $(basename "$link") -> ${target} (dangling)" ;;
+    "") broken="$broken\n    $(basename "$link") is a regular file, not an alias" ;;
+    *) broken="$broken\n    $(basename "$link") -> ${target} (not a mark)" ;;
+  esac
+done < <(find "$icons/$theme" -name '*.svg' ! -name 'annixion-*' 2>/dev/null)
+
+report "$([ "$aliases" -gt 0 ] && echo 0 || echo 1)" \
+  "the theme aliases marks onto stock icon names" \
+  "found none — every pinned upstream launcher will fall through to breeze-dark"
+
+report "$([ -z "$broken" ] && echo 0 || echo 1)" \
+  "every alias points at a mark that exists" \
+  "$aliases checked:$(printf '%b' "$broken")"
 
 echo
 if [ "$fails" -gt 0 ]; then

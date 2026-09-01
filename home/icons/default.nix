@@ -62,6 +62,46 @@ let
   copies = lib.mapAttrsToList (
     name: mark: "cp ${render name mark} $out/share/icons/AnNIXion/scalable/apps/annixion-${name}.svg"
   ) marks;
+
+  # An application that ships its own .desktop entry asks for the icon name
+  # that entry declares, and home/plasma.nix pins those entries on purpose:
+  # Plasma matches a window to its launcher by class, and only the stock name
+  # resolves. So each of these marks is installed under the stock name too —
+  # without it the launcher falls through to an inherited theme. The three
+  # marked generic are freedesktop names shared by any app of that kind.
+  aliases = {
+    ark = [ "ark" ];
+    burpsuite = [ "burpsuite" ];
+    dolphin = [ "org.kde.dolphin" ];
+    filelight = [ "filelight" ];
+    ghidra = [ "ghidra" ];
+    github-desktop = [ "github-desktop" ];
+    gqrx = [ "gqrx" ];
+    htop = [ "htop" ];
+    kate = [ "kate" ];
+    kcalc = [ "accessories-calculator" ]; # generic
+    kleopatra = [ "kleopatra" ];
+    konsole = [ "utilities-terminal" ]; # generic
+    kwalletmanager = [ "kwalletmanager" ];
+    obsidian = [ "obsidian" ];
+    onlyoffice = [ "onlyoffice-desktopeditors" ];
+    systemsettings = [
+      "systemsettings"
+      "preferences-system" # generic
+    ];
+    vscodium = [ "vscodium" ];
+    wireshark = [ "org.wireshark.Wireshark" ];
+  };
+
+  links = lib.concatLists (
+    lib.mapAttrsToList (
+      name: stock:
+      if marks ? ${name} then
+        map (s: "ln -s annixion-${name}.svg $out/share/icons/AnNIXion/scalable/apps/${s}.svg") stock
+      else
+        throw "icon alias ${name}: no such mark"
+    ) aliases
+  );
 in
 pkgs.runCommand "annixion-icons" { } ''
   mkdir -p $out/share/icons/AnNIXion/scalable/apps
@@ -80,4 +120,5 @@ pkgs.runCommand "annixion-icons" { } ''
   Context=Applications
   EOF
   ${lib.concatStringsSep "\n  " copies}
+  ${lib.concatStringsSep "\n  " links}
 ''
