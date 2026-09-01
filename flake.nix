@@ -207,7 +207,12 @@
         };
     in
     {
-      packages.${system}.iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+      packages.${system} = {
+        iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
+        # tests/branding.sh builds the greeter through here rather than from
+        # <nixpkgs>, which a CI runner does not set.
+        sddm-theme = (import ./branding { inherit pkgs; }).sddmTheme;
+      };
 
       nixosConfigurations = {
         AnNIXion-iso = nixpkgs.lib.nixosSystem {
