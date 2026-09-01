@@ -39,13 +39,16 @@
       Categories=X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
     '';
+    # The only profile that does not exec Firefox directly: annixion-redteam
+    # (home/redteam-launch.nix) brings Burp up behind it, then execs the same
+    # command the others carry inline.
     ".local/share/applications/firefox-red.desktop".text = ''
       [Desktop Entry]
       Type=Application
       Name=Firefox - Red Team
       GenericName=Assault Browser
       Icon=annixion-firefox-redteam
-      Exec=env MOZ_APP_REMOTINGNAME=firefox-red firefox -P "Red Team" --no-remote %U
+      Exec=annixion-redteam %U
       StartupWMClass=firefox-red
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
