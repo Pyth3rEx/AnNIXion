@@ -21,16 +21,74 @@ def mark(name, size=None, colour=None):
         s = s.replace('<svg class="mk" ', f'<svg class="mk" style="width:{size}px;height:{size}px" ', 1)
     return s
 
-CHROME = [("#0E0F13","Deepest ground","home/zsh/omp-theme.nix:3"),
-          ("#1A1D24","Raised surface","home/zsh/omp-theme.nix:3"),
-          ("#2E323D","Segment, divider","home/zsh/omp-theme.nix:3"),
-          ("#FF0033","The signature accent","18 uses across home/"),
-          ("#DFE4EA","Primary text","home/zsh/omp-theme.nix:3"),
-          ("#301212","Root ground","home/konsole.nix:55")]
-GRAFFITI = [("#000000","Wall ground — 62% of wallpaper pixels"),
-            ("#0F5AE6","Cobalt — the figure"),
-            ("#F213A0","Magenta — spray tags, smiley, jester"),
-            ("#33E62B","Acid green — the throw-up tag")]
+RELEASE = "0.4.0 “Nebula”"
+
+def wm(size_cls=""):
+    return (f'<div class="wm {size_cls}"><span class="sc">AN</span>'
+            f'<span class="nix">NIX</span><span class="sc">ION</span></div>')
+
+AUDIENCE = [
+ ("firefox-redteam","Red teamers","Assessing someone else's estate, under written authorisation, with a proxy in front of everything."),
+ ("firefox-osint","Intelligence analysts","Working sources and archives at scale, where the collection must never be attributable to the collector."),
+ ("firefox-puppet","Persona operators","Running identities that have to stay separate, stay consistent, and stay alive for months."),
+]
+PILLARS = [
+ ("menu-root","Annexion","Take the territory.",
+  "The name is <em>annexion</em> — to take full control of a territory, absorb it completely, make it "
+  "yours. A machine is not a tool you rent for the engagement. It is ground you take and hold, and "
+  "everything on it is declared, owned and accounted for — down to the wallpaper."),
+ ("seclists","Refuse to wing it","Discipline over improvisation.",
+  "Nothing set up by hand. Nothing that drifts. Nothing that exists only in a shell history. If a thing "
+  "matters enough to configure, it matters enough to declare — and once declared it survives the "
+  "reinstall, the rollback and the handover."),
+ ("menu-tools","Opinionated","Built for people who already know why.",
+  "Not a first distribution, and not pretending to be. It makes the choices so you do not spend your "
+  "morning making them again, and assumes you can tell when a default is wrong for you. Every one can be "
+  "overridden in a line — but you have to mean it."),
+ ("menu-install","Reproducible","Or it did not happen.",
+  "The whole machine is one declared artifact: packages, egress policy, browser isolation, desktop, "
+  "shell. Deploy and redeploy are the same command, and a bad change is undone by booting the previous "
+  "generation. You can say what the machine was doing when it mattered, and put it back."),
+ ("menu-install-tunneling","Privacy first","Adapt or die.",
+  "Confinement is not a preference the user can lose. Where a profile is meant to leave only through a "
+  "tunnel, it leaves only through a tunnel — and if the tunnel is gone, it does not leave at all. If we "
+  "cannot deliver the service to standard, we do not deliver a lesser one."),
+]
+LAWS = [
+ ("Colour classifies. Silhouette identifies.",
+  "A mark never says two things with one device. The colour tells you what running the tool does to a "
+  "target; the drawing tells you which tool it is. Read the colour first and you already know whether you "
+  "need authorisation before you have read the name."),
+ ("The container is the enemy.",
+  "Every plate, badge and rounded tile is canvas spent on itself instead of on the drawing. The set draws "
+  "edge to edge and lets the shape make the silhouette. Where a container was tried, it took four fifths of "
+  "the area and gave nothing back."),
+ ("Privilege changes the ground you stand on.",
+  "Elevation is never a badge bolted onto a corner. The root terminal changes its entire background; the "
+  "root launcher changes its entire colour. A warning you can learn to ignore is not a warning."),
+ ("The hand lives in the geometry.",
+  "Looseness is not a filter applied at the end. It is in how the line was drawn: nothing truly straight, "
+  "nothing truly parallel, nothing that quite closes. A perfect rectangle with a drip on it is a perfect "
+  "rectangle with a drip on it."),
+ ("One application, one drawing.",
+  "However many colours a thing wears, it is drawn once. Four browser profiles and three terminals share "
+  "two drawings between them. A variant that needs new artwork is a variant that will drift."),
+ ("Draw what it does, never its logo.",
+  "Borrowed logos break a set faster than bad drawing does — they arrive with someone else's grid, weight "
+  "and intent. Most of these tools have no logo anyway. Draw the job."),
+ ("Test at the size it will be seen.",
+  "A mark that only works at poster size is not a mark. Everything here is judged at menu size, in its own "
+  "colour, beside the things it will actually sit next to. If it cannot be told apart there, the shape is "
+  "wrong — adding detail will not save it."),
+ ("Red is a check on muscle memory.",
+  "The signature colour is not decoration and is not spent freely. It means the thing behind it needs "
+  "written authorisation, or root, or both. Used anywhere else it stops meaning anything, and the one "
+  "place it must work is the place you are moving too fast to read."),
+]
+CHROME = [("#0E0F13","Deepest ground"),("#1A1D24","Raised surface"),("#2E323D","Segment, divider"),
+          ("#FF0033","The signature accent"),("#DFE4EA","Primary text"),("#301212","Root ground")]
+GRAFFITI = [("#000000","Wall ground — 62% of the wallpaper"),("#0F5AE6","Cobalt — the figure"),
+            ("#F213A0","Magenta — spray tags, smiley, jester"),("#33E62B","Acid green — the throw-up tag")]
 CLASSES = [
  ("Passive","#33E62B","10.7:1","Sends nothing to the target","theharvester",["theHarvester","Whois","SecLists"]),
  ("Probe","#FFD000","12.2:1","Touches the target and shows in their logs, no access attempted","nmap",["Nmap","dig","WhatWeb","Gobuster","ffuf","Gqrx"]),
@@ -67,43 +125,23 @@ MOTIFS = [
  ("The X",'<path d="M2.4 2.2 21.8 21.6M21.6 2.4 2.2 21.8"/><path d="M4.6 21.9v2"/>'),
 ]
 SURFACES = [
- ("Boot loader","themed","systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash"),
- ("Login (SDDM)","themed","Breeze's greeter rebranded through theme.conf alone — no QML of our own"),
- ("Lock screen","themed","wallpaper_2.png via home/plasma.nix:36"),
- ("Desktop","themed","wallpaper_1.png, preserveAspectFit on pure black"),
- ("Panel","themed","32px, annixion-logo as launcher icon"),
- ("Application menu","themed","42 entries, 34 directories, 81 marks"),
- ("Terminal","themed","Konsole, 85% opacity with blur"),
- ("Prompt","themed","oh-my-posh, chrome palette, red accent diamonds"),
- ("fastfetch","themed","AnNIXion mark at width 30, keys and title in red"),
- ("Browser profiles","themed","One mark in four class colours"),
- ("README / GitHub","themed","Glitch banner, wordmark lockup, badge row"),
- ("ISO","themed","Banner on black for both the syslinux and GRUB menus"),
-]
-REJECTED = [
- ("The hexagonal badge","Every glyph seated in a coloured hexagon.",
-  "The container spent 82% of the canvas on itself, leaving the drawing at 18% of the area and a 1.01px stroke once the menu rendered 22px. Two tools in the same class became a coloured hexagon with a smudge inside.",
-  "Filling the canvas gives 4.2× the drawn area and 1.9× the stroke weight from the same drawings."),
- ("Rotating marks off-axis","A few degrees of tilt on every mark, for looseness.",
-  "It reads as hand-drawn at 96px and as a rendering bug at 22px, and a menu column all leaning the same way looks broken rather than deliberate.",
-  "The hand lives in the strokes, not the transform."),
- ("A globe for the browser profiles","The obvious drawing for a web browser.",
-  "At 22px it is indistinguishable from the Internet directory's own globe, which sits directly above it in the same menu, and both are grey.",
-  "The window and tab is one stroke less obvious and unmistakably not that."),
- ("A drip bolted onto machine geometry","Perfect rectangles, with paint added afterwards.",
-  "Adding a drip to a machine-perfect rectangle does not make it graffiti — it makes it a rectangle with a drip.",
-  "The hand has to be in the geometry itself, which is what devices 1 and 2 are for."),
- ("Our own SDDM greeter in QML","Full control over the login surface.",
-  "A greeter that fails to load leaves no way into the machine.",
-  "Breeze's greeter, rebranded through theme.conf — it is already tested by everyone running Plasma."),
- ("Shadowing upstream icon names","Drawing annixion marks under names like wireshark or ghidra, so pinned stock launchers wear them too.",
-  "A mark filed under an upstream name silently wins the icon lookup for every application that asks for it, including ones we never drew for.",
-  "Marks stay namespaced annixion-*, and tests/menu-icons.sh fails on any un-namespaced file in the theme. The six stock launchers pinned to the panel keep their upstream icons."),
+ ("Boot loader","The first thing the mark says, before anything else has loaded"),
+ ("Login","The greeter, rebranded to the palette — signature red on the void ground"),
+ ("Lock screen","The wall, uninterrupted"),
+ ("Desktop","The wall, on pure black, aspect preserved"),
+ ("Panel","32px, the launcher mark at the left edge"),
+ ("Application menu","Forty-two entries and thirty-four directories, every one carrying its own mark"),
+ ("Terminal","85% opacity with blur, so the wall reads through the work"),
+ ("Prompt","The chrome palette, red accent diamonds, and the session colour on the left"),
+ ("System banner","The mark at width thirty, keys and title in red"),
+ ("Browser profiles","One mark in four class colours"),
+ ("Repository","Glitch banner, wordmark lockup, badge row"),
+ ("Install image","The banner on black, and the same splash the installed system uses"),
 ]
 DO = ["State what happened and what to do about it.",
       "Name things the way an operator does — <em>targets</em>, <em>hosts</em>, <em>captures</em>.",
-      "Say the consequence before the mechanism, in commit messages and errors alike.",
-      "Keep the dry register: the wall is loud so the words do not have to be."]
+      "Say the consequence before the mechanism.",
+      "Keep the register dry: the wall is loud so the words do not have to be."]
 DONT = ["Reach for hacker-movie voice — no “pwned”, no leetspeak, no skull emoji in output.",
         "Apologise in errors or hedge with “something went wrong”.",
         "Use the graffiti vocabulary in UI copy; it belongs on the wall, not in a dialog.",
@@ -116,148 +154,216 @@ def page(n, title, kicker, body, cls=""):
     head = ""
     if n:
         head = (f'<header class="ph"><div class="pn">{n}</div>'
-                f'<div class="pt"><h2>{title}</h2><p class="kick">{kicker}</p></div>'
-                f'<div class="rule"></div></header>')
-    return f'<section class="page {cls}">{head}<div class="pb">{body}</div>'\
-           f'<footer class="pf"><span>AnNIXion — Visual Identity</span>'\
-           f'<span>0.3.1 “Tripwire”</span>'\
-           f'<span class="pg">{PAGENO[0]:02d} / {{TOTAL}}</span></footer></section>'
+                f'<div class="pt"><h2>{title}</h2><p class="kick">{kicker}</p></div></header>')
+    return (f'<section class="page {cls}">{head}<div class="pb">{body}</div>'
+            f'<footer class="pf"><span>{{WM}}</span><span>Design board</span>'
+            f'<span>{RELEASE}</span>'
+            f'<span class="pg">{PAGENO[0]:02d} / {{TOTAL}}</span></footer></section>')
 
 P = []
 
-# ── cover ────────────────────────────────────────────────────────────────
+# ══ WELCOME ══════════════════════════════════════════════════════════════
+aud = "".join(f'<div class="aud">{mark(m,30)}<div><b>{t}</b><span>{d}</span></div></div>'
+              for m,t,d in AUDIENCE)
 P.append(page(None,"","",f'''
-<div class="cover">
-  <div class="cov-l">
-    <div class="eyebrow"><span class="rr"></span><span class="lab">Design board · v0.3.1 “Tripwire”</span></div>
-    <h1>Everything gets<br>crossed <span class="sig">out</span></h1>
-    <p class="lede">The X is already the loudest thing AnNIXion owns. It is the hero letterform in the
-    wordmark, it is the dead eyes on the wall, and it is what an operator leaves behind. This board is the
-    whole system: one palette lifted off the wallpaper, one set of hand-drawn marks, one face, and a rule
-    for every surface the distribution puts in front of you.</p>
-    <div class="wordmark">
-      <div class="wm">an<span class="nix">NIX</span>ion</div>
+<div class="welcome">
+  <div class="w-l">
+    <div class="eyebrow"><span class="rr"></span><span class="lab">Design board · {RELEASE}</span></div>
+    <h1>Take the ground.<br>Then make it <span class="sig">yours</span>.</h1>
+    <p class="lede">An opinionated, reproducible offensive security distribution for people who do this
+    for a living. Not a toolkit you assemble over a weekend and patch by hand for a year — a territory you
+    annex. Every tool, every browser profile, every egress rule and every pixel of the desktop is declared
+    in code and deployed in one command.</p>
+    <p class="lede2">The discipline of an engineer, the temperament of a privateer: rigorous underneath,
+    unapologetic on the surface. The name comes from <em>annexion</em> — to take full control of a
+    territory, absorb it completely, make it yours.</p>
+    <div class="auds">{aud}</div>
+  </div>
+  <div class="w-r">
+    <div class="w-mark">{mark("logo",108)}</div>
+    <div class="wordmark">{wm()}
       <div class="wmd"><span class="ln"></span><span class="bx">OFFENSIVE SECURITY DISTRIBUTION</span><span class="ln"></span></div>
     </div>
     <p class="tagline">“The environment for operators who refuse to wing it”</p>
   </div>
-  <div class="cov-r">{mark("logo", 168)}</div>
-</div>''',"cover-page"))
+</div>
+<div class="indep">
+  <span class="lab">Independent of Nix</span>
+  <p>AnNIXion is built on NixOS and proud of that lineage — the name says so out loud. It is <b>not made
+  by, affiliated with, endorsed by, sponsored by or connected to</b> the NixOS Foundation, the Nix project,
+  or anyone who works on them. Nix and NixOS are the work of their own community and owe this project
+  nothing. AnNIXion is an independent downstream distribution and speaks only for itself; every opinion
+  here is ours, and none of it should be read as theirs.</p>
+</div>''',"welcome-page"))
 
-# ── 01 name and mark ─────────────────────────────────────────────────────
-P.append(page("01","Name and mark","Always AnNIXion in running text — one word, capital A, capital NIX. Never Annixion, never ANNIXION.",f'''
+# ══ 01 MISSION ═══════════════════════════════════════════════════════════
+P.append(page("01","Mission","Why this exists, and what it refuses to do.",f'''
+<div class="mission">
+  <p class="m-big">AnNIXion exists to give the operator a machine that is <span class="sig">entirely
+  theirs</span> and <span class="sig">entirely known</span>.</p>
+  <div class="two">
+   <div class="col">
+    <p class="m-body">The trade runs on trust in your own environment. You cannot assess somebody else's
+    estate from a box you are not sure of — one whose proxy might be leaking, whose profile might be
+    bleeding cookies into the next engagement, whose last three fixes exist only in a shell history nobody
+    kept. Every hour spent wondering about your own machine is an hour not spent on the target, and every
+    unrecorded fix is a finding you will not be able to defend.</p>
+    <p class="m-body">So the whole machine is declared, not just the tools: the egress policy, the browser
+    isolation, the menu, the prompt, the wall behind it. One artifact, one command, one known state.</p>
+   </div>
+   <div class="col">
+    <p class="m-body">What that buys is not convenience. It is the ability to say exactly what your machine
+    was doing at the moment it mattered, and to put it back byte for byte — on a new disk, on somebody
+    else's hardware, a year later.</p>
+    <p class="m-body">And it buys the right to be strict. A system that can be rebuilt in one command can
+    afford to refuse. It never has to degrade quietly to keep working, because nothing about it is
+    precious and nothing about it is improvised.</p>
+   </div>
+  </div>
+</div>'''))
+
+# ══ 02 PILLARS ═══════════════════════════════════════════════════════════
+pil = "".join(f'<div class="pil">{mark(m,36,"#FF0033")}<div class="pil-b"><b>{t}</b>'
+              f'<span class="pil-s">{sub}</span><p>{d}</p></div></div>' for m,t,sub,d in PILLARS)
+P.append(page("02","The five pillars","Everything below the fold in this document is downstream of these.",
+  f'<div class="pillars">{pil}</div>'))
+
+# ══ 03 ADAPT OR DIE ══════════════════════════════════════════════════════
+P.append(page("03","Adapt or die","The one place the project is genuinely inflexible, and the reason it can afford to be.",f'''
+<div class="creed">
+  <p class="cr-big">If we cannot deliver the service to standard,<br>we do not deliver a <span class="sig">lesser one</span>.</p>
+</div>
+<div class="two">
+ <div class="col">
+  <p class="m-body">Most software, told it cannot do the safe thing, does the unsafe thing and mentions it.
+  The tunnel drops and the browser keeps loading. The proxy is not listening and the request goes direct.
+  There is a dialog, and the dialog has a “continue anyway”, and at three in the morning everybody presses
+  it.</p>
+  <p class="m-body">Here the confinement is not a setting inside the application that the application can
+  lose. A profile that is meant to leave only through the tunnel is held to that below the application
+  entirely — so it is not a promise the browser makes, and not one it can break. Tunnel down, nothing
+  leaves. No dialog. No fallback. No continue anyway.</p>
+ </div>
+ <div class="col">
+  <div class="creed-x">{mark("menu-root",90)}</div>
+  <p class="m-body">That is what <b>privacy first</b> costs, and it is the whole reason the standard is
+  worth having. A killswitch with an override is a preference. A killswitch without one is a property of
+  the machine.</p>
+  <p class="m-body"><b>Adapt or die</b> points at us before it points at anyone else. When the standard and
+  the convenience collide, the convenience goes. If a feature cannot be built to the standard, it does not
+  ship until it can.</p>
+ </div>
+</div>'''))
+
+# ══ 04 NAME AND MARK ═════════════════════════════════════════════════════
+P.append(page("04","Name and mark","One word, capital A, capital NIX. Never <em>Annixion</em>, never <em>ANNIXION</em>.",f'''
 <div class="two">
   <div class="col">
-    <table class="kv">
-      <tr><th>Wordmark</th><td><code>anNIXion</code>, NIX in <code>#FF0033</code></td></tr>
-      <tr><th>Descriptor</th><td>OFFENSIVE SECURITY DISTRIBUTION, boxed in a hairline red rule</td></tr>
-      <tr><th>Tagline</th><td>README and release notes only, never the lockup</td></tr>
-      <tr><th>Logo</th><td>Nix snowflake under a datamosh glitch — a hero image, never an icon</td></tr>
-      <tr><th>Launcher mark</th><td><code>annixion-logo</code> — the same snowflake drawn to the mark rules</td></tr>
-      <tr><th>Codename</th><td>One word in <code>RELEASE_NAME</code> beside the number in <code>VERSION</code></td></tr>
-    </table>
-    <div class="note"><b>In the wordmark</b>, the three letters of NIX carry the signature red and the rest
-    stays light, so the Nix lineage is legible without saying it. Letterspacing is wide (0.30em), weight is
-    light: it is a wordmark, not a headline.</div>
+    <div class="lockup">{wm("big")}
+      <div class="wmd"><span class="ln"></span><span class="bx">OFFENSIVE SECURITY DISTRIBUTION</span><span class="ln"></span></div>
+    </div>
+    <div class="note"><b>The lockup sets AN and ION as small capitals</b> at roughly six tenths the height
+    of NIX, which stays full size in the signature red. No lowercase anywhere: the three letters of the
+    lineage carry the colour, the rest carries the word, and the eye reads NIX without anyone having to
+    point at it. Letterspacing is wide at 0.30em and the weight is light — it is a wordmark, not a
+    headline. In running text the name is simply written AnNIXion.</div>
   </div>
   <div class="col">
     <div class="panel">
       <span class="lab">The X — the recurring device</span>
       <div class="xrow">
-        <figure>{mark("logo",56)}<figcaption>in the mark</figcaption></figure>
-        <figure><svg class="mk loose" style="width:56px;height:56px" viewBox="0 0 24 24" fill="none" stroke="#FF0033" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{MOTIFS[0][1]}</svg><figcaption>as the eyes on the wall</figcaption></figure>
-        <figure>{mark("menu-root",56)}<figcaption>over a finished target</figcaption></figure>
+        <figure>{mark("logo",54)}<figcaption>in the mark</figcaption></figure>
+        <figure><svg class="mk loose" style="width:54px;height:54px" viewBox="0 0 24 24" fill="none" stroke="#FF0033" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{MOTIFS[0][1]}</svg><figcaption>as the eyes on the wall</figcaption></figure>
+        <figure>{mark("menu-root",54)}<figcaption>over a finished target</figcaption></figure>
       </div>
       <p class="sm">Three places that were never talking to each other. The X is the crossed-out letter in
       the wordmark, the eyes on the graffiti smiley, and the shape an operator draws over a target that is
       done. Making it the system cost nothing — it was already there.</p>
     </div>
     <div class="panel warn">
-      <span class="lab">Dark ground only</span>
-      <p class="sm">The datamosh logo is light artwork on transparency: it vanishes on any light surface, and
-      at the 32px the panel gives it the glitch bars collapse into a smear. The panel wears
-      <code>annixion-logo</code> instead. Because that is a stroke rather than baked pixels, it is also the
-      first form of the mark that can be recoloured for a light surface.</p>
+      <span class="lab">Two forms, two jobs</span>
+      <p class="sm">The <b>datamosh logo</b> is a hero image: light artwork on transparency, drawn large on
+      the boot splash, the banner and the repository header. It is not an icon — at launcher size the
+      glitch collapses into a smear. The <b>launcher mark</b> is the same snowflake reduced to its six
+      arms, four of which are the X, drawn to the mark rules and legible down to sixteen pixels.</p>
     </div>
   </div>
 </div>'''))
 
-# ── 02 palette ───────────────────────────────────────────────────────────
+# ══ 05 PALETTE ═══════════════════════════════════════════════════════════
 sw = "".join(f'<div class="sw"><div class="chip" style="background:{h}"></div>'
-             f'<div class="meta"><span class="hex">{h}</span><span class="use">{r}</span>'
-             f'<span class="src">{d}</span></div></div>' for h,r,d in CHROME)
+             f'<div class="meta"><span class="hex">{h}</span><span class="use">{r}</span></div></div>'
+             for h,r in CHROME)
 gr = "".join(f'<div class="sw"><div class="chip" style="background:{h}"></div>'
-             f'<div class="meta"><span class="hex">{h}</span><span class="use">{r}</span></div></div>' for h,r in GRAFFITI)
-P.append(page("02","Palette","A sober red-on-Nord chrome runs the interface; a neon graffiti wall runs behind it.",f'''
+             f'<div class="meta"><span class="hex">{h}</span><span class="use">{r}</span></div></div>'
+             for h,r in GRAFFITI)
+P.append(page("05","Palette","A sober red-on-Nord chrome runs the interface; a neon graffiti wall runs behind it.",f'''
 <span class="lab">Chrome — the interface</span>
 <div class="sws">{sw}</div>
-<span class="lab" style="margin-top:8mm;display:block">Graffiti — sampled from assets/wallpaper/</span>
+<span class="lab" style="margin-top:8mm;display:block">Graffiti — sampled off the wall itself</span>
 <div class="sws">{gr}</div>
-<div class="note" style="margin-top:7mm">The mark colours are lifted off the wall, so the menu speaks the
-wallpaper's language the moment it opens. Motifs live on pure black and nowhere else, one spray colour per
-motif, never two in the same mark.</div>'''))
+<div class="note" style="margin-top:7mm">The mark colours are lifted off the wallpaper, so the menu speaks
+the wall's language the moment it opens. Motifs live on pure black and nowhere else. They drip downward,
+never upward, and carry one spray colour each — never two in the same mark.</div>'''))
 
-# ── 03 semantic classes ──────────────────────────────────────────────────
+# ══ 06 SEMANTIC CLASSES ══════════════════════════════════════════════════
 cards = "".join(
  f'<div class="cls"><div class="cls-top">{mark(ic,34)}<span class="cls-name">{n}</span>'
  f'<span class="cls-hex" style="color:{c}">{c}</span></div>'
- f'<div class="cls-body"><p class="cls-rule">{r}</p>'
- f'<p class="cls-eg">{" · ".join(eg)}</p>'
- f'<p class="cls-cr">contrast <b>{cr}</b> on the #14171D menu ground</p></div></div>'
+ f'<div class="cls-body"><p class="cls-rule">{r}</p><p class="cls-eg">{" · ".join(eg)}</p>'
+ f'<p class="cls-cr">contrast <b>{cr}</b> against the menu ground</p></div></div>'
  for n,c,cr,r,ic,eg in CLASSES)
-P.append(page("03","Semantic classes","Colour encodes what running the tool does to the target, not which kill-chain phase it sits in — the menu already tells you the phase.",f'''
+P.append(page("06","Semantic classes","Colour encodes what running the tool does to the target — not which phase of the job it sits in. The menu already tells you the phase.",f'''
 <div class="clsgrid">{cards}</div>
 <div class="note" style="margin-top:6mm"><b>Red means the tool needs written authorisation behind it.</b>
-That is the one class where the mark is a check on muscle memory rather than decoration. Phases 03 through
-07 all land on offensive red, giving the menu an unbroken red band down its middle — the stretch where you
-are inside someone else's estate.</div>'''))
+That is the one class where the mark is a check on muscle memory rather than decoration. The middle of the
+kill chain lands on red end to end, giving the menu an unbroken red band down its centre — the stretch
+where you are inside somebody else's estate.</div>'''))
 
-# ── 04 session colours ───────────────────────────────────────────────────
-terms = "".join(f'<figure class="tf">{mark(m,54)}<figcaption><b>{lbl}</b><span>{d}</span></figcaption></figure>'
-  for m,lbl,d in [("konsole","Operator","#7A8494 · the operator's own shell"),
-                  ("konsole-root","Root","#FF0033 · sudo -i, on the #301212 root profile"),
-                  ("konsole-nix","Nix shell","#7EBAE4 · nix develop, where the checks run")])
-P.append(page("04","Session colours","The six classes say what a tool does to a target. A terminal does nothing to a target, so the terminal family is coloured by the session you are standing in instead.",f'''
+# ══ 07 SESSION COLOURS ═══════════════════════════════════════════════════
+terms = "".join(f'<figure class="tf">{mark(m,52)}<figcaption><b>{lbl}</b><span>{d}</span></figcaption></figure>'
+  for m,lbl,d in [("konsole","Operator","#7A8494 · your own shell"),
+                  ("konsole-root","Root","#FF0033 · elevated, on the red ground"),
+                  ("konsole-nix","Build shell","#7EBAE4 · the throwaway environment")])
+P.append(page("07","Session colours","The six classes say what a tool does to a target. A terminal does nothing to a target, so it is coloured by the session you are standing in instead.",f'''
 <div class="two">
  <div class="col">
   <div class="terms">{terms}</div>
-  <div class="note">The values are the prompt's own — the session segment flips to accent red as root and to
-  Nix blue inside a Nix shell (<code>home/zsh/omp-theme.nix:37</code>). The launcher and the shell it opens
-  agree before you have typed anything.</div>
+  <div class="note">These are not new values invented for the icons. The prompt already flips its session
+  segment to accent red as root and to the cool blue inside a throwaway build shell — the launcher simply
+  says the same thing one surface earlier, before you have typed anything.</div>
  </div>
  <div class="col">
-  <table class="grid-t">
-   <thead><tr><th>Colour</th><th>Value</th><th>Contrast</th><th>Session</th></tr></thead>
-   <tbody>
-    <tr><td>Utility</td><td><code>#7A8494</code></td><td>4.8:1</td><td>The operator's own shell</td></tr>
-    <tr><td>Elevated</td><td><code>#FF0033</code></td><td>4.5:1</td><td>root</td></tr>
-    <tr><td>Nix</td><td><code>#7EBAE4</code></td><td>8.6:1</td><td>Inside <code>nix develop</code></td></tr>
-   </tbody></table>
-  <div class="note"><b>Elevated repeats the signature red</b> rather than introducing a seventh value: root
-  is the one session that is dangerous to miss, and it should read as the same red the root Konsole
-  background and the prompt already use. These two colours are the terminal family's alone — no tool mark
-  may take them.</div>
-  <div class="note"><b>This is the elevation rule reaching one surface earlier.</b> The root Konsole already
-  changes the ground you are standing on once the window is open; colouring the launcher says it while the
-  pointer is still over the menu.</div>
+  <div class="note"><b>Elevated repeats the signature red</b> rather than introducing a seventh value. Root
+  is the one session that is dangerous to miss, and it should read as the same red the root terminal
+  background and the prompt already use. These two colours belong to the terminal family alone — no tool
+  mark may take them.</div>
+  <div class="note"><b>This is the elevation law reaching one surface earlier.</b> The root terminal
+  already changes the ground you are standing on once the window is open. Colouring the launcher says it
+  while the pointer is still over the menu, which is the moment it is useful.</div>
+  <div class="pgrid">
+   <div class="pg-c" style="background:#7A8494"></div>
+   <div class="pg-c" style="background:#FF0033"></div>
+   <div class="pg-c" style="background:#7EBAE4"></div>
+  </div>
  </div>
 </div>'''))
 
-# ── 05 typography ────────────────────────────────────────────────────────
-P.append(page("05","Typography","JetBrains Mono is the display and interface face. Things you type should look typed.",f'''
+# ══ 08 TYPOGRAPHY ════════════════════════════════════════════════════════
+P.append(page("08","Typography","One face does everything. Things you type should look typed.",f'''
 <div class="two">
  <div class="col">
   <div class="spec-blk">
-   <div class="sp-lab">Display · 46px · -0.03em</div>
-   <div class="sp sp-d">Everything gets crossed out</div>
-   <div class="sp-lab">Section · 26px · -0.02em</div>
+   <div class="sp-lab">Display · -0.03em</div>
+   <div class="sp sp-d">Take the ground</div>
+   <div class="sp-lab">Section · -0.02em</div>
    <div class="sp sp-s">The mark system</div>
-   <div class="sp-lab">Label · 11px · uppercase · 0.12em</div>
+   <div class="sp-lab">Label · uppercase · 0.12em</div>
    <div class="sp sp-l">SEMANTIC CLASSES</div>
-   <div class="sp-lab">Body · 16px · 1.6</div>
+   <div class="sp-lab">Body · 1.6 leading</div>
    <div class="sp sp-b">Say the consequence before the mechanism.</div>
    <div class="sp-lab">Wordmark · light · 0.30em — the one place tracking goes wide</div>
-   <div class="sp sp-w">an<span class="sig">NIX</span>ion</div>
+   <div class="sp">{wm("spec")}</div>
   </div>
  </div>
  <div class="col">
@@ -269,183 +375,152 @@ P.append(page("05","Typography","JetBrains Mono is the display and interface fac
    <div class="cs-row">0123456789</div>
    <div class="cs-row">! ? @ # $ % &amp; * / \\ &lt; &gt; {{ }} [ ]</div>
   </div>
-  <table class="kv">
-   <tr><th>Face</th><td><code>nerd-fonts.jetbrains-mono</code>, shipped in <code>home.nix</code></td></tr>
-   <tr><th>Fallback</th><td><code>nerd-fonts.fira-code</code></td></tr>
-   <tr><th>Display tracking</th><td><code>-0.03em</code> at display sizes</td></tr>
-   <tr><th>Labels</th><td>11px uppercase at <code>0.12em</code></td></tr>
-   <tr><th>Wordmark</th><td>light weight, <code>0.30em</code></td></tr>
-  </table>
-  <div class="note">Category strings and paths keep the mono face — they are things you type, and should
-  look typed. This board is set in the same face the system is.</div>
+  <div class="note"><b>JetBrains Mono</b> is the display and interface face, with Fira Code behind it. A
+  monospace was not chosen for flavour: category strings, hostnames and paths are the substance of this
+  interface, and they should look like the things you type rather than like prose about them.</div>
+  <div class="note">The wordmark is the single exception to everything above — light weight, wide tracking,
+  small capitals. It is allowed to behave differently because it appears once per surface and never inside
+  a sentence. This board is set in the same face the system is.</div>
  </div>
 </div>'''))
 
-# ── 06 the mark system ───────────────────────────────────────────────────
-P.append(page("06","The mark system","Every AnNIXion application and menu directory gets a single-colour line drawing filling its whole canvas. No container, no plate — the colour classifies, the silhouette identifies.",f'''
+# ══ 09 THE MARK SYSTEM ═══════════════════════════════════════════════════
+P.append(page("09","The mark system","Every application and every menu directory gets a single-colour line drawing filling its whole canvas. No container, no plate.",f'''
 <div class="two">
  <div class="col">
   <div class="gridart"><div class="ga-frame">{mark("nmap",150)}</div>
-   <div class="ga-cap">Nmap at 150px on the 24-unit grid. The drawing fills 21 × 21, leaving 1.5 units of
-   air each side so round caps never clip.</div></div>
+   <div class="ga-cap">One mark at poster size on its own grid. The drawing fills twenty-one of the
+   twenty-four units, leaving a unit and a half of air on every side so the round caps never clip.</div></div>
  </div>
  <div class="col">
   <table class="grid-t">
    <thead><tr><th>Rule</th><th>Value</th><th>Why</th></tr></thead>
    <tbody>
-    <tr><td>Grid</td><td>24 × 24, drawing fills 21 × 21</td><td>1.5 units of air each side</td></tr>
-    <tr><td>Stroke</td><td>2.1, round cap and join</td><td>Lands at 1.93px when the menu draws 22px</td></tr>
-    <tr><td>Colour</td><td>Whole mark in one class colour</td><td>Colour classifies, silhouette identifies</td></tr>
-    <tr><td>Fills</td><td>Only for dots under 2.5 units</td><td>Anything larger becomes a blob at 16px</td></tr>
-    <tr><td>Detail budget</td><td>Five strokes or fewer</td><td>Spend the sixth on silhouette, never texture</td></tr>
-    <tr><td>Silhouette</td><td>Must differ from its classmates</td><td>Inside a class the colour is identical</td></tr>
-    <tr><td>Subject</td><td>What the tool does, never its logo</td><td>Upstream logos break the set</td></tr>
-    <tr><td>Naming</td><td><code>annixion-&lt;tool&gt;</code></td><td>Namespaced against upstream hicolor icons</td></tr>
-    <tr><td>Export</td><td><code>scalable/apps/annixion-&lt;tool&gt;.svg</code></td><td>One file per mark</td></tr>
+    <tr><td>Grid</td><td>24 units, drawing fills 21</td><td>Air on every side, so caps never clip</td></tr>
+    <tr><td>Stroke</td><td>2.1, round cap and join</td><td>Lands just under 2px at menu size</td></tr>
+    <tr><td>Colour</td><td>One class colour, whole mark</td><td>Colour classifies, silhouette identifies</td></tr>
+    <tr><td>Fills</td><td>Dots under 2.5 units only</td><td>Anything larger becomes a blob when small</td></tr>
+    <tr><td>Detail</td><td>Five strokes or fewer</td><td>Spend the sixth on silhouette, never texture</td></tr>
+    <tr><td>Silhouette</td><td>Differs from its classmates</td><td>Inside a class the colour is identical</td></tr>
+    <tr><td>Subject</td><td>What it does, never its logo</td><td>Borrowed logos break the set</td></tr>
    </tbody></table>
-  <div class="note"><b>Test at 22px, next to its classmates</b> — not alone and not at 96px. A mark is
-  finished when you can pick it out of its own class colour at menu size. If you cannot, change the shape
-  rather than adding detail.</div>
+  <div class="note"><b>A mark is finished when you can pick it out of its own class colour at menu size,
+  beside its classmates.</b> Not alone, and not at poster size. If you cannot, change the shape — adding
+  detail will make it worse.</div>
  </div>
 </div>'''))
 
-# ── 07 the hand ──────────────────────────────────────────────────────────
-demos = "".join(f'<figure class="dm">'
-  f'<div class="dm-art"><svg class="mk gy" viewBox="0 0 24 24">{g}</svg>'
-  f'<span class="arw">&rarr;</span>'
-  f'<svg class="mk sg" viewBox="0 0 24 24">{h}</svg></div>'
+# ══ 10 THE HAND ══════════════════════════════════════════════════════════
+demos = "".join(f'<figure class="dm"><div class="dm-art"><svg class="mk gy" viewBox="0 0 24 24">{g}</svg>'
+  f'<span class="arw">&rarr;</span><svg class="mk sg" viewBox="0 0 24 24">{h}</svg></div>'
   f'<figcaption>{cap}</figcaption></figure>' for g,h,cap in GEO)
 rules = "".join(f'<div class="hr"><span class="hn">{n}</span><div><b>{t}</b>'
   f'<span class="tagx {k}">{k}</span><p>{d}</p></div></div>' for n,t,d,k in HAND)
-P.append(page("07","The hand","Adding a drip to a machine-perfect rectangle does not make it graffiti — it makes it a rectangle with a drip. The hand has to be in the geometry itself.",f'''
+P.append(page("10","The hand","Adding a drip to a machine-perfect rectangle does not make it graffiti — it makes it a rectangle with a drip. The hand has to be in the geometry itself.",f'''
 <div class="demos">{demos}</div>
 <div class="hrules">{rules}</div>
-<div class="note">Rules 1 and 2 are universal and apply to every mark in the set. Rules 3 and 4 are semantic
-and are earned. Corners and crossings overshoot their joins by up to a unit throughout — the marker keeps
-moving after the shape has ended.</div>'''))
+<div class="note">Devices one and two are universal and apply to every mark in the set. Three and four are
+semantic and have to be earned. Corners and crossings overshoot their joins by up to a unit throughout —
+the marker keeps moving after the shape has ended.</div>'''))
 
-# ── 08 families ──────────────────────────────────────────────────────────
-ffam = "".join(f'<figure class="ff">{mark(m,60)}<figcaption><b>{lbl}</b><span>{c}</span></figcaption></figure>'
-  for m,lbl,c in [("firefox-untrusted","Unsafe Browser","utility · #7A8494"),
+# ══ 11 FAMILIES ══════════════════════════════════════════════════════════
+ffam = "".join(f'<figure class="ff">{mark(m,58)}<figcaption><b>{lbl}</b><span>{c}</span></figcaption></figure>'
+  for m,lbl,c in [("firefox-untrusted","Unsafe","utility · #7A8494"),
                   ("firefox-redteam","Red Team","offensive · #FF0033"),
                   ("firefox-osint","OSINT","probe · #FFD000"),
                   ("firefox-puppet","Puppet Master","passive · #33E62B")])
-res = "".join(f'<figure class="ff dim">{mark("firefox-untrusted",44,c)}<figcaption><span>{lbl}</span></figcaption></figure>'
-  for c,lbl in [("#4A90FF","forensic — reserved"),("#F213A0","reverse — reserved")])
-P.append(page("08","Families","Where one application appears several times under different colours, every copy shares a single drawing and the colour carries the whole difference.",f'''
+res = "".join(f'<figure class="ff dim">{mark("firefox-untrusted",42,c)}<figcaption><span>{lbl}</span></figcaption></figure>'
+  for c,lbl in [("#4A90FF","forensic — held"),("#F213A0","reverse — held")])
+P.append(page("11","Families","Where one application appears several times in different colours, every copy shares a single drawing and the colour carries the whole difference.",f'''
 <span class="lab">The browser profiles — one drawing, four classes</span>
 <div class="fams">{ffam}</div>
 <div class="two" style="margin-top:6mm">
  <div class="col">
-  <div class="note"><b>Bound once</b> at the top of <code>home/icons/marks.nix</code> and referenced by
-  name, so a redraw cannot drift between the variants and a fifth variant costs no artwork at all — the two
-  reserve classes below are two lines each.</div>
+  <div class="note"><b>Drawn once, referenced by name.</b> A redraw cannot drift between the variants,
+  reclassifying a profile is a change of one word, and a fifth profile costs no artwork at all — the two
+  colours below are already waiting for one.</div>
   <div class="fams">{res}</div>
  </div>
  <div class="col">
-  <div class="note reject"><b>Why not a globe.</b> A globe is the more obvious browser drawing. At 22px it
-  is indistinguishable from the Internet directory's own globe, which sits directly above it in the same
-  menu — and both are grey. The window and tab is one stroke less obvious and unmistakably not that.</div>
+  <div class="note reject"><b>A globe was the obvious drawing, and it lost.</b> At menu size it is
+  indistinguishable from the Internet directory's own globe, which sits directly above it in the same list
+  — and both are grey. The window and tab is one degree less obvious and unmistakably not that.</div>
   <div class="clash">
    <div class="cl-row">{mark("menu-internet",22)}<span>Internet — directory</span></div>
-   <div class="cl-row">{mark("firefox-untrusted",22)}<span>Firefox — Unsafe Browser</span></div>
-   <div class="cl-row">{mark("firefox-redteam",22)}<span>Firefox — Red Team</span></div>
-   <div class="cl-row">{mark("firefox-osint",22)}<span>Firefox — OSINT</span></div>
-   <div class="cl-row">{mark("firefox-puppet",22)}<span>Firefox — Puppet Master</span></div>
+   <div class="cl-row">{mark("firefox-untrusted",22)}<span>Unsafe Browser</span></div>
+   <div class="cl-row">{mark("firefox-redteam",22)}<span>Red Team</span></div>
+   <div class="cl-row">{mark("firefox-osint",22)}<span>OSINT</span></div>
+   <div class="cl-row">{mark("firefox-puppet",22)}<span>Puppet Master</span></div>
   </div>
-  <div class="note">OSINT is amber rather than green deliberately: the profile drives a real browser at a
-  real target, fetching their pages and landing in their logs. That is probe, not passive.</div>
+  <div class="note">OSINT is amber rather than green deliberately. The profile drives a real browser at a
+  real target, fetching their pages and landing in their logs. That is a probe, not passive collection.</div>
  </div>
 </div>'''))
 
-# ── 09/10 the full set ───────────────────────────────────────────────────
+# ══ 12 / 13 THE SET ══════════════════════════════════════════════════════
 names = sorted(n[len("annixion-"):-4] for n in os.listdir(ICONS) if n.startswith("annixion-"))
 tools = [n for n in names if not n.startswith("menu-")]
 dirs  = [n for n in names if n.startswith("menu-")]
 def cell(n): return f'<figure class="tl">{mark(n,52)}<figcaption>{n}</figcaption></figure>'
-P.append(page("09","The set — applications",f"{len(tools)} application marks. Colour is the class; every silhouette differs from its classmates.",
+P.append(page("12","The set — applications",f"{len(tools)} application marks. Colour is the class; every silhouette differs from its classmates.",
   f'<div class="setgrid">{"".join(cell(n) for n in tools)}</div>'))
-P.append(page("10","The set — menu directories",f"{len(dirs)} directory marks, one per node of the kill-chain tree. A directory takes the colour of what it contains.",
+P.append(page("13","The set — directories",f"{len(dirs)} directory marks, one per node of the tree. A directory takes the colour of what it contains.",
   f'<div class="setgrid">{"".join(cell(n) for n in dirs)}</div>'))
 
-# ── 11 motifs ────────────────────────────────────────────────────────────
+# ══ 14 MOTIFS ════════════════════════════════════════════════════════════
 mot = "".join(f'<figure class="mo"><svg class="mk loose" viewBox="0 0 24 24">{d}</svg>'
   f'<figcaption>{n}</figcaption></figure>' for n,d in MOTIFS)
-P.append(page("11","Motif vocabulary","The wallpapers carry a fixed cast. Reuse these rather than inventing new ones.",f'''
+P.append(page("14","Motif vocabulary","The wall carries a fixed cast. Reuse it rather than inventing new ones.",f'''
 <div class="motifs">{mot}</div>
 <div class="two" style="margin-top:7mm">
- <div class="col"><div class="note"><b>Where they are allowed.</b> Wallpaper, lock screen, ISO boot splash,
- fastfetch banner, README header, release art. Motifs live on pure black and nowhere else. They drip
- downward, never upward. One spray colour per motif, never two in the same mark.</div></div>
- <div class="col"><div class="note reject"><b>Not the panel and not the menu</b> — with one exception. The
- X-eyed smiley is the Post-Exploitation mark, because there it states something true rather than
- decorating. Motifs are drawn looser than tool marks: stroke 1.7, hand-weighted curves, allowed to
+ <div class="col"><div class="note"><b>Where they are allowed.</b> The wallpaper, the lock screen, the boot
+ splash, the system banner, the repository header and release art. Motifs live on pure black and nowhere
+ else. They drip downward, never upward, and take one spray colour each.</div></div>
+ <div class="col"><div class="note reject"><b>Not the panel, and not the menu</b> — with one exception. The
+ X-eyed smiley is the post-exploitation mark, because there it states something true rather than
+ decorating. Motifs are drawn looser than tool marks: lighter stroke, hand-weighted curves, and allowed to
  overshoot much further.</div></div>
 </div>'''))
 
-# ── 12 surfaces ──────────────────────────────────────────────────────────
-rows = "".join(f'<tr><td>{s}</td><td><span class="pill">{st}</span></td><td>{d}</td></tr>' for s,st,d in SURFACES)
-P.append(page("12","Surfaces","A rule for every surface the distribution puts in front of you, from power-on to the desktop.",f'''
-<table class="grid-t wide"><thead><tr><th>Surface</th><th>State</th><th>Notes</th></tr></thead><tbody>{rows}</tbody></table>
+# ══ 15 SURFACES ══════════════════════════════════════════════════════════
+rows = "".join(f'<tr><td>{s}</td><td>{d}</td></tr>' for s,d in SURFACES)
+P.append(page("15","Surfaces","A rule for every surface the system puts in front of you, from power-on to the desktop.",f'''
+<table class="grid-t wide"><thead><tr><th>Surface</th><th>How the identity lands</th></tr></thead><tbody>{rows}</tbody></table>
 <div class="two" style="margin-top:6mm">
- <div class="col"><div class="note"><b>Boot.</b> <code>boot.loader.timeout</code> stays at 3 seconds. A
- splash that cannot be interrupted is a machine with no way back to an older generation. The splash is a
- Plymouth <code>script</code> theme copied into the initrd, so it must stay small.</div></div>
- <div class="col"><div class="note"><b>Elevation.</b> The root Konsole profile swaps the whole background
- to <code>#301212</code> rather than adding a warning icon. The rule generalises: privilege changes the
- surface you are standing on, never a decoration bolted onto it.</div></div>
+ <div class="col"><div class="note"><b>The splash can always be interrupted.</b> A boot screen you cannot
+ escape is a machine with no way back to a working state. Three seconds, every time, however good the
+ animation is.</div></div>
+ <div class="col"><div class="note"><b>Elevation changes the ground.</b> The root terminal swaps its entire
+ background rather than adding a warning icon in a corner. Privilege is a floor you are standing on, never
+ a decoration bolted onto the furniture.</div></div>
 </div>'''))
 
-# ── 13 rejected ──────────────────────────────────────────────────────────
-rej = "".join(f'<div class="rj"><b>{t}</b><p class="rj-w">{w}</p>'
-  f'<p class="rj-x"><span>Why not</span>{y}</p><p class="rj-i"><span>Instead</span>{i}</p></div>'
-  for t,w,y,i in REJECTED)
-P.append(page("13","Rejected directions","What was tried, what it cost, and what replaced it. Kept because the next person to have the same idea deserves the measurement, not the argument.",
-  f'<div class="rejects">{rej}</div>'))
+# ══ 16 DESIGN LAWS ═══════════════════════════════════════════════════════
+laws = "".join(f'<div class="law"><span class="ln-n">{i:02d}</span><div><b>{t}</b><p>{d}</p></div></div>'
+                for i,(t,d) in enumerate(LAWS, 1))
+P.append(page("16","Design laws","Eight rules the whole system runs on. They are not style preferences — each one was paid for, and breaking one shows up on screen within a day.",
+  f'<div class="laws">{laws}</div>'))
 
-# ── 14 voice ─────────────────────────────────────────────────────────────
-P.append(page("14","Voice","The wall is loud so the words do not have to be.",f'''
+# ══ 17 VOICE ═════════════════════════════════════════════════════════════
+P.append(page("17","Voice","Two registers, on purpose. The pitch is loud. The interface is quiet.",f'''
+<div class="note" style="margin-bottom:6mm"><b>The first three pages of this document swagger, and nothing
+the system says at runtime is allowed to.</b> That split is the point. Attitude belongs where somebody has
+chosen to read — a cover, a banner, a wall. It does not belong in an error at three in the morning, where
+the only thing anyone wants is what happened and what to do about it. A distribution that talks like its
+own marketing is a distribution you stop reading.</div>
 <div class="two">
  <div class="col"><div class="panel yes"><span class="lab">Do</span><ul>{"".join(f"<li>{x}</li>" for x in DO)}</ul></div></div>
  <div class="col"><div class="panel no"><span class="lab">Don't</span><ul>{"".join(f"<li>{x}</li>" for x in DONT)}</ul></div></div>
 </div>
 <div class="term">
- <div class="term-bar">konsole — the register, in practice</div>
- <div class="term-body"><span class="tg">$&gt;</span> annixion-vpn-browser OSINT<br>
+ <div class="term-bar">the register, in practice</div>
+ <div class="term-body"><span class="tg">$&gt;</span> osint-browser<br>
  <span class="tm">the tunnel is down; the browser did not start</span><br>
- <span class="tm">bring it up with: sudo systemctl start wg-quick-osint</span><br><br>
- <span class="tg">$&gt;</span> <span class="tc">// not: “Oops! Something went wrong :( Please try again.”</span></div>
-</div>'''))
-
-# ── 15 colophon ──────────────────────────────────────────────────────────
-P.append(page("15","How it is built","Reclassifying a tool is a one-word change. Redrawing one is a change to its body. Neither touches the menu.",f'''
-<div class="two">
- <div class="col">
-  <table class="kv">
-   <tr><th><code>home/icons/marks.nix</code></th><td>One entry per mark — a class and the 24-grid drawing. The two family bodies are bound in a <code>let</code> at the top and referenced by name.</td></tr>
-   <tr><th><code>home/icons/default.nix</code></th><td>Renders each into <code>scalable/apps/annixion-&lt;name&gt;.svg</code>, the class supplying the stroke colour, and emits an <code>index.theme</code>.</td></tr>
-   <tr><th><code>home.nix</code></th><td>Joins that theme with <code>SlotIcons</code> into the one directory <code>xdg.dataFile."icons"</code> owns.</td></tr>
-   <tr><th><code>home/apps-menu.nix</code></th><td>Names marks only by <code>annixion-&lt;tool&gt;</code> and <code>annixion-menu-&lt;slug&gt;</code>.</td></tr>
-   <tr><th><code>tests/menu-icons.sh</code></th><td>Fails on any <code>Icon=</code> that resolves nowhere, and on any un-namespaced file in the theme.</td></tr>
-  </table>
- </div>
- <div class="col">
-  <div class="note"><b>Adding a menu entry means adding its mark in the same commit.</b> The test is the
-  check that would have caught the four dead names the previous theme was carrying — <code>codium</code>,
-  <code>wireshark</code>, <code>network-transmit-receive</code> and <code>media-removable</code>, all of
-  which drew a blank placeholder.</div>
-  <div class="note"><b>Inheritance.</b> The theme inherits <code>Slot-Dark-Icons</code>,
-  <code>breeze-dark</code>, <code>Adwaita</code> and <code>hicolor</code>, so anything the set does not draw
-  still falls back to a real icon rather than a blank.</div>
-  <div class="note reject"><b>One boundary.</b> Six launchers pinned to the panel are stock desktop entries
-  — Konsole, Dolphin, Burp Suite, Wireshark, Ghidra, Obsidian — because Plasma matches a window to a
-  launcher by class and only the stock name resolves. They wear their upstream icons. Shadowing those names
-  in our theme would capture the lookup for every application that asks for them, so the test forbids it.</div>
-  <div class="colo">Set in JetBrains Mono, the system's own face. Every mark on this board is read out of a
-  built icon theme, not redrawn — regenerate with <code>branding/identity-board.sh</code>. The normative
-  reference is <code>docs/visual-identity.md</code>.</div>
- </div>
-</div>'''))
+ <span class="tm">bring it up, then run this again</span><br><br>
+ <span class="tg">$&gt;</span> <span class="tc">// not: “Oops! Something went wrong :( Please try again.”</span><br>
+ <span class="tg">$&gt;</span> <span class="tc">// and not: “tunnel pwned — u r leaking bro”</span></div>
+</div>
+<p class="closing">The wall is loud so the words do not have to be.</p>'''))
 
 CSS = """
 @page { size: A4 landscape; margin: 0; }
@@ -457,52 +532,94 @@ CSS = """
 *{box-sizing:border-box; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
 html,body{margin:0;padding:0;background:var(--void);color:var(--fg);
  font-family:var(--mono); font-size:9.4pt; line-height:1.58;}
-.page{width:297mm;height:210mm;padding:14mm 15mm 11mm;background:var(--void);
+/* Justified throughout. Monospace justifies badly without hyphenation,
+   so every prose class opts into both together. */
+.kick,.lede,.lede2,.sm,.note,.m-body,.indep p,.pil-b p,.law p,.cls-rule,
+.ga-cap,.grid-t.wide td:last-child,.aud span,.panel li{
+ text-align:justify;text-justify:inter-word;hyphens:auto;-webkit-hyphens:auto;}
+.page{width:297mm;height:210mm;padding:14mm 15mm 10mm;background:var(--void);
  position:relative;overflow:hidden;display:flex;flex-direction:column;
  page-break-after:always;break-after:page;}
 .page:last-child{page-break-after:auto;break-after:auto;}
 .pb{flex:1;min-height:0;}
 h1,h2{margin:0;font-weight:700;letter-spacing:-.03em;line-height:1.06;}
-h1{font-size:38pt;} h2{font-size:19pt;letter-spacing:-.02em;}
-p{margin:0;}
-code{font-family:var(--mono);font-size:.9em;color:var(--fg);
- background:rgba(255,255,255,.05);padding:.5px 3px;border-radius:2px;}
+h1{font-size:27pt;} h2{font-size:19pt;letter-spacing:-.02em;}
+p{margin:0;} em{font-style:italic;color:var(--fg);}
+code{font-family:var(--mono);font-size:.9em;background:rgba(255,255,255,.05);padding:.5px 3px;}
 .sig{color:var(--sig);}
 .lab{font-size:7.4pt;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);}
 .sm{font-size:8.4pt;color:var(--muted);line-height:1.55;}
 
-/* header / footer */
 .ph{display:grid;grid-template-columns:auto 1fr;gap:0 6mm;align-items:start;
  padding-bottom:5mm;margin-bottom:6mm;border-bottom:1px solid var(--edge);}
 .pn{font-size:30pt;font-weight:700;color:var(--sig);line-height:.85;letter-spacing:-.05em;}
 .pt h2{margin-bottom:2.2mm;}
-.kick{font-size:9pt;color:var(--muted);max-width:175mm;}
-.rule{display:none;}
+.kick{font-size:9pt;color:var(--muted);max-width:180mm;}
 .pf{display:flex;gap:6mm;align-items:center;padding-top:3.5mm;margin-top:5mm;
  border-top:1px solid var(--edge);font-size:7pt;color:#5A6474;letter-spacing:.06em;}
 .pf .pg{margin-left:auto;}
 
-/* cover */
-.cover-page{padding:0;}
-.cover{flex:1;display:grid;grid-template-columns:1fr 74mm;align-items:stretch;
- gap:14mm;padding:20mm 15mm;}
-.eyebrow{display:flex;gap:5mm;align-items:center;margin-bottom:7mm;}
-.rr{width:16mm;height:1.1mm;background:var(--sig);}
-.cover .lede{font-size:10pt;color:var(--muted);max-width:150mm;margin:6mm 0 10mm;}
-.wordmark{background:#000;border:1px solid var(--edge);padding:9mm 7mm;
- display:flex;flex-direction:column;align-items:center;gap:5mm;}
-.wm{font-size:27pt;font-weight:300;letter-spacing:.30em;color:#F2F4F7;
- text-indent:.30em;line-height:1;}
+/* wordmark — small capitals, no lowercase */
+.wm{font-weight:300;letter-spacing:.30em;color:#F2F4F7;text-indent:.30em;
+ line-height:1;white-space:nowrap;font-size:20pt;}
+.wm .sc{font-size:.62em;}
 .wm .nix{color:var(--sig);font-weight:400;}
+.wm.big{font-size:30pt;} .wm.spec{font-size:17pt;}
 .wmd{display:flex;align-items:center;gap:4mm;width:100%;}
-.wmd .ln{flex:1;height:.3mm;background:var(--sig);}
-.wmd .bx{border:.3mm solid var(--sig);padding:1.4mm 3.5mm;font-size:7pt;letter-spacing:.19em;}
-.tagline{margin-top:7mm;font-size:9pt;color:var(--muted);font-style:italic;}
-.cov-r{background:#000;border:1px solid var(--edge);padding:12mm;display:grid;place-items:center;}
-.cov-l{display:flex;flex-direction:column;justify-content:center;}
+.wmd .ln{flex:1;min-width:5mm;height:.3mm;background:var(--sig);}
+.wmd .bx{border:.3mm solid var(--sig);padding:1.4mm 3.5mm;font-size:6.6pt;letter-spacing:.19em;
+ white-space:nowrap;}
+.wordmark .bx{font-size:5.8pt;letter-spacing:.15em;}
+.wordmark{background:#000;border:1px solid var(--edge);padding:5.5mm 5mm;
+ display:flex;flex-direction:column;align-items:center;gap:4.5mm;}
+.lockup{background:#000;border:1px solid var(--edge);padding:14mm 8mm;
+ display:flex;flex-direction:column;align-items:center;gap:7mm;}
 
-/* layout */
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8mm;height:100%;}
+/* welcome */
+.welcome-page{padding:12mm 15mm 10mm;}
+.welcome{display:grid;grid-template-columns:1fr 80mm;gap:10mm;align-items:start;}
+.w-l{display:flex;flex-direction:column;}
+.w-r{display:flex;flex-direction:column;gap:5mm;}
+.w-mark{background:#000;border:1px solid var(--edge);padding:7mm;display:grid;place-items:center;}
+.eyebrow{display:flex;gap:5mm;align-items:center;margin-bottom:6mm;}
+.rr{width:16mm;height:1.1mm;background:var(--sig);}
+.lede{font-size:9.6pt;color:#B6BECB;max-width:150mm;margin-top:5mm;}
+.lede2{font-size:8.8pt;color:var(--muted);max-width:150mm;margin-top:3.5mm;}
+.tagline{font-size:8.6pt;color:var(--muted);font-style:italic;text-align:center;}
+.auds{display:flex;flex-direction:column;gap:2mm;margin-top:5mm;}
+.aud{display:flex;gap:3.5mm;align-items:flex-start;background:var(--surface);
+ border:1px solid var(--edge);padding:2.4mm 3.5mm;}
+.aud .mk{width:26px;height:26px;flex:none;}
+.aud b{font-size:8.4pt;display:block;}
+.aud span{font-size:7.4pt;color:var(--muted);line-height:1.4;}
+.indep{margin-top:3.5mm;border:1px solid var(--sig-dim);border-left:1.4mm solid var(--sig);
+ background:rgba(255,0,51,.05);padding:3.5mm 4.5mm;display:flex;flex-direction:column;gap:1.5mm;}
+.indep p{font-size:7.6pt;color:#B6BECB;line-height:1.5;max-width:none;}
+.indep b{color:var(--fg);}
+
+/* mission */
+.mission{display:flex;flex-direction:column;gap:7mm;height:100%;}
+.m-big{font-size:20pt;font-weight:700;letter-spacing:-.025em;line-height:1.24;max-width:210mm;}
+.m-body{font-size:10pt;color:#B6BECB;line-height:1.62;}
+.m-body + .m-body{margin-top:4mm;}
+
+/* pillars */
+.pillars{display:flex;flex-direction:column;gap:2mm;}
+.pil{display:flex;gap:4.5mm;align-items:flex-start;background:var(--surface);
+ border:1px solid var(--edge);border-left:.9mm solid var(--sig-dim);padding:2.9mm 4.5mm;}
+.pil .mk{width:36px;height:36px;flex:none;margin-top:.5mm;}
+.pil-b{display:flex;flex-direction:column;gap:1mm;}
+.pil-b b{font-size:10pt;letter-spacing:-.01em;}
+.pil-s{font-size:7.6pt;color:var(--sig);text-transform:uppercase;letter-spacing:.1em;}
+.pil-b p{font-size:8pt;color:var(--muted);line-height:1.46;margin-top:.7mm;max-width:none;}
+
+/* creed */
+.creed{border:1px solid var(--edge);background:#000;padding:11mm 8mm;margin-bottom:7mm;text-align:center;}
+.cr-big{font-size:19pt;font-weight:700;line-height:1.32;letter-spacing:-.02em;max-width:none;}
+.creed-x{display:grid;place-items:center;padding:2mm 0 4mm;}
+
+/* generic */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8mm;}
 .col{display:flex;flex-direction:column;gap:5mm;min-width:0;}
 .panel{background:var(--surface);border:1px solid var(--edge);padding:5mm;
  display:flex;flex-direction:column;gap:3.5mm;}
@@ -513,31 +630,23 @@ code{font-family:var(--mono);font-size:.9em;color:var(--fg);
  padding-left:4mm;line-height:1.55;}
 .note b{color:var(--fg);font-weight:700;}
 .note.reject{border-left-color:#3A4150;}
+.closing{margin-top:4mm;font-size:11pt;color:var(--muted);font-style:italic;text-align:center;}
 
-/* tables */
 table{border-collapse:collapse;width:100%;font-size:8.6pt;}
-.kv th{text-align:left;vertical-align:top;padding:2.4mm 4mm 2.4mm 0;color:var(--muted);
- font-weight:400;white-space:nowrap;border-bottom:1px solid var(--edge);width:1%;}
-.kv td{vertical-align:top;padding:2.4mm 0;border-bottom:1px solid var(--edge);}
 .grid-t th{text-align:left;font-size:7.2pt;text-transform:uppercase;letter-spacing:.1em;
  color:var(--muted);font-weight:400;background:var(--surface);padding:2.4mm 3mm;
  border-bottom:1px solid var(--edge);}
-.grid-t td{padding:2.4mm 3mm;border-bottom:1px solid var(--edge);vertical-align:top;}
+.grid-t td{padding:2mm 3mm;border-bottom:1px solid var(--edge);vertical-align:top;}
 .grid-t td:first-child{color:var(--fg);white-space:nowrap;}
 .grid-t.wide td:last-child{color:var(--muted);}
-.pill{font-size:7pt;text-transform:uppercase;letter-spacing:.08em;color:#33E62B;
- border:.3mm solid rgba(51,230,43,.42);padding:.6mm 2mm;}
 
-/* swatches */
 .sws{display:grid;grid-template-columns:repeat(6,1fr);gap:3mm;margin-top:3mm;}
 .sw{border:1px solid var(--edge);background:var(--surface);}
-.sw .chip{height:26mm;border-bottom:1px solid var(--edge);}
+.sw .chip{height:30mm;border-bottom:1px solid var(--edge);}
 .sw .meta{padding:3mm;display:flex;flex-direction:column;gap:1mm;}
 .sw .hex{font-size:9pt;font-weight:700;}
 .sw .use{font-size:7.6pt;color:var(--muted);line-height:1.4;}
-.sw .src{font-size:6.6pt;color:#5A6474;}
 
-/* marks */
 .mk{display:block;fill:none;}
 svg.mk[viewBox]{width:100%;height:100%;}
 .mk.loose{width:62px;height:62px;stroke:#F213A0;stroke-width:1.7;
@@ -549,7 +658,6 @@ svg.mk[viewBox]{width:100%;height:100%;}
 .xrow figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:2.5mm;}
 .xrow figcaption{font-size:7pt;color:var(--muted);text-align:center;}
 
-/* classes */
 .clsgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;}
 .cls{border:1px solid var(--edge);background:var(--surface);display:flex;flex-direction:column;}
 .cls-top{display:flex;align-items:center;gap:3.5mm;padding:3.5mm 4mm;
@@ -558,30 +666,28 @@ svg.mk[viewBox]{width:100%;height:100%;}
 .cls-name{font-size:10pt;font-weight:700;}
 .cls-hex{margin-left:auto;font-size:8pt;font-weight:700;}
 .cls-body{padding:4mm;display:flex;flex-direction:column;gap:2.6mm;}
-.cls-rule{font-size:8.8pt;}
-.cls-eg{font-size:7.6pt;color:var(--muted);}
-.cls-cr{font-size:7pt;color:#5A6474;}
-.cls-cr b{color:var(--muted);}
+.cls-rule{font-size:8.8pt;} .cls-eg{font-size:7.6pt;color:var(--muted);}
+.cls-cr{font-size:7pt;color:#5A6474;} .cls-cr b{color:var(--muted);}
 
-/* terminals / families */
 .terms{display:flex;flex-direction:column;gap:3mm;}
 .tf{margin:0;display:flex;align-items:center;gap:5mm;background:var(--surface);
  border:1px solid var(--edge);padding:4mm;}
-.tf .mk{width:54px;height:54px;flex:none;}
+.tf .mk{width:52px;height:52px;flex:none;}
 .tf figcaption{display:flex;flex-direction:column;gap:1mm;}
 .tf b{font-size:10pt;} .tf span{font-size:8pt;color:var(--muted);}
+.pgrid{display:flex;gap:3mm;margin-top:auto;}
+.pg-c{flex:1;height:14mm;border:1px solid var(--edge);}
 .fams{display:flex;gap:4mm;}
 .ff{margin:0;flex:1;background:var(--surface);border:1px solid var(--edge);
  padding:4mm;display:flex;flex-direction:column;align-items:center;gap:3mm;}
-.ff .mk{width:60px;height:60px;}
+.ff .mk{width:58px;height:58px;}
 .ff figcaption{display:flex;flex-direction:column;gap:.8mm;text-align:center;}
 .ff b{font-size:8.8pt;} .ff span{font-size:7.2pt;color:var(--muted);}
-.ff.dim{opacity:.72;} .ff.dim .mk{width:44px;height:44px;}
+.ff.dim{opacity:.72;} .ff.dim .mk{width:42px;height:42px;}
 .clash{background:var(--surface);border:1px solid var(--edge);padding:2mm 0;}
 .cl-row{display:flex;align-items:center;gap:4mm;padding:1.8mm 4mm;font-size:8.6pt;}
 .cl-row .mk{width:22px;height:22px;flex:none;}
 
-/* grid art */
 .gridart{background:var(--surface);border:1px solid var(--edge);padding:5mm;
  display:flex;flex-direction:column;gap:4mm;height:100%;}
 .ga-frame{flex:1;display:grid;place-items:center;background:
@@ -590,7 +696,6 @@ svg.mk[viewBox]{width:100%;height:100%;}
 .ga-frame .mk{width:150px;height:150px;}
 .ga-cap{font-size:8pt;color:var(--muted);}
 
-/* hand */
 .demos{display:grid;grid-template-columns:repeat(4,1fr);gap:4mm;margin-bottom:6mm;}
 .dm{margin:0;background:var(--surface);border:1px solid var(--edge);padding:4mm;
  display:flex;flex-direction:column;align-items:center;gap:3mm;}
@@ -605,59 +710,49 @@ svg.mk[viewBox]{width:100%;height:100%;}
  padding:.4mm 1.8mm;border:.3mm solid var(--edge);color:var(--muted);}
 .tagx.earned{color:var(--sig);border-color:var(--sig-dim);}
 
-/* the set */
 .setgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:6mm 3mm;}
 .tl{margin:0;display:flex;flex-direction:column;align-items:center;gap:2mm;}
 .tl .mk{width:52px;height:52px;}
 .tl figcaption{font-size:6.6pt;color:var(--muted);text-align:center;line-height:1.25;
  word-break:break-word;}
 
-/* motifs */
 .motifs{display:flex;gap:5mm;justify-content:space-between;background:#000;
  border:1px solid var(--edge);padding:8mm 6mm;}
 .mo{margin:0;display:flex;flex-direction:column;align-items:center;gap:3.5mm;}
 .mo figcaption{font-size:7.2pt;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);}
 
-/* rejected */
-.rejects{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;}
-.rj{background:var(--surface);border:1px solid var(--edge);border-top:.8mm solid var(--sig-dim);
- padding:4mm;display:flex;flex-direction:column;gap:2.4mm;}
-.rj b{font-size:9.4pt;}
-.rj p{font-size:7.9pt;line-height:1.5;}
-.rj-w{color:var(--muted);font-style:italic;}
-.rj-x span,.rj-i span{display:block;font-size:6.6pt;text-transform:uppercase;
- letter-spacing:.11em;margin-bottom:.8mm;}
-.rj-x span{color:var(--sig);} .rj-i span{color:#33E62B;}
-.rj-x{color:var(--muted);} .rj-i{color:var(--fg);}
+/* laws */
+.laws{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm 8mm;}
+.law{display:flex;gap:4mm;align-items:flex-start;}
+.ln-n{font-size:13pt;font-weight:700;color:var(--sig-dim);line-height:1.1;}
+.law b{font-size:9.8pt;letter-spacing:-.01em;}
+.law p{font-size:8.2pt;color:var(--muted);line-height:1.5;margin-top:1.2mm;}
 
-/* typography page */
 .spec-blk{background:var(--surface);border:1px solid var(--edge);padding:5mm;
  display:flex;flex-direction:column;gap:1.5mm;height:100%;}
-.sp-lab{font-size:6.6pt;text-transform:uppercase;letter-spacing:.11em;color:#5A6474;
- margin-top:3mm;}
+.sp-lab{font-size:6.6pt;text-transform:uppercase;letter-spacing:.11em;color:#5A6474;margin-top:3mm;}
 .sp{color:var(--fg);}
 .sp-d{font-size:23pt;font-weight:700;letter-spacing:-.03em;line-height:1.08;}
 .sp-s{font-size:14pt;font-weight:700;letter-spacing:-.02em;}
 .sp-l{font-size:8.4pt;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
 .sp-b{font-size:9.4pt;line-height:1.6;}
-.sp-w{font-size:17pt;font-weight:300;letter-spacing:.30em;text-indent:.30em;}
 .charset{background:var(--surface);border:1px solid var(--edge);padding:5mm;
  display:flex;flex-direction:column;gap:1.4mm;}
 .cs-row{font-size:12.5pt;letter-spacing:.02em;color:#AEB6C2;}
 
-/* terminal */
-.term{border:1px solid var(--edge);margin-top:6mm;}
+.term{border:1px solid var(--edge);margin-top:5mm;}
 .term-bar{background:#0E0F13;border-bottom:1px solid var(--edge);padding:2.4mm 4mm;
  font-size:7pt;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
 .term-body{background:var(--surface);padding:4mm;font-size:8.8pt;line-height:1.75;}
 .tg{color:var(--sig);} .tm{color:var(--fg);} .tc{color:#5A6474;}
-.colo{font-size:7.6pt;color:#5A6474;line-height:1.55;margin-top:auto;}
 """
 
-doc = ('<!doctype html><html><head><meta charset="utf-8">'
+FOOTWM = ('<span class="wm" style="font-size:7pt;letter-spacing:.2em;text-indent:.2em">'
+          '<span class="sc">AN</span><span class="nix">NIX</span><span class="sc">ION</span></span>')
+doc = ('<!doctype html><html lang="en"><head><meta charset="utf-8">'
        '<title>AnNIXion — Visual Identity</title>'
        f'<style>{CSS}</style></head><body>' + "".join(P) + '</body></html>')
-doc = doc.replace("{TOTAL}", f"{len(P):02d}")
+doc = doc.replace("{TOTAL}", f"{len(P):02d}").replace("{WM}", FOOTWM)
 with open(OUT, "w") as fh:
     fh.write(doc)
 print(f"{OUT}: {len(P)} pages")
