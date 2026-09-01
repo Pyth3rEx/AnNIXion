@@ -66,6 +66,16 @@ LAWS = [
  ("Privilege changes the ground you stand on.",
   "Elevation is never a badge bolted onto a corner. The root terminal changes its entire background; the "
   "root launcher changes its entire colour. A warning you can learn to ignore is not a warning."),
+ ("When symbols cross, cut a gap.",
+  "Two shapes of the same colour at the same weight do not read as two shapes where they meet — they "
+  "read as one blob, and the smaller the icon the sooner it happens. A crossing symbol is drawn twice: "
+  "once wide in the ground colour to cut a gap, then normally on top. A symbol that merely sits inside "
+  "another shape is not crossing it, and knocking that one out only eats the shape."),
+ ("A cap is ink, and ink needs room.",
+  "A round cap reaches half a stroke past the point that draws it. A line ending on the edge of the "
+  "canvas therefore loses its tip to the crop, and a sliced tip does not read as short — it reads as "
+  "cut. The canvas is bigger than the grid for exactly this reason, and the build measures every mark "
+  "rather than trusting the drawing."),
  ("The hand lives in the geometry.",
   "Looseness is not a filter applied at the end. It is in how the line was drawn: nothing truly straight, "
   "nothing truly parallel, nothing that quite closes. A perfect rectangle with a drip on it is a perfect "
@@ -85,6 +95,74 @@ LAWS = [
   "written authorisation, or root, or both. Used anywhere else it stops meaning anything, and the one "
   "place it must work is the place you are moving too fast to read."),
 ]
+def menu_model():
+    """The real kill-chain tree: every directory, and the tools filed under it."""
+    import xml.etree.ElementTree as ET
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(f"{root}/home/apps-menu.nix").read()
+    xml = src[src.index("menuXml = \'\'") + 12:]
+    xml = xml[:xml.index("\n  \'\';")]
+    xml = re.sub(r"<!DOCTYPE[^>]*>", "", xml, flags=re.S)
+    xml = re.sub(r"<!--.*?-->", "", xml, flags=re.S)
+
+    dirs = {f: (label, icon) for f, label, icon in
+            re.findall(r'"([\w.-]+\.directory)" =\s*\n?\s*dir "([^"]+)" "([^"]+)"', src)}
+
+    entries = []
+    for key, body in re.findall(r'"([\w-]+)" = de \{(.*?)\n    \};', src, re.S):
+        entries.append((re.search(r'name = "([^"]+)"', body).group(1),
+                        re.search(r'icon = "([^"]+)"', body).group(1),
+                        re.findall(r'"(X-AnNIXion-[\w-]+)"', body)))
+    ff = open(f"{root}/home/firefox/default.nix").read()
+    for blk in re.findall(r"\[Desktop Entry\](.*?)\n    \'\'", ff, re.S):
+        if "NoDisplay=true" in blk:
+            continue
+        entries.append((re.search(r"Name=(.+)", blk).group(1).strip(),
+                        re.search(r"Icon=(.+)", blk).group(1).strip(),
+                        re.findall(r"(X-AnNIXion-[\w-]+)", blk)))
+
+    by_cat = {}
+    for name, icon, cats in entries:
+        for c in cats:
+            by_cat.setdefault(c, []).append((name, icon))
+
+    def walk(node, depth=0):
+        out = []
+        d = node.find("Directory")
+        if d is not None and d.text in dirs:
+            label, icon = dirs[d.text]
+            tools = []
+            for inc in node.findall("Include"):
+                for c in inc.findall("Category"):
+                    tools += by_cat.get(c.text, [])
+            out.append({"depth": depth, "label": label, "icon": icon, "tools": tools})
+        for sub in node.findall("Menu"):
+            out += walk(sub, depth + (1 if d is not None else 0))
+        return out
+
+    nodes = [n for n in walk(ET.fromstring(xml)) if n["label"] != "AnNIXion"]
+    if not nodes:
+        raise SystemExit("identity-board: parsed no menu directories")
+    # the root directory held depth 0 and has just been dropped, so rebase
+    base = min(n["depth"] for n in nodes)
+    for n in nodes:
+        n["depth"] -= base
+    for n in nodes:
+        for nm, ic in [(n["label"], n["icon"])] + [(t[0], t[1]) for t in n["tools"]]:
+            if not os.path.exists(os.path.join(ICONS, f"{ic}.svg")):
+                raise SystemExit(f"identity-board: {nm} names {ic}, which the theme does not have")
+    return nodes
+
+
+def flat(name, size=None):
+    """The mark as it would look without its knockout pass."""
+    s = mark(name, size)
+    groups = re.findall(r'<g\b.*?</g>', s, re.S)
+    if len(groups) == 3:                       # body, knockout, symbol
+        s = s.replace(groups[1], "", 1)
+    return s
+
+
 CHROME = [("#0E0F13","Deepest ground"),("#1A1D24","Raised surface"),("#2E323D","Segment, divider"),
           ("#FF0033","The signature accent"),("#DFE4EA","Primary text"),("#301212","Root ground")]
 GRAFFITI = [("#000000","Wall ground — 62% of the wallpaper"),("#0F5AE6","Cobalt — the figure"),
@@ -130,7 +208,7 @@ SURFACES = [
  ("Lock screen","The wall, uninterrupted"),
  ("Desktop","The wall, on pure black, aspect preserved"),
  ("Panel","32px, the launcher mark at the left edge"),
- ("Application menu","Forty-two entries and thirty-four directories, every one carrying its own mark"),
+ ("Application menu","Forty-six entries across thirty-three categories, every one carrying its own mark"),
  ("Terminal","85% opacity with blur, so the wall reads through the work"),
  ("Prompt","The chrome palette, red accent diamonds, and the session colour on the left"),
  ("System banner","The mark at width thirty, keys and title in red"),
@@ -273,7 +351,7 @@ P.append(page("04","Name and mark","One word, capital A, capital NIX. Never <em>
       <span class="lab">The X — the recurring device</span>
       <div class="xrow">
         <figure>{mark("logo",54)}<figcaption>in the mark</figcaption></figure>
-        <figure><svg class="mk loose" style="width:54px;height:54px" viewBox="0 0 24 24" fill="none" stroke="#FF0033" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">{MOTIFS[0][1]}</svg><figcaption>as the eyes on the wall</figcaption></figure>
+        <figure><svg class="mk loose" style="width:54px;height:54px" viewBox="-1.3 -1.3 26.6 26.6" fill="none" stroke="#FF0033" stroke-width="1.88" stroke-linecap="round" stroke-linejoin="round">{MOTIFS[0][1]}</svg><figcaption>as the eyes on the wall</figcaption></figure>
         <figure>{mark("menu-root",54)}<figcaption>over a finished target</figcaption></figure>
       </div>
       <p class="sm">Three places that were never talking to each other. The X is the crossed-out letter in
@@ -388,16 +466,27 @@ P.append(page("08","Typography","One face does everything. Things you type shoul
 P.append(page("09","The mark system","Every application and every menu directory gets a single-colour line drawing filling its whole canvas. No container, no plate.",f'''
 <div class="two">
  <div class="col">
-  <div class="gridart"><div class="ga-frame">{mark("nmap",150)}</div>
-   <div class="ga-cap">One mark at poster size on its own grid. The drawing fills twenty-one of the
-   twenty-four units, leaving a unit and a half of air on every side so the round caps never clip.</div></div>
+  <div class="gridart"><div class="ga-frame">{mark("nmap",122)}</div>
+   <div class="ga-cap">One mark at poster size on its own grid. A round cap reaches half a stroke past the
+   line that draws it, so the canvas is the grid plus a margin for the ink the stroke throws beyond it —
+   otherwise a drip ending on the bottom edge is sliced flat and reads as a cut, not a tip.</div></div>
+  <div class="knock">
+   <span class="lab">Where one symbol crosses another</span>
+   <div class="kn-row">
+    <figure>{flat("aircrack",44)}{flat("aircrack",22)}<figcaption>flat — the bolt<br>fuses with the arcs</figcaption></figure>
+    <figure>{mark("aircrack",44)}{mark("aircrack",22)}<figcaption>knocked out — a gap<br>in the ground colour</figcaption></figure>
+    <figure>{flat("sqlmap",44)}{flat("sqlmap",22)}<figcaption>flat</figcaption></figure>
+    <figure>{mark("sqlmap",44)}{mark("sqlmap",22)}<figcaption>knocked out</figcaption></figure>
+   </div>
+  </div>
  </div>
  <div class="col">
   <table class="grid-t">
    <thead><tr><th>Rule</th><th>Value</th><th>Why</th></tr></thead>
    <tbody>
-    <tr><td>Grid</td><td>24 units, drawing fills 21</td><td>Air on every side, so caps never clip</td></tr>
-    <tr><td>Stroke</td><td>2.1, round cap and join</td><td>Lands just under 2px at menu size</td></tr>
+    <tr><td>Grid</td><td>24 units, edge to edge</td><td>The drawing may use all of it</td></tr>
+    <tr><td>Canvas</td><td>The grid, padded 1.3 all round</td><td>Where the round cap goes, so nothing is sliced</td></tr>
+    <tr><td>Stroke</td><td>2.33, round cap and join</td><td>Lands just under 2px at menu size</td></tr>
     <tr><td>Colour</td><td>One class colour, whole mark</td><td>Colour classifies, silhouette identifies</td></tr>
     <tr><td>Fills</td><td>Dots under 2.5 units only</td><td>Anything larger becomes a blob when small</td></tr>
     <tr><td>Detail</td><td>Five strokes or fewer</td><td>Spend the sixth on silhouette, never texture</td></tr>
@@ -457,20 +546,66 @@ P.append(page("11","Families","Where one application appears several times in di
  </div>
 </div>'''))
 
-# ══ 12 / 13 THE SET ══════════════════════════════════════════════════════
-names = sorted(n[len("annixion-"):-4] for n in os.listdir(ICONS) if n.startswith("annixion-"))
-tools = [n for n in names if not n.startswith("menu-")]
-dirs  = [n for n in names if n.startswith("menu-")]
-def cell(n): return f'<figure class="tl">{mark(n,52)}<figcaption>{n}</figcaption></figure>'
-P.append(page("12","The set — applications",f"{len(tools)} application marks. Colour is the class; every silhouette differs from its classmates.",
-  f'<div class="setgrid">{"".join(cell(n) for n in tools)}</div>'))
-P.append(page("13","The set — directories",f"{len(dirs)} directory marks, one per node of the tree. A directory takes the colour of what it contains.",
-  f'<div class="setgrid">{"".join(cell(n) for n in dirs)}</div>'))
+# ══ 12-14 THE SET, BY CATEGORY ═══════════════════════════════════════════
+NODES = menu_model()
+
+
+def bare(icon):
+    return mark(icon[len("annixion-"):], None)
+
+
+def tool_cell(name, icon):
+    return (f'<figure class="tcell"><span class="ic30">{bare(icon)}</span>'
+            f'<figcaption>{html.escape(name)}</figcaption></figure>')
+
+
+def block(i):
+    """One top-level phase: its own mark, then each directory beneath it."""
+    top = NODES[i]
+    rows = ""
+    if top["tools"]:
+        rows += f'<div class="tools">{"".join(tool_cell(*t) for t in top["tools"])}</div>'
+    j = i + 1
+    while j < len(NODES) and NODES[j]["depth"] > top["depth"]:
+        sb = NODES[j]
+        rows += (f'<div class="subrow"><div class="sub-h"><span class="ic22">{bare(sb["icon"])}</span>'
+                 f'{html.escape(sb["label"])}</div>'
+                 f'<div class="tools">{"".join(tool_cell(*t) for t in sb["tools"])}</div></div>')
+        j += 1
+    return (f'<div class="cat"><div class="cat-h"><span class="ic28">{bare(top["icon"])}</span>'
+            f'<b>{html.escape(top["label"])}</b></div>{rows}</div>')
+
+
+TOPS = [i for i, n in enumerate(NODES) if n["depth"] == 0]
+if len(TOPS) < 10:
+    raise SystemExit(f"identity-board: found only {len(TOPS)} top-level categories")
+groups = [TOPS[0:4], TOPS[4:10], TOPS[10:]]
+titles = ["The set — reconnaissance to exploitation",
+          "The set — installation to the wire",
+          "The set — off the kill chain"]
+kickers = ["Every mark in the place it is actually used. A directory takes the colour of what it holds; "
+           "a tool takes the colour of what running it does to the target.",
+           "The middle of the chain runs red end to end. That is deliberate: it is the stretch where you "
+           "are inside somebody else's estate, and it should not look like the rest. Once the work is "
+           "over the set cools to forensic blue and reverse magenta — neither of which touches the network.",
+           "The parts of the menu that are not the kill chain: the browsers, the editors, the terminals, "
+           "and the two marks that belong to no category at all."]
+
+for k, (grp, title, kick) in enumerate(zip(groups, titles, kickers)):
+    body = f'<div class="cats">{"".join(block(i) for i in grp)}</div>'
+    if k == 2:
+        body += ('<div class="cat outside"><div class="cat-h">'
+                 f'<span class="ic28">{mark("logo")}</span><b>Outside the tree</b></div>'
+                 '<div class="tools">'
+                 f'{tool_cell("The launcher mark", "annixion-logo")}'
+                 f'{tool_cell("The menu root", "annixion-menu-root")}'
+                 '</div></div>')
+    P.append(page(f"{12 + k}", title, kick, body))
 
 # ══ 14 MOTIFS ════════════════════════════════════════════════════════════
-mot = "".join(f'<figure class="mo"><svg class="mk loose" viewBox="0 0 24 24">{d}</svg>'
+mot = "".join(f'<figure class="mo"><svg class="mk loose" viewBox="-1.3 -1.3 26.6 26.6">{d}</svg>'
   f'<figcaption>{n}</figcaption></figure>' for n,d in MOTIFS)
-P.append(page("14","Motif vocabulary","The wall carries a fixed cast. Reuse it rather than inventing new ones.",f'''
+P.append(page("15","Motif vocabulary","The wall carries a fixed cast. Reuse it rather than inventing new ones.",f'''
 <div class="motifs">{mot}</div>
 <div class="two" style="margin-top:7mm">
  <div class="col"><div class="note"><b>Where they are allowed.</b> The wallpaper, the lock screen, the boot
@@ -484,7 +619,7 @@ P.append(page("14","Motif vocabulary","The wall carries a fixed cast. Reuse it r
 
 # ══ 15 SURFACES ══════════════════════════════════════════════════════════
 rows = "".join(f'<tr><td>{s}</td><td>{d}</td></tr>' for s,d in SURFACES)
-P.append(page("15","Surfaces","A rule for every surface the system puts in front of you, from power-on to the desktop.",f'''
+P.append(page("16","Surfaces","A rule for every surface the system puts in front of you, from power-on to the desktop.",f'''
 <table class="grid-t wide"><thead><tr><th>Surface</th><th>How the identity lands</th></tr></thead><tbody>{rows}</tbody></table>
 <div class="two" style="margin-top:6mm">
  <div class="col"><div class="note"><b>The splash can always be interrupted.</b> A boot screen you cannot
@@ -498,11 +633,11 @@ P.append(page("15","Surfaces","A rule for every surface the system puts in front
 # ══ 16 DESIGN LAWS ═══════════════════════════════════════════════════════
 laws = "".join(f'<div class="law"><span class="ln-n">{i:02d}</span><div><b>{t}</b><p>{d}</p></div></div>'
                 for i,(t,d) in enumerate(LAWS, 1))
-P.append(page("16","Design laws","Eight rules the whole system runs on. They are not style preferences — each one was paid for, and breaking one shows up on screen within a day.",
+P.append(page("17","Design laws","Ten rules the whole system runs on. They are not style preferences — each one was paid for, and breaking one shows up on screen within a day.",
   f'<div class="laws">{laws}</div>'))
 
 # ══ 17 VOICE ═════════════════════════════════════════════════════════════
-P.append(page("17","Voice","Two registers, on purpose. The pitch is loud. The interface is quiet.",f'''
+P.append(page("18","Voice","Two registers, on purpose. The pitch is loud. The interface is quiet.",f'''
 <div class="note" style="margin-bottom:6mm"><b>The first three pages of this document swagger, and nothing
 the system says at runtime is allowed to.</b> That split is the point. Attitude belongs where somebody has
 chosen to read — a cover, a banner, a wall. It does not belong in an error at three in the morning, where
@@ -636,7 +771,7 @@ table{border-collapse:collapse;width:100%;font-size:8.6pt;}
 .grid-t th{text-align:left;font-size:7.2pt;text-transform:uppercase;letter-spacing:.1em;
  color:var(--muted);font-weight:400;background:var(--surface);padding:2.4mm 3mm;
  border-bottom:1px solid var(--edge);}
-.grid-t td{padding:2mm 3mm;border-bottom:1px solid var(--edge);vertical-align:top;}
+.grid-t td{padding:1.7mm 3mm;border-bottom:1px solid var(--edge);vertical-align:top;}
 .grid-t td:first-child{color:var(--fg);white-space:nowrap;}
 .grid-t.wide td:last-child{color:var(--muted);}
 
@@ -649,7 +784,7 @@ table{border-collapse:collapse;width:100%;font-size:8.6pt;}
 
 .mk{display:block;fill:none;}
 svg.mk[viewBox]{width:100%;height:100%;}
-.mk.loose{width:62px;height:62px;stroke:#F213A0;stroke-width:1.7;
+.mk.loose{width:62px;height:62px;stroke:#F213A0;stroke-width:1.88;
  stroke-linecap:round;stroke-linejoin:round;color:#F213A0;}
 .mk.gy{width:52px;height:52px;stroke:#5A6474;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;}
 .mk.sg{width:52px;height:52px;stroke:var(--sig);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;}
@@ -689,7 +824,13 @@ svg.mk[viewBox]{width:100%;height:100%;}
 .cl-row .mk{width:22px;height:22px;flex:none;}
 
 .gridart{background:var(--surface);border:1px solid var(--edge);padding:5mm;
- display:flex;flex-direction:column;gap:4mm;height:100%;}
+ display:flex;flex-direction:column;gap:4mm;}
+.knock{background:var(--surface);border:1px solid var(--edge);padding:4mm 5mm;
+ display:flex;flex-direction:column;gap:3mm;margin-top:4mm;}
+.kn-row{display:flex;gap:5mm;justify-content:space-between;}
+.kn-row figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:1.6mm;}
+.kn-row .mk{display:inline-block;}
+.kn-row figcaption{font-size:6.6pt;color:var(--muted);text-align:center;line-height:1.35;}
 .ga-frame{flex:1;display:grid;place-items:center;background:
  linear-gradient(#232936 .3mm,transparent .3mm) 0 0/100% 12.5%,
  linear-gradient(90deg,#232936 .3mm,transparent .3mm) 0 0/12.5% 100%,#0E0F13;}
@@ -710,11 +851,21 @@ svg.mk[viewBox]{width:100%;height:100%;}
  padding:.4mm 1.8mm;border:.3mm solid var(--edge);color:var(--muted);}
 .tagx.earned{color:var(--sig);border-color:var(--sig-dim);}
 
-.setgrid{display:grid;grid-template-columns:repeat(9,1fr);gap:6mm 3mm;}
-.tl{margin:0;display:flex;flex-direction:column;align-items:center;gap:2mm;}
-.tl .mk{width:52px;height:52px;}
-.tl figcaption{font-size:6.6pt;color:var(--muted);text-align:center;line-height:1.25;
- word-break:break-word;}
+.cats{column-count:2;column-gap:8mm;}
+.cat{break-inside:avoid;background:var(--surface);border:1px solid var(--edge);
+ border-left:.8mm solid var(--sig-dim);padding:2.8mm 3.4mm;margin-bottom:2.8mm;
+ display:flex;flex-direction:column;gap:2mm;}
+.cat.outside{border-left-color:#3A4150;}
+.cat-h{display:flex;align-items:center;gap:3mm;}
+.cat-h b{font-size:9pt;letter-spacing:-.01em;}
+.subrow{display:flex;flex-direction:column;gap:1.4mm;}
+.sub-h{display:flex;align-items:center;gap:2.2mm;font-size:7.6pt;color:var(--muted);}
+.tools{display:flex;flex-wrap:wrap;gap:2mm 2.6mm;}
+.tcell{margin:0;display:flex;flex-direction:column;align-items:center;gap:1mm;width:13mm;}
+.tcell figcaption{font-size:5.6pt;color:var(--muted);text-align:center;line-height:1.2;}
+.ic30,.ic28,.ic22{display:inline-flex;flex:none;}
+.ic30 svg,.ic28 svg,.ic22 svg{width:100%;height:100%;}
+.ic30{width:26px;height:26px;} .ic28{width:25px;height:25px;} .ic22{width:20px;height:20px;}
 
 .motifs{display:flex;gap:5mm;justify-content:space-between;background:#000;
  border:1px solid var(--edge);padding:8mm 6mm;}
