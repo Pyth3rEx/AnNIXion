@@ -128,6 +128,35 @@ read:
 journalctl -u xrdp -u xrdp-sesman -b
 ```
 
+### Enhanced Session sits on the splash screen
+
+Because you are already logged in on the console.
+
+Plasma is one desktop per user, not one per session. Both logins share a
+single `systemd --user` manager and a single session bus, so whichever
+desktop started first owns `org.kde.KWin`. The second one's `kwin` is a
+`Type=dbus` unit waiting on a name it will never be given: systemd times the
+start job out after ninety seconds, restarts it, and repeats, while
+`startplasma-x11` waits on `org.kde.KSplash` for as long as you leave it
+there. The xrdp log says nothing, because nothing is wrong with the
+connection — it authenticates, gets its X server, and hands over to a
+desktop that never arrives.
+
+Ask who holds the name and the answer is the console session's compositor:
+
+```sh
+busctl --user list | grep org.kde.KWin
+```
+
+`modules/xrdp.nix` now stops the running workspace before it starts its own,
+so connecting takes the desktop over and the console drops back to SDDM.
+On a generation without that fix, log out on the console, or clear it by
+hand from either session:
+
+```sh
+systemctl --user stop plasma-workspace.target graphical-session.target
+```
+
 ---
 
 ## Browsers & proxies

@@ -5,6 +5,22 @@
   ...
 }:
 
+let
+  # Plasma is one per user: the manager and the session bus are shared, so a
+  # console login already owns org.kde.KWin and a second session's kwin waits
+  # on a name it can never get. Stop the old workspace — the console drops
+  # back to SDDM. See docs/faq.md.
+  takeOverSession = pkgs.writeShellScript "annixion-take-over-session" ''
+    systemctl --user stop plasma-workspace.target graphical-session.target 2>/dev/null || true
+
+    # The name goes when the process does, not when the stop job is queued.
+    for _ in $(seq 300); do
+      systemctl --user is-active --quiet \
+        plasma-kwin_wayland.service plasma-kwin_x11.service plasma-ksmserver.service || break
+      sleep 0.1
+    done
+  '';
+in
 {
   # ── Hyper-V guest support ─────────────────────────────────
   virtualisation.hypervGuest.enable = lib.mkDefault true;
@@ -49,6 +65,9 @@
         systemctl --user show-environment >/dev/null 2>&1 && break
         sleep 0.1
       done
+
+      # ── Take over an existing desktop ────────────────────────────────
+      ${takeOverSession}
 
       # ── D-Bus ────────────────────────────────────────────────────────
       # systemd --user owns the bus socket; dbus-launch is the fallback
@@ -119,7 +138,10 @@
   # ExecStart; it is required, not a user-tunable default.
   systemd.services.xrdp = {
     serviceConfig = {
-      ExecStart = lib.mkForce "${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://-1:3389 --config /etc/xrdp/xrdp.ini";
+      # stdbuf: the console log is a pipe, so it is block buffered and every
+      # forked session replays the parent's buffer — the journal gets those
+      # lines minutes late, out of order and duplicated.
+      ExecStart = lib.mkForce "${pkgs.coreutils}/bin/stdbuf -oL -eL ${pkgs.xrdp}/bin/xrdp --nodaemon --port vsock://-1:3389 --config /etc/xrdp/xrdp.ini";
     };
   };
 }
