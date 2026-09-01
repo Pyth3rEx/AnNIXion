@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Assets must never be line-ending normalised.
+*.pdf binary
+*.png binary
