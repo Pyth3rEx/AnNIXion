@@ -4,11 +4,13 @@ The name, palette, typography, marks and motif vocabulary AnNIXion draws from,
 and the rule for every surface it puts in front of you. Read this before adding
 an icon, a wallpaper, a theme or any user-facing asset.
 
-This file is the normative reference. [visual-identity.pdf](visual-identity.pdf)
-presents the same system as a 16-page design board — the lockup, the specimen,
-the full mark set and the rejected directions — and is regenerated from a built
-icon theme by `branding/identity-board.sh`, so it cannot show a set that is not
-the one shipping.
+This file is the normative reference and is written for whoever is building the
+thing. [visual-identity.pdf](visual-identity.pdf) is the same system as an
+18-page design board for 0.4.0 "Nebula", written for a design audience: the
+mission, the lockup, the specimen, the full mark set and the eight laws, with
+the implementation left here. It is regenerated from a built icon theme by
+`branding/identity-board.sh`, which refuses to print if any page has outgrown
+itself.
 
 ---
 

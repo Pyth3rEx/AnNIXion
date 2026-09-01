@@ -3,3 +3,4 @@ hardware-configuration.nix
 .idea/
 .claude/
 assets/certs/
+__pycache__/
