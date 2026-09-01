@@ -72,6 +72,8 @@ in
     ./home/file-visibility.nix
     ./home/konsole.nix
     ./home/window-raise.nix
+    ./home/redteam-launch.nix
+    ./home/panel-separator.nix
   ];
 
   home.username = lib.mkDefault "operator";
