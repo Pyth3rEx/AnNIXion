@@ -66,16 +66,19 @@ report "$([ "${timeout:-0}" -ge 1 ] 2>/dev/null && echo 0 || echo 1)" \
   "the boot menu stays reachable" "loader timeout is ${timeout:-<unset>}"
 
 # ── Greeter ────────────────────────────────────────────────────────────────
+# plasma6.nix sets this too, so the priority has to actually win.
 sddm=$(nix eval --raw "$SYS.services.displayManager.sddm.theme" 2>/dev/null)
 report "$([ "$sddm" = "annixion" ] && echo 0 || echo 1)" \
   "the greeter uses the AnNIXion theme" "sddm theme is ${sddm:-<unset>}"
 
-# plasma6.nix sets this too, so the priority has to actually win.
-greeter=$(nix build --no-link --print-out-paths --impure --expr \
-  'let p = import <nixpkgs> {}; in (import ./branding { pkgs = p; }).sddmTheme' \
-  2>/dev/null)
+# Built through the flake, on the nixpkgs the system pins: a runner has no
+# <nixpkgs> to fall back on, and a stray one would not be the shipped greeter.
+err=$(mktemp)
+greeter=$(nix build --no-link --print-out-paths '.#sddm-theme' 2>"$err")
+detail=$(tail -n 3 "$err" | tr '\n' ' ')
+rm -f "$err"
 if [ -z "$greeter" ]; then
-  report 1 "the greeter theme builds" "sddmTheme did not build"
+  report 1 "the greeter theme builds" "${detail:-sddmTheme did not build}"
 else
   conf="$greeter/share/sddm/themes/annixion/theme.conf"
   report "$([ -f "$conf" ] && echo 0 || echo 1)" \
