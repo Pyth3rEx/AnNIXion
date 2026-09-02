@@ -101,6 +101,7 @@ a path a module chose.
 | `tests/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
 | `tests/git-credential-helper.nix` | That a push can find its credentials: the gh helper is configured for every user, and the binary it names is one the system still has. |
 | `tests/docker.nix` | That the container runtime is the rootless one: the daemon belongs to the user, its socket is the one the CLI is pointed at, and neither a root daemon nor a `docker` group exists. |
+| `tests/vpn-health.nix` | That a tunnel which is up but unsound is called out: a relay answering every port 53 query, and a route leaving outside the tunnel. Covers the alert firing once per fault, staying quiet while it persists, and the unit reading as failed throughout. |
 
 ---
 

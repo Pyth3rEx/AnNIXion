@@ -21,6 +21,8 @@ lot. Every one of them takes `-h` / `--help`.
 | `annixion-vpn-tunnels` | List every interface that qualifies as a live tunnel |
 | `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
 | `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
+| `annixion-vpn-check` | Check a live tunnel is fit for work, not merely up |
+| `annixion-vpn-watch` | The same check, with the alert — run by its timer |
 | `annixion-raise` | Focus a running window by `WM_CLASS`, or launch the app |
 
 The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
@@ -226,6 +228,68 @@ The launcher therefore masks the `nscd` socket and supplies a private
 process resolves for itself and DNS fails closed with everything else. Change
 them with `annixion.vpnEnforcement.dnsServers`; setting it to `[ ]` restores
 the system resolver and gives up this guarantee.
+
+---
+
+## VPN health — when the tunnel is faulty
+
+A tunnel can be connected and still be no good. The two failures that matter
+here do not read as a disconnection:
+
+- **The relay answers port 53 itself.** Commercial providers do this to stop
+  DNS leaking, and it is indiscriminate: every query, to every address, UDP and
+  TCP alike. Recon then lies. A zone transfer comes back `Transfer failed.` as
+  though the zone refused it, and every lookup is the relay's answer rather
+  than the nameserver's — including answers from a blocklist you did not
+  choose.
+- **Traffic leaves by the wrong device.** A route that puts the internet back
+  on the physical link while the tunnel is up is a leak, whatever the VPN
+  client's own indicator says.
+
+Neither is AnNIXion's to fix, and neither is worked around here. A bypass would
+mean recon traffic taking a path nobody chose, and a fault the operator never
+learned about. So the system says so instead:
+
+```bash
+annixion-vpn-check              # tunnel, egress, interception, resolution
+annixion-vpn-check --transfer   # and a real zone transfer, over the network
+```
+
+| Exit | Meaning |
+|---|---|
+| 0 | The tunnel is fit for work |
+| 1 | It is up and faulty — the report names which check failed |
+| 2 | No tunnel is up, so there is nothing to judge |
+
+The interception check asks 192.0.2.1 — RFC 5737 TEST-NET-1, routable to
+nothing — for a record. An answer from an address nothing routes to means every
+destination is getting the same resolver. The egress check reads which device
+the kernel would use for the internet, and compares it against the same tunnel
+list the killswitch is built from, so the two cannot disagree about what a
+tunnel is.
+
+`annixion-vpn-watch` runs that check every five minutes under the user's
+systemd, and yells on the tick a fault appears: a `kdialog` error, falling back
+to a critical desktop notification. It stays quiet while the same fault
+persists — and yells again if the tunnel recovers and then breaks — so the
+alert keeps meaning something. The report goes to the journal every run, and
+the unit exits non-zero for as long as the tunnel is unsound, so
+`systemctl --user status annixion-vpn-watch` is a second place the truth shows.
+
+```nix
+# user/vpn-health.nix — tune it per machine
+annixion.vpnHealth = {
+  interval = "5min";              # how often the watcher re-checks
+  egressProbe = "1.1.1.1";        # address whose route is read, never dialled
+  alertCommand = "${pkgs.myAlert}/bin/alert";   # takes the report on stdin
+};
+```
+
+What to do about a fault is a provider decision, not a config one: turn off
+their DNS filtering or custom-DNS setting, move to a server that does not
+intercept, or change provider. `tests/dns-axfr.sh` is the same claim as a
+test — it fails loudly, on this machine or in CI, when a zone that publishes
+itself as transferable will not transfer.
 
 ---
 

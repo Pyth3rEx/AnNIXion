@@ -52,6 +52,7 @@
         ./modules/shell.nix
         ./modules/git.nix
         ./modules/docker.nix
+        ./modules/vpn-health.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
@@ -238,6 +239,7 @@
         bind-axfr = pkgs.testers.nixosTest (import ./tests/bind-axfr.nix);
         git-credential-helper = pkgs.testers.nixosTest (import ./tests/git-credential-helper.nix);
         docker = pkgs.testers.nixosTest (import ./tests/docker.nix);
+        vpn-health = pkgs.testers.nixosTest (import ./tests/vpn-health.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {

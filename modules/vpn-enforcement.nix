@@ -401,6 +401,17 @@ in
       '';
     };
 
+    tunnelsPackage = lib.mkOption {
+      type = lib.types.package;
+      internal = true;
+      readOnly = true;
+      default = tunnelList;
+      description = ''
+        The tunnel enumerator, exposed so another module asks this one what
+        counts as a live tunnel instead of deciding for itself.
+      '';
+    };
+
     dnsServers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [

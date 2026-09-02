@@ -41,8 +41,9 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.<test>` — CI builds every check the flake defines | VM boot + service behaviour + tool presence (needs KVM) | ~10 min |
 
-Seven VM tests exist — `boot`, `security-tools`, `vpn-enforcement`, `shells`,
-`xrdp-session`, `bind-axfr` and `git-credential-helper`. L1 evaluates all of
+Nine VM tests exist — `boot`, `security-tools`, `vpn-enforcement`,
+`vpn-health`, `shells`, `xrdp-session`, `bind-axfr`, `git-credential-helper`
+and `docker`. L1 evaluates all of
 them; CI's L3 step discovers and builds every check the flake defines, so a
 test that is wired in cannot fail to run. Run one on its own with
 `nix build .#checks.x86_64-linux.vpn-enforcement`.
