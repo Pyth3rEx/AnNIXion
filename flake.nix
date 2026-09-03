@@ -262,6 +262,9 @@
           yq-go
           # tests/dns-axfr.sh needs dig; runners do not reliably carry it.
           dnsutils
+          # Builds the release SBOM, in CI and by hand: the same pinned version
+          # either way, so a locally generated SBOM matches the published one.
+          sbomnix
           nil
           nix-output-monitor
         ];

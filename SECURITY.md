@@ -77,6 +77,29 @@ and mirrored in the GitHub release tag.
 
 ---
 
+## What a release tells you about itself
+
+Every release carries `annixion-<version>.cdx.json`, a CycloneDX SBOM listing
+every package and version in the closure, and `SHA256SUMS` over both it and the
+ISO. The closure is fixed by the tag's `flake.lock`, so this is exact rather
+than approximate — and it is captured at release time because it stops being
+recoverable later, once binary-cache entries are collected and upstream sources
+move.
+
+It is a fact, not a verdict. Nothing here claims the release is free of known
+vulnerabilities; the SBOM is what lets you check that yourself, against a
+scanner you chose:
+
+```bash
+grype sbom:annixion-<version>.cdx.json
+```
+
+Note what such a scan does *not* know: it sees what is present, not what is
+reachable. Findings against services this system disables (see the hardening
+notes above) are still findings, and some CPE ranges upstream are simply stale.
+
+---
+
 ## Reporting a vulnerability
 
 If you find a security issue **in AnNIXion's configuration or tooling** (not in

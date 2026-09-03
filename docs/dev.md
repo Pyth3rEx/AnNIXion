@@ -26,7 +26,7 @@ cd ~/.dotfiles
 nix develop
 ```
 
-The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `jq`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
+The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `jq`, `sbomnix`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
 
 If you are running AnNIXion, your real `hardware-configuration.nix` is already present and the `AnNIXion` configuration is offered alongside it.
 
@@ -46,6 +46,22 @@ Seven VM tests exist — `boot`, `security-tools`, `vpn-enforcement`, `shells`,
 them; CI's L3 step discovers and builds every check the flake defines, so a
 test that is wired in cannot fail to run. Run one on its own with
 `nix build .#checks.x86_64-linux.vpn-enforcement`.
+
+**Release SBOM**
+
+The `check` job also builds the CycloneDX SBOM that ships with each release,
+because it is the job that has already built the closure and separate jobs share
+no Nix store. `iso` downloads it as an artifact and publishes it. Generate the
+same file locally:
+
+```bash
+.github/scripts/generate-sbom.sh --out-dir /tmp
+```
+
+It scans `AnNIXion-ci` — a couple of minutes on a warm store, ~2300 components
+and ~3 MB of JSON. Pass a different target with `SBOM_TARGET`; it must be a
+flakeref, since sbomnix given a bare store path cannot reach nixmeta and quietly
+drops every licence.
 
 **[testing.md](testing.md) covers the suite itself** — what each test is for,
 which kind a change needs, and how to wire a new one in. Every feature ships
