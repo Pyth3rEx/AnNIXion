@@ -24,6 +24,7 @@ fi
 # carries the finding and package counts, and those changing is exactly the
 # thing worth committing.
 normalise() {
+  # shellcheck disable=SC2016  # the backticks are markdown, not a substitution
   sed -E 's/`[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} UTC`/`TIMESTAMP`/g' "$1"
 }
 
