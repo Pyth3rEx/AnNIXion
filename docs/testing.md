@@ -90,6 +90,7 @@ a path a module chose.
 | `tests/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
 | `tests/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
 | `tests/pr-column.sh` | Which board column a pull request lands in as it opens, moves in and out of draft, or is closed unmerged — and that `project.yml` still receives those events. |
+| `tests/sbom.sh` | That the release SBOM is generated, checked and published — and that the ways it degrades silently are refused: a store path in place of a flakeref, a document with no components, one where no component carries a licence. Drives the real script with `sbomnix` stubbed. |
 | `tests/dns-axfr.sh` | That a zone transfer actually leaves this machine, and that an intercepting resolver is named as such rather than read as a locked-down zone. **The one test that uses the network.** |
 
 **VM tests — L3**

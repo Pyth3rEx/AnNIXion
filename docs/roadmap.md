@@ -265,6 +265,9 @@ Everything below is what remains; the next pass gets its own branch.
   - [ ] Verify system does not contact unknown hosts on boot
   - [ ] Baseline network traffic analysis
   - [ ] Document all default network connections and how to disable them
+  - [x] Publish a CycloneDX SBOM as a release asset — what is in the closure, captured at release time, while it is still knowable
+  - [ ] Weekly-regenerated CVE status page over that SBOM, linked from each release
+  - [ ] `nix run .#cve-audit` — scan the running system for known CVEs
 
 ---
 
@@ -280,7 +283,7 @@ Everything below is what remains; the next pass gets its own branch.
 - [x] Versioned releases with tagged ISOs (semantic versioning via `VERSION` file)
 - [ ] Release notes per version
 - [x] GitHub Actions CI — flake eval, system closure build, VM tests, ISO build + size gate, release publish
-- [ ] Sign the ISO in CI — publish `SHA256SUMS` and a detached GPG signature over it, signing key in Actions secrets, public key committed and fingerprint in the README. Today the release job uploads the raw ISO with no checksum and no signature
+- [ ] Sign the ISO in CI — a detached GPG signature over `SHA256SUMS`, signing key in Actions secrets, public key committed and fingerprint in the README. The release job now publishes `SHA256SUMS` over the ISO and the SBOM; the signature is what is still missing
 - [ ] Document UEFI as a requirement — the ISO is a hybrid image and boots happily in legacy mode, then fails at the very end of the install with the disk already wiped. Requirements section, the Rufus setting that produces a UEFI stick (`GPT` + `UEFI (non CSM)`), the firmware settings to change, and the `ls /sys/firmware/efi` check
 - [ ] Document the one BIOS path that does work: an existing BIOS-booted NixOS install can override `boot.loader.systemd-boot.enable` (it is `mkDefault`) and keep GRUB — disabling systemd-boot explicitly is required or NixOS trips its one-boot-loader assertion
 

@@ -4,3 +4,8 @@ hardware-configuration.nix
 .claude/
 assets/certs/
 __pycache__/
+result-toplevel
+result-iso
+# sbomnix drops its request cache in the working directory, whatever it is.
+http_cache.sqlite
+annixion-*.cdx.json

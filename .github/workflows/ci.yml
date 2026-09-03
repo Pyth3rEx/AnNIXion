@@ -76,6 +76,7 @@ jobs:
           nix develop --command bash tests/workflow-permissions.sh
           nix develop --command bash tests/stale-reviews.sh
           nix develop --command bash tests/pr-column.sh
+          nix develop --command bash tests/sbom.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
@@ -135,10 +136,12 @@ jobs:
       # resolves and all modules compose without conflicts.
       # AnNIXion-ci is the real config with ci/hardware-stub.nix as its disk
       # layout — the only part CI cannot know.
+      # The out-link is what the SBOM step is taken from: --no-link leaves the
+      # closure eligible for collection with nothing naming it.
       - name: "[L2] System closure build"
         run: |
           nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
-            --print-build-logs --no-link
+            --print-build-logs --out-link result-toplevel
 
       # L3 — VM tests: boot + service behaviour, security tool presence.
       # Runs in QEMU via the NixOS test framework.
@@ -151,6 +154,20 @@ jobs:
           printf 'running %s VM test(s): %s\n' "${#checks[@]}" "${checks[*]}"
           nix build "${checks[@]/#/.#checks.x86_64-linux.}" \
             --print-build-logs --no-link
+
+      # Generated here rather than in `iso` because separate jobs share no Nix
+      # store, and this one has already built the closure the SBOM describes.
+      - name: "[L2] Release SBOM"
+        env:
+          SBOM_DIR: ${{ runner.temp }}/sbom
+        run: nix develop --command bash .github/scripts/generate-sbom.sh --out-dir "$SBOM_DIR"
+
+      - name: Upload the SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: ${{ runner.temp }}/sbom/*.cdx.json
+          if-no-files-found: error
 
   iso:
     name: Build ISO
@@ -273,6 +290,26 @@ jobs:
           fi
           echo "ISO size: ${ISO_MB} MB / ${MAX_MB} MB limit ✓"
 
+      # Built in `check`, where the closure lives. This job only publishes it.
+      - name: Download the SBOM
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: ${{ runner.temp }}/sbom
+
+      - name: Locate SBOM
+        id: sbom
+        env:
+          SBOM_DIR: ${{ runner.temp }}/sbom
+        run: |
+          SBOM=$(find "$SBOM_DIR" -name "*.cdx.json" -type f | head -1)
+          if [ -z "$SBOM" ]; then
+            echo "::error::No .cdx.json under the downloaded artifact — the check job published no SBOM."
+            exit 1
+          fi
+          echo "path=$SBOM" >> "$GITHUB_OUTPUT"
+          echo "Found SBOM: $SBOM ($(du -sh "$SBOM" | cut -f1), $(jq '.components | length' "$SBOM") components)"
+
       - name: Read version
         id: version
         run: |
@@ -331,6 +368,7 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
           TITLE: ${{ steps.version.outputs.title }}
           ISO_PATH: ${{ steps.iso.outputs.path }}
+          SBOM_PATH: ${{ steps.sbom.outputs.path }}
           # Via env, never interpolated into the shell, exactly as pr-form.yml
           # takes the body: ${{ }} is pasted in before bash runs, so backticks
           # in a changelog would be command substitution rather than markup.
@@ -350,6 +388,15 @@ jobs:
             ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
             --jq '.body' 2>/dev/null || echo "")
 
+          # One checksum file over every asset, so the detached signature
+          # planned for Phase 11 covers the SBOM as well as the ISO. Bare
+          # filenames: `sha256sum -c SHA256SUMS` runs where they were downloaded.
+          SUMS="$RUNNER_TEMP/SHA256SUMS"
+          : > "$SUMS"
+          for asset in "$ISO_PATH" "$SBOM_PATH"; do
+            (cd "$(dirname "$asset")" && sha256sum "$(basename "$asset")") >> "$SUMS"
+          done
+
           NOTES_FILE=$(mktemp)
           {
             printf '%s\n' "$CHANGELOG"
@@ -358,10 +405,14 @@ jobs:
             fi
             printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
             printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
-            printf 'Built from commit `%s`.\n' "$COMMIT_SHA"
+            printf '\n`%s` is the CycloneDX SBOM for this release — every package and version in the closure, exactly as shipped. Check the downloads against `SHA256SUMS` with `sha256sum -c SHA256SUMS`.\n' \
+              "$(basename "$SBOM_PATH")"
+            printf '\nBuilt from commit `%s`.\n' "$COMMIT_SHA"
           } > "$NOTES_FILE"
 
           gh release create "$TAG" \
             --title "$TITLE" \
             --notes-file "$NOTES_FILE" \
-            "$ISO_PATH"
+            "$ISO_PATH" \
+            "$SBOM_PATH" \
+            "$SUMS"
