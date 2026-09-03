@@ -272,7 +272,9 @@
           nix-output-monitor
         ];
         shellHook = ''
-          echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check."
+          # stderr, not stdout: scripts run as 'nix develop --command ... > file'
+          # would otherwise find this banner at the top of their output.
+          echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check." >&2
         '';
       };
     };
