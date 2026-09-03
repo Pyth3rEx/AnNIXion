@@ -110,11 +110,31 @@ cyclonedx_or_die "$BUILDTIME" buildtime
 # --buildtime emits runtime_and_buildtime: the build closure contains the
 # runtime one. If that stops holding, the readable page is comparing two sets
 # that no longer nest, and its "does not ship" half is wrong.
+#
+# A runtime component counts as present if either its bom-ref (deriver) or any
+# of its nix:output_path values (a multi-output derivation carries one per
+# output) turns up on the buildtime side. bom-ref alone is not enough: a
+# fixed-output derivation (a plain URL fetch, burpsuite.jar among them) can
+# have more than one valid deriver for the same output — two derivations
+# differing only in, say, the curl used to fetch it still hash to the same
+# fixed output — and Nix's local store records whichever deriver it last saw,
+# which need not be the one this specific buildtime graph reaches even though
+# the output itself demonstrably is there. Output path alone is not enough
+# either: it only names one output of what may be several, so two components
+# for the same multi-output derivation can legitimately carry disjoint
+# single-output paths. Either match is sufficient; only failing both means
+# the runtime output is actually missing from the build closure.
 runtime_n=$(jq '.components | length' "$RUNTIME")
 buildtime_n=$(jq '.components | length' "$BUILDTIME")
-missing=$(jq -n --slurpfile r "$RUNTIME" --slurpfile b "$BUILDTIME" \
-  '($b[0].components | map(.["bom-ref"])) as $have
-   | [$r[0].components[] | select(.["bom-ref"] as $x | $have | index($x) | not)] | length')
+missing=$(jq -n --slurpfile r "$RUNTIME" --slurpfile b "$BUILDTIME" '
+  def outpaths: (.properties // []) | [.[] | select(.name == "nix:output_path") | .value];
+  ($b[0].components | map(.["bom-ref"]) | reduce .[] as $x ({}; .[$x] = true)) as $have_ref
+  | ($b[0].components | map(outpaths) | add // [] | reduce .[] as $x ({}; .[$x] = true)) as $have_out
+  | [$r[0].components[] | select(
+      ($have_ref[.["bom-ref"]] | not)
+      and ((outpaths | any(. as $p | $have_out[$p])) | not)
+    )] | length
+')
 if [ "$missing" -ne 0 ]; then
   printf 'generate-sbom: %s runtime component(s) are absent from the build closure — the two SBOMs no longer nest\n' \
     "$missing" >&2
