@@ -81,6 +81,36 @@ count as the installed closure produces a large frightening number that means
 nothing. `render-supply-chain.sh` enforces the split; `tests/supply-chain.sh`
 checks that it holds.
 
+**Security pages**
+
+`cve-status.yml` runs weekly and on demand. It builds the closure, scans it with
+`vulnxscan` against the flakeref — not the SBOM, since `vulnix` needs live store
+paths and is the only engine that sees some findings — resolves licences and
+maintainers from nixpkgs `meta`, and writes four files to `docs/security/`.
+
+It commits only when the pages say something new. The scan stamps every page
+with its own run time, so a plain `git diff` is never empty;
+`security-pages-changed.sh` neutralises just the timestamp and compares the
+rest. The committed history is meant to read as a CVE timeline, which it cannot
+do if every week logs a clock update.
+
+`ci.yml` carries `paths-ignore` for `docs/security/**`. Its `iso` job fires on
+any push to `main` with no path filter, so without that guard each weekly commit
+would start a three-hour ISO build to republish a tag that already exists.
+
+Regenerate locally against a scan you already have:
+
+```bash
+.github/scripts/render-security-pages.py \
+  --triage vulns.triage.csv --vulns vulns.csv \
+  --provenance <(.github/scripts/package-provenance.sh --triage vulns.triage.csv) \
+  --apps <(.github/scripts/installed-apps.sh) \
+  --sbom annixion-<v>.cdx.json --out-dir docs/security --coverage reduced
+```
+
+Pass `--coverage reduced` for anything scanned from an SBOM rather than a live
+closure; the page says so in its own caveats.
+
 **[testing.md](testing.md) covers the suite itself** — what each test is for,
 which kind a change needs, and how to wire a new one in. Every feature ships
 with its tests.

@@ -268,7 +268,7 @@ Everything below is what remains; the next pass gets its own branch.
   - [x] Publish a CycloneDX SBOM as a release asset — what is in the closure, captured at release time, while it is still knowable
   - [x] Publish the build closure alongside it, and a readable page splitting what runs from what merely built it
   - [x] Measure closure size and store-path count at release time rather than quoting a figure from a past one
-  - [ ] Weekly-regenerated CVE status page over that SBOM, linked from each release
+  - [x] Weekly-regenerated CVE status page over that SBOM, linked from each release
   - [ ] `nix run .#cve-audit` — scan the running system for known CVEs
 
 ---

@@ -7,27 +7,56 @@
 # five named maintainers is a different risk from the same finding in one with
 # none, and "unmaintained" is a fact worth printing rather than an empty cell.
 #
-#   package-provenance.sh <names-file>   one package name per line
+#   package-provenance.sh [--names FILE] [--triage CSV] [--sbom CDX] ...
+#
+# Names accumulate from every source given. The two scanners disagree about what
+# a package is called — vulnxscan reports CPE product names, the SBOM reports
+# nix attribute names — so a page covering both needs both, deduplicated.
 #
 # Emits JSON on stdout: { "<name>": { license, maintainers[], homepage } | null }.
-# null means the name did not resolve to a nixpkgs attribute — vulnxscan reports
-# CPE product names, which do not all match attribute paths.
+# null means the name did not resolve to a nixpkgs attribute.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-NAMES_FILE=${1:?usage: package-provenance.sh <names-file>}
-[ -r "$NAMES_FILE" ] || {
-  printf 'package-provenance: cannot read %s\n' "$NAMES_FILE" >&2
+NAMES=$(mktemp)
+trap 'rm -f "$NAMES" "${EXPR:-}"' EXIT
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --names)
+      cat "${2:?--names needs a file}" >>"$NAMES"
+      shift 2
+      ;;
+    --triage)
+      # Column 3 of vulnxscan's triage CSV, which is quoted.
+      python3 -c 'import csv,sys
+for r in csv.DictReader(open(sys.argv[1], newline="", encoding="utf-8")):
+    if r.get("package"): print(r["package"])' "${2:?--triage needs a file}" >>"$NAMES"
+      shift 2
+      ;;
+    --sbom)
+      jq -r '.components[].name // empty' "${2:?--sbom needs a file}" >>"$NAMES"
+      shift 2
+      ;;
+    *)
+      # A bare path stays supported: it is how the fixtures drive this.
+      cat "$1" >>"$NAMES"
+      shift
+      ;;
+  esac
+done
+
+if [ ! -s "$NAMES" ]; then
+  printf 'package-provenance: no package names given\n' >&2
   exit 2
-}
+fi
 
 # One evaluation for every package rather than one per package: nix pays the
 # nixpkgs eval cost once, and a scan flagging 200 packages would otherwise take
 # minutes of repeated startup.
-NAMES_JSON=$(jq -R -s 'split("\n") | map(select(length > 0)) | unique' <"$NAMES_FILE")
+NAMES_JSON=$(jq -R -s 'split("\n") | map(select(length > 0)) | unique' <"$NAMES")
 
 EXPR=$(mktemp)
-trap 'rm -f "$EXPR"' EXIT
 cat >"$EXPR" <<NIX
 let
   flake = builtins.getFlake "path:${ROOT}";
