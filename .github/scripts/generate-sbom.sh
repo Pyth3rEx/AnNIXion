@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-# Builds the CycloneDX SBOM published as a release asset, so an operator can
-# answer "what is actually in this ISO" without rebuilding the closure — which
-# stops being possible once cache entries are collected and sources move.
+# Builds the supply-chain artifacts published with each release.
 #
-#   generate-sbom.sh [--out-dir DIR]   writes annixion-<VERSION>.cdx.json
-#   generate-sbom.sh --name            prints that filename and touches nothing
+# Two SBOMs, deliberately not merged. The runtime one is the operational
+# artifact: it is what a vulnerability scanner should read, and a finding in it
+# is a finding that can block an operator. The buildtime one is a superset —
+# every tool, source archive and patch that touched the build, most of which
+# never ships — and is a reference rather than a verdict. Merging them would
+# put compiler CVEs on the operator's page, where they are noise.
+#
+#   generate-sbom.sh [--out-dir DIR]   writes both SBOMs and the readable index
+#   generate-sbom.sh --name            lists the assets, one per line, no network
 #
 # --name takes no network, so tests/sbom.sh can drive the real script.
 set -euo pipefail
@@ -14,10 +19,14 @@ TARGET=${SBOM_TARGET:-"$ROOT#nixosConfigurations.AnNIXion-ci.config.system.build
 VERSION=${SBOM_VERSION:-$(tr -d '\r\n' <"$ROOT/VERSION")}
 OUT_DIR=$PWD
 
-asset_name() { printf 'annixion-%s.cdx.json' "$1"; }
+runtime_name() { printf 'annixion-%s.cdx.json\n' "$1"; }
+buildtime_name() { printf 'annixion-%s.buildtime.cdx.json\n' "$1"; }
+page_name() { printf 'annixion-%s.supply-chain.md\n' "$1"; }
 
 if [ "${1:-}" = "--name" ]; then
-  asset_name "$VERSION"
+  runtime_name "$VERSION"
+  buildtime_name "$VERSION"
+  page_name "$VERSION"
   exit 0
 fi
 
@@ -47,7 +56,9 @@ esac
 
 mkdir -p "$OUT_DIR"
 OUT_DIR=$(cd "$OUT_DIR" && pwd)
-CDX="$OUT_DIR/$(asset_name "$VERSION")"
+RUNTIME="$OUT_DIR/$(runtime_name "$VERSION")"
+BUILDTIME="$OUT_DIR/$(buildtime_name "$VERSION")"
+PAGE="$OUT_DIR/$(page_name "$VERSION")"
 
 # sbomnix writes sbom.spdx.json, sbom.csv and a ~12 MB http_cache.sqlite into
 # the working directory whatever was asked for. Run it somewhere disposable and
@@ -55,33 +66,97 @@ CDX="$OUT_DIR/$(asset_name "$VERSION")"
 SCRATCH=$(mktemp -d)
 trap 'rm -rf "$SCRATCH"' EXIT
 
-printf 'Scanning %s\n' "$TARGET"
-(
-  cd "$SCRATCH"
-  sbomnix "$TARGET" \
-    --cdx "$CDX" \
-    --csv "$SCRATCH/sbom.csv" \
-    --spdx "$SCRATCH/sbom.spdx.json"
-)
+scan() {
+  local out=$1
+  shift
+  (
+    cd "$SCRATCH"
+    sbomnix "$TARGET" "$@" \
+      --cdx "$out" \
+      --csv "$SCRATCH/sbom.csv" \
+      --spdx "$SCRATCH/sbom.spdx.json"
+  )
+}
 
-if ! jq -e '.bomFormat == "CycloneDX"' "$CDX" >/dev/null 2>&1; then
-  printf 'generate-sbom: %s is not a CycloneDX document\n' "$CDX" >&2
-  exit 1
-fi
+cyclonedx_or_die() {
+  local f=$1 label=$2
+  if ! jq -e '.bomFormat == "CycloneDX"' "$f" >/dev/null 2>&1; then
+    printf 'generate-sbom: the %s SBOM is not a CycloneDX document\n' "$label" >&2
+    exit 1
+  fi
+  if [ "$(jq '.components | length' "$f")" -eq 0 ]; then
+    printf 'generate-sbom: the %s SBOM lists no components\n' "$label" >&2
+    exit 1
+  fi
+}
 
-components=$(jq '.components | length' "$CDX")
-if [ "$components" -eq 0 ]; then
-  printf 'generate-sbom: %s lists no components\n' "$CDX" >&2
-  exit 1
-fi
+printf 'Scanning %s (runtime)\n' "$TARGET"
+scan "$RUNTIME"
+cyclonedx_or_die "$RUNTIME" runtime
 
 # The degraded fallback is silent otherwise: a well-formed SBOM, right component
-# count, no licences on any of them.
-if [ "$(jq '[.components[] | select(.licenses != null and (.licenses | length > 0))] | length' "$CDX")" -eq 0 ]; then
-  printf 'generate-sbom: no component in %s carries a licence — sbomnix fell back to its minimum attribute set\n' \
-    "$CDX" >&2
+# count, no licences on any of them. Only the runtime scan is held to this —
+# two thirds of the build closure is bootstrap plumbing, patches and tarballs
+# that legitimately carry no licence.
+if [ "$(jq '[.components[] | select(.licenses != null and (.licenses | length > 0))] | length' "$RUNTIME")" -eq 0 ]; then
+  printf 'generate-sbom: no component in the runtime SBOM carries a licence — sbomnix fell back to its minimum attribute set\n' >&2
   exit 1
 fi
 
-printf 'Wrote %s (%s components, %s)\n' \
-  "$CDX" "$components" "$(du -h "$CDX" | cut -f1)"
+printf 'Scanning %s (buildtime)\n' "$TARGET"
+scan "$BUILDTIME" --buildtime
+cyclonedx_or_die "$BUILDTIME" buildtime
+
+# --buildtime emits runtime_and_buildtime: the build closure contains the
+# runtime one. If that stops holding, the readable page is comparing two sets
+# that no longer nest, and its "does not ship" half is wrong.
+runtime_n=$(jq '.components | length' "$RUNTIME")
+buildtime_n=$(jq '.components | length' "$BUILDTIME")
+missing=$(jq -n --slurpfile r "$RUNTIME" --slurpfile b "$BUILDTIME" \
+  '($b[0].components | map(.["bom-ref"])) as $have
+   | [$r[0].components[] | select(.["bom-ref"] as $x | $have | index($x) | not)] | length')
+if [ "$missing" -ne 0 ]; then
+  printf 'generate-sbom: %s runtime component(s) are absent from the build closure — the two SBOMs no longer nest\n' \
+    "$missing" >&2
+  exit 1
+fi
+
+# Recomputed every release rather than quoted from a past one: the closure only
+# ever moves, and a stale figure in a release body is worse than none.
+STORE_PATH=$(nix path-info "$TARGET" | head -1)
+CLOSURE_PATHS=$(nix path-info -r "$STORE_PATH" | wc -l)
+CLOSURE_BYTES=$(nix path-info -S --json --json-format 1 "$STORE_PATH" |
+  jq '[.. | objects | select(has("closureSize")) | .closureSize] | first')
+CLOSURE_HUMAN=$(awk -v b="$CLOSURE_BYTES" 'BEGIN {
+  if (b >= 1073741824) printf "%.2f GiB", b / 1073741824; else printf "%.1f MiB", b / 1048576
+}')
+
+# Stamped into the documents themselves, so an archived SBOM still reports the
+# closure it describes once the release body is the only other record.
+stamp() {
+  local f=$1 tmp
+  tmp=$(mktemp)
+  jq --arg v "$VERSION" \
+    --arg paths "$CLOSURE_PATHS" \
+    --arg bytes "$CLOSURE_BYTES" \
+    --arg human "$CLOSURE_HUMAN" \
+    --arg store "$STORE_PATH" '
+    .metadata.properties = ((.metadata.properties // []) + [
+      { name: "annixion:version",             value: $v },
+      { name: "annixion:closure_store_path",  value: $store },
+      { name: "annixion:closure_store_paths", value: $paths },
+      { name: "annixion:closure_size_bytes",  value: $bytes },
+      { name: "annixion:closure_size",        value: $human }
+    ])' "$f" >"$tmp"
+  mv "$tmp" "$f"
+}
+stamp "$RUNTIME"
+stamp "$BUILDTIME"
+
+bash "$ROOT/.github/scripts/render-supply-chain.sh" \
+  --runtime "$RUNTIME" --buildtime "$BUILDTIME" >"$PAGE"
+
+printf '\nClosure   %s store paths, %s\n' "$CLOSURE_PATHS" "$CLOSURE_HUMAN"
+printf 'Runtime   %-8s %s components\n' "$(du -h "$RUNTIME" | cut -f1)" "$runtime_n"
+printf 'Buildtime %-8s %s components\n' "$(du -h "$BUILDTIME" | cut -f1)" "$buildtime_n"
+printf 'Page      %-8s %s\n' "$(du -h "$PAGE" | cut -f1)" "$PAGE"

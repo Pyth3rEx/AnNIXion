@@ -47,21 +47,39 @@ them; CI's L3 step discovers and builds every check the flake defines, so a
 test that is wired in cannot fail to run. Run one on its own with
 `nix build .#checks.x86_64-linux.vpn-enforcement`.
 
-**Release SBOM**
+**Supply-chain artifacts**
 
-The `check` job also builds the CycloneDX SBOM that ships with each release,
-because it is the job that has already built the closure and separate jobs share
-no Nix store. `iso` downloads it as an artifact and publishes it. Generate the
-same file locally:
+The `check` job also builds the three files that ship with each release, because
+it is the job that has already built the closure and separate jobs share no Nix
+store. `iso` downloads them as an artifact and publishes them.
+
+| Asset | What it is |
+|---|---|
+| `annixion-<v>.cdx.json` | CycloneDX SBOM of the **installed** closure. The operational artifact — point scanners here. |
+| `annixion-<v>.buildtime.cdx.json` | The same, plus every build input: toolchains, fetched archives, patches. Provenance, not exposure. |
+| `annixion-<v>.supply-chain.md` | Both of the above rendered as one readable page, in two halves that are never summed. |
+
+Generate all three locally:
 
 ```bash
-.github/scripts/generate-sbom.sh --out-dir /tmp
+.github/scripts/generate-sbom.sh --out-dir /tmp/sbom
 ```
 
-It scans `AnNIXion-ci` — a couple of minutes on a warm store, ~2300 components
-and ~3 MB of JSON. Pass a different target with `SBOM_TARGET`; it must be a
-flakeref, since sbomnix given a bare store path cannot reach nixmeta and quietly
-drops every licence.
+It scans `AnNIXion-ci` twice — once for runtime, once with `--buildtime` — so
+budget a few minutes on a warm store. Pass a different target with
+`SBOM_TARGET`; it must be a flakeref, since sbomnix given a bare store path
+cannot reach nixmeta and quietly drops every licence.
+
+Closure size and store-path count are measured at generation time, stamped into
+both SBOMs as `annixion:closure_*` properties, and read back out by the release
+job. **No figure for these is hardcoded anywhere** — a closure size quoted in
+prose is wrong by the next release and nothing catches it.
+
+The two halves stay apart on purpose. A CVE against a compiler that built the
+image is not running on an operator's machine, and rolling it into the same
+count as the installed closure produces a large frightening number that means
+nothing. `render-supply-chain.sh` enforces the split; `tests/supply-chain.sh`
+checks that it holds.
 
 **[testing.md](testing.md) covers the suite itself** — what each test is for,
 which kind a change needs, and how to wire a new one in. Every feature ships
