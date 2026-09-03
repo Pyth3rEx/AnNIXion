@@ -86,6 +86,7 @@ jobs:
           nix develop --command bash tests/package-provenance.sh
           nix develop --command bash tests/security-pages.sh
           nix develop --command bash tests/cve-status-workflow.sh
+          nix develop --command bash tests/pr-cve-scan.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
