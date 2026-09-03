@@ -265,6 +265,9 @@
           # Builds the release SBOM, in CI and by hand: the same pinned version
           # either way, so a locally generated SBOM matches the published one.
           sbomnix
+          # render-cve-status.py and the form parsers. Arrives transitively with
+          # sbomnix otherwise, which is not something to depend on.
+          python3
           nil
           nix-output-monitor
         ];
