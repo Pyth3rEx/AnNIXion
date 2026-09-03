@@ -37,6 +37,7 @@ fi
 # Shared jq vocabulary. Components are per-derivation, so the same package at
 # the same version can appear several times; the page collapses those and the
 # JSON keeps the fidelity.
+# shellcheck disable=SC2016  # $n and $c are jq bindings, not shell variables
 JQ_DEFS='
   def prop($n): (.metadata.properties // []) | map(select(.name == $n)) | (.[0].value // "");
   def cell: tostring | gsub("\\|"; "\\\\|");
