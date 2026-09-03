@@ -111,6 +111,48 @@ Regenerate locally against a scan you already have:
 Pass `--coverage reduced` for anything scanned from an SBOM rather than a live
 closure; the page says so in its own caveats.
 
+**CVEs a pull request introduces**
+
+The weekly scan describes the release that already shipped, so a package added
+by a pull request is invisible until the following Monday — by which point it is
+in `main`. `cve-pr.yml` closes that gap by scanning only what the branch adds.
+
+It builds both closures, lists them with `nix path-info -r`, and hands the
+difference to `closure-added.py`. The second build is not a second closure's
+worth of work: the two share everything the branch did not touch, and those
+paths are already in the runner's store. Most of the difference is not a package
+either — any configuration change rewrites `etc`, `system-path` and the system
+derivation, and each of those references the whole closure, so letting one
+through would scope the scan straight back to everything. A path has to have a
+name and a version to be kept.
+
+`scan-target.sh` then builds one store path out of the added set, because
+`vulnxscan` takes a single target and the added set is not closed under
+references. It uses `builtins.storePath`, not the paths as text: nix records a
+reference only where the string carrying it has context, and a target built from
+plain text has a closure of one file — it scans clean and reports nothing wrong.
+`tests/pr-cve-scan.sh` builds a real target and checks the references are there.
+
+That target's closure covers the added packages' dependencies too, most of which
+were already in the base. That is the price of keeping `vulnix`, which is
+nix-only and refuses an SBOM; `render-pr-cve.py` filters the findings back down
+to the added packages and reuses the grading and buckets of
+`render-security-pages.py`, so the two never disagree about a severity.
+
+`CVE_PR_THRESHOLD` (default `9.0`) is the CVSS at or above which the check goes
+red; `CVE_PR_MODE=comment` keeps it green and lets the comment be the whole
+signal. A finding repology says does not apply never gates. The comment is
+posted by `cve-pr-comment.yml` on `workflow_run`, for the same reason
+`pr-summary.yml` exists: the `pull_request` token is read-only on a fork and
+cannot comment. It matches the pull request by head SHA against this
+repository's open ones and never reads a number out of the artifact, which a
+fork controls.
+
+The trigger carries a `paths` filter — only a `.nix` file or the lock can move
+the closure, and nothing else is worth two builds. A run skipped by a path
+filter stays pending forever if it is made a required check, so leave it
+advisory or require it through a merge queue.
+
 **[testing.md](testing.md) covers the suite itself** — what each test is for,
 which kind a change needs, and how to wire a new one in. Every feature ships
 with its tests.
