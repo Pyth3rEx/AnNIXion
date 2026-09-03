@@ -6,6 +6,11 @@ on:
   # Pushes only matter on main (system closure + ISO release).
   push:
     branches: [main]
+    # cve-status.yml commits here weekly. The iso job fires on any push to
+    # main with no path filter, so without this every Monday starts a
+    # three-hour ISO build to republish a tag that already exists.
+    paths-ignore:
+      - "docs/security/**"
 
 # Read-only floor for every job. Build ISO raises its own to publish a release;
 # nothing else writes, so nothing else declares more.
@@ -79,6 +84,7 @@ jobs:
           nix develop --command bash tests/sbom.sh
           nix develop --command bash tests/supply-chain.sh
           nix develop --command bash tests/security-pages.sh
+          nix develop --command bash tests/cve-status-workflow.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
@@ -450,6 +456,11 @@ jobs:
             printf -- '- `%s` — the same plus every build input, for provenance. A CVE in here is not running on your machine.\n' \
               "$(basename "$BUILDTIME_PATH")"
             printf -- '- `SHA256SUMS` — verify with `sha256sum -c SHA256SUMS`.\n'
+            # A link, not a number: the CVE set against a frozen closure only
+            # grows, so a count published here is wrong within weeks and wrong
+            # in the flattering direction.
+            printf '\n**Known CVEs in this release:** [live status](https://github.com/%s/blob/main/docs/security/README.md), regenerated weekly.\n' \
+              "$REPO"
             printf '\nBuilt from commit `%s`.\n' "$COMMIT_SHA"
           } > "$NOTES_FILE"
 
