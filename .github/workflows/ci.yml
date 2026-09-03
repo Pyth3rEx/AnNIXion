@@ -77,6 +77,7 @@ jobs:
           nix develop --command bash tests/stale-reviews.sh
           nix develop --command bash tests/pr-column.sh
           nix develop --command bash tests/sbom.sh
+          nix develop --command bash tests/supply-chain.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
@@ -156,17 +157,19 @@ jobs:
             --print-build-logs --no-link
 
       # Generated here rather than in `iso` because separate jobs share no Nix
-      # store, and this one has already built the closure the SBOM describes.
-      - name: "[L2] Release SBOM"
+      # store, and this one has already built the closure they describe. The
+      # closure metrics are read off the live store, which is the other reason
+      # L2 above keeps its out-link.
+      - name: "[L2] Supply-chain artifacts"
         env:
           SBOM_DIR: ${{ runner.temp }}/sbom
         run: nix develop --command bash .github/scripts/generate-sbom.sh --out-dir "$SBOM_DIR"
 
-      - name: Upload the SBOM
+      - name: Upload the supply-chain artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: ${{ runner.temp }}/sbom/*.cdx.json
+          path: ${{ runner.temp }}/sbom/
           if-no-files-found: error
 
   iso:
@@ -290,25 +293,47 @@ jobs:
           fi
           echo "ISO size: ${ISO_MB} MB / ${MAX_MB} MB limit ✓"
 
-      # Built in `check`, where the closure lives. This job only publishes it.
-      - name: Download the SBOM
+      # Built in `check`, where the closure lives. This job only publishes them.
+      - name: Download the supply-chain artifacts
         uses: actions/download-artifact@v4
         with:
           name: sbom
           path: ${{ runner.temp }}/sbom
 
-      - name: Locate SBOM
+      - name: Locate the supply-chain artifacts
         id: sbom
         env:
           SBOM_DIR: ${{ runner.temp }}/sbom
         run: |
-          SBOM=$(find "$SBOM_DIR" -name "*.cdx.json" -type f | head -1)
-          if [ -z "$SBOM" ]; then
-            echo "::error::No .cdx.json under the downloaded artifact — the check job published no SBOM."
-            exit 1
-          fi
-          echo "path=$SBOM" >> "$GITHUB_OUTPUT"
-          echo "Found SBOM: $SBOM ($(du -sh "$SBOM" | cut -f1), $(jq '.components | length' "$SBOM") components)"
+          set -u
+          # The generator is the single source of truth for the asset names, so
+          # a rename cannot leave this step looking for the old ones.
+          mapfile -t assets < <(.github/scripts/generate-sbom.sh --name)
+          for a in "${assets[@]}"; do
+            if [ ! -s "$SBOM_DIR/$a" ]; then
+              echo "::error::$a is missing from the artifact the check job published."
+              ls -la "$SBOM_DIR" || true
+              exit 1
+            fi
+          done
+          {
+            echo "runtime=$SBOM_DIR/${assets[0]}"
+            echo "buildtime=$SBOM_DIR/${assets[1]}"
+            echo "page=$SBOM_DIR/${assets[2]}"
+          } >> "$GITHUB_OUTPUT"
+
+          # Recomputed each release by the generator and carried in the SBOM, so
+          # the release body never quotes a figure from a previous closure.
+          prop() {
+            jq -r --arg n "$1" '(.metadata.properties // [])
+              | map(select(.name == $n)) | (.[0].value // "")' "$SBOM_DIR/${assets[0]}"
+          }
+          {
+            echo "paths=$(prop annixion:closure_store_paths)"
+            echo "size=$(prop annixion:closure_size)"
+            echo "components=$(jq '.components | length' "$SBOM_DIR/${assets[0]}")"
+            echo "build_components=$(jq '.components | length' "$SBOM_DIR/${assets[1]}")"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Read version
         id: version
@@ -368,7 +393,13 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
           TITLE: ${{ steps.version.outputs.title }}
           ISO_PATH: ${{ steps.iso.outputs.path }}
-          SBOM_PATH: ${{ steps.sbom.outputs.path }}
+          SBOM_PATH: ${{ steps.sbom.outputs.runtime }}
+          BUILDTIME_PATH: ${{ steps.sbom.outputs.buildtime }}
+          PAGE_PATH: ${{ steps.sbom.outputs.page }}
+          CLOSURE_PATHS: ${{ steps.sbom.outputs.paths }}
+          CLOSURE_SIZE: ${{ steps.sbom.outputs.size }}
+          COMPONENTS: ${{ steps.sbom.outputs.components }}
+          BUILD_COMPONENTS: ${{ steps.sbom.outputs.build_components }}
           # Via env, never interpolated into the shell, exactly as pr-form.yml
           # takes the body: ${{ }} is pasted in before bash runs, so backticks
           # in a changelog would be command substitution rather than markup.
@@ -393,7 +424,7 @@ jobs:
           # filenames: `sha256sum -c SHA256SUMS` runs where they were downloaded.
           SUMS="$RUNNER_TEMP/SHA256SUMS"
           : > "$SUMS"
-          for asset in "$ISO_PATH" "$SBOM_PATH"; do
+          for asset in "$ISO_PATH" "$SBOM_PATH" "$BUILDTIME_PATH" "$PAGE_PATH"; do
             (cd "$(dirname "$asset")" && sha256sum "$(basename "$asset")") >> "$SUMS"
           done
 
@@ -405,8 +436,19 @@ jobs:
             fi
             printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
             printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
-            printf '\n`%s` is the CycloneDX SBOM for this release — every package and version in the closure, exactly as shipped. Check the downloads against `SHA256SUMS` with `sha256sum -c SHA256SUMS`.\n' \
+            printf '\n---\n\n## What is in this release\n\n'
+            printf 'Measured on this closure, not carried over from a previous one.\n\n'
+            printf '| | |\n|---|---|\n'
+            printf '| Installed closure | %s store paths, %s |\n' "$CLOSURE_PATHS" "$CLOSURE_SIZE"
+            printf '| Packages on the system | %s |\n' "$COMPONENTS"
+            printf '| Including what built it | %s |\n\n' "$BUILD_COMPONENTS"
+            printf -- '- `%s` — the supply chain as a page: what runs, and separately what built it.\n' \
+              "$(basename "$PAGE_PATH")"
+            printf -- '- `%s` — CycloneDX SBOM of the installed closure. **This is the one to scan.**\n' \
               "$(basename "$SBOM_PATH")"
+            printf -- '- `%s` — the same plus every build input, for provenance. A CVE in here is not running on your machine.\n' \
+              "$(basename "$BUILDTIME_PATH")"
+            printf -- '- `SHA256SUMS` — verify with `sha256sum -c SHA256SUMS`.\n'
             printf '\nBuilt from commit `%s`.\n' "$COMMIT_SHA"
           } > "$NOTES_FILE"
 
@@ -415,4 +457,6 @@ jobs:
             --notes-file "$NOTES_FILE" \
             "$ISO_PATH" \
             "$SBOM_PATH" \
+            "$BUILDTIME_PATH" \
+            "$PAGE_PATH" \
             "$SUMS"
