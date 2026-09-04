@@ -6,7 +6,7 @@ an icon, a wallpaper, a theme or any user-facing asset.
 
 This file is the normative reference and is written for whoever is building the
 thing. [visual-identity.pdf](visual-identity.pdf) is the same system as an
-18-page design board for 0.4.0 "Nebula", written for a design audience: the
+19-page design board for 0.4.0 "Nebula", written for a design audience: the
 mission, the lockup, the specimen, the full mark set and the eight laws, with
 the implementation left here. It is regenerated from a built icon theme by
 `scripts/identity-board.sh`, which refuses to print if any page has outgrown
@@ -35,6 +35,7 @@ alone, which appears once per surface and never inside a sentence.
 | Descriptor | OFFENSIVE SECURITY DISTRIBUTION, boxed in a hairline red rule |
 | Tagline | "The environment for operators who refuse to wing it" — README and release notes only, never the lockup |
 | Logo | Nix snowflake under a datamosh glitch, `assets/branding/AnNIXion.png` |
+| Banner | The lockup beside the logo on the void ground, `assets/branding/banner.png` — generated, see below |
 | Launcher mark | The same snowflake drawn to the mark rules, `annixion-logo` |
 | Codename | One word in `RELEASE_NAME` beside the number in `VERSION` |
 
@@ -288,7 +289,7 @@ cannot, change the shape rather than adding detail.
 ### Stock icon names
 
 A tool packaged with its own `.desktop` entry asks for the icon name that entry
-declares, not for ours, and `home/desktop/plasma.nix` pins those entries deliberately —
+declares, not for ours, and `home/desktop/plasma/` pins those entries deliberately —
 Plasma matches a window to its launcher by class, and only the stock name
 resolves. A mark named `annixion-<tool>` is therefore never consulted for them:
 Konsole asks for `utilities-terminal`, Dolphin for `org.kde.dolphin`, and both
@@ -329,7 +330,7 @@ true rather than decorating.
 |---|---|---|
 | Boot loader | themed | systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash. `system/branding.nix` |
 | Login (SDDM) | themed | Breeze's greeter rebranded through `theme.conf` alone — no QML of our own |
-| Lock screen | themed | `wallpaper_2.png` via `home/desktop/plasma.nix:36` |
+| Lock screen | themed | `wallpaper_2.png` via `home/desktop/plasma/:36` |
 | Desktop | themed | `wallpaper_1.png`, `preserveAspectFit` on pure black |
 | Panel | themed | 32px, `annixion-logo` as launcher icon |
 | Application menu | themed | 46 entries across 33 categories, 81 marks |
@@ -425,6 +426,21 @@ not teaching.
 
 ## How it is built
 
+The banner is rendered by `scripts/banner.sh`, not drawn. It builds the lockup
+from the rules on this page — AN and ION as small capitals at 0.62em, NIX full
+size in the signature red, 0.30em tracking at light weight, the descriptor boxed
+in a hairline rule — so the banner cannot show an identity that is not the
+documented one. The face is pinned to the store rather than taken from whatever
+fontconfig has installed, because a fallback face is not obvious until it ships.
+
+It renders on true black, which is why nothing has to key a background shade out
+before the ISO splashes drop it onto their own ground.
+
+A render gate follows the print: a missing font, a broken image or a CSS typo
+all produce a PNG of the right size that is simply wrong, and none of them fail
+the render. The gate asserts the signature red reached the canvas and that the
+canvas is not near-blank.
+
 `catalog/` holds one file per mark — a class and the 24-grid drawing, beside
 the package and menu entry of the same tool. Drawings worn by more than one
 mark are bound once in `catalog/bodies.nix` and referenced by name, so the four
@@ -435,7 +451,7 @@ emits an `index.theme` inheriting `Slot-Dark-Icons`, `breeze-dark`, `Adwaita`
 and `hicolor`. Anything the set does not draw still falls back to a real icon.
 
 `home/` joins that theme with `SlotIcons` into the single directory
-`xdg.dataFile."icons"` owns, and `home/desktop/plasma.nix` selects `AnNIXion`.
+`xdg.dataFile."icons"` owns, and `home/desktop/plasma/` selects `AnNIXion`.
 
 Reclassifying a tool is a one-word change to its `class`. Redrawing one is a
 change to its `body` — or, for a family member, to the shared body every

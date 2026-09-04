@@ -27,137 +27,240 @@
 
 ---
 
-AnNIXion is a NixOS-based offensive security distribution for red teamers, OSINT
-practitioners, and persona operators. Every tool, browser profile, proxy rule and
-desktop shortcut is declared in code — version-controlled, reproducible, deployed
-in a single command.
+AnNIXion is an offensive security distribution built on NixOS, for red teamers,
+OSINT work and persona operations.
 
-The name comes from *annexion* — to take full control of a territory, absorb it
-completely, make it yours.
-
----
-
-## Features
-
-- **Kernel-level VPN enforcement.** The OSINT and Puppet Master profiles run in
-  a dedicated systemd slice, and an nftables rule matching that cgroup permits
-  egress only through a live tunnel. Enforcement is independent of browser
-  preferences, so WebRTC, OCSP and captive-portal probes are covered, and
-  traffic stops if the tunnel drops.
-- **Isolated browser profiles.** Four Firefox profiles, each with its own
-  cookies, cache, extensions, search engines and egress path, generated from
-  configuration rather than set up by hand.
-- **Burp CA automation.** `annixion-burp-ca` fetches Burp's certificate and
-  installs it through Firefox enterprise policy. The Red Team profile proxies
-  through Burp at profile level and does not fall back to a direct connection
-  when the proxy is unavailable.
-- **Attack surface reduction.** `system/hardening.nix` disables unused
-  services, trims default packages and sets kernel sysctls. Every setting is
-  applied at priority 900, so any of it can be restored with one line in
-  `user/`.
-- **Reproducible by construction.** The system is one flake: packages, browser
-  profiles, egress policy, desktop layout and shell. Deployment and
-  redeployment are the same command, and a bad change is undone by booting the
-  previous generation.
-- **Tested in CI.** Every pull request runs flake evaluation, a full system
-  closure build, and VM tests covering boot, tool presence and killswitch
-  regressions. Releases additionally build the ISO behind a size gate.
+The tools, the four browser profiles, the proxy rules, the firewall policy, the
+menu, the keyboard shortcuts and the wallpaper are all declared in files in this
+repository. That is the whole system. There is no other state, nothing
+configured by hand at 2am that only you remember, and no drift between the box
+you built in March and the one you build today.
 
 ---
 
-## Why NixOS
+## Annexing the system
 
-|  | Traditional distro | AnNIXion |
-|---|:---:|:---:|
-| Configuration drift | Inevitable | Impossible |
-| Reinstall | Hours of manual setup | One command |
-| Browser isolation | Manual, breaks over time | Enforced by policy |
-| Proxy kill-switch | None | Built in — leaks blocked by default |
-| Burp CA setup | Manual every install | Auto-generated, trusted on first boot |
-| Roll back a bad change | Not possible | Boot the previous generation |
-| Share your exact setup | Zip file and prayer | `git clone` |
+*Annexion* — to take full control of a territory, absorb it completely, make it
+yours.
 
----
+The barrier is real and worth stating plainly. On NixOS you do not install
+software, you declare it; a package that is not written down is not on the
+machine, and no amount of `apt install` will change that. The first week is
+spent learning where things go. People bounce off it.
 
-## What's inside
+What is on the other side of that wall:
 
-<table>
-<tr>
-<td valign="top" width="50%">
+| What you get | Why it matters |
+|---|---|
+| **Nothing drifts** | The config *is* the system. A box six months old and one built this morning from the same commit are the same box. |
+| **Rollback is a reboot** | A change that breaks the desktop is undone by booting the previous generation. Nothing to uninstall, nothing to repair. |
+| **Your setup is portable** | New laptop, fresh VM, rebuilt after an engagement: one clone and one command. |
+| **You can answer "what is on it"** | Every release ships a bill of materials. You will be asked this eventually. |
 
-**Browsers**
-- Red Team — Burp proxy at profile level, FoxyProxy for ad-hoc switching, HackTools, Cookie Editor, SingleFile
-- OSINT — VPN-enforced, NoScript, CanvasBlocker, UA Switcher, Cookie AutoDelete, Shodan and Censys search keywords
-- Puppet Master — VPN-enforced, Multi-Account Containers, Temporary Containers, per-container identity stripe
-- Unsafe Browser — clearnet fallback for captive portals, uBlock and fingerprint resistance only
-
-**Proxy enforcement**
-- Browsers block all traffic if their assigned proxy is not running
-- Burp CA generated on first install — Firefox trusts it immediately
-- Every proxy setting overridable per-machine via `user/`
-
-</td>
-<td valign="top" width="50%">
-
-**Offensive tooling**
-- Metasploit, Burp Suite, SQLMap, Gobuster, FFuf
-- Nmap, Netcat, Wireshark, Hydra, Aircrack-ng
-- John the Ripper, Hashcat
-- Ghidra, Binwalk
-- Volatility 3, Autopsy
-- Impacket, WhatWeb
-
-**OSINT & intelligence**
-- theHarvester, WHOIS, dig/nslookup
-
-**SDR / RF**
-- HackRF tools, GQRX, GNURadio
-
-**Desktop**
-- KDE Plasma 6 (X11) with Krohnkite tiling
-- Kill-chain application menu, from recon to forensics
-- Hyper-V Enhanced Session over vsock
-- ZSH + oh-my-posh, fzf history, syntax highlighting
-
-</td>
-</tr>
-</table>
-
----
-
-## Browser profiles
-
-Every profile launches isolated — separate cookies, cache, extensions and proxy
-rules. Click the desktop launcher. Nothing bleeds between them.
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  Firefox - Red Team          → Burp 127.0.0.1:8080              │
-│  Firefox - OSINT             → VPN tunnel (kernel-enforced)     │
-│  Firefox - Puppet Master     → VPN tunnel (kernel-enforced)     │
-│  Firefox - Unsafe Browser    → Direct (clearnet, no proxy)      │
-└─────────────────────────────────────────────────────────────────┘
-  OSINT and Puppet Master are confined to the VPN tunnel by an nftables
-  killswitch and refuse to launch without one. No fallback. No leaks.
-
-  Red Team is not: it has to reach targets on the LAN as often as on the
-  internet. Burp is its control, and still fails closed. Run it through
-  the tunnel with  annixion-vpn-browser "Red Team"  when you want that.
+```mermaid
+flowchart LR
+    R["one repository<br/>flake.nix · system/ · home/ · catalog/"]
+    R --> L["your laptop"]
+    R --> V["engagement VM"]
+    R --> B["the box you rebuilt<br/>after the last job"]
+    L --- N["identical, down to the shell prompt"]
+    V --- N
+    B --- N
+    style R fill:#1A1D24,stroke:#FF0033,stroke-width:2px,color:#DFE4EA
+    style N fill:#0E0F13,stroke:#2E323D,color:#7A8494
+    style L fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
+    style V fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
+    style B fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
 ```
 
+AnNIXion is that climb already made for offensive security. The tooling, the
+browser isolation, the egress rules and the desktop are configured and working
+the first time you boot it. What you add after that is yours.
+
 ---
 
-## Quick start
+## Egress that fails closed
 
-**Fresh install — no NixOS required:**
+A VPN that drops mid-engagement is not an inconvenience. The usual answers are
+weak in specific ways: a proxy set in browser preferences does not cover WebRTC
+or OCSP, and a killswitch in a VPN client is machine-wide, which is useless when
+one browser must reach the client's LAN and another must never touch it.
 
-1. Download the latest ISO from [Releases](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
-2. Flash to USB with [Rufus](https://rufus.ie) (Windows) or `dd` (Linux/macOS)
-3. Boot — auto-logs in as `operator`
-4. Connect: `nmtui`
-5. Install: `annixion-install`
+So the enforcement is a cgroup and an nftables rule, and the browser is not
+consulted:
 
-**On existing NixOS:**
+```mermaid
+flowchart TD
+    O["Firefox — OSINT"] --> S
+    P["Firefox — Puppet Master"] --> S
+    S["annixion-vpn.slice<br/>a persistent systemd cgroup"]
+    S -->|every packet, matched on cgroup| N{"nftables rule<br/>is a tunnel live?"}
+    N -->|yes| T["out through tun0"]
+    N -->|no| D["DROP<br/>no fallback, no leak"]
+    style O fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
+    style P fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
+    style S fill:#1A1D24,stroke:#DFE4EA,color:#DFE4EA
+    style N fill:#0E0F13,stroke:#FFD000,color:#DFE4EA
+    style T fill:#0E0F13,stroke:#33E62B,color:#33E62B
+    style D fill:#301212,stroke:#FF0033,stroke-width:2px,color:#FF0033
+```
+
+WebRTC, OCSP, captive-portal probes and anything else the browser does without
+telling you are all covered, because none of it can leave the cgroup. When the
+tunnel dies, traffic stops rather than quietly continuing from your real
+address.
+
+Red Team is deliberately *not* confined — it has to reach the LAN as often as
+the internet — but it still fails closed on Burp, and one command puts it in
+the tunnel when the engagement calls for it.
+
+---
+
+## Four browsers that cannot contaminate each other
+
+Not four windows, and not four container tabs. Four profiles, each with its own
+cookies, cache, extensions, search engines and route out of the machine.
+
+| Profile | Route out | Built for |
+|---|---|---|
+| **Red Team** | Burp at `127.0.0.1:8080`, fails closed | Web assessment, interception |
+| **OSINT** | VPN tunnel, kernel-enforced | Investigation, NoScript, canvas and UA control |
+| **Puppet Master** | VPN tunnel, kernel-enforced | Personas, multi-account containers, per-container stripe |
+| **Unsafe Browser** | Direct, no proxy | Captive portals, and nothing else |
+
+Burp's CA is fetched and installed through Firefox enterprise policy on first
+run, so interception works immediately instead of after the usual certificate
+dance.
+
+---
+
+## A menu shaped like the work
+
+Ninety binaries under a single "Security" folder is not a menu, it is a list.
+This one is the kill chain:
+
+```
+AnNIXion
+├── 01. Reconnaissance
+│   ├── Passive OSINT        theHarvester · Whois · dig · SecLists
+│   ├── Active Scanning      Nmap · WhatWeb · Gobuster · ffuf
+│   └── RF / Signal Intel    HackRF · Gqrx · GNU Radio
+├── 02. Weaponization        Ghidra · Binwalk
+├── 03. Delivery             Burp Suite · sqlmap
+├── 04. Exploitation
+│   ├── Frameworks           Metasploit
+│   ├── Credential Attacks   Hydra · John the Ripper · Hashcat
+│   └── Wireless             Aircrack-ng
+├── 05. Installation         Netcat
+├── 06. C2                   Metasploit
+├── 07. Post-Exploitation    Impacket
+├── 08. Forensics            Volatility 3 · Autopsy
+├── 09. Reverse Engineering  Ghidra · Binwalk
+└── 10. Sniffing & Analysis  Wireshark · Netcat
+```
+
+Every icon is drawn for this system rather than pulled from a pack, and the
+colour of a mark tells you what running that tool does to a target — green for
+passive, amber for probing, red for offensive, blue for forensic. You can read
+the menu without reading the labels.
+
+The menu is not maintained by hand. A tool is one file, and the package list,
+the desktop entry, the menu tree and the icon are all derived from it:
+
+```mermaid
+flowchart LR
+    F["catalog/recon/scanning/nmap.nix<br/>package · name · exec · mark"]
+    F --> P["installed on the system"]
+    F --> D["its entry in the menu"]
+    F --> M["its icon in the theme"]
+    F --> C["filed under Active Scanning<br/>from the folder it sits in"]
+    style F fill:#1A1D24,stroke:#FF0033,stroke-width:2px,color:#DFE4EA
+    style P fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
+    style D fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
+    style M fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
+    style C fill:#0E0F13,stroke:#2E323D,color:#7A8494
+```
+
+Adding a tool is adding that one file. Nothing registers it anywhere, so a tool
+cannot end up installed but missing from the menu, or drawn but never shipped.
+
+---
+
+## A system that can account for itself
+
+Most distributions ask you to trust them. Every AnNIXion release publishes what
+is actually inside it:
+
+- a CycloneDX SBOM of the **installed** closure — every package and version on a
+  running machine
+- a second covering the **build** closure — the toolchains, sources and patches
+  that produced it
+- a readable page rendering both
+- `SHA256SUMS` over all of it and the ISO
+
+The two closures are published and counted separately on purpose. A CVE against
+a compiler that built the image is not running on your machine, is not reachable
+by an attacker, and treating it as exposure turns a security document into
+noise.
+
+Point your own scanner at the first one — `grype sbom:annixion-<version>.cdx.json`.
+None of this is a verdict. It is the material for you to reach one.
+
+A weekly scan republishes the current state, so you can also just look:
+
+| Page | What it tells you |
+|---|---|
+| [Known CVEs](docs/security/cves.md) | What is reported against the shipped system now, and what has no upstream fix |
+| [Packages](docs/security/packages.md) | Every package on a running machine, with versions |
+| [Applications](docs/security/apps.md) | The tools this distribution chose to ship, and where they stand |
+
+A pull request that pulls in a new dependency with a known CVE is told so on the
+pull request, scoped to what that branch adds rather than re-reporting the whole
+closure.
+
+---
+
+## The desktop
+
+KDE Plasma 6 on X11 with Krohnkite tiling. Hyper-V Enhanced Session over vsock,
+so it is usable as a guest rather than merely bootable. ZSH with oh-my-posh, fzf
+history and syntax highlighting. Docker runs rootless, as you, with no `docker`
+group — that group is root by another name.
+
+Attack surface reduction is on by default: OpenSSH, ModemManager, geoclue, fwupd
+and the KDE PIM stack are gone, the firewall has no open ports, and a set of
+kernel sysctls is applied. All of it at priority 900, so any single piece is
+restored with one line.
+
+---
+
+## Making it yours
+
+Every option in the base config ships as a default, which means anything you put
+in `user/` wins without `lib.mkForce` and without editing a tracked file:
+
+```nix
+# user/configuration.nix
+networking.hostName = "raven";
+time.timeZone = "America/New_York";
+environment.systemPackages = with pkgs; [ tcpdump ];
+```
+
+Hostname, git identity, extra packages, keyboard shortcuts, or switching parts
+of the hardening back on. `user/` is yours; upstream never touches it.
+
+---
+
+## Install
+
+**From the ISO**, if you do not already run NixOS:
+
+1. Download the [latest release](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
+2. Flash it with [Rufus](https://rufus.ie) or `dd`
+3. Boot — it logs in automatically as `operator`
+4. Connect with `nmtui`, then run `annixion-install`
+
+**On a machine already running NixOS:**
 
 ```bash
 git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
@@ -166,57 +269,42 @@ git -C ~/.dotfiles add hardware-configuration.nix -f
 sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure
 ```
 
-After the first build, use `rebuild`, `upgrade` or `update` from the shell.
+The toolset is large — allow 30–60 minutes on a slow connection. After the first
+build, `rebuild`, `upgrade` and `update` handle the rest.
 
-Full guide including Hyper-V Enhanced Session setup →
-[docs/installation.md](docs/installation.md)
+Hyper-V setup and the full walkthrough:
+**[docs/installation.md](docs/installation.md)**
 
 ---
 
 ## Documentation
 
-| | |
+| Guide | What it covers |
 |---|---|
-| [Installation](docs/installation.md) | Prerequisites, deploy steps, Hyper-V setup, repository layout |
-| [Usage](docs/usage.md) | Commands, browser profiles, Burp and VPN setup, override examples |
-| [Customization](docs/customization.md) | User override system, adding tools, dev environment |
-| [Shell reference](docs/zsh.md) | Prompt, keybindings, and the full alias and plugin list |
-| [CLI tools](docs/tools.md) | Enhanced command-line tools (bat, rg, fd, fzf, jq…) |
-| [Developer guide](docs/dev.md) | Local CI levels, the checks to run before pushing, contributor workflow |
-| [Testing](docs/testing.md) | The test suite, which kind of test a change needs, and the rule that every feature ships with its tests |
-| [Hardening](docs/hardening.md) | What is disabled to reduce attack surface, and how to restore it |
-| [FAQ](docs/faq.md) | Common setup and troubleshooting questions |
-| [Roadmap](docs/roadmap.md) | Phase-by-phase progress, planned features |
-| [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) | How to contribute · security posture and reporting |
-
----
-
-## Status
-
-Active development. Functional and deployable today.
-
-`✔` Bootable ISO with guided installer (`annixion-install`)  
-`✔` NixOS flake · Home Manager · plasma-manager  
-`✔` KDE Plasma 6 · Krohnkite tiling · Breeze Dark  
-`✔` Hyper-V Enhanced Session (vsock)  
-`✔` Four Firefox profiles with proxy enforcement and Burp CA automation  
-`✔` Kernel-level VPN killswitch with regression tests  
-`✔` Offensive, OSINT and SDR tooling declared in a single module  
-`✔` Attack surface reduction module  
-`✔` ZSH + oh-my-posh environment  
-`✔` User override system  
-`✔` CI/CD — flake eval, VM tests, ISO build + size gate, versioned releases  
-
-`○` Full disk encryption · TUI installer · Kernel hardening
-
-See [docs/roadmap.md](docs/roadmap.md) for the full picture.
+| [Installation](docs/installation.md) | Prerequisites, deploy steps, Hyper-V Enhanced Session |
+| [Usage](docs/usage.md) | The `annixion-*` commands, browser profiles, Burp and VPN setup |
+| [Customization](docs/customization.md) | The override system, adding tools, the dev environment |
+| [Architecture](docs/architecture.md) | Repository layout, the tool catalog, how to add a tool |
+| [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, plugins |
+| [CLI tools](docs/tools.md) | bat, ripgrep, fd, fzf, jq and the rest |
+| [Hardening](docs/hardening.md) | What is disabled, what is deliberately left alone, how to restore it |
+| [Visual identity](docs/visual-identity.md) | Palette, typography, the mark system |
+| [Developer guide](docs/dev.md) | Local CI levels and the contributor workflow |
+| [Testing](docs/testing.md) | The suite, and the rule that every feature ships with its tests |
+| [FAQ](docs/faq.md) | Install, boot, browser, proxy and CI troubleshooting |
+| [Roadmap](docs/roadmap.md) | What is done, and what is planned |
+| [Security](SECURITY.md) | Posture, the bill of materials, reporting a vulnerability |
+| [Contributing](CONTRIBUTING.md) | Branch model, conventions, what to run before a PR |
 
 ---
 
 <div align="center">
 
-**For authorized security testing, research, and educational use only.**  
-Obtain explicit written permission before any assessment. The authors assume no
-liability for misuse.
+Built on NixOS and proud of the lineage. Not affiliated with, endorsed by or
+connected to the NixOS Foundation or the Nix project.
+
+**For authorized security testing, research and educational use only.**
+Obtain explicit written permission before any assessment.
+The authors assume no liability for misuse.
 
 </div>

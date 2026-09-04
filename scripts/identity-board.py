@@ -96,59 +96,68 @@ LAWS = [
   "place it must work is the place you are moving too fast to read."),
 ]
 def menu_model():
-    """The real kill-chain tree: every directory, and the tools filed under it."""
-    import xml.etree.ElementTree as ET
+    """The real kill-chain tree: every directory, and the tools filed under it.
+
+    Read from the built catalog rather than scraped out of the Nix source, for
+    the same reason the marks are taken from a built theme — the board must not
+    be able to describe a menu that is not the one shipping.
+    """
+    import json
+    import subprocess
+
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    src = open(f"{root}/home/desktop/apps-menu.nix").read()
-    xml = src[src.index("menuXml = \'\'") + 12:]
-    xml = xml[:xml.index("\n  \'\';")]
-    xml = re.sub(r"<!DOCTYPE[^>]*>", "", xml, flags=re.S)
-    xml = re.sub(r"<!--.*?-->", "", xml, flags=re.S)
+    out = subprocess.run(
+        ["nix", "build", "--no-link", "--print-out-paths", ".#catalog-json"],
+        cwd=root, capture_output=True, text=True,
+    )
+    if out.returncode != 0:
+        raise SystemExit(f"identity-board: could not build .#catalog-json\n{out.stderr}")
+    cat = json.loads(open(out.stdout.strip()).read())
 
-    dirs = {f: (label, icon) for f, label, icon in
-            re.findall(r'"([\w.-]+\.directory)" =\s*\n?\s*dir "([^"]+)" "([^"]+)"', src)}
+    tools = cat["tools"]
+    nodes = []
+    for n in sorted(cat["nodes"], key=lambda n: (n["path"].count("/"), n["order"])):
+        nodes.append({
+            "path": n["path"],
+            "depth": n["path"].count("/"),
+            "label": n["label"],
+            "icon": f"annixion-{n['mark']}",
+            "tools": [(tools[t]["name"], tools[t]["icon"]) for t in sorted(n["tools"])],
+        })
+    # A tool earning a place under a second phase appears under both, the way
+    # the menu shows it.
+    by_path = {n["path"]: n for n in nodes}
+    for key, t in tools.items():
+        for extra in t.get("alsoIn", []):
+            if extra in by_path:
+                by_path[extra]["tools"].append((t["name"], t["icon"]))
 
-    entries = []
-    for key, body in re.findall(r'"([\w-]+)" = de \{(.*?)\n    \};', src, re.S):
-        entries.append((re.search(r'name = "([^"]+)"', body).group(1),
-                        re.search(r'icon = "([^"]+)"', body).group(1),
-                        re.findall(r'"(X-AnNIXion-[\w-]+)"', body)))
+    # The browser profiles ship their entries from home/firefox, not the catalog.
     ff = open(f"{root}/home/firefox/default.nix").read()
+    extra = []
     for blk in re.findall(r"\[Desktop Entry\](.*?)\n    \'\'", ff, re.S):
         if "NoDisplay=true" in blk:
             continue
-        entries.append((re.search(r"Name=(.+)", blk).group(1).strip(),
-                        re.search(r"Icon=(.+)", blk).group(1).strip(),
-                        re.findall(r"(X-AnNIXion-[\w-]+)", blk)))
-
-    by_cat = {}
-    for name, icon, cats in entries:
+        cats = re.findall(r"(X-AnNIXion-[\w-]+)", blk)
+        extra.append((re.search(r"Name=(.+)", blk).group(1).strip(),
+                      re.search(r"Icon=(.+)", blk).group(1).strip(), cats))
+    by_cat = {n.get("category") or "": n for n in cat["nodes"]}
+    for name, icon, cats in extra:
         for c in cats:
-            by_cat.setdefault(c, []).append((name, icon))
+            n = by_cat.get(c)
+            if n and n["path"] in by_path:
+                by_path[n["path"]]["tools"].append((name, icon))
 
-    def walk(node, depth=0):
-        out = []
-        d = node.find("Directory")
-        if d is not None and d.text in dirs:
-            label, icon = dirs[d.text]
-            tools = []
-            for inc in node.findall("Include"):
-                for c in inc.findall("Category"):
-                    tools += by_cat.get(c.text, [])
-            out.append({"depth": depth, "label": label, "icon": icon, "tools": tools})
-        for sub in node.findall("Menu"):
-            out += walk(sub, depth + (1 if d is not None else 0))
-        return out
+    nodes.sort(key=lambda n: (n["path"].split("/")[0], n["path"]))
+    order = {n["path"].split("/")[0]: i for i, n in enumerate(
+        sorted([x for x in cat["nodes"] if "/" not in x["path"]], key=lambda x: x["order"]))}
+    nodes.sort(key=lambda n: (order.get(n["path"].split("/")[0], 99), n["path"]))
 
-    nodes = [n for n in walk(ET.fromstring(xml)) if n["label"] != "AnNIXion"]
     if not nodes:
         raise SystemExit("identity-board: parsed no menu directories")
-    # the root directory held depth 0 and has just been dropped, so rebase
-    base = min(n["depth"] for n in nodes)
+
     for n in nodes:
-        n["depth"] -= base
-    for n in nodes:
-        for nm, ic in [(n["label"], n["icon"])] + [(t[0], t[1]) for t in n["tools"]]:
+        for nm, ic in [(n["label"], n["icon"])] + list(n["tools"]):
             if not os.path.exists(os.path.join(ICONS, f"{ic}.svg")):
                 raise SystemExit(f"identity-board: {nm} names {ic}, which the theme does not have")
     return nodes

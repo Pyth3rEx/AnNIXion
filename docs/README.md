@@ -17,9 +17,10 @@ day-to-day operation.
 
 | Document | What it covers |
 |---|---|
+| [Architecture](architecture.md) | How the tree is laid out, what the catalog is, and how to add a tool |
 | [Customization](customization.md) | The `user/` override system, adding tools, versioning |
 | [Visual identity](visual-identity.md) | Palette, typography, the mark system and its semantic colours, motif vocabulary |
-| [Visual identity — design board](visual-identity.pdf) | The same system as an 18-page print board for a design audience: mission, lockup, palette, specimen, the full mark set and the eight laws |
+| [Visual identity — design board](visual-identity.pdf) | The same system as a 19-page print board for a design audience: mission, lockup, palette, specimen, the full mark set and the eight laws |
 | [Shell reference](zsh.md) | Prompt, keybindings, aliases, oh-my-zsh plugins |
 | [CLI tools](tools.md) | bat, ripgrep, fd, fzf, jq and the rest of the enhanced toolset |
 
