@@ -22,7 +22,7 @@ reach.
 
 **What is configured**
 
-- Attack surface reduction — `modules/hardening.nix` disables OpenSSH,
+- Attack surface reduction — `system/hardening.nix` disables OpenSSH,
   ModemManager, geoclue, fwupd, the KDE PIM stack and the rest of what the
   distro does not use; enables the firewall with no ports open; sets kernel
   sysctls covering `dmesg`, kernel pointers, kexec, unprivileged BPF, `ptrace`

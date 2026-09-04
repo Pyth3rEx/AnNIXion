@@ -40,7 +40,7 @@
       MimeType=text/html;text/xml;
     '';
     # The only profile that does not exec Firefox directly: annixion-redteam
-    # (home/redteam-launch.nix) brings Burp up behind it, then execs the same
+    # (home/desktop/redteam-launch.nix) brings Burp up behind it, then execs the same
     # command the others carry inline.
     ".local/share/applications/firefox-red.desktop".text = ''
       [Desktop Entry]

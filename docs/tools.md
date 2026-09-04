@@ -1,6 +1,6 @@
 # Enhanced CLI Tools
 
-AnNIXion replaces several standard Unix tools with modern alternatives that are significantly faster, more readable, or purpose-built for security workflows. All of these are declared in `home.nix` and available immediately after `rebuild`.
+AnNIXion replaces several standard Unix tools with modern alternatives that are significantly faster, more readable, or purpose-built for security workflows. All of these are declared in `home/` and available immediately after `rebuild`.
 
 ---
 

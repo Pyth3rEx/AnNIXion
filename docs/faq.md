@@ -62,7 +62,7 @@ that read. It is expected and safe here.
 ### How do I add a security tool?
 
 Add the nixpkgs package to `environment.systemPackages` in
-`modules/security-tools.nix` and run `rebuild`. See
+`system/security-tools.nix` and run `rebuild`. See
 [customization.md](customization.md).
 
 ### How do I change a setting without touching shared config?
@@ -85,7 +85,7 @@ Flakes only see git-tracked files. Run `git add` on the new file before
 
 Two things have to be true, and the second one is easy to miss.
 
-The guest side is handled by `modules/xrdp.nix`: Hyper-V emulates no sound
+The guest side is handled by `system/xrdp.nix`: Hyper-V emulates no sound
 card, so audio only travels over xrdp's redirection channel, which the module
 enables. See [Installation](installation.md#audio) for why that requires
 PulseAudio rather than PipeWire.
@@ -103,7 +103,7 @@ channel at all and will never have audio.
 
 ### Reconnecting hangs, or vmconnect says to contact the admin
 
-Fixed in `modules/xrdp.nix` — rebuild and the next login is clean. Generations
+Fixed in `system/xrdp.nix` — rebuild and the next login is clean. Generations
 before the fix set the operator account to linger, so `systemd --user` outlived
 the session it belonged to. It kept `graphical-session.target` active pointing
 at a `DISPLAY` that had gone away with the old X server, and the next login
@@ -148,7 +148,7 @@ Ask who holds the name and the answer is the console session's compositor:
 busctl --user list | grep org.kde.KWin
 ```
 
-`modules/xrdp.nix` now stops the running workspace before it starts its own,
+`system/xrdp.nix` now stops the running workspace before it starts its own,
 so connecting takes the desktop over and the console drops back to SDDM.
 On a generation without that fix, log out on the console, or clear it by
 hand from either session:
@@ -240,7 +240,7 @@ NXDOMAIN in another.
 ### `gh auth login` worked, but pushing still can't authenticate
 
 AnNIXion wires the gh credential helper into `/etc/gitconfig` for every user
-(`modules/git.nix`), so `gh auth login` is the only step there is.
+(`system/git.nix`), so `gh auth login` is the only step there is.
 
 Do not run `gh auth setup-git`. It writes the store path of whichever `gh` ran
 it into your `~/.gitconfig`, and the next garbage collection deletes that path.
@@ -259,7 +259,7 @@ git config --global --unset-all credential.https://gist.github.com.helper
 ### CI rejects my PR for committing `hardware-configuration.nix`
 
 It's machine-specific and gitignored. Remove it from your commit; CI and the dev
-shell generate a stub from `ci/hardware-stub.nix` automatically. See
+shell generate a stub from `system/hardware-stub.nix` automatically. See
 [dev.md](dev.md) and [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### CI fails on a version bump
