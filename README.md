@@ -27,11 +27,13 @@
 
 ---
 
+**The environment for operators who refuse to wing it.**
+
 AnNIXion is a NixOS-based offensive security distribution for red teamers, OSINT
 practitioners and persona operators. Every tool, browser profile, proxy rule,
 menu entry and desktop shortcut is declared in code — so the machine you assess
 from is version-controlled, reproducible, and rebuilt from a single command
-instead of assembled by hand and slowly drifting.
+instead of assembled by hand and left to rot.
 
 The name comes from *annexion* — to take full control of a territory, absorb it
 completely, make it yours.
@@ -41,18 +43,28 @@ completely, make it yours.
 
 ---
 
-## What you get
+## Your egress cannot leak
 
-**A workstation that fails closed.** The OSINT and Puppet Master browser
-profiles run inside a dedicated systemd slice, and an nftables rule matching
-that cgroup permits egress only through a live tunnel. The enforcement is in the
-kernel, not in browser preferences, so WebRTC, OCSP and captive-portal probes
-are covered too — and if the tunnel drops, traffic stops rather than falling
-back to your real address.
+A VPN that drops is not an inconvenience on an engagement, it is an incident.
+So the killswitch is not a browser setting or a checkbox in a client — it is an
+nftables rule in the kernel.
 
-**Four browsers that cannot contaminate each other.** Separate cookies, cache,
-extensions, search engines and egress path, each generated from configuration
-rather than clicked together once and forgotten.
+The OSINT and Puppet Master profiles run inside a dedicated systemd slice, and
+that rule permits egress only through a live tunnel. WebRTC, OCSP, captive
+portal probes and anything else the browser does behind your back are all
+covered, because none of them can escape a cgroup. If the tunnel dies, traffic
+stops. There is no fallback to your real address, because there is nothing to
+fall back to.
+
+Red Team is deliberately not confined — it has to reach the LAN as often as the
+internet — but it still fails closed on Burp, and one command puts it in the
+tunnel when you want it there.
+
+## Your identities cannot cross
+
+Four Firefox profiles, each with its own cookies, cache, extensions, search
+engines and egress path. Not four windows of the same browser. Not four
+profiles you set up once and hoped stayed separate.
 
 ```
 Firefox — Red Team        → Burp at 127.0.0.1:8080, fails closed
@@ -61,52 +73,63 @@ Firefox — Puppet Master   → VPN tunnel, kernel-enforced, container identitie
 Firefox — Unsafe Browser  → direct, for captive portals only
 ```
 
-Burp's CA is fetched and trusted on first install, so interception works without
-the usual certificate dance.
+Burp's CA is fetched and trusted on first install, so interception works
+immediately instead of after the usual certificate ritual.
 
-**The toolset, in kill-chain order.** Nmap, Metasploit, Burp Suite, SQLMap,
-Gobuster, ffuf, Hydra, John, Hashcat, Aircrack-ng, Ghidra, Binwalk, Impacket,
-Volatility 3, Autopsy, Wireshark, theHarvester, HackRF, GQRX and GNU Radio —
-filed under Reconnaissance, Weaponization, Delivery, Exploitation, C2,
-Post-Exploitation, Forensics and RE rather than one flat "Security" menu.
+## Your machine is a file
 
-**A desktop that is part of the configuration.** KDE Plasma 6 with Krohnkite
-tiling, a drawn icon set where the colour of a mark tells you what running that
-tool does to a target, Hyper-V Enhanced Session over vsock, and a ZSH
-environment with oh-my-posh, fzf history and syntax highlighting.
+A new laptop, a fresh VM, a rebuilt box after an engagement — one clone and one
+command, and it is the same machine down to the shell prompt. Configuration
+drift is not managed, it is impossible: the system is the flake, and anything
+not in the flake is not on the system.
 
-**An override system, so none of this is a fork.** Every base option is
-`lib.mkDefault`; anything you put in `user/` wins without `lib.mkForce`. Your
-hostname, your keys, your extra tools, your relaxations of the hardening — all
-without touching a tracked file.
+A change that breaks something is undone by booting the previous generation.
+Nothing is uninstalled, nothing is repaired, you just boot last week.
 
----
+And it is yours without being a fork: every base option is `lib.mkDefault`, so
+whatever you put in `user/` wins without touching a tracked file.
 
-## New in 0.4 "Nebula"
+## You know what is in it
 
-**Every release says what is inside it.** Each one ships a CycloneDX SBOM of the
-installed closure, a second covering the toolchains and sources that produced
-it, a readable supply-chain page, and a `SHA256SUMS` over the lot. The two are
-published and counted separately on purpose: a CVE against a compiler that built
-the image is not running on your machine. Point your own scanner at it —
-`grype sbom:annixion-<version>.cdx.json` — because none of it is a verdict, it
-is the material to reach your own.
+Most distributions ask you to trust them. This one hands you the evidence.
 
-**Known-vulnerability status, kept current.** A weekly scan republishes the CVE
-status of the shipped closure, and it only commits when something actually
-changed, so the page's date means something.
+Every release ships a CycloneDX SBOM of the installed closure, a second covering
+the toolchains and sources that built it, a readable supply-chain page, and
+checksums over all of it. The two closures are published and counted separately
+on purpose — a CVE in a compiler that produced the image is not running on your
+machine, and conflating them turns a security document into noise.
 
-**Pull requests are scanned for what they add.** A PR that pulls in a new
-dependency with a known CVE is told so on the PR, scoped to what the branch
-introduces rather than re-reporting the whole closure.
+Point your own scanner at it. `grype sbom:annixion-<version>.cdx.json`. None of
+it is a verdict; it is the material for you to reach one.
 
-**Rootless containers.** Docker runs as the desktop user, with no `docker`
-group — which is root-equivalent — and no root daemon by default.
+You do not have to run one to look, either. A weekly scan republishes the state
+of the shipped closure, kept in three pages you can read right now:
 
-**One file per tool.** A tool's package, its menu entry and its icon are
-declared together in [`catalog/`](catalog/); the package list, the `.desktop`
-entry, the menu tree and the icon theme are all derived from it. Adding a tool
-is adding a file, and the three can no longer drift apart.
+| | |
+|---|---|
+| [Known CVEs](docs/security/cves.md) | What is currently reported against the closure, and what has no fix upstream yet |
+| [Packages](docs/security/packages.md) | Every package on a running system, with its version |
+| [Applications](docs/security/apps.md) | The tools this distribution chose to ship, and their standing |
+
+A pull request that introduces a new CVE is told so on the pull request, before
+it merges.
+
+## It is a desktop, not a toolbox
+
+Nmap, Metasploit, Burp Suite, SQLMap, Gobuster, ffuf, Hydra, John, Hashcat,
+Aircrack-ng, Ghidra, Binwalk, Impacket, Volatility 3, Autopsy, Wireshark,
+theHarvester, HackRF, GQRX and GNU Radio — filed under Reconnaissance,
+Weaponization, Delivery, Exploitation, C2, Post-Exploitation, Forensics and
+Reverse Engineering, so the menu follows the work instead of dumping ninety
+binaries under "Security".
+
+Every tool is drawn, not scraped from an icon pack: the colour of a mark tells
+you what running it does to a target — passive, probing, offensive, forensic.
+KDE Plasma 6 with Krohnkite tiling, Hyper-V Enhanced Session over vsock, and a
+ZSH environment with oh-my-posh, fzf history and syntax highlighting.
+
+Containers run rootless — as you, with no `docker` group, because that group is
+root by another name.
 
 ---
 
@@ -120,6 +143,7 @@ is adding a file, and the three can no longer drift apart.
 | Proxy kill-switch | None | Built in — leaks blocked by default |
 | Burp CA setup | Manual, every install | Generated, trusted on first boot |
 | Roll back a bad change | Not possible | Boot the previous generation |
+| Know what is installed | Guesswork | SBOM, per release |
 | Share your exact setup | Zip file and prayer | `git clone` |
 
 ---
@@ -143,8 +167,8 @@ sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure
 ```
 
 After the first build, `rebuild`, `upgrade` and `update` are available from the
-shell. Security tools are large — expect 30–60 minutes on a slow connection.
-Full guide, including Hyper-V Enhanced Session:
+shell. The toolset is large — expect 30–60 minutes on a slow connection. Full
+guide, including Hyper-V Enhanced Session:
 [docs/installation.md](docs/installation.md).
 
 ---
@@ -161,20 +185,9 @@ Full guide, including Hyper-V Enhanced Session:
 | [Hardening](docs/hardening.md) | What is disabled to reduce attack surface, and how to restore it |
 | [Visual identity](docs/visual-identity.md) | Palette, typography, the mark system |
 | [Developer guide](docs/dev.md) · [Testing](docs/testing.md) | Local CI levels · the suite and the rule behind it |
-| [FAQ](docs/faq.md) · [Roadmap](docs/roadmap.md) | Troubleshooting · phase-by-phase progress |
+| [FAQ](docs/faq.md) · [Roadmap](docs/roadmap.md) | Troubleshooting · what is done and what is planned |
+| [Security status](docs/security/README.md) | Known CVEs, the package list and the shipped applications, refreshed weekly |
 | [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) | How to contribute · posture, SBOMs and reporting |
-
----
-
-## Status
-
-Active development, functional and deployable today. Shipping **0.3.1
-"Tripwire"**; **0.4.0 "Nebula"** is in progress.
-
-Every pull request runs flake evaluation, a full system closure build, and VM
-tests covering boot, tool presence and killswitch regressions; releases build
-the ISO behind a size gate. Full disk encryption, a TUI installer and kernel
-hardening are the notable gaps — see [docs/roadmap.md](docs/roadmap.md).
 
 ---
 
