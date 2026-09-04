@@ -1,9 +1,8 @@
 # Menu node: Tunneling & Shells
 _: {
   order = 1;
-  menuName = "Tunneling &amp; Shells";
+  menuName = "Tunneling & Shells";
   label = "Tunneling & Shells";
-  # The label carries a "/", which a menu Name would read as a path separator.
   directory = "annixion-5-install-tunneling.directory";
   category = "X-AnNIXion-Install-Tunneling";
   mark = {

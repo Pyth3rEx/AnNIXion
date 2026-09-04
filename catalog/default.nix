@@ -91,6 +91,10 @@ in
 
   tools = allTools;
 
+  # Node by its path, so a tool earning a place under a second phase can name
+  # that phase the way the tree already names it ("re/firmware").
+  byPath = lib.listToAttrs (map (n: lib.nameValuePair n.path n) allNodes);
+
   # Everything the system installs. `p` is pkgs.
   packages =
     p:

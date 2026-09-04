@@ -4,8 +4,11 @@
   order = 3;
   menuName = "RF Signal Intel";
   label = "RF / Signal Intel";
-  # The label carries a "/", which a menu Name would read as a path separator.
   directory = "annixion-1-recon-rf.directory";
+  note = ''
+    No "/" in a menu Name: it is a path separator, so the slash
+    invents a parent menu. The label comes from the .directory.
+  '';
   category = "X-AnNIXion-Recon-RF";
   mark = {
     class = "probe";

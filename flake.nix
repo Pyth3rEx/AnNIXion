@@ -48,6 +48,7 @@
         ./modules/branding.nix
         ./modules/xrdp.nix
         ./modules/security-tools.nix
+        ./modules/burp-ca.nix
         ./modules/vpn-enforcement.nix
         ./modules/hardening.nix
         ./modules/shell.nix
