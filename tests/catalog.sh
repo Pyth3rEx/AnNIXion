@@ -23,35 +23,19 @@ report() {
 
 cd "$ROOT" || exit 1
 
-catalog=$(nix eval --impure --json --expr '
-  let
-    pkgs = import <nixpkgs> { };
-    inherit (pkgs) lib;
-    c = import ./catalog { inherit lib; };
-    node = n: {
-      inherit (n) path order directory;
-      category = n.category or null;
-      mark = n.mark.name;
-      tools = builtins.attrNames n.tools;
-      children = map (x: x.path) n.children;
-    };
-  in
-  {
-    nodes = map node c.allNodes;
-    tools = lib.mapAttrs (_: t: {
-      inherit (t) path category;
-      hasPackage = (t.package or null) != null;
-      alsoIn = t.alsoIn or [ ];
-      launch = t.launch;
-      wmName = t.wmName or null;
-    }) c.tools;
-    marks = builtins.attrNames c.marks;
-    support = builtins.attrNames c.support;
-  }
-' 2>&1)
+# Through the flake, not <nixpkgs>: a CI runner sets no nixpkgs channel, and a
+# stray one would not be the catalog this branch ships.
+# nix build reports progress on stderr; keep it off the path it prints.
+err=$(mktemp)
+trap 'rm -f "$err"' EXIT
+if ! dump=$(nix build --no-link --print-out-paths .#catalog-json 2>"$err"); then
+  printf 'catalog: could not build .#catalog-json\n%s\n' "$(cat "$err")"
+  exit 1
+fi
+catalog=$(cat "$dump")
 
 if ! jq -e . >/dev/null 2>&1 <<<"$catalog"; then
-  printf 'catalog: could not evaluate\n%s\n' "$catalog"
+  printf 'catalog: .#catalog-json is not valid JSON\n%s\n' "$catalog"
   exit 1
 fi
 
