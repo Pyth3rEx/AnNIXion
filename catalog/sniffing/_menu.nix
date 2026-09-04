@@ -2,9 +2,8 @@
 { bodies }:
 {
   order = 10;
-  menuName = "10. Sniffing &amp; Analysis";
+  menuName = "10. Sniffing & Analysis";
   label = "10. Sniffing & Analysis";
-  # The label carries a "/", which a menu Name would read as a path separator.
   directory = "annixion-10-sniffing.directory";
   category = "X-AnNIXion-Sniffing";
   mark = {
