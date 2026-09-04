@@ -49,7 +49,7 @@
         ./system/xrdp.nix
         ./system/security-tools.nix
         ./system/burp-ca.nix
-        ./system/vpn-enforcement.nix
+        ./system/vpn
         ./system/hardening.nix
         ./system/shell.nix
         ./system/git.nix

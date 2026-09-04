@@ -4,7 +4,7 @@
   nodes.machine =
     { pkgs, ... }:
     {
-      imports = [ ../../system/vpn-enforcement.nix ];
+      imports = [ ../../system/vpn ];
 
       users.users.operator = {
         isNormalUser = true;
