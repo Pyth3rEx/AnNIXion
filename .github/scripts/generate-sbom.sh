@@ -11,7 +11,7 @@
 #   generate-sbom.sh [--out-dir DIR]   writes both SBOMs and the readable index
 #   generate-sbom.sh --name            lists the assets, one per line, no network
 #
-# --name takes no network, so tests/sbom.sh can drive the real script.
+# --name takes no network, so tests/repo/sbom.sh can drive the real script.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"

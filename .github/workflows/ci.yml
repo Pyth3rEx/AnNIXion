@@ -71,28 +71,28 @@ jobs:
 
       - name: "[L0] Script tests"
         run: |
-          nix develop --command bash tests/milestone.sh
-          nix develop --command bash tests/prompt-width.sh
-          nix develop --command bash tests/firefox-profiles.sh
-          nix develop --command bash tests/catalog.sh
-          nix develop --command bash tests/menu-icons.sh
-          nix develop --command bash tests/branding.sh
-          nix develop --command bash tests/etc-hosts.sh
-          nix develop --command bash tests/workflow-injection.sh
-          nix develop --command bash tests/workflow-permissions.sh
-          nix develop --command bash tests/stale-reviews.sh
-          nix develop --command bash tests/pr-column.sh
-          nix develop --command bash tests/sbom.sh
-          nix develop --command bash tests/supply-chain.sh
-          nix develop --command bash tests/package-provenance.sh
-          nix develop --command bash tests/security-pages.sh
-          nix develop --command bash tests/cve-status-workflow.sh
-          nix develop --command bash tests/pr-cve-scan.sh
+          nix develop --command bash tests/repo/milestone.sh
+          nix develop --command bash tests/shell/prompt-width.sh
+          nix develop --command bash tests/shell/firefox-profiles.sh
+          nix develop --command bash tests/shell/catalog.sh
+          nix develop --command bash tests/shell/menu-icons.sh
+          nix develop --command bash tests/shell/branding.sh
+          nix develop --command bash tests/shell/etc-hosts.sh
+          nix develop --command bash tests/repo/workflow-injection.sh
+          nix develop --command bash tests/repo/workflow-permissions.sh
+          nix develop --command bash tests/repo/stale-reviews.sh
+          nix develop --command bash tests/repo/pr-column.sh
+          nix develop --command bash tests/repo/sbom.sh
+          nix develop --command bash tests/repo/supply-chain.sh
+          nix develop --command bash tests/repo/package-provenance.sh
+          nix develop --command bash tests/repo/security-pages.sh
+          nix develop --command bash tests/repo/cve-status-workflow.sh
+          nix develop --command bash tests/repo/pr-cve-scan.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
       - name: "[L0] Zone transfer"
-        run: nix develop --command bash tests/dns-axfr.sh
+        run: nix develop --command bash tests/shell/dns-axfr.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
@@ -145,7 +145,7 @@ jobs:
 
       # L2 — full system closure: proves every package in the config
       # resolves and all modules compose without conflicts.
-      # AnNIXion-ci is the real config with ci/hardware-stub.nix as its disk
+      # AnNIXion-ci is the real config with system/hardware-stub.nix as its disk
       # layout — the only part CI cannot know.
       # The out-link is what the SBOM step is taken from: --no-link leaves the
       # closure eligible for collection with nothing naming it.
@@ -280,7 +280,7 @@ jobs:
         run: |
           ISO=$(find result-iso/ -name "*.iso" -type f | head -1)
           if [ -z "$ISO" ]; then
-            echo "::error file=iso.nix::No .iso file found under result-iso/. Build may have failed silently."
+            echo "::error file=iso/default.nix::No .iso file found under result-iso/. Build may have failed silently."
             echo "Directory contents:"
             find result-iso/ -type f || echo "(empty)"
             exit 1
@@ -298,7 +298,7 @@ jobs:
           ISO_BYTES=$(stat -c%s "$ISO")
           ISO_MB=$((ISO_BYTES / 1024 / 1024))
           if [ "$ISO_BYTES" -gt "$MAX_BYTES" ]; then
-            echo "::error file=iso.nix::ISO is ${ISO_MB} MB — exceeds the ${MAX_MB} MB GitHub release limit. Remove packages from iso.nix to reduce size."
+            echo "::error file=iso/default.nix::ISO is ${ISO_MB} MB — exceeds the ${MAX_MB} MB GitHub release limit. Remove packages from iso/default.nix to reduce size."
             exit 1
           fi
           echo "ISO size: ${ISO_MB} MB / ${MAX_MB} MB limit ✓"

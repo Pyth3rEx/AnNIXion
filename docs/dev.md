@@ -26,7 +26,7 @@ cd ~/.dotfiles
 nix develop
 ```
 
-The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `jq`, `sbomnix`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `ci/hardware-stub.nix`.
+The dev shell provides `nixfmt`, `statix`, `deadnix`, `shellcheck`, `jq`, `sbomnix`, `nil`, and `nix-output-monitor`. It does not touch `hardware-configuration.nix` — build `AnNIXion-ci` instead, which pairs the full system with `system/hardware-stub.nix`.
 
 If you are running AnNIXion, your real `hardware-configuration.nix` is already present and the `AnNIXion` configuration is offered alongside it.
 
@@ -36,7 +36,7 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 
 | Level | Command | What it checks | Typical runtime |
 |---|---|---|---|
-| **L0** | `.github/scripts/lint.sh`, `tests/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, eval warnings, script fixtures | ~2 min |
+| **L0** | `.github/scripts/lint.sh`, `tests/repo/milestone.sh` | Formatting, Nix anti-patterns, dead code, shell bugs, eval warnings, script fixtures | ~2 min |
 | **L1** | `nix flake check --no-build` | Syntax, type errors, undefined references | ~5 s |
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.<test>` — CI builds every check the flake defines | VM boot + service behaviour + tool presence (needs KVM) | ~10 min |
@@ -78,7 +78,7 @@ prose is wrong by the next release and nothing catches it.
 The two halves stay apart on purpose. A CVE against a compiler that built the
 image is not running on an operator's machine, and rolling it into the same
 count as the installed closure produces a large frightening number that means
-nothing. `render-supply-chain.sh` enforces the split; `tests/supply-chain.sh`
+nothing. `render-supply-chain.sh` enforces the split; `tests/repo/supply-chain.sh`
 checks that it holds.
 
 **Security pages**
@@ -131,7 +131,7 @@ name and a version to be kept.
 references. It uses `builtins.storePath`, not the paths as text: nix records a
 reference only where the string carrying it has context, and a target built from
 plain text has a closure of one file — it scans clean and reports nothing wrong.
-`tests/pr-cve-scan.sh` builds a real target and checks the references are there.
+`tests/repo/pr-cve-scan.sh` builds a real target and checks the references are there.
 
 That target's closure covers the added packages' dependencies too, most of which
 were already in the base. That is the price of keeping `vulnix`, which is
@@ -196,7 +196,7 @@ Two details worth knowing if you run the tools by hand:
 **Script tests**
 
 ```bash
-tests/milestone.sh
+tests/repo/milestone.sh
 ```
 
 Fixture tests for `.github/scripts/assign-milestone.sh` and
@@ -216,28 +216,19 @@ CI runs it on every PR. The ISO build and its size gate run only on PRs into
 
 ---
 
-## Running checks in VSCodium
+## Running a full CI run locally
 
-Open `~/.dotfiles` as the workspace root in VSCodium. The repo ships a `.vscode/tasks.json` that wires up all CI commands.
-
-| Shortcut / action | What runs |
-|---|---|
-| `Ctrl+Shift+B` | **Full check** — L0 lint + script tests + L1 in parallel |
-| `Tasks: Run Task` → `CI: L2 — System Build` | Full system closure |
-| `Tasks: Run Task` → `CI: L3 — VM Tests` | VM tests (requires KVM) |
-| `Tasks: Run Task` → `Format: apply` | Auto-format all Nix files |
-
-Each task opens in its own dedicated terminal panel so outputs don't interleave.
-
-### GitHub Local Actions extension
-
-The `github-local-actions` extension (already installed via `home/vscodium.nix`) lets you run the full `.github/workflows/ci.yml` locally. It requires Docker and [`act`](https://github.com/nektos/act). Use it when you want to reproduce a full CI run including the ISO build step.
+The `github-local-actions` extension, installed with the editor in
+`home/apps/vscodium.nix`, runs `.github/workflows/ci.yml` on this machine. It
+needs Docker and [`act`](https://github.com/nektos/act). Reach for it when you
+want a full CI run including the ISO build; for everything else the commands
+below are faster.
 
 ---
 
-## Running checks in the terminal
+## Running checks
 
-Same commands, without VSCodium:
+The levels, as commands:
 
 ```bash
 # L1 — fast, always run before pushing
@@ -245,7 +236,7 @@ nix flake check --no-build
 
 # L0 — every linter, plus the script fixture tests
 .github/scripts/lint.sh
-tests/milestone.sh
+tests/repo/milestone.sh
 
 # L2 — recommended before opening a PR
 nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
@@ -271,7 +262,7 @@ Before pushing your branch or opening a PR:
 
 - [ ] `nix flake check --no-build` passes
 - [ ] `.github/scripts/lint.sh` clean (CI runs it as the **Lint** check)
-- [ ] `tests/milestone.sh` passes
+- [ ] `tests/repo/milestone.sh` passes
 - [ ] `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel --no-link` succeeds (recommended)
 - [ ] **The change ships with its tests** — see [testing.md](testing.md). If it
       genuinely needs none, say so in the PR.
@@ -320,7 +311,7 @@ has touched is left alone until a review actually asks for something.
 Run it by hand from the Actions tab to see what it would do; the manual trigger
 defaults to a dry run, which reports each verdict and touches nothing. Worth
 doing after changing `WARN_DAYS` or `CLOSE_DAYS`, since this closes other
-people's work. `tests/stale-reviews.sh` drives the same decision through
+people's work. `tests/repo/stale-reviews.sh` drives the same decision through
 `--decide`, so the thresholds are covered without a network.
 
 ### Ready and Up next
@@ -401,7 +392,7 @@ two configurations built from the same modules:
 | Configuration | Disk layout | Offered when |
 |---|---|---|
 | `AnNIXion` | `./hardware-configuration.nix` | that file exists |
-| `AnNIXion-ci` | `./ci/hardware-stub.nix` | always |
+| `AnNIXion-ci` | `./system/hardware-stub.nix` | always |
 
 Nothing ever copies the stub to `hardware-configuration.nix`. A placeholder at
 that path is indistinguishable from a real machine's config, and rebuilding from

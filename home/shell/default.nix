@@ -1,0 +1,215 @@
+{
+  lib,
+  pkgs,
+  ...
+}:
+
+# Shell environment. Keybindings, aliases and plugins are documented in
+# docs/zsh.md.
+{
+  imports = [ ./oh-my-posh.nix ];
+
+  # ── Zsh — core settings ────────────────────────────────────────────────────
+  programs.zsh = {
+    enable = true;
+    autosuggestion.enable = true;
+    enableCompletion = true;
+    # Syntax highlighting is fast-syntax-highlighting, at mkOrder 1190.
+
+    # ── External plugins from nixpkgs ────────────────────────────────────────
+    plugins = [
+      {
+        name = "you-should-use";
+        src = "${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use";
+      }
+      {
+        name = "zsh-autopair";
+        src = "${pkgs.zsh-autopair}/share/zsh/zsh-autopair";
+        file = "autopair.zsh";
+      }
+    ];
+    autocd = true;
+
+    # ── oh-my-zsh framework ─────────────────────────────────────────────────
+    # Bundled plugins only; external ones go in plugins above.
+    oh-my-zsh = {
+      enable = true;
+      theme = ""; # oh-my-posh owns the prompt
+      plugins = [
+        "git"
+        "docker"
+        "colorize"
+        "sudo"
+        "extract"
+        "history"
+        "nmap"
+        "rsync"
+        "urltools"
+        "jsontools"
+        "dirhistory"
+        "magic-enter"
+        # "z" is replaced by programs.zoxide below.
+      ];
+    };
+
+    # ── Aliases ─────────────────────────────────────────────────────────────
+    shellAliases = {
+      # ── System ─────────────────────────────────────────────
+      ll = "ls -la";
+      grep = "grep --color=auto";
+      cat = "bat";
+      b = "clear && annixion-banner";
+
+      # ── NixOS rebuild ──────────────────────────────────────
+      rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
+      upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
+      update = "nix flake update --flake ~/.dotfiles";
+
+      # ── Git ────────────────────────────────────────────────
+      gs = "git status";
+      gp = "git push";
+      gl = "git pull";
+
+      # ── Network / OSINT ────────────────────────────────────
+      ip_out = "curl -s https://ifconfig.me && echo";
+      ip_local = "ip -4 addr show scope global | awk '/inet/{print $2}'";
+      myip = "ip -4 addr | awk '/inet/ && !/127.0.0.1/{printf \"%-12s %s\\n\", $NF\":\", $2}'";
+      ports = "ss -tulnp";
+      vpn = "annixion-tunnels | awk '{printf \"VPN ACTIVE: %s\\n\", $1}' | grep . || echo 'No VPN detected'";
+
+      # ── Quick config edit ──────────────────────────────────
+      enix = "kate ~/.dotfiles/flake.nix";
+      emod = "kate ~/.dotfiles/system/";
+      euser = "kate ~/.dotfiles/user/";
+      ehome = "kate ~/.dotfiles/home/";
+      ezsh = "kate ~/.dotfiles/home/shell/default.nix";
+
+      # ── Tools ──────────────────────────────────────────────
+      ftp = "lftp";
+      neofetch = "fastfetch";
+      hex = "xxd";
+      b64e = "base64";
+      b64d = "base64 -d";
+      hashfile = "sha256sum";
+      serve = "python3 -m http.server";
+
+      # ── SecLists explorer ──────────────────────────────────
+      seclists = ''
+        sh -c "
+          SECLISTS_PATH=\"\''${SECLISTS_PATH:-/run/current-system/sw/share/wordlists/seclists/}\" &&
+          printf \"=== Seclists Explorer ===\n\n%s\n\nThis is the Seclists wordlists directory (read-only in Nix store). Listing top-level folders:\n\n\" \"\$SECLISTS_PATH\" &&
+          ls -la --group-directories-first \"\$SECLISTS_PATH\" 2>/dev/null | awk '/^d/ {print}'
+        "
+      '';
+    };
+
+    # ── Shell init content ───────────────────────────────────────────────────
+    initContent = lib.mkMerge [
+      # fzf-tab at 1150 — after oh-my-zsh runs compinit at 1100.
+      (lib.mkOrder 1150 ''
+        source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+      '')
+
+      # Key bindings at 1200 — after oh-my-zsh loads at 1100.
+      (lib.mkOrder 1200 ''
+        bindkey "^[[1;5C" forward-word          # Ctrl+Right  jump word forward
+        bindkey "^[[1;5D" backward-word         # Ctrl+Left   jump word back
+        bindkey "^H"      backward-kill-word    # Ctrl+Bksp   delete word back
+        bindkey "^[[3;5~" kill-word             # Ctrl+Del    delete word forward
+        bindkey "^[[3~"   delete-char           # Delete      delete char forward
+        bindkey "^[[H"    beginning-of-line     # Home
+        bindkey "^[[F"    end-of-line           # End
+
+        autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+        bindkey "^[[A" up-line-or-beginning-search    # Up   — history prefix search
+        bindkey "^[[B" down-line-or-beginning-search  # Down — history prefix search
+
+        # Last command's char count, read by oh-my-posh below.
+        function _omp_track_cmd_len() { export OMP_CMD_LEN=''${#1}; }
+        add-zsh-hook preexec _omp_track_cmd_len
+      '')
+
+      # any-nix-shell at 1250 — rewrites nix-shell, nix develop and nix run to
+      # hand the session to zsh instead of leaving you in bash.
+      (lib.mkOrder 1250 ''
+        ${pkgs.any-nix-shell}/bin/any-nix-shell zsh | source /dev/stdin
+      '')
+
+      # fast-syntax-highlighting at 1190 — after plugins, before bindings.
+      (lib.mkOrder 1190 ''
+        source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+      '')
+
+      # ── AnNIXion banner — defined here, run before the first prompt ──────
+      (lib.mkAfter ''
+        # The kernel knows which links are tunnels; the name does not. Providers
+        # hand out WireGuard interfaces like ee-tll-wg-001, which no prefix match
+        # catches, and a bridge named vpn0 is not a tunnel.
+        annixion-tunnels() {
+          ip -d -o link show 2>/dev/null | awk '
+            {
+              iface = $2
+              sub(/:$/, "", iface)
+              # Drop index and name so an interface cannot match on its own name.
+              $1 = ""
+              $2 = ""
+              if ($0 ~ /(^| )(wireguard|tun|tap|ppp|gre|gretap|ipip|sit|vti|xfrm)( |$)/)
+                print iface
+            }
+          '
+        }
+
+        annixion-banner() {
+          echo ""
+          echo "  \e[1;31m █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗\e[0m"
+          echo "  \e[1;31m██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║\e[0m"
+          echo "  \e[1;31m███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║\e[0m"
+          echo "  \e[1;31m██╔══██║██║╚██╗██║██║╚████║██║ ██╔██╗ ██║██║   ██║██║╚███║\e[0m"
+          echo "  \e[1;31m██║  ██║██║ ╚████║██║ ╚███║██║██╔╝╚██╗██║╚██████╔╝██║ ╚██║\e[0m"
+          echo "  \e[1;31m╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝\e[0m"
+          echo ""
+
+          printf "  \e[0;90mhost  \e[0m %s\n" "$(hostname)"
+          printf "  \e[0;90mdate  \e[0m %s\n" "$(date '+%A %d %B %Y  %H:%M')"
+          printf "  \e[0;90mkernel\e[0m %s\n" "$(uname -r)"
+          echo ""
+
+          # VPN interfaces highlighted in green.
+          ip -4 addr show scope global 2>/dev/null |
+            awk -v tunnels=" $(annixion-tunnels | tr '\n' ' ')" '
+            /inet/ {
+              ip = $2
+              split($NF, a, "@")
+              iface = a[length(a)]
+              if (index(tunnels, " " iface " "))
+                printf "  \033[0;32mvpn   \033[0m \033[0;32m%-20s (%s) VPN\033[0m\n", ip, iface
+              else
+                printf "  \033[0;90mip    \033[0m %-20s (%s)\n", ip, iface
+            }
+          '
+          echo ""
+        }
+
+        # Nested shells (nix-shell, the tool menu) skip the banner. An if
+        # block, not &&, so .zshrc does not end on a non-zero status.
+        if [[ -z "$IN_NIX_SHELL$IN_NIX_RUN$ANNIXION_NO_BANNER" ]]; then
+          annixion-banner
+        fi
+      '')
+    ];
+  };
+
+  # ── fzf — fuzzy finder with ZSH widget integration ─────────────────────────
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  # ── zoxide — frecency directory jumping ────────────────────────────────────
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+}
