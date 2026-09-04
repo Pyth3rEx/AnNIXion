@@ -135,7 +135,12 @@
             inherit (pkgs) lib;
             c = import ./catalog { inherit lib; };
             node = n: {
-              inherit (n) path order directory;
+              inherit (n)
+                path
+                order
+                directory
+                label
+                ;
               category = n.category or null;
               mark = n.mark.name;
               tools = builtins.attrNames n.tools;
@@ -145,8 +150,14 @@
           pkgs.writeText "annixion-catalog.json" (
             builtins.toJSON {
               nodes = map node c.allNodes;
-              tools = lib.mapAttrs (_: t: {
-                inherit (t) path category launch;
+              tools = lib.mapAttrs (key: t: {
+                inherit (t)
+                  path
+                  category
+                  launch
+                  name
+                  ;
+                icon = "annixion-${key}";
                 hasPackage = (t.package or null) != null;
                 alsoIn = t.alsoIn or [ ];
                 wmName = t.wmName or null;

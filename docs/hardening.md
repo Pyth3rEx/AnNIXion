@@ -27,7 +27,7 @@ services.openssh.enable = true;
 | `documentation.nixos`, `.info`, `.doc` | Offline manuals. **Man pages stay** — this is a tooling distro, so only the three sub-switches are set. `documentation.enable` is the master gate and takes man pages with it. |
 | `programs.kde-pim` | Plasma enables it by default, putting `akonadi` and `kdepim-runtime` on PATH — a database and agents speaking IMAP, EWS, Google, Kolab and DAV, with no mail client to use them. |
 | `environment.plasma6.excludePackages` | `krdp` (a second RDP server beside xrdp), `plasma-browser-integration` (bridges the desktop into the browser through a native messaging host), `ffmpegthumbs` (parses whatever video a directory holds), `elisa`, `khelpcenter`, the wallpaper pack, the touch keyboard. |
-| Baloo indexing | Indexing file contents means parsing them. Set in `home/desktop/plasma.nix`. |
+| Baloo indexing | Indexing file contents means parsing them. Set in `home/desktop/plasma/`. |
 | `environment.stub-ld` | Loader stub for unpatched foreign binaries. |
 | `nix.settings.allowed-users` | Defaulted to `*`, letting any account submit builds. Now `@wheel`. |
 | Firewall ports | Nothing listens that should be reachable, so nothing is opened. |
@@ -110,7 +110,7 @@ It enables the root daemon and puts the operator in the `docker` group. Take it
 when a container genuinely needs the host network — not to make a permission
 error go away.
 
-**Containers are outside the VPN killswitch.** `system/vpn-enforcement.nix`
+**Containers are outside the VPN killswitch.** `system/vpn/`
 matches one cgroup, `annixion-vpn.slice` under the user manager, and arms
 nftables against it. A container is not in that cgroup under either daemon:
 rootful containers sit under `system.slice`, and even the rootless daemon runs
@@ -129,7 +129,7 @@ place that does it independently:
 | Where | How |
 |---|---|
 | Dolphin | `HiddenFilesShown` in the global view-properties file it reads instead of `dolphinrc` |
-| KDE open/save dialogs | `Show Hidden Files` in `kdeglobals` (set in `home/desktop/plasma.nix`) |
+| KDE open/save dialogs | `Show Hidden Files` in `kdeglobals` (set in `home/desktop/plasma/`) |
 | GTK file chooser (Firefox) | `show-hidden` via dconf, for GTK3 and GTK4 |
 | `rg` and `fd` | `--hidden`, which they otherwise skip |
 

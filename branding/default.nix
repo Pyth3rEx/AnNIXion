@@ -7,14 +7,13 @@ let
   banner = ../assets/branding/banner.png;
   wallpaper = ../assets/branding/wallpapers/wallpaper_2.png;
 
-  # The banner ships on #0D0D0D, so dropping it straight onto black leaves a
-  # visible panel. Key that shade out first, then flatten onto true black.
+  # scripts/banner.sh renders on true black, so the banner drops straight onto
+  # the splash: no shade to key out first, and nothing left to leave a panel.
   onBlack =
     name: width: geometry:
     pkgs.runCommand name { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
-      magick ${banner} -fuzz 14% -transparent '#0D0D0D' \
-        -resize ${toString width}x -background black -gravity center \
-        -extent ${geometry} -flatten $out
+      magick ${banner} -resize ${toString width}x \
+        -background black -gravity center -extent ${geometry} -flatten $out
     '';
 in
 rec {

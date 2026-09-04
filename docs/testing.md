@@ -104,7 +104,7 @@ a path a module chose.
 |---|---|
 | `tests/system/boot.nix` | The system boots, and the services a login depends on come up. |
 | `tests/system/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
-| `tests/system/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
+| `tests/system/vpn/` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
 | `tests/system/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
 | `tests/system/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
 | `tests/system/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
