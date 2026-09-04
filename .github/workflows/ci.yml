@@ -83,6 +83,7 @@ jobs:
           nix develop --command bash tests/pr-column.sh
           nix develop --command bash tests/sbom.sh
           nix develop --command bash tests/supply-chain.sh
+          nix develop --command bash tests/package-provenance.sh
           nix develop --command bash tests/security-pages.sh
           nix develop --command bash tests/cve-status-workflow.sh
           nix develop --command bash tests/pr-cve-scan.sh

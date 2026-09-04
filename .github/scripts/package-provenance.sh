@@ -73,25 +73,34 @@ let
     else
       (l.fullName or l.shortName or l.spdxId or "unknown");
 
+  # p itself can throw when forced: a removed nixpkgs package stays a
+  # top-level attribute that evaluates to a throw rather than being absent,
+  # so "p or null" does not save us and the null-check has to sit inside
+  # tryEval too, not just the meta lookup after it.
   one =
     n:
     let
-      p = pkgs.\${n} or null;
       r = builtins.tryEval (
         let
-          m = p.meta or { };
+          p = pkgs.\${n} or null;
         in
-        {
-          license = if m ? license then licName m.license else "";
-          maintainers = map (x: {
-            name = x.name or "";
-            github = x.github or "";
-          }) (m.maintainers or [ ]);
-          homepage = if (m ? homepage) && builtins.isString m.homepage then m.homepage else "";
-        }
+        if p == null then
+          null
+        else
+          let
+            m = p.meta or { };
+          in
+          {
+            license = if m ? license then licName m.license else "";
+            maintainers = map (x: {
+              name = x.name or "";
+              github = x.github or "";
+            }) (m.maintainers or [ ]);
+            homepage = if (m ? homepage) && builtins.isString m.homepage then m.homepage else "";
+          }
       );
     in
-    if p == null then null else (if r.success then r.value else null);
+    if r.success then r.value else null;
 in
 builtins.listToAttrs (
   map (n: {
