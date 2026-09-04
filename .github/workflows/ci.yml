@@ -74,6 +74,7 @@ jobs:
           nix develop --command bash tests/milestone.sh
           nix develop --command bash tests/prompt-width.sh
           nix develop --command bash tests/firefox-profiles.sh
+          nix develop --command bash tests/catalog.sh
           nix develop --command bash tests/menu-icons.sh
           nix develop --command bash tests/branding.sh
           nix develop --command bash tests/etc-hosts.sh
