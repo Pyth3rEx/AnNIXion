@@ -1,4 +1,4 @@
-# AnNIXion operator marks: renders home/icons/marks.nix into an icon theme.
+# AnNIXion operator marks: renders the catalog's drawings into an icon theme.
 # Geometry and colour rules live in docs/visual-identity.md.
 { pkgs, lib }:
 
@@ -18,7 +18,9 @@ let
     nixenv = "#7EBAE4";
   };
 
-  marks = import ./marks.nix;
+  catalog = import ../../catalog { inherit lib; };
+  inherit (catalog) marks;
+
   # Marks are drawn on a 24-unit grid, but a round cap or join reaches half a
   # stroke width past the geometry — so a drip that ends on the bottom edge has
   # its tip sliced flat by the viewBox and reads as a cut, not a drawn end.
@@ -67,39 +69,16 @@ let
   # that entry declares, and home/plasma.nix pins those entries on purpose:
   # Plasma matches a window to its launcher by class, and only the stock name
   # resolves. So each of these marks is installed under the stock name too —
-  # without it the launcher falls through to an inherited theme. The three
-  # marked generic are freedesktop names shared by any app of that kind.
-  aliases = {
-    ark = [ "ark" ];
-    burpsuite = [ "burpsuite" ];
-    dolphin = [ "org.kde.dolphin" ];
-    filelight = [ "filelight" ];
-    ghidra = [ "ghidra" ];
-    github-desktop = [ "github-desktop" ];
-    gqrx = [ "gqrx" ];
-    htop = [ "htop" ];
-    kate = [ "kate" ];
-    kcalc = [ "accessories-calculator" ]; # generic
-    kleopatra = [ "kleopatra" ];
-    konsole = [ "utilities-terminal" ]; # generic
-    kwalletmanager = [ "kwalletmanager" ];
-    obsidian = [ "obsidian" ];
-    onlyoffice = [ "onlyoffice-desktopeditors" ];
-    systemsettings = [
-      "systemsettings"
-      "preferences-system" # generic
-    ];
-    vscodium = [ "vscodium" ];
-    wireshark = [ "org.wireshark.Wireshark" ];
-  };
+  # without it the launcher falls through to an inherited theme.
+  #
+  # The list lives in the tool's own catalog file, beside the mark it aliases,
+  # so an alias cannot outlive the mark it points at.
+  aliases = lib.mapAttrs (_: t: t.aliases) (lib.filterAttrs (_: t: t ? aliases) catalog.tools);
 
   links = lib.concatLists (
     lib.mapAttrsToList (
       name: stock:
-      if marks ? ${name} then
-        map (s: "ln -s annixion-${name}.svg $out/share/icons/AnNIXion/scalable/apps/${s}.svg") stock
-      else
-        throw "icon alias ${name}: no such mark"
+      map (s: "ln -s annixion-${name}.svg $out/share/icons/AnNIXion/scalable/apps/${s}.svg") stock
     ) aliases
   );
 in
