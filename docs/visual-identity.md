@@ -135,8 +135,9 @@ silhouette identifies.
 Where one application appears several times under different colours, every
 copy shares a single drawing and the colour carries the whole difference. Two
 families exist: the four browser profiles and the three terminals. Their
-bodies are bound once at the top of `home/icons/marks.nix`, so a redraw cannot
-drift between the variants and a fifth variant costs no artwork at all.
+bodies are bound once in `catalog/bodies.nix` and referenced by name, so a
+redraw cannot drift between the variants and a fifth variant costs no artwork
+at all.
 
 This is the rule that decided the browser mark. A globe is the more obvious
 browser drawing, but at 22px it is indistinguishable from the Internet
@@ -163,7 +164,7 @@ gap either side of the crossing symbol. On the menu ground that gap is
 invisible and the two shapes simply separate; on the wallpaper it reads as the
 dark outline the marks take there anyway.
 
-In `marks.nix` this is the mark's `over` attribute. Order matters: body, then
+In the catalog this is the mark's `over` attribute. Order matters: body, then
 knockout, then the symbol.
 
 | Rule | Value |
@@ -386,7 +387,7 @@ because persona work touches archives and social surfaces, not the target
 estate.
 
 A fifth or sixth profile needs no artwork — forensic `#4A90FF` and reverse
-`#F213A0` are two lines in `marks.nix`. That is what the six recoloured PNGs
+`#F213A0` are two lines in `catalog/browsers/`. That is what the six recoloured PNGs
 were paying a megabyte for, and two of the six (`firefox-blue.png`,
 `firefox-purple.png`) were never referenced at all. All six are gone.
 
@@ -424,10 +425,11 @@ not teaching.
 
 ## How it is built
 
-`home/icons/marks.nix` holds one entry per mark — a class and the 24-grid
-drawing. The two family bodies are bound in a `let` at the top of that file and
-referenced by name, so the four browsers and the three terminals cannot drift
-apart. `home/icons/default.nix` renders each into
+`catalog/` holds one file per mark — a class and the 24-grid drawing, beside
+the package and menu entry of the same tool. Drawings worn by more than one
+mark are bound once in `catalog/bodies.nix` and referenced by name, so the four
+browsers and the three terminals cannot drift apart. `home/icons/default.nix`
+renders each into
 `scalable/apps/annixion-<name>.svg`, the class supplying the stroke colour, and
 emits an `index.theme` inheriting `Slot-Dark-Icons`, `breeze-dark`, `Adwaita`
 and `hicolor`. Anything the set does not draw still falls back to a real icon.
