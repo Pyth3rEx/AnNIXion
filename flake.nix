@@ -213,6 +213,35 @@
         # tests/branding.sh builds the greeter through here rather than from
         # <nixpkgs>, which a CI runner does not set.
         sddm-theme = (import ./branding { inherit pkgs; }).sddmTheme;
+
+        # The catalog as plain data, for the same reason: tests/catalog.sh
+        # reads it through here rather than importing it against <nixpkgs>.
+        # Only what a test can assert about — no drawings, no functions.
+        catalog-json =
+          let
+            inherit (pkgs) lib;
+            c = import ./catalog { inherit lib; };
+            node = n: {
+              inherit (n) path order directory;
+              category = n.category or null;
+              mark = n.mark.name;
+              tools = builtins.attrNames n.tools;
+              children = map (x: x.path) n.children;
+            };
+          in
+          pkgs.writeText "annixion-catalog.json" (
+            builtins.toJSON {
+              nodes = map node c.allNodes;
+              tools = lib.mapAttrs (_: t: {
+                inherit (t) path category launch;
+                hasPackage = (t.package or null) != null;
+                alsoIn = t.alsoIn or [ ];
+                wmName = t.wmName or null;
+              }) c.tools;
+              marks = builtins.attrNames c.marks;
+              support = builtins.attrNames c.support;
+            }
+          );
       };
 
       nixosConfigurations = {
