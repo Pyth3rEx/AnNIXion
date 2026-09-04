@@ -119,7 +119,8 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   ├── xrdp.nix                   # Hyper-V guest support, Enhanced Session via vsock
 │   ├── security-tools.nix         # The system package set, taken from the catalog
 │   ├── burp-ca.nix                # annixion-burp-ca
-│   ├── vpn-enforcement.nix        # Kernel killswitch: egress confined to the VPN
+│   ├── core/                      # Boot, networking, nix, locale, audio, users
+│   ├── vpn/                       # Kernel killswitch: one file per program
 │   ├── hardening.nix              # Attack surface reduction
 │   ├── shell.nix                  # Zsh for every login, prompt for shells HM does not own
 │   └── hardware-stub.nix          # Stand-in disk layout for CI and fresh clones
@@ -127,7 +128,7 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 ├── home/                          # Home Manager — the operator's environment
 │   ├── default.nix                # Base user environment
 │   ├── firefox/                   # The four profiles, their policies and their theme
-│   ├── desktop/                   # Plasma, the application menu, the panel, the icons
+│   ├── desktop/                   # Plasma (a file per surface), the menu, the icons
 │   ├── apps/                      # Konsole, VSCodium, OnlyOffice, fastfetch
 │   └── shell/                     # Zsh, oh-my-posh and its theme
 │
