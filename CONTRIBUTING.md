@@ -138,10 +138,15 @@ networking.hostName = "AnNIXion";
 
 ## Adding tools
 
-System-wide security tools live in `system/security-tools.nix`. Add the
-nixpkgs package to `environment.systemPackages` with a short inline comment,
-then rebuild and confirm it resolves. For tools not yet in nixpkgs, see the
-overlays plan in [docs/roadmap.md](docs/roadmap.md) (Phase 9).
+A tool is one file in `catalog/`, declaring its package, its menu entry and its
+icon together — put it in the kill-chain phase it belongs to. Nothing registers
+it anywhere; the file being there is the registration. The schema is in
+[docs/architecture.md](docs/architecture.md#adding-a-tool).
+
+Run `tests/shell/catalog.sh` and `tests/shell/menu-icons.sh` afterwards: the
+first checks the catalog still describes a menu that can be built, the second
+that every `Icon=` resolves. For tools not yet in nixpkgs, see the overlays plan
+in [docs/roadmap.md](docs/roadmap.md) (Phase 9).
 
 ## Adding or changing user-facing config
 

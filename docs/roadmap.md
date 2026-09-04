@@ -125,7 +125,7 @@ Rationale:
 - Stable X11 session required for reliable xrdp/Enhanced Session support
 - Wayland (Plasma 6) available as a future upgrade path once xrdp Wayland support matures
 
-- [x] KDE Plasma 6 declared in `system/desktop.nix`; per-user Plasma settings extracted to `home/desktop/plasma.nix` (plasma-manager)
+- [x] KDE Plasma 6 declared in `system/desktop.nix`; per-user Plasma settings extracted to `home/desktop/plasma/` (plasma-manager)
 - [x] SDDM login manager with Breeze theme
 - [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
 - [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Alt+F4 close
@@ -179,7 +179,7 @@ Rationale:
 - [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, social search
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
 - [x] Burp proxy set at profile level (`network.proxy.*`) rather than via FoxyProxy, so interception does not depend on a third-party extension (#25); `failover_direct = false` blocks leaks if Burp is down. FoxyProxy stays installed for ad-hoc switching, shipped disabled with the Burp entry as a worked example
-- [x] VPN enforcement rebuilt in the kernel (`system/vpn-enforcement.nix`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
+- [x] VPN enforcement rebuilt in the kernel (`system/vpn/`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
 - [x] VPN enforcement covers OSINT and Puppet Master. Red Team was enforced too until #37: an attribution control gating a reachability workflow made the profile unusable on internal engagements, where the target is on the LAN and no tunnel is involved. It now launches direct, with `annixion-vpn-browser "Red Team"` available when the tunnel is wanted — and Burp must go through `annixion-vpn-run` alongside it, since the browser only reaches loopback
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
@@ -208,13 +208,15 @@ Rationale:
 
 **Goal:** RedTeam, OSINT, Privacy, and SDR tool sets as independently selectable modules.
 
-> **Current status:** `system/security-tools.nix` contains all tools as a single flat module. Phase 8 refactors this into separate, independently selectable modules wired through the flake installer.
+> **Current status:** the split landed, finer than this phase planned. `catalog/`
+> declares each tool in its own file — package, menu entry and mark together —
+> grouped by kill-chain phase rather than by the four sets below. The per-set
+> module list is therefore superseded; what remains is making a *selection*
+> of tools installable, which the catalog makes a filter rather than a refactor.
 
-- [ ] `system/tools/redteam.nix` — nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, netcat, wireshark, john, hashcat, hydra, aircrack-ng, ghidra, binwalk
-- [ ] `system/tools/osint.nix` — theHarvester, spiderfoot, sherlock, holehe, recon-ng, maltego, ExifTool, metagoofil, photon
-- [ ] `system/tools/privacy.nix` — tor, torbrowser, proxychains-ng, mullvad-vpn, protonvpn, macchanger
-- [ ] `system/tools/sdr.nix` — hackrf, gqrx, gnuradio (RF/SDR toolchain)
-- [ ] Refactor `system/security-tools.nix` into independent modules
+- [x] ~~`system/tools/{redteam,osint,privacy,sdr}.nix` as separate modules~~ — superseded by `catalog/`, which goes one file per tool. See [architecture.md](architecture.md)
+- [x] Refactor `system/security-tools.nix` into independent files
+- [ ] A profile flag that selects which catalog phases are installed
 - [ ] Wire profile flags from Phase 3 installer into flake outputs
 - [ ] `flake.nix` conditionally includes tool modules based on selected profile
 

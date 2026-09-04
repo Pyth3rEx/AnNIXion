@@ -46,7 +46,7 @@ ZSH configuration lives in `home/shell/` — `default.nix` for the shell,
 
 ## Desktop panel
 
-The top bar is declared in `home/desktop/plasma.nix` under `programs.plasma.panels`, and
+The top bar is declared in `home/desktop/plasma/` under `programs.plasma.panels`, and
 is organised by function into three groups:
 
 ```
@@ -121,7 +121,7 @@ turns that off, so the bar names whatever is focused, on any screen.
 
 ## Keyboard
 
-Shortcuts live in `home/desktop/plasma.nix`: window and desktop keys under
+Shortcuts live in `home/desktop/plasma/`: window and desktop keys under
 `shortcuts.kwin`, launchers under `hotkeys.commands`.
 
 | Keys | Action |
@@ -204,7 +204,12 @@ No manual activation needed — it is included by default. Open VSCodium after t
 
 ## Adding tools
 
-System packages are declared in `system/security-tools.nix`. Add any nixpkgs package to the `environment.systemPackages` list and rebuild.
+A tool is one file in `catalog/`, holding its package, its menu entry and its
+icon together. Drop it in the kill-chain phase it belongs to and rebuild — the
+package list, the `.desktop` entry, the menu XML and the icon theme all follow
+from it. There is no list to add it to.
+
+The schema and the fields are in [architecture.md](architecture.md#adding-a-tool).
 
 For tools not in nixpkgs, add a derivation under `overlays/` (see [docs/roadmap.md](roadmap.md) Phase 9).
 
