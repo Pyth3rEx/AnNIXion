@@ -10,3 +10,6 @@ result-iso
 http_cache.sqlite
 annixion-*.cdx.json
 annixion-*.supply-chain.md
+
+# Editor workspace settings are personal, not the project's.
+.vscode/

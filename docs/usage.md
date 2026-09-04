@@ -126,7 +126,7 @@ Red Team launches unenforced by default, since its job is reaching the target
 rather than hiding the source — see [above](#running-red-team-through-a-vpn) for
 running it through the tunnel when that is what you want.
 
-How it works (`modules/vpn-enforcement.nix`):
+How it works (`system/vpn-enforcement.nix`):
 
 1. Enforced applications run inside a dedicated systemd user slice —
    the browser profiles launched through `annixion-vpn-browser`, and anything

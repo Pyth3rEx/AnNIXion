@@ -41,7 +41,7 @@ bar, and it rules out most of what gets written to satisfy a policy.
   behaviour, not the configuration. `services.foo.enable = true` evaluating is
   L1's job. Whether the service does the thing is this one's.
 - **A change to CI or repository automation** needs a fixture test as well.
-  `tests/workflow-injection.sh` and `tests/workflow-permissions.sh` exist
+  `tests/repo/workflow-injection.sh` and `tests/repo/workflow-permissions.sh` exist
   because a workflow is code that runs with a token, and it is the one kind of
   code that cannot be tried locally before it matters.
 - **A bug fix** needs a test that fails before the fix. If you cannot write one,
@@ -80,36 +80,36 @@ a path a module chose.
 
 | Test | What it covers |
 |---|---|
-| `tests/milestone.sh` | Which milestone new work lands on, and the column that implies. Drives `assign-milestone.sh` and `board-status.sh` through `--select` and `--decide`. |
-| `tests/prompt-width.sh` | The prompt's responsive ladder: the top line never wraps, and a `nix-shell` stays marked, at every width. Renders the theme the repository ships. |
-| `tests/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
-| `tests/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
-| `tests/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects, and that every un-namespaced file in that theme is an alias onto a mark that exists. A name that resolves nowhere draws a blank placeholder rather than erroring. |
-| `tests/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
-| `tests/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
-| `tests/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
-| `tests/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
-| `tests/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
-| `tests/pr-column.sh` | Which board column a pull request lands in as it opens, moves in and out of draft, or is closed unmerged — and that `project.yml` still receives those events. |
-| `tests/sbom.sh` | That both release SBOMs are generated, measured and published — and that the ways they degrade silently are refused: a store path in place of a flakeref, a document with no components, a runtime SBOM where nothing carries a licence, a build closure that no longer contains the runtime one. Drives the real script with `sbomnix` and `nix` stubbed. |
-| `tests/security-pages.sh` | That the four published security pages keep the installed closure, its findings and the applications somebody chose apart — and that every maintainer stays individually reachable rather than collapsing into a `+3` nobody can contact. |
-| `tests/cve-status-workflow.sh` | That the weekly scan publishes only when it has news: a run where nothing but the clock moved must not commit, and one where a count changed on that same line must. Also that `ci.yml` ignores pushes to the generated pages — without it every Monday's bot commit starts a three-hour ISO build. |
-| `tests/pr-cve-scan.sh` | That the pull request scan stays scoped to what the branch adds: the generated paths that reference the whole closure are kept out of it, a finding against a dependency the branch did not introduce is left out, and the target handed to the scanner really depends on the paths it was built from — one that does not scans clean and reports nothing wrong. Also that the comment replaces the previous one rather than stacking up. |
-| `tests/supply-chain.sh` | That the readable page keeps the installed closure and the build-only inputs apart — a compiler that never ships must not appear in the half a reader treats as their exposure — and that it still says, in words, why the two halves are not to be added together. |
-| `tests/dns-axfr.sh` | That a zone transfer actually leaves this machine, and that an intercepting resolver is named as such rather than read as a locked-down zone. **The one test that uses the network.** |
+| `tests/repo/milestone.sh` | Which milestone new work lands on, and the column that implies. Drives `assign-milestone.sh` and `board-status.sh` through `--select` and `--decide`. |
+| `tests/shell/prompt-width.sh` | The prompt's responsive ladder: the top line never wraps, and a `nix-shell` stays marked, at every width. Renders the theme the repository ships. |
+| `tests/shell/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
+| `tests/shell/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
+| `tests/shell/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects, and that every un-namespaced file in that theme is an alias onto a mark that exists. A name that resolves nowhere draws a blank placeholder rather than erroring. |
+| `tests/shell/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
+| `tests/shell/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
+| `tests/repo/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
+| `tests/repo/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
+| `tests/repo/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
+| `tests/repo/pr-column.sh` | Which board column a pull request lands in as it opens, moves in and out of draft, or is closed unmerged — and that `project.yml` still receives those events. |
+| `tests/repo/sbom.sh` | That both release SBOMs are generated, measured and published — and that the ways they degrade silently are refused: a store path in place of a flakeref, a document with no components, a runtime SBOM where nothing carries a licence, a build closure that no longer contains the runtime one. Drives the real script with `sbomnix` and `nix` stubbed. |
+| `tests/repo/security-pages.sh` | That the four published security pages keep the installed closure, its findings and the applications somebody chose apart — and that every maintainer stays individually reachable rather than collapsing into a `+3` nobody can contact. |
+| `tests/repo/cve-status-workflow.sh` | That the weekly scan publishes only when it has news: a run where nothing but the clock moved must not commit, and one where a count changed on that same line must. Also that `ci.yml` ignores pushes to the generated pages — without it every Monday's bot commit starts a three-hour ISO build. |
+| `tests/repo/pr-cve-scan.sh` | That the pull request scan stays scoped to what the branch adds: the generated paths that reference the whole closure are kept out of it, a finding against a dependency the branch did not introduce is left out, and the target handed to the scanner really depends on the paths it was built from — one that does not scans clean and reports nothing wrong. Also that the comment replaces the previous one rather than stacking up. |
+| `tests/repo/supply-chain.sh` | That the readable page keeps the installed closure and the build-only inputs apart — a compiler that never ships must not appear in the half a reader treats as their exposure — and that it still says, in words, why the two halves are not to be added together. |
+| `tests/shell/dns-axfr.sh` | That a zone transfer actually leaves this machine, and that an intercepting resolver is named as such rather than read as a locked-down zone. **The one test that uses the network.** |
 
 **VM tests — L3**
 
 | Test | What it covers |
 |---|---|
-| `tests/boot.nix` | The system boots, and the services a login depends on come up. |
-| `tests/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
-| `tests/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
-| `tests/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
-| `tests/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
-| `tests/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
-| `tests/git-credential-helper.nix` | That a push can find its credentials: the gh helper is configured for every user, and the binary it names is one the system still has. |
-| `tests/docker.nix` | That the container runtime is the rootless one: the daemon belongs to the user, its socket is the one the CLI is pointed at, and neither a root daemon nor a `docker` group exists. |
+| `tests/system/boot.nix` | The system boots, and the services a login depends on come up. |
+| `tests/system/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
+| `tests/system/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
+| `tests/system/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
+| `tests/system/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
+| `tests/system/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
+| `tests/system/git-credential-helper.nix` | That a push can find its credentials: the gh helper is configured for every user, and the binary it names is one the system still has. |
+| `tests/system/docker.nix` | That the container runtime is the rootless one: the daemon belongs to the user, its socket is the one the CLI is pointed at, and neither a root daemon nor a `docker` group exists. |
 
 ---
 
@@ -118,17 +118,17 @@ a path a module chose.
 ```bash
 # L0 — fixture tests. Fast enough to run on every save.
 .github/scripts/lint.sh
-tests/milestone.sh
-tests/prompt-width.sh
-tests/firefox-profiles.sh
-tests/menu-icons.sh
-tests/branding.sh
-tests/etc-hosts.sh
-tests/workflow-injection.sh
-tests/workflow-permissions.sh
-tests/stale-reviews.sh
-tests/pr-column.sh
-tests/dns-axfr.sh   # the one that needs the internet
+tests/repo/milestone.sh
+tests/shell/prompt-width.sh
+tests/shell/firefox-profiles.sh
+tests/shell/menu-icons.sh
+tests/shell/branding.sh
+tests/shell/etc-hosts.sh
+tests/repo/workflow-injection.sh
+tests/repo/workflow-permissions.sh
+tests/repo/stale-reviews.sh
+tests/repo/pr-column.sh
+tests/shell/dns-axfr.sh   # the one that needs the internet
 
 # L1 — evaluates every VM test without building any of them.
 nix flake check --no-build
@@ -158,7 +158,7 @@ add one.
 ```nix
 checks.${system} = {
   # …
-  bind-axfr = pkgs.testers.nixosTest (import ./tests/bind-axfr.nix);
+  bind-axfr = pkgs.testers.nixosTest (import ./tests/system/bind-axfr.nix);
 };
 ```
 
@@ -176,10 +176,10 @@ explicit list is worth its cost in review.
   detect the logic changing.
 - **Assert behaviour, not configuration.** That a file contains a setting is
   usually L1's business. That the setting has an effect is the test's.
-- **No network, unless the network is the subject.** `tests/dns-axfr.sh` is the
+- **No network, unless the network is the subject.** `tests/shell/dns-axfr.sh` is the
   single exception in the tree, and it is deliberately isolated in its own CI
   step so a red build there points at the network rather than at the hermetic
-  tests beside it. `tests/bind-axfr.nix` is what covers the same code path when
+  tests beside it. `tests/system/bind-axfr.nix` is what covers the same code path when
   the network is not available.
 - **Name the failure.** An assertion that fails should print what it expected
   and what it got. Somebody reading the CI log has no access to your terminal.

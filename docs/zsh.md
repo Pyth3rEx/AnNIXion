@@ -1,18 +1,18 @@
 # ZSH Reference
 
-AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/zsh/`:
+AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/shell/`:
 
 | File | Contents |
 |---|---|
-| `home/zsh/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
-| `home/zsh/oh-my-posh.nix` | Turns the prompt on for the Home Manager user |
-| `home/zsh/omp-theme.nix` | The prompt itself — block layout, segments and colours |
+| `home/shell/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
+| `home/shell/oh-my-posh.nix` | Turns the prompt on for the Home Manager user |
+| `home/shell/omp-theme.nix` | The prompt itself — block layout, segments and colours |
 
 ---
 
 ## Prompt — oh-my-posh
 
-Defined in `home/zsh/omp-theme.nix`. Two-line powerline-style prompt in accent
+Defined in `home/shell/omp-theme.nix`. Two-line powerline-style prompt in accent
 red (`#FF4757`) over dark slate greys (`#0E0F13`, `#1A1D24`, `#2E323D`) with
 `#DFE4EA` text. Left-block segments open on a solid arrow in their own colour
 and close on a solid one traced by an accent red thin arrow; right-block
@@ -40,20 +40,20 @@ the default slate otherwise — and `nix-shell` adds the `❄` with the kind of
 environment. Root is checked first, so a Nix shell entered as root still reads
 red: the more dangerous state wins.
 
-`tests/prompt-width.sh` renders the theme across the whole range and fails if
+`tests/shell/prompt-width.sh` renders the theme across the whole range and fails if
 the top line wraps, the `❄` goes missing, or the background stops flipping;
-`tests/shells.nix` asserts the same three states in a VM.
+`tests/system/shells.nix` asserts the same three states in a VM.
 
 The thresholds assume a path of about 20 characters; a much longer one can still
 wrap at the low end of a band.
 
 Every shell on the machine is zsh and every one of them uses this prompt.
-`modules/shell.nix` makes zsh the default login shell for every user including
+`system/shell.nix` makes zsh the default login shell for every user including
 root, and installs the theme into `/etc/zshrc` and `/etc/bashrc` for anyone Home
 Manager does not manage.
 
 Root is managed too: `flake.nix` gives it a Home Manager configuration importing
-`home/zsh`, so `sudo su` lands in the same shell — same aliases, plugins,
+`home/shell`, so `sudo su` lands in the same shell — same aliases, plugins,
 keybindings and banner — with the session segment flipped to ` ROOT`. The CLI
 those aliases call lives in `environment.systemPackages` rather than
 `home.packages` so both users have it. Aliases written against `~/.dotfiles`
@@ -62,14 +62,14 @@ those aliases call lives in `environment.systemPackages` rather than
 Bash cannot be removed from NixOS: it is `/bin/sh`, every build sandbox and
 every activation script. What it no longer is, is a shell you land in.
 `nix-shell`, `nix develop` and `nix run` all start bash, so `any-nix-shell`
-(loaded from `home/zsh/default.nix`) rewrites them to hand the session straight
+(loaded from `home/shell/default.nix`) rewrites them to hand the session straight
 to zsh. The `❄` segment marks such a shell. The `/etc/bashrc` copy of the prompt
 covers the leftovers — `nix-shell --pure`, a bare `bash` — so even those keep the
 red prompt.
 
 
 The separator glyphs live in the Private Use Area, so the terminal font must be
-a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/konsole.nix`;
+a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/apps/konsole.nix`;
 a plain font renders the separators as empty boxes.
 
 ```
@@ -152,10 +152,10 @@ $>
 | `upgrade` | Update all flake inputs, then rebuild |
 | `update` | Update flake inputs only (no rebuild) |
 | `enix` | Open `flake.nix` in Kate |
-| `emod` | Open `modules/` in Kate |
+| `emod` | Open `system/` in Kate |
 | `euser` | Open `user/` in Kate |
-| `ehome` | Open `home.nix` in Kate |
-| `ezsh` | Open `home/zsh/default.nix` in Kate |
+| `ehome` | Open `home/` in Kate |
+| `ezsh` | Open `home/shell/default.nix` in Kate |
 
 ## Aliases — Git
 
@@ -301,7 +301,7 @@ Each new terminal session prints the AnNIXion ASCII banner followed by:
 - All global IPv4 addresses — VPN interfaces highlighted in green
 
 The banner is the `annixion-banner` function, defined at the end of `initContent`
-in `home/zsh/default.nix` and called once on startup. Run `annixion-banner` to reprint it
+in `home/shell/default.nix` and called once on startup. Run `annixion-banner` to reprint it
 in place, or `b` to clear the screen first — useful after a `clear` has scrolled
 the addresses away.
 

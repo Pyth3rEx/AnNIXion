@@ -2,7 +2,7 @@
 
 # AnNIXion
 
-![AnNIXion banner](banner.png)
+![AnNIXion banner](assets/branding/banner.png)
 
 **The environment for operators who refuse to wing it.**
 
@@ -51,7 +51,7 @@ completely, make it yours.
   installs it through Firefox enterprise policy. The Red Team profile proxies
   through Burp at profile level and does not fall back to a direct connection
   when the proxy is unavailable.
-- **Attack surface reduction.** `modules/hardening.nix` disables unused
+- **Attack surface reduction.** `system/hardening.nix` disables unused
   services, trims default packages and sets kernel sysctls. Every setting is
   applied at priority 900, so any of it can be restored with one line in
   `user/`.
@@ -182,7 +182,7 @@ Full guide including Hyper-V Enhanced Session setup →
 | [Customization](docs/customization.md) | User override system, adding tools, dev environment |
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, and the full alias and plugin list |
 | [CLI tools](docs/tools.md) | Enhanced command-line tools (bat, rg, fd, fzf, jq…) |
-| [Developer guide](docs/dev.md) | Local CI levels, VSCodium tasks, contributor workflow |
+| [Developer guide](docs/dev.md) | Local CI levels, the checks to run before pushing, contributor workflow |
 | [Testing](docs/testing.md) | The test suite, which kind of test a change needs, and the rule that every feature ships with its tests |
 | [Hardening](docs/hardening.md) | What is disabled to reduce attack surface, and how to restore it |
 | [FAQ](docs/faq.md) | Common setup and troubleshooting questions |

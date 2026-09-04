@@ -2,8 +2,7 @@
 
 Thanks for wanting to improve AnNIXion. This guide covers the branch model,
 how to set up a working environment, and what to check before opening a pull
-request. For the detailed local-CI reference (levels, VSCodium tasks, terminal
-commands) see [docs/dev.md](docs/dev.md).
+request. For the detailed local-CI reference (levels and commands) see [docs/dev.md](docs/dev.md).
 
 ---
 
@@ -33,7 +32,7 @@ nix develop        # provides nixfmt, statix, deadnix, nil, nix-output-monitor
 ```
 
 You do not need a `hardware-configuration.nix` to work on AnNIXion. The
-`AnNIXion-ci` configuration pairs the full system with `ci/hardware-stub.nix`,
+`AnNIXion-ci` configuration pairs the full system with `system/hardware-stub.nix`,
 so the flake evaluates and builds on any machine. `AnNIXion` itself is only
 offered once you have a real `hardware-configuration.nix` in the repo root.
 
@@ -48,7 +47,7 @@ Run at least L0 + L1 locally (see [docs/dev.md](docs/dev.md) for all levels):
 
 ```bash
 .github/scripts/lint.sh        # L0 — nixfmt, statix, deadnix, shellcheck, eval
-tests/milestone.sh             # L0 — script fixture tests
+tests/repo/milestone.sh             # L0 — script fixture tests
 nix flake check --no-build     # L1 — syntax / type / references
 ```
 
@@ -139,7 +138,7 @@ networking.hostName = "AnNIXion";
 
 ## Adding tools
 
-System-wide security tools live in `modules/security-tools.nix`. Add the
+System-wide security tools live in `system/security-tools.nix`. Add the
 nixpkgs package to `environment.systemPackages` with a short inline comment,
 then rebuild and confirm it resolves. For tools not yet in nixpkgs, see the
 overlays plan in [docs/roadmap.md](docs/roadmap.md) (Phase 9).

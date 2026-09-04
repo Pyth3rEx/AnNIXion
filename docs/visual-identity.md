@@ -9,7 +9,7 @@ thing. [visual-identity.pdf](visual-identity.pdf) is the same system as an
 18-page design board for 0.4.0 "Nebula", written for a design audience: the
 mission, the lockup, the specimen, the full mark set and the eight laws, with
 the implementation left here. It is regenerated from a built icon theme by
-`branding/identity-board.sh`, which refuses to print if any page has outgrown
+`scripts/identity-board.sh`, which refuses to print if any page has outgrown
 itself.
 
 ---
@@ -34,7 +34,7 @@ alone, which appears once per surface and never inside a sentence.
 | Wordmark | `AN`·**NIX**·`ION` — small caps either side, NIX in `#FF0033` |
 | Descriptor | OFFENSIVE SECURITY DISTRIBUTION, boxed in a hairline red rule |
 | Tagline | "The environment for operators who refuse to wing it" — README and release notes only, never the lockup |
-| Logo | Nix snowflake under a datamosh glitch, `assets/icons/AnNIXion.png` |
+| Logo | Nix snowflake under a datamosh glitch, `assets/branding/AnNIXion.png` |
 | Launcher mark | The same snowflake drawn to the mark rules, `annixion-logo` |
 | Codename | One word in `RELEASE_NAME` beside the number in `VERSION` |
 
@@ -82,16 +82,16 @@ language the moment it opens.
 
 | Colour | Role | Declared |
 |---|---|---|
-| `#0E0F13` | Deepest ground | `home/zsh/omp-theme.nix:3` |
-| `#1A1D24` | Raised surface | `home/zsh/omp-theme.nix:3` |
-| `#2E323D` | Segment, divider | `home/zsh/omp-theme.nix:3` |
+| `#0E0F13` | Deepest ground | `home/shell/omp-theme.nix:3` |
+| `#1A1D24` | Raised surface | `home/shell/omp-theme.nix:3` |
+| `#2E323D` | Segment, divider | `home/shell/omp-theme.nix:3` |
 | `#FF0033` | The signature accent | 18 uses across `home/` |
-| `#DFE4EA` | Primary text | `home/zsh/omp-theme.nix:3` |
-| `#301212` | Root ground | `home/konsole.nix:55` |
+| `#DFE4EA` | Primary text | `home/shell/omp-theme.nix:3` |
+| `#301212` | Root ground | `home/apps/konsole.nix:55` |
 
 ### Graffiti
 
-Sampled from `assets/wallpaper/`. Pure black ground, one spray colour per mark.
+Sampled from `assets/branding/wallpapers/`. Pure black ground, one spray colour per mark.
 
 | Colour | Role |
 |---|---|
@@ -105,7 +105,7 @@ Sampled from `assets/wallpaper/`. Pure black ground, one spray colour per mark.
 ## Typography
 
 `nerd-fonts.jetbrains-mono` and `nerd-fonts.fira-code` already ship in
-`home.nix`. JetBrains Mono is the display and interface face; set it at
+`home/`. JetBrains Mono is the display and interface face; set it at
 `-0.03em` tracking at display sizes. Labels are 11px uppercase at `0.12em`.
 Category strings and paths keep the mono face — they are things you type, and
 should look typed. The wordmark is the one place letterspacing goes wide.
@@ -193,10 +193,10 @@ is scaled by the same ratio (2.1 → 2.3275) so the weight on screen is
 unchanged. The drawing still lives on the 24-unit grid; the pad exists only to
 hold the ink the stroke throws beyond it.
 
-Both halves are enforced. `branding/mark-bbox.py` walks every path in the built
+Both halves are enforced. `scripts/mark-bbox.py` walks every path in the built
 theme — Bézier extrema included, not just the control points — and fails if any
 mark's geometry leaves the grid or any mark's ink leaves the canvas.
-`tests/menu-icons.sh` runs it. It was written after 32 of 81 marks turned out
+`tests/shell/menu-icons.sh` runs it. It was written after 32 of 81 marks turned out
 to be losing ink off the edge, twelve of them drips.
 
 ### The hand
@@ -249,8 +249,8 @@ the shell it opens agree before you have typed anything.
 | Colour | Value | Contrast | Session | Declared |
 |---|---|---|---|---|
 | Utility | `#7A8494` | 4.8:1 | The operator's own shell | the class table above |
-| Elevated | `#FF0033` | 4.5:1 | root | `home/zsh/omp-theme.nix:37` |
-| Nix | `#7EBAE4` | 8.6:1 | Inside `nix develop` or `nix-shell` | `home/zsh/omp-theme.nix:38` |
+| Elevated | `#FF0033` | 4.5:1 | root | `home/shell/omp-theme.nix:37` |
+| Nix | `#7EBAE4` | 8.6:1 | Inside `nix develop` or `nix-shell` | `home/shell/omp-theme.nix:38` |
 
 Elevated repeats the signature red rather than introducing a seventh value:
 root is the one session that is dangerous to miss, and it should read as the
@@ -279,7 +279,7 @@ achieved.
 | | | `gh` shipped as a terminal window with a prompt in it — the same drawing as Konsole, in the same grey. Two unrelated tools may not share a silhouette; it now takes the branch graph in a window. No test catches this, so it is on review. |
 | Subject | What the tool does, never its logo | Upstream logos break the set; most of these tools have none |
 | Naming | `annixion-<tool>` | Namespaced against upstream hicolor icons |
-| Stock alias | Add to `aliases` in `home/icons/default.nix` | Only if the tool ships its own `.desktop` entry — see below |
+| Stock alias | Add to `aliases` in `home/desktop/icons/default.nix` | Only if the tool ships its own `.desktop` entry — see below |
 
 Test at 22px, next to its classmates — not alone and not at 96px. A mark is
 finished when you can pick it out of its own class colour at menu size. If you
@@ -288,20 +288,20 @@ cannot, change the shape rather than adding detail.
 ### Stock icon names
 
 A tool packaged with its own `.desktop` entry asks for the icon name that entry
-declares, not for ours, and `home/plasma.nix` pins those entries deliberately —
+declares, not for ours, and `home/desktop/plasma.nix` pins those entries deliberately —
 Plasma matches a window to its launcher by class, and only the stock name
 resolves. A mark named `annixion-<tool>` is therefore never consulted for them:
 Konsole asks for `utilities-terminal`, Dolphin for `org.kde.dolphin`, and both
 fall through to the inherited theme.
 
-The `aliases` set in `home/icons/default.nix` installs those marks under the
+The `aliases` set in `home/desktop/icons/default.nix` installs those marks under the
 stock names as well, as symlinks onto the namespaced file. Three of the names
 are generic freedesktop ones rather than app-specific — `utilities-terminal`,
 `accessories-calculator` and `preferences-system` — so the mark answers for any
 application of that kind, which is the intent here but is worth knowing before
 adding a fourth.
 
-`tests/menu-icons.sh` requires every un-namespaced file in the theme to be one
+`tests/shell/menu-icons.sh` requires every un-namespaced file in the theme to be one
 of these symlinks pointing at a mark that exists. Whether a given alias names
 the right mark is not tested, and stays on review.
 
@@ -327,9 +327,9 @@ true rather than decorating.
 
 | Surface | State | Notes |
 |---|---|---|
-| Boot loader | themed | systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash. `modules/branding.nix` |
+| Boot loader | themed | systemd-boot draws a text menu and takes no theme, so the mark's first appearance is the Plymouth splash. `system/branding.nix` |
 | Login (SDDM) | themed | Breeze's greeter rebranded through `theme.conf` alone — no QML of our own |
-| Lock screen | themed | `wallpaper_2.png` via `home/plasma.nix:36` |
+| Lock screen | themed | `wallpaper_2.png` via `home/desktop/plasma.nix:36` |
 | Desktop | themed | `wallpaper_1.png`, `preserveAspectFit` on pure black |
 | Panel | themed | 32px, `annixion-logo` as launcher icon |
 | Application menu | themed | 46 entries across 33 categories, 81 marks |
@@ -355,13 +355,13 @@ that fails to load leaves no way into the machine, and Breeze's is already
 tested by everyone running Plasma.
 
 Note that `plasma6.nix` also sets the SDDM theme with `mkDefault`, so
-`modules/branding.nix` uses `lib.mkOverride 900` — `mkDefault` there is a
+`system/branding.nix` uses `lib.mkOverride 900` — `mkDefault` there is a
 conflict rather than an override, and 900 still yields to `user/`.
 
 ### Elevation
 
 The root Konsole profile swaps the whole background to `#301212` rather than
-adding a warning icon (`home/konsole.nix:53`). The rule generalises: privilege
+adding a warning icon (`home/apps/konsole.nix:53`). The rule generalises: privilege
 changes the surface you are standing on, never a decoration bolted onto it.
 
 ---
@@ -428,22 +428,22 @@ not teaching.
 `catalog/` holds one file per mark — a class and the 24-grid drawing, beside
 the package and menu entry of the same tool. Drawings worn by more than one
 mark are bound once in `catalog/bodies.nix` and referenced by name, so the four
-browsers and the three terminals cannot drift apart. `home/icons/default.nix`
+browsers and the three terminals cannot drift apart. `home/desktop/icons/default.nix`
 renders each into
 `scalable/apps/annixion-<name>.svg`, the class supplying the stroke colour, and
 emits an `index.theme` inheriting `Slot-Dark-Icons`, `breeze-dark`, `Adwaita`
 and `hicolor`. Anything the set does not draw still falls back to a real icon.
 
-`home.nix` joins that theme with `SlotIcons` into the single directory
-`xdg.dataFile."icons"` owns, and `home/plasma.nix` selects `AnNIXion`.
+`home/` joins that theme with `SlotIcons` into the single directory
+`xdg.dataFile."icons"` owns, and `home/desktop/plasma.nix` selects `AnNIXion`.
 
 Reclassifying a tool is a one-word change to its `class`. Redrawing one is a
 change to its `body` — or, for a family member, to the shared body every
-variant reads. Neither touches `home/apps-menu.nix`, which names marks
+variant reads. Neither touches `home/desktop/apps-menu.nix`, which names marks
 only by `annixion-<tool>` and `annixion-menu-<slug>`.
 
 Adding a menu entry means adding its mark in the same commit —
-`tests/menu-icons.sh` fails on any `Icon=` that resolves nowhere, which is the
+`tests/shell/menu-icons.sh` fails on any `Icon=` that resolves nowhere, which is the
 check that would have caught the four dead names below.
 
 The theme this replaced, `Slot-Nord-Dark-Colorize-Icons`, shipped 195 place

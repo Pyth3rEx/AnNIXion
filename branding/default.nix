@@ -3,9 +3,9 @@
 { pkgs }:
 
 let
-  mark = ../assets/icons/AnNIXion.png;
-  banner = ../banner.png;
-  wallpaper = ../assets/wallpaper/wallpaper_2.png;
+  mark = ../assets/branding/AnNIXion.png;
+  banner = ../assets/branding/banner.png;
+  wallpaper = ../assets/branding/wallpapers/wallpaper_2.png;
 
   # The banner ships on #0D0D0D, so dropping it straight onto black leaves a
   # visible panel. Key that shade out first, then flatten onto true black.

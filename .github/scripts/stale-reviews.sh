@@ -7,7 +7,7 @@
 #
 #   --decide <review> <last-author-activity|-> <now>   → close | warn | none
 #
-# --decide takes ISO-8601 timestamps and touches nothing, so tests/stale-reviews.sh
+# --decide takes ISO-8601 timestamps and touches nothing, so tests/repo/stale-reviews.sh
 # can drive the real logic without a network.
 set -uo pipefail
 

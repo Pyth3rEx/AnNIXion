@@ -101,61 +101,50 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 ```
 .
 ├── flake.nix                      # Inputs, outputs, system and user wiring
-├── iso.nix                        # Live installer ISO configuration
 ├── hardware-configuration.nix     # Auto-generated per-machine — gitignored, do not edit
 ├── VERSION                        # Semantic version — bumped on every release
 ├── RELEASE_NAME                   # Codename for the current release
 │
-├── scripts/
-│   └── annixion-install           # Guided installer, bundled into the ISO
+├── catalog/                       # One file per tool: its package, menu entry and mark
+│   ├── bodies.nix                 # Drawings worn by more than one mark
+│   ├── recon/ weapon/ delivery/   # A folder is a menu node: _menu.nix describes it,
+│   ├── exploit/ install/ c2/      #   every other .nix beside it is a tool inside it
+│   ├── postex/ forensics/ re/ sniffing/
+│   ├── tools/ system/             # The unnumbered menus: Internet, Dev, Utils, System
+│   ├── browsers/                  # The four Firefox profile marks
+│   └── support/                   # Installed system-wide but never shown
 │
-├── home.nix                       # Base user environment
-├── home/
-│   ├── firefox/
-│   │   ├── default.nix            # Firefox enable, policies, desktop launchers
-│   │   ├── untrusted.nix          # Unsafe Browser profile (clearnet, id 0)
-│   │   ├── redteam.nix            # Red Team profile: Burp proxy, web tooling
-│   │   ├── osint.nix              # OSINT profile: VPN-enforced, investigation extensions
-│   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona and containers
-│   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
-│   ├── plasma.nix                 # KDE Plasma: panels, shortcuts, Krohnkite tiling
-│   ├── zsh/
-│   │   ├── default.nix            # ZSH: oh-my-zsh, aliases, plugins, banner
-│   │   ├── oh-my-posh.nix         # Prompt: enabled for zsh and bash
-│   │   └── omp-theme.nix          # Prompt: blocks, segments, colours
-│   ├── fastfetch.nix              # Fastfetch system-info banner
-│   ├── vscodium.nix               # VSCodium with the Nix toolchain
-│   ├── only-office.nix            # OnlyOffice document editor
-│   ├── apps-menu.nix              # Kill-chain application menu and desktop entries
-│   ├── control-center.nix         # annixion-cc control center, Meta key handler
-│   └── file-visibility.nix        # Show hidden files across KDE, GTK, rg and fd
-│
-├── modules/
+├── system/                        # NixOS modules
 │   ├── desktop.nix                # Plasma 6 on X11, SDDM, KDE extras
 │   ├── xrdp.nix                   # Hyper-V guest support, Enhanced Session via vsock
-│   ├── security-tools.nix         # Offensive, OSINT, RF and forensics packages
+│   ├── security-tools.nix         # The system package set, taken from the catalog
+│   ├── burp-ca.nix                # annixion-burp-ca
 │   ├── vpn-enforcement.nix        # Kernel killswitch: egress confined to the VPN
 │   ├── hardening.nix              # Attack surface reduction
-│   └── shell.nix                  # Zsh for every login, prompt for shells HM does not own
-│
-├── tests/
-│   ├── boot.nix                   # VM test: system boots, services start
-│   ├── security-tools.nix         # VM test: all tools are present
-│   └── vpn-enforcement.nix        # VM test: killswitch loads and fails closed
-│
-├── ci/
+│   ├── shell.nix                  # Zsh for every login, prompt for shells HM does not own
 │   └── hardware-stub.nix          # Stand-in disk layout for CI and fresh clones
 │
-├── assets/                        # Wallpapers, icons, bookmarks, Burp CA
+├── home/                          # Home Manager — the operator's environment
+│   ├── default.nix                # Base user environment
+│   ├── firefox/                   # The four profiles, their policies and their theme
+│   ├── desktop/                   # Plasma, the application menu, the panel, the icons
+│   ├── apps/                      # Konsole, VSCodium, OnlyOffice, fastfetch
+│   └── shell/                     # Zsh, oh-my-posh and its theme
 │
+├── iso/                           # Live installer ISO configuration
+├── branding/                      # Boot splash, greeter and installer artwork
+├── scripts/                       # annixion-install, the identity board, mark checks
+│
+├── tests/
+│   ├── system/                    # VM tests — nixosTest, L3
+│   ├── shell/                     # Fixture tests about the built system, L0
+│   └── repo/                      # Fixture tests about CI and automation, L0
+│
+├── assets/                        # Wallpapers, the mark, bookmarks, Burp CA
 ├── user/                          # Personal overrides — never committed upstream
 │   ├── configuration.nix
 │   ├── home.nix
 │   └── examples/
-│       ├── git.nix
-│       ├── zsh.nix
-│       └── hackthebox.nix
-│
 └── docs/                          # Extended documentation
 ```
 
@@ -176,7 +165,7 @@ Full clipboard, audio, and dynamic resolution will be available after reconnecti
 
 Hyper-V emulates no sound card, so the guest has no audio hardware to speak of.
 Sound reaches the Windows host over xrdp's redirection channel instead, which
-`modules/xrdp.nix` enables with `services.xrdp.audio.enable`.
+`system/xrdp.nix` enables with `services.xrdp.audio.enable`.
 
 That channel only works over PulseAudio: xrdp redirects through
 `module-xrdp-sink` and `module-xrdp-source`, native modules of the PulseAudio

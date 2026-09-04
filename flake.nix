@@ -44,16 +44,16 @@
       # and the CI stand-in so the two cannot drift apart.
       baseModules = [
         # ── Feature modules ──────────────────────────────────
-        ./modules/desktop.nix
-        ./modules/branding.nix
-        ./modules/xrdp.nix
-        ./modules/security-tools.nix
-        ./modules/burp-ca.nix
-        ./modules/vpn-enforcement.nix
-        ./modules/hardening.nix
-        ./modules/shell.nix
-        ./modules/git.nix
-        ./modules/docker.nix
+        ./system/desktop.nix
+        ./system/branding.nix
+        ./system/xrdp.nix
+        ./system/security-tools.nix
+        ./system/burp-ca.nix
+        ./system/vpn-enforcement.nix
+        ./system/hardening.nix
+        ./system/shell.nix
+        ./system/git.nix
+        ./system/docker.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
@@ -79,7 +79,7 @@
 
             users.operator = {
               imports = [
-                ./home.nix
+                ./home
               ]
               ++ (if builtins.pathExists ./user/home.nix then [ ./user/home.nix ] else [ ]);
             };
@@ -89,7 +89,7 @@
             # home.nix. Cheaper than mirroring the config into NixOS options,
             # and the two cannot drift.
             users.root = {
-              imports = [ ./home/zsh ];
+              imports = [ ./home/shell ];
               home.stateVersion = "26.05";
             };
           };
@@ -148,7 +148,7 @@
             i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
             # ── Audio (Pipewire) ────────────────────────
-            # Hyper-V has no sound card: modules/xrdp.nix swaps this for
+            # Hyper-V has no sound card: system/xrdp.nix swaps this for
             # PulseAudio, the only stack xrdp can redirect audio through.
             services.pipewire = {
               enable = lib.mkDefault true;
@@ -173,7 +173,7 @@
             };
 
             # ── System packages ─────────────────────────
-            # Tool packages live in modules/security-tools.nix.
+            # Tool packages live in system/security-tools.nix.
             nixpkgs.config.allowUnfree = lib.mkDefault true;
 
             environment.systemPackages = with pkgs; [
@@ -210,7 +210,7 @@
     {
       packages.${system} = {
         iso = self.nixosConfigurations.AnNIXion-iso.config.system.build.isoImage;
-        # tests/branding.sh builds the greeter through here rather than from
+        # tests/shell/branding.sh builds the greeter through here rather than from
         # <nixpkgs>, which a CI runner does not set.
         sddm-theme = (import ./branding { inherit pkgs; }).sddmTheme;
 
@@ -250,14 +250,14 @@
           specialArgs = { inherit inputs; };
           modules = [
             "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-            ./modules/shell.nix
-            ./iso.nix
+            ./system/shell.nix
+            ./iso
           ];
         };
 
         # Referenced where it lives, never copied to
         # hardware-configuration.nix, so it cannot reach a real machine.
-        AnNIXion-ci = mkAnnixion ./ci/hardware-stub.nix;
+        AnNIXion-ci = mkAnnixion ./system/hardware-stub.nix;
       }
       # Absent a real hardware-configuration.nix, "nixos-rebuild
       # --flake .#AnNIXion" fails on the missing attribute rather than
@@ -267,14 +267,14 @@
       };
 
       checks.${system} = {
-        boot = pkgs.testers.nixosTest (import ./tests/boot.nix);
-        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/security-tools.nix);
-        vpn-enforcement = pkgs.testers.nixosTest (import ./tests/vpn-enforcement.nix);
-        shells = pkgs.testers.nixosTest (import ./tests/shells.nix);
-        xrdp-session = pkgs.testers.nixosTest (import ./tests/xrdp-session.nix);
-        bind-axfr = pkgs.testers.nixosTest (import ./tests/bind-axfr.nix);
-        git-credential-helper = pkgs.testers.nixosTest (import ./tests/git-credential-helper.nix);
-        docker = pkgs.testers.nixosTest (import ./tests/docker.nix);
+        boot = pkgs.testers.nixosTest (import ./tests/system/boot.nix);
+        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/system/security-tools.nix);
+        vpn-enforcement = pkgs.testers.nixosTest (import ./tests/system/vpn-enforcement.nix);
+        shells = pkgs.testers.nixosTest (import ./tests/system/shells.nix);
+        xrdp-session = pkgs.testers.nixosTest (import ./tests/system/xrdp-session.nix);
+        bind-axfr = pkgs.testers.nixosTest (import ./tests/system/bind-axfr.nix);
+        git-credential-helper = pkgs.testers.nixosTest (import ./tests/system/git-credential-helper.nix);
+        docker = pkgs.testers.nixosTest (import ./tests/system/docker.nix);
       };
 
       devShells.${system}.default = pkgs.mkShell {
@@ -286,11 +286,11 @@
           shellcheck
           # project-sync.sh and the milestone tests parse JSON with it.
           jq
-          # tests/prompt-width.sh renders the real theme to check the ladder.
+          # tests/shell/prompt-width.sh renders the real theme to check the ladder.
           oh-my-posh
-          # tests/workflow-injection.sh reads the workflows' run: blocks.
+          # tests/repo/workflow-injection.sh reads the workflows' run: blocks.
           yq-go
-          # tests/dns-axfr.sh needs dig; runners do not reliably carry it.
+          # tests/shell/dns-axfr.sh needs dig; runners do not reliably carry it.
           dnsutils
           # Builds the release SBOM, in CI and by hand: the same pinned version
           # either way, so a locally generated SBOM matches the published one.
@@ -304,7 +304,7 @@
         shellHook = ''
           # stderr, not stdout: scripts run as 'nix develop --command ... > file'
           # would otherwise find this banner at the top of their output.
-          echo "AnNIXion dev shell — Ctrl+Shift+B in VSCodium runs the full check." >&2
+          echo "AnNIXion dev shell — .github/scripts/lint.sh runs the linters; docs/dev.md has the rest." >&2
         '';
       };
     };

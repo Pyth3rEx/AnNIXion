@@ -89,7 +89,7 @@ in
       "browser.privatebrowsing.autostart" = true;
 
       # ── VPN enforcement ───────────────────────────────────────
-      # Egress is confined by modules/vpn-enforcement.nix, not by prefs.
+      # Egress is confined by system/vpn-enforcement.nix, not by prefs.
       "network.proxy.type" = 0;
 
       # ── DNS over HTTPS ─────────────────────────────────────────
@@ -141,7 +141,7 @@ in
       "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
-      settings = builtins.fromJSON (builtins.readFile ../../assets/tools/bookmarks-osint.json);
+      settings = builtins.fromJSON (builtins.readFile ../../assets/firefox/bookmarks-osint.json);
       force = true;
     };
     extensions = {

@@ -95,7 +95,7 @@ in
       # No privatebrowsing.autostart — containers need a regular session.
 
       # ── VPN enforcement ───────────────────────────────────────
-      # Egress is confined by modules/vpn-enforcement.nix, not by prefs.
+      # Egress is confined by system/vpn-enforcement.nix, not by prefs.
       "network.proxy.type" = 0;
 
       # ── DNS over HTTPS ─────────────────────────────────────────
@@ -147,7 +147,7 @@ in
       "browser.download.useDownloadDir" = false;
     };
     bookmarks = {
-      settings = builtins.fromJSON (builtins.readFile ../../assets/tools/bookmarks-puppet.json);
+      settings = builtins.fromJSON (builtins.readFile ../../assets/firefox/bookmarks-puppet.json);
       force = true;
     };
     extensions = {

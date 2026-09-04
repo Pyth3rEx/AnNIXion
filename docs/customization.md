@@ -39,14 +39,14 @@ See `user/README.md` for the full override system documentation.
 
 ## Shell environment
 
-ZSH configuration lives in `home/zsh/` — `default.nix` for the shell,
+ZSH configuration lives in `home/shell/` — `default.nix` for the shell,
 `oh-my-posh.nix` for the prompt. See [docs/zsh.md](zsh.md) for the full shortcut and alias reference, and [docs/tools.md](tools.md) for enhanced CLI tools included in the environment.
 
 ---
 
 ## Desktop panel
 
-The top bar is declared in `home/plasma.nix` under `programs.plasma.panels`, and
+The top bar is declared in `home/desktop/plasma.nix` under `programs.plasma.panels`, and
 is organised by function into three groups:
 
 ```
@@ -80,14 +80,14 @@ a window whose class is `wireshark`. The ids with no stock equivalent — the ro
 terminal, the Firefox profiles — carry their own `StartupWMClass` instead.
 
 The rule between the pager and the launchers is `com.annixion.separator`, a
-two-file KPackage written by `home/panel-separator.nix`. Plasma 5's
+two-file KPackage written by `home/desktop/panel-separator.nix`. Plasma 5's
 `org.kde.plasma.marginsseparator` is gone in Plasma 6 with nothing in its place,
 so it is ours. It draws a hairline in the theme's text colour and costs about
 six pixels; being fixed-length and left of the first spacer, it shifts the
 centre group right by half that.
 
 `Meta+F4` and the Red Team icon both run `annixion-redteam`
-(`home/redteam-launch.nix`), which starts Burp Suite if `pgrep -f burpsuite`
+(`home/desktop/redteam-launch.nix`), which starts Burp Suite if `pgrep -f burpsuite`
 finds none running and then execs the browser profile. Burp is matched on its
 command line, not its window: the JVM shows nothing for several seconds, and a
 window test would start a second copy for every click in that gap. Note that
@@ -121,7 +121,7 @@ turns that off, so the bar names whatever is focused, on any screen.
 
 ## Keyboard
 
-Shortcuts live in `home/plasma.nix`: window and desktop keys under
+Shortcuts live in `home/desktop/plasma.nix`: window and desktop keys under
 `shortcuts.kwin`, launchers under `hotkeys.commands`.
 
 | Keys | Action |
@@ -168,7 +168,7 @@ Grouped in three bands: heavy use, offensive, then work.
 ### Launch or focus
 
 These keys do not start a second copy of a running app. Each one calls
-`annixion-raise` (`home/window-raise.nix`), which matches a glob against every
+`annixion-raise` (`home/desktop/window-raise.nix`), which matches a glob against every
 window's `WM_CLASS`, activates the first hit, cycles through the rest on
 repeated presses, and only runs the command when nothing matches.
 
@@ -191,7 +191,7 @@ A Wayland session would need `kdotool` in its place.
 
 ## Development environment
 
-VSCodium ships as part of the base user environment (`home/vscodium.nix`) with full Nix language support out of the box:
+VSCodium ships as part of the base user environment (`home/apps/vscodium.nix`) with full Nix language support out of the box:
 
 - **Language server:** `nil` — code completion and diagnostics
 - **Formatting:** `nixfmt` — auto-format on save, 2-space indentation
@@ -204,7 +204,7 @@ No manual activation needed — it is included by default. Open VSCodium after t
 
 ## Adding tools
 
-System packages are declared in `modules/security-tools.nix`. Add any nixpkgs package to the `environment.systemPackages` list and rebuild.
+System packages are declared in `system/security-tools.nix`. Add any nixpkgs package to the `environment.systemPackages` list and rebuild.
 
 For tools not in nixpkgs, add a derivation under `overlays/` (see [docs/roadmap.md](roadmap.md) Phase 9).
 
