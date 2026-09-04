@@ -38,7 +38,6 @@
         inherit system;
         config.allowUnfree = true;
       };
-      version = builtins.replaceStrings [ "\n" ] [ "" ] (builtins.readFile "${self}/VERSION");
 
       # Everything bar the machine's disk layout. Shared by the real system
       # and the CI stand-in so the two cannot drift apart.
@@ -49,7 +48,7 @@
         ./system/xrdp.nix
         ./system/security-tools.nix
         ./system/burp-ca.nix
-        ./system/vpn-enforcement.nix
+        ./system/vpn
         ./system/hardening.nix
         ./system/shell.nix
         ./system/git.nix
@@ -97,102 +96,16 @@
 
         # ── Core system configuration ────────────────────────
         # All mkDefault, so user/configuration.nix overrides freely.
-        (
-          {
-            lib,
-            pkgs,
-            ...
-          }:
-          {
-
-            # ── Boot loader ─────────────────────────────
-            boot.loader.systemd-boot.enable = lib.mkDefault true;
-            boot.loader.efi.canTouchEfiVariables = lib.mkDefault true;
-
-            # ── OS definition ───────────────────────────
-            environment.etc."os-release".text = lib.mkForce ''
-              NAME=AnNIXion
-              ID=annixion
-              VERSION="${version}"
-              VERSION_ID="${version}"
-              PRETTY_NAME="AnNIXion v${version}"
-              HOME_URL="https://github.com/Pyth3rEx/AnNIXion/"
-              SUPPORT_URL="https://github.com/Pyth3rEx/AnNIXion/tree/main/docs"
-              BUG_REPORT_URL="https://github.com/Pyth3rEx/AnNIXion/issues"
-            '';
-
-            # ── Networking ──────────────────────────────
-            networking = {
-              hostName = lib.mkDefault "AnNIXion";
-              networkmanager.enable = lib.mkDefault true;
-              networkmanager.plugins = with pkgs; [
-                networkmanager-openvpn
-              ];
-            };
-
-            # ── Nix settings ────────────────────────────
-            nix.settings.experimental-features = lib.mkDefault [
-              "nix-command"
-              "flakes"
-            ];
-
-            # Old generations pile up otherwise.
-            nix.gc = {
-              automatic = lib.mkDefault true;
-              dates = lib.mkDefault "weekly";
-              options = lib.mkDefault "--delete-older-than 15d";
-            };
-
-            # ── Locale & time ───────────────────────────
-            time.timeZone = lib.mkDefault "Europe/Paris";
-            i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
-
-            # ── Audio (Pipewire) ────────────────────────
-            # Hyper-V has no sound card: system/xrdp.nix swaps this for
-            # PulseAudio, the only stack xrdp can redirect audio through.
-            services.pipewire = {
-              enable = lib.mkDefault true;
-              alsa.enable = lib.mkDefault true;
-              alsa.support32Bit = lib.mkDefault true;
-              pulse.enable = lib.mkDefault true;
-            };
-
-            # ── Security & sudo ─────────────────────────
-            security.sudo.wheelNeedsPassword = lib.mkDefault true;
-
-            # ── User account ────────────────────────────
-            users.users.operator = {
-              isNormalUser = lib.mkDefault true;
-              extraGroups = lib.mkDefault [
-                "wheel"
-                "networkmanager"
-                "video"
-                "input"
-              ];
-              hashedPassword = lib.mkDefault "$6$DkRVwYEQPe/aYDUp$ULU/oBw9ujsQa5.s4EgWKL2YNNZ2SmEfA0PrMqF6XrZ.FCOsplXdTTEPsWmFH1dU0tB0/JRHeSxasjPBBuQAu1";
-            };
-
-            # ── System packages ─────────────────────────
-            # Tool packages live in system/security-tools.nix.
-            nixpkgs.config.allowUnfree = lib.mkDefault true;
-
-            environment.systemPackages = with pkgs; [
-              networkmanager
-              networkmanagerapplet
-              openvpn
-              wireguard-tools
-              kdePackages.kservice
-            ];
-
-            # A real file so root can edit it; world-readable or every non-root
-            # name lookup and the rootless container runtime lose /etc/hosts.
-            environment.etc.hosts.mode = "0644";
-
-            # ── State version — never change this ───────
-            system.stateVersion = lib.mkDefault "26.05";
-
-          }
-        )
+        ./system/core/boot.nix
+        ./system/core/os-release.nix
+        ./system/core/networking.nix
+        ./system/core/nix.nix
+        ./system/core/locale.nix
+        ./system/core/audio.nix
+        ./system/core/security.nix
+        ./system/core/users.nix
+        ./system/core/packages.nix
+        ./system/core/state-version.nix
       ]
       # ── User overrides (system level) ────────────────────────────
       ++ (if builtins.pathExists ./user/configuration.nix then [ ./user/configuration.nix ] else [ ]);
@@ -266,16 +179,28 @@
         AnNIXion = mkAnnixion ./hardware-configuration.nix;
       };
 
-      checks.${system} = {
-        boot = pkgs.testers.nixosTest (import ./tests/system/boot.nix);
-        security-tools = pkgsUnfree.testers.nixosTest (import ./tests/system/security-tools.nix);
-        vpn-enforcement = pkgs.testers.nixosTest (import ./tests/system/vpn-enforcement.nix);
-        shells = pkgs.testers.nixosTest (import ./tests/system/shells.nix);
-        xrdp-session = pkgs.testers.nixosTest (import ./tests/system/xrdp-session.nix);
-        bind-axfr = pkgs.testers.nixosTest (import ./tests/system/bind-axfr.nix);
-        git-credential-helper = pkgs.testers.nixosTest (import ./tests/system/git-credential-helper.nix);
-        docker = pkgs.testers.nixosTest (import ./tests/system/docker.nix);
-      };
+      # Discovered, not listed. ci.yml already asks the flake which checks
+      # exist; a VM test that was written and wired in but never added here
+      # would evaluate for nobody and run nowhere.
+      checks.${system} =
+        let
+          inherit (nixpkgs) lib;
+          # The only one that boots unfree packages — the rest must keep the
+          # plain instance or their derivations change for no reason.
+          unfree = [ "security-tools" ];
+        in
+        lib.mapAttrs'
+          (
+            file: _:
+            let
+              name = lib.removeSuffix ".nix" file;
+              testers = if builtins.elem name unfree then pkgsUnfree.testers else pkgs.testers;
+            in
+            lib.nameValuePair name (testers.nixosTest (import (./tests/system + "/${file}")))
+          )
+          (
+            lib.filterAttrs (n: t: t == "regular" && lib.hasSuffix ".nix" n) (builtins.readDir ./tests/system)
+          );
 
       devShells.${system}.default = pkgs.mkShell {
         name = "annixion-dev";
