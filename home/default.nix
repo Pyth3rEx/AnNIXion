@@ -62,7 +62,7 @@ in
 {
   imports = [
     ./firefox
-    ./desktop/plasma.nix
+    ./desktop/plasma
     ./apps/vscodium.nix
     ./apps/only-office.nix
     ./desktop/apps-menu.nix
