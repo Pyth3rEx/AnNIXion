@@ -109,6 +109,12 @@ scanner you chose:
 grype sbom:annixion-<version>.cdx.json
 ```
 
+That SBOM describes a past release, though — not a checkout with `user/`
+overrides, extra packages, or an unmerged branch. For that, `annixion-cve-report`
+runs the same pipeline (a fresh SBOM, a live scan, the same rendered pages)
+against your own checkout, right now, and marks the result `-local+<commit>`
+so it is never mistaken for that release's. See [docs/usage.md](docs/usage.md).
+
 Note what such a scan does *not* know: it sees what is present, not what is
 reachable. Findings against services this system disables (see the hardening
 notes above) are still findings, and some CPE ranges upstream are simply stale.

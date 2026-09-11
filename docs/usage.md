@@ -22,6 +22,7 @@ lot. Every one of them takes `-h` / `--help`.
 | `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
 | `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
 | `annixion-raise` | Focus a running window by `WM_CLASS`, or launch the app |
+| `annixion-cve-report` | Regenerate the weekly CVE pipeline against your own checkout |
 
 The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and
 `annixion-htb-vpn` once imported.

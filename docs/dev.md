@@ -111,6 +111,19 @@ Regenerate locally against a scan you already have:
 Pass `--coverage reduced` for anything scanned from an SBOM rather than a live
 closure; the page says so in its own caveats.
 
+That recipe re-renders a scan you already have. `annixion-cve-report`
+(`scripts/annixion-cve-report`) is the other end of it: it drives this same
+sequence — build, `generate-sbom.sh`, `vulnxscan`, `package-provenance.sh`,
+`installed-apps.sh`, `render-security-pages.py --coverage full` — end to end
+against `$ANNIXION_DOTFILES` (default `~/.dotfiles`), so it never needs a scan
+handed to it. It never touches `docs/security/`, stamps its output
+`-local+<commit>[+dirty]`, and is deliberately a second, independent caller of
+the same five scripts rather than a refactor of `cve-status.yml` — the two run
+in different environments (CI has no scan tools pre-installed and goes through
+`nix develop`; the installed command carries `sbomnix` on its own `PATH`) and
+sharing a script between them would just reintroduce that branching one level
+up.
+
 **CVEs a pull request introduces**
 
 The weekly scan describes the release that already shipped, so a package added

@@ -88,6 +88,7 @@ jobs:
           nix develop --command bash tests/repo/security-pages.sh
           nix develop --command bash tests/repo/cve-status-workflow.sh
           nix develop --command bash tests/repo/pr-cve-scan.sh
+          nix develop --command bash tests/repo/cve-report.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
