@@ -6,11 +6,17 @@
 }:
 
 {
-  # Not dolphinrc: GlobalViewProps means every folder reads this.
   home.file.".local/share/dolphin/view_properties/global/.directory".text = ''
     [Settings]
     HiddenFilesShown=true
   '';
+
+  # GlobalViewProps defaults to true, which is what makes every folder read
+  # the .directory file above instead of its own per-folder properties — but
+  # it's pinned explicitly rather than trusted, since a first-run Dolphin
+  # wizard or a stray dolphinrc write is enough to flip it to per-folder mode
+  # and silently strand the setting above.
+  programs.plasma.configFile."dolphinrc"."General"."GlobalViewProps" = true;
 
   # GTK's chooser — Firefox and other non-Qt apps.
   dconf.settings = {
