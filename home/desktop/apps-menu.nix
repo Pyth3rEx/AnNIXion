@@ -120,6 +120,7 @@ let
   sections = {
     killChain = "  <!-- ── Kill-chain phases at root ──────────────────────────────── -->\n\n";
     misc = "  <!-- ── Misc tools ──────────────────────────────────────────────── -->\n\n";
+    suppressed = "  <!-- ── Stock categories suppressed, not curated ───────────────── -->\n\n";
   };
 
   # Depth 1: the '' below is dedented to the document root, so a top-level
@@ -144,7 +145,35 @@ let
   + blocks killChain
   + sections.misc
   + blocks misc
+  + sections.suppressed
+  + suppressedStock
   + "</Menu>\n";
+
+  # ── Suppressed stock categories ─────────────────────────────────────────
+  # <MergeFile type="parent"/> above is load-bearing — without it neither our
+  # own entries nor the icon/mime lookups they depend on resolve — but its
+  # side effect is pulling in the *entire* stock category tree alongside
+  # ours: root-level "Internet", "Graphics", "Development", etc. from
+  # plasma-applications.menu, each showing whatever non-catalog package
+  # happens to carry that XDG category, under that category's stock
+  # (non-AnNIXion) icon. A tool that shows up this way was never added to
+  # the catalog, so it carries none of the guarantees catalog/default.nix
+  # promises — wrong icon, wrong place, not something this menu chose to
+  # show. <Deleted/> on a same-named, same-depth <Menu> merges with and
+  # hides the stock one; it does not touch the tools it would have held,
+  # since none of them are the catalog's to keep.
+  #
+  # Only the ones actually seen leaking are suppressed here. Other stock
+  # categories (Office, Multimedia, System, ...) merge the same way and may
+  # need the same treatment if a package ever lands a .desktop entry in them.
+  suppressedStock =
+    lib.concatMapStrings
+      (name: "  <Menu>\n" + "    <Name>${name}</Name>\n" + "    <Deleted/>\n" + "  </Menu>\n\n")
+      [
+        "Internet" # kf5-internet.directory — stray Network-category apps, not a catalog tool
+        "Graphics" # kf5-graphics.directory — stray Graphics-category apps, not a catalog tool
+        "Applications" # kf5-unknown.directory — KDE's own "Lost & Found" catch-all
+      ];
 
   # ── Directory label & icon files ──────────────────────────────────────────
   directories = {
