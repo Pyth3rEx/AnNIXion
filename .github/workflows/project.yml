@@ -9,7 +9,9 @@ name: Project
 #   PR opened             → In progress, milestone assigned — Ready while a draft
 #   PR draft state moved  → Ready as a draft, In progress once ready for review
 #   PR closed unmerged    → Done; it is not coming back
-#   PR merged into dev    → In review, with the issues it closes
+#   PR merged, not main   → In review, with the issues it closes — a
+#                           stacked PR's merge into the branch below it
+#                           counts here too, not only a merge into dev
 #   PR merged into main   → Done, with everything else in review
 #   milestone closed      → the next release's Ready work rises to Up next
 #
@@ -198,13 +200,18 @@ jobs:
             --content "${{ github.event.pull_request.node_id }}" \
             --status "$STATUS"
 
-  # ── Merged into dev ───────────────────────────────────────────────────
-  pr-merged-dev:
-    name: Merged into dev
+  # ── Merged upstream ───────────────────────────────────────────────────
+  # Not just base == dev: a stacked pull request merges into the branch
+  # below it in the stack, not into dev directly, and that merge is just as
+  # much progress as a direct one. Only a release PR's base is main, so
+  # excluding that is what tells the two apart — every other base is a step
+  # on the way to dev, however many hops from it.
+  pr-merged-upstream:
+    name: Merged upstream
     if: >-
       github.event_name == 'pull_request_target' && github.event.action == 'closed'
       && github.event.pull_request.merged == true
-      && github.event.pull_request.base.ref == 'dev'
+      && github.event.pull_request.base.ref != 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
