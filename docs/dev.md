@@ -284,7 +284,7 @@ rather than something to remember:
 | PR opened | **In progress**, put on the furthest milestone — **Ready** while it is a draft |
 | PR marked ready for review, or sent back to draft | **In progress**, or **Ready** again |
 | PR closed without merging | **Done**. Nothing else moves: an unmerged PR closes no issues |
-| PR merged into `dev` | **In review**, along with every issue the PR closes |
+| PR merged, base not `main` | **In review**, along with every issue the PR closes |
 | PR merged into `main` | **Done** — the PR, the issues it closes, and everything else still in review. Then the new release's Ready work is swept into **Up next**. |
 | Milestone closed | The now-nearest milestone's Ready work is swept into **Up next** |
 
@@ -292,6 +292,15 @@ The `main` rule is what retires the work. A feature PR merging into `dev` does
 not close its issues, because closing keywords only fire on the default branch;
 the release PR into `main` does. Everything that reached `dev` is in review by
 then, so the sweep moves the whole release to Done at once.
+
+The board rule is "not `main`", not "is `dev`", because a stacked pull request
+merges into the branch below it in the stack rather than into `dev` directly —
+only its bottom PR's base is actually `dev`. Gating on `base.ref == 'dev'`
+would leave every PR above the bottom one stuck off the board: neither it nor
+the issues it closes would ever reach **In review**, and since the release sweep
+only picks up what is already there, they would never reach **Done** either,
+even once the whole stack had shipped. Excluding just `main` catches every hop
+in the stack, however many there are.
 
 ---
 
