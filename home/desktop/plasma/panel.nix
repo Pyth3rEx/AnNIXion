@@ -38,10 +38,10 @@ in
 
           {
             iconTasks = {
-              # The everyday five, not the whole hotkey set: a pinned icon is
+              # The everyday six, not the whole hotkey set: a pinned icon is
               # worth its width only for what is opened without thinking, and
               # the rest stay a Meta+F<N> or a menu entry away. Order still
-              # follows hotkeys.commands, so these are F1, F2, F4, F5 and F6.
+              # follows hotkeys.commands, so these are F1 through F6.
               #
               # Where a stock entry and an annixion-* one both exist the stock
               # one is pinned: Plasma matches a window to a launcher by class,
@@ -53,6 +53,8 @@ in
                 # Terminals
                 "applications:org.kde.konsole.desktop"
                 "applications:annixion-konsole-root.desktop"
+                # File manager
+                "applications:org.kde.dolphin.desktop"
                 # Browser profiles. Red Team also brings up Burp — see
                 # home/desktop/redteam-launch.nix.
                 "applications:firefox-red.desktop"
