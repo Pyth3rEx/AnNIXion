@@ -120,6 +120,6 @@ NixOS flakes only see files that are tracked by git. Editing an existing file
 | File / option | Why |
 |---|---|
 | `hardware-configuration.nix` | Generated for your specific machine |
-| `home.stateVersion` in `home.nix` | Records your Home Manager install version |
+| `home.stateVersion` in `home/` | Records your Home Manager install version |
 | `system.stateVersion` in `flake.nix` | Records your NixOS install version |
-| `lib.mkForce` in `modules/xrdp.nix` | Required for Hyper-V Enhanced Session to work |
+| `lib.mkForce` in `system/xrdp.nix` | Required for Hyper-V Enhanced Session to work |

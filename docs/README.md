@@ -17,7 +17,10 @@ day-to-day operation.
 
 | Document | What it covers |
 |---|---|
+| [Architecture](architecture.md) | How the tree is laid out, what the catalog is, and how to add a tool |
 | [Customization](customization.md) | The `user/` override system, adding tools, versioning |
+| [Visual identity](visual-identity.md) | Palette, typography, the mark system and its semantic colours, motif vocabulary |
+| [Visual identity — design board](visual-identity.pdf) | The same system as a 19-page print board for a design audience: mission, lockup, palette, specimen, the full mark set and the eight laws |
 | [Shell reference](zsh.md) | Prompt, keybindings, aliases, oh-my-zsh plugins |
 | [CLI tools](tools.md) | bat, ripgrep, fd, fzf, jq and the rest of the enhanced toolset |
 
@@ -26,7 +29,8 @@ day-to-day operation.
 | Document | What it covers |
 |---|---|
 | [Hardening](hardening.md) | What is disabled, what is deliberately left alone, how to restore any of it |
-| [Developer guide](dev.md) | Local CI levels, VSCodium tasks, hardware configuration, pre-push checklist |
+| [Developer guide](dev.md) | Local CI levels, hardware configuration, pre-push checklist |
+| [Testing](testing.md) | The test suite, which kind of test a change needs, and the rule that every feature ships with its tests |
 | [Roadmap](roadmap.md) | Phase-by-phase progress and planned features |
 
 ---

@@ -1,22 +1,86 @@
 # ZSH Reference
 
-AnNIXion ships a fully configured ZSH environment. All configuration lives in `home/zsh.nix`.
+AnNIXion ships a fully configured ZSH environment. Configuration lives in `home/shell/`:
+
+| File | Contents |
+|---|---|
+| `home/shell/default.nix` | Shell settings, aliases, plugins, keybindings, the startup banner |
+| `home/shell/oh-my-posh.nix` | Turns the prompt on for the Home Manager user |
+| `home/shell/omp-theme.nix` | The prompt itself — block layout, segments and colours |
 
 ---
 
 ## Prompt — oh-my-posh
 
-Two-line powerline-style prompt with a neon red / dark grey palette.
+Defined in `home/shell/omp-theme.nix`. Two-line powerline-style prompt in accent
+red (`#FF4757`) over dark slate greys (`#0E0F13`, `#1A1D24`, `#2E323D`) with
+`#DFE4EA` text. Left-block segments open on a solid arrow in their own colour
+and close on a solid one traced by an accent red thin arrow; right-block
+segments have no opening cap and are split by an accent red `//`.
+Path components are split by a plain `/` in accent red, the leading one on
+absolute paths included. The second line is a single accent red `$>` prompt
+(`#>` when root) with the cursor immediately after it.
+
+Every segment except `user @ host` and `nix-shell` carries a `min_width`, so a
+narrow terminal sheds them one at a time instead of wrapping onto a second line:
+
+| terminal width | segments shown |
+| --- | --- |
+| < 70 | `user @ host`, `nix-shell` (only inside one) |
+| 70 | `+ path` |
+| 105 | `+ git` |
+| 120 | `+ exit code` |
+| 135 | `+ clock` |
+| 150 | `+ execution time` |
+| 165 | `+ command length` |
+
+Which shell you are in is not decoration, so neither marker sheds. `user @ host`
+carries it in its background — accent red as root, Nix blue inside a Nix shell,
+the default slate otherwise — and `nix-shell` adds the `❄` with the kind of
+environment. Root is checked first, so a Nix shell entered as root still reads
+red: the more dangerous state wins.
+
+`tests/shell/prompt-width.sh` renders the theme across the whole range and fails if
+the top line wraps, the `❄` goes missing, or the background stops flipping;
+`tests/system/shells.nix` asserts the same three states in a VM.
+
+The thresholds assume a path of about 20 characters; a much longer one can still
+wrap at the low end of a band.
+
+Every shell on the machine is zsh and every one of them uses this prompt.
+`system/shell.nix` makes zsh the default login shell for every user including
+root, and installs the theme into `/etc/zshrc` and `/etc/bashrc` for anyone Home
+Manager does not manage.
+
+Root is managed too: `flake.nix` gives it a Home Manager configuration importing
+`home/shell`, so `sudo su` lands in the same shell — same aliases, plugins,
+keybindings and banner — with the session segment flipped to ` ROOT`. The CLI
+those aliases call lives in `environment.systemPackages` rather than
+`home.packages` so both users have it. Aliases written against `~/.dotfiles`
+(`rebuild`, `enix`) look under `/root` when run as root.
+
+Bash cannot be removed from NixOS: it is `/bin/sh`, every build sandbox and
+every activation script. What it no longer is, is a shell you land in.
+`nix-shell`, `nix develop` and `nix run` all start bash, so `any-nix-shell`
+(loaded from `home/shell/default.nix`) rewrites them to hand the session straight
+to zsh. The `❄` segment marks such a shell. The `/etc/bashrc` copy of the prompt
+covers the leftovers — `nix-shell --pure`, a bare `bash` — so even those keep the
+red prompt.
+
+
+The separator glyphs live in the Private Use Area, so the terminal font must be
+a Nerd Font. Konsole is set to `JetBrainsMono Nerd Font` in `home/apps/konsole.nix`;
+a plain font renders the separators as empty boxes.
 
 ```
   user @ HOST    ~/path/to/dir    ⎇ main  ●2  +1  ↑3        42c  ⏱ 5s  ✗ 1  14:32:07
-❯
+$> 
 ```
 
 | Segment | When shown | Meaning |
 |---|---|---|
-| `user @ HOST` | Always | Username and hostname. Flips to `☠ ROOT` on red bg when root |
-| `~/path` | Always | Current directory, shortened to 4 levels. `~` for home |
+| `user @ HOST` | Always | Username and hostname. Flips to ` ROOT` on red bg when root |
+| `~/path` | Terminal ≥ 70 cols | Current directory, shortened to 4 levels. `~` for home |
 | `⎇ branch` | Inside a git repo | Branch or commit SHA |
 | `●N` | Staged changes | N files staged |
 | `+N` | Working changes | N modified/untracked files |
@@ -25,7 +89,9 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | `Nc` (right) | After every command | Character count of the last command |
 | `⏱ Xs` (right) | Command ran > 3 s | Execution time, rounded |
 | `✗ N` (right) | Non-zero exit | Exit code of the last command |
-| `HH:MM:SS` (right) | Always | Current time |
+| `HH:MM:SS` (right) | Terminal ≥ 135 cols | Current time |
+| `❄ impure` | Inside nix-shell / nix develop | The shell is a Nix environment; Nix blue, not accent red |
+| `$>` (line 2) | Always | Where you type; `#>` when root |
 
 ---
 
@@ -76,6 +142,7 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | `ll` | `ls -la` |
 | `grep` | `grep --color=auto` |
 | `cat` | `bat` (syntax-highlighted pager) |
+| `b` | Clears the screen and reprints the startup banner |
 
 ## Aliases — NixOS
 
@@ -85,10 +152,10 @@ Two-line powerline-style prompt with a neon red / dark grey palette.
 | `upgrade` | Update all flake inputs, then rebuild |
 | `update` | Update flake inputs only (no rebuild) |
 | `enix` | Open `flake.nix` in Kate |
-| `emod` | Open `modules/` in Kate |
+| `emod` | Open `system/` in Kate |
 | `euser` | Open `user/` in Kate |
-| `ehome` | Open `home.nix` in Kate |
-| `ezsh` | Open `home/zsh.nix` in Kate |
+| `ehome` | Open `home/` in Kate |
+| `ezsh` | Open `home/shell/default.nix` in Kate |
 
 ## Aliases — Git
 
@@ -233,5 +300,9 @@ Each new terminal session prints the AnNIXion ASCII banner followed by:
 - Hostname, current date/time, kernel version
 - All global IPv4 addresses — VPN interfaces highlighted in green
 
-The banner is defined at the end of `initContent` in `home/zsh.nix`.
+The banner is the `annixion-banner` function, defined at the end of `initContent`
+in `home/shell/default.nix` and called once on startup. Run `annixion-banner` to reprint it
+in place, or `b` to clear the screen first — useful after a `clear` has scrolled
+the addresses away.
+
 To override it per-machine without touching the shared config, use `user/examples/zsh.nix`.

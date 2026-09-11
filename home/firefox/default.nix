@@ -1,9 +1,11 @@
 # Firefox: shared policies, desktop launchers, and the four profiles.
+# Every Exec carries %U: these entries claim text/html and the http
+# scheme handlers, and without a field code the URL is never passed —
+# Firefox then reads the bare argument as a path and opens file://.
+# MOZ_APP_REMOTINGNAME gives each profile its own WM_CLASS, so the panel
+# and annixion-raise can tell the windows apart.
 {
-  inputs,
-  config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -30,19 +32,24 @@
       Type=Application
       Name=Firefox - Unsafe Browser
       GenericName=Unsafe Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-grey.png
-      Exec=firefox -P "Unsafe Browser" --no-remote
+      Icon=annixion-firefox-untrusted
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-untrusted firefox -P "Unsafe Browser" --no-remote %U
+      StartupWMClass=firefox-untrusted
       Terminal=false
       Categories=X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
     '';
+    # The only profile that does not exec Firefox directly: annixion-redteam
+    # (home/desktop/redteam-launch.nix) brings Burp up behind it, then execs the same
+    # command the others carry inline.
     ".local/share/applications/firefox-red.desktop".text = ''
       [Desktop Entry]
       Type=Application
       Name=Firefox - Red Team
       GenericName=Assault Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-red.png
-      Exec=firefox -P "Red Team" --no-remote
+      Icon=annixion-firefox-redteam
+      Exec=annixion-redteam %U
+      StartupWMClass=firefox-red
       Terminal=false
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -52,8 +59,9 @@
       Type=Application
       Name=Firefox - OSINT
       GenericName=Search Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-yellow.png
-      Exec=annixion-vpn-browser "OSINT"
+      Icon=annixion-firefox-osint
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT" %U
+      StartupWMClass=firefox-osint
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
@@ -63,8 +71,9 @@
       Type=Application
       Name=Firefox - Puppet Master
       GenericName=Persona Browser
-      Icon=${config.home.homeDirectory}/.dotfiles/assets/icons/firefox-green.png
-      Exec=annixion-vpn-browser "Puppet Master"
+      Icon=annixion-firefox-puppet
+      Exec=env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master" %U
+      StartupWMClass=firefox-puppet
       Terminal=false
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;

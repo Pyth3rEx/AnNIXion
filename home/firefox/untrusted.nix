@@ -1,7 +1,6 @@
 # Unsafe Browser profile — clearnet fallback, hardened, no proxy.
 {
   inputs,
-  config,
   lib,
   pkgs,
   ...
@@ -19,7 +18,9 @@ in
 {
   programs.firefox.profiles."untrusted" = {
     id = 0;
-    isDefault = true;
+    # Explicit: Home Manager treats id 0 as the default profile unless
+    # told otherwise, and the default is OSINT.
+    isDefault = false;
     name = "Unsafe Browser";
     search = {
       default = "ddg";
@@ -112,6 +113,22 @@ in
       "browser.formfill.enable" = false;
       "media.autoplay.default" = 5;
       "browser.download.useDownloadDir" = false;
+
+      # ── Nothing outlives the window ───────────────────────────
+      # Permanent private browsing. Every window opens private, and history,
+      # cookies, storage and cache are held in memory and dropped on exit —
+      # this is what makes the profile forget, not a shutdown sanitiser.
+      "browser.privatebrowsing.autostart" = true;
+      "places.history.enabled" = false;
+      "browser.cache.disk.enable" = false;
+      "browser.cache.offline.enable" = false;
+
+      # A blank page every launch, with no session able to restore the last.
+      "browser.startup.page" = 0;
+      "browser.startup.homepage" = "about:blank";
+      "browser.sessionstore.resume_from_crash" = false;
+      "browser.sessionstore.privacy_level" = 2;
+      "browser.sessionstore.max_resumed_crashes" = 0;
     };
     extensions = {
       packages = with addons; [

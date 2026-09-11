@@ -11,7 +11,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] `flake.nix` with inputs: `nixpkgs`, `home-manager`, `plasma-manager`
 - [x] `configuration.nix` — locale, timezone, basic kernel params
 - [x] Base system configuration functional
-- [x] `iso.nix` — minimal ISO build target, boots to shell with auto-login
+- [x] `iso/` — minimal ISO build target, boots to shell with auto-login
 - [x] ISO builds with `nix build .#packages.x86_64-linux.iso`
 - [x] ISO size gate in CI — fails if ISO exceeds 1900 MB (GitHub release limit)
 
@@ -66,7 +66,7 @@ owns — no second config format.
 - [ ] First install writes the answers (username, password hash, hostname, timezone, keymap, encryption, profiles) into `user/configuration.nix` and `user/home.nix`
 - [ ] `--user-config <path|git-url>` imports an existing folder and skips the prompts it covers
 - [ ] Disk selection stays interactive in both modes — it describes the machine in front of you, not a preference
-- [ ] Validate a provided config **before the disk is wiped**: copy `ci/hardware-stub.nix` into place and `nix eval` the toplevel `drvPath`, so an incompatible config costs seconds instead of a formatted disk
+- [ ] Validate a provided config **before the disk is wiped**: copy `system/hardware-stub.nix` into place and `nix eval` the toplevel `drvPath`, so an incompatible config costs seconds instead of a formatted disk
 - [ ] Strip `system.stateVersion` and hardware-shaped settings on import — stateVersion is machine state, and inheriting an old one silently changes stateful defaults with no error
 - [ ] Retire the shared `hashedPassword` in `flake.nix`, which ships one password hash to every install, in favour of the one collected at install time
 - [ ] Document that the `user/` folder is secret-bearing once it holds a password hash
@@ -77,7 +77,7 @@ owns — no second config format.
 Only what the installer generated can be migrated mechanically; hand-written Nix
 can be detected but not rewritten.
 
-- [ ] `modules/compat.nix` using `lib.mkRenamedOptionModule` / `mkRemovedOptionModule` for the `annixion.*` namespace — adopt as policy now, while there is almost nothing to rename
+- [ ] `system/compat.nix` using `lib.mkRenamedOptionModule` / `mkRemovedOptionModule` for the `annixion.*` namespace — adopt as policy now, while there is almost nothing to rename
 - [ ] Write a version stamp (`user/.annixion-version`) at generation and check it on import
 - [ ] On eval failure, offer edit / continue without the config / abort rather than a bare abort
 - [ ] `annixion-config-doctor` — same validation, runnable before `rebuild` on an installed system
@@ -91,7 +91,7 @@ can be detected but not rewritten.
 
 ### Testing
 
-- [ ] `tests/installer.sh` — run the installer with every destructive command stubbed and assert the device sequence, the encryption branches and the LUKS guard; wire in as `checks.installer` and in CI. No disk, no VM, no network
+- [ ] `tests/repo/installer.sh` — run the installer with every destructive command stubbed and assert the device sequence, the encryption branches and the LUKS guard; wire in as `checks.installer` and in CI. No disk, no VM, no network
 - [ ] Manual VM install before each release — the stub test proves the right commands are issued, not that the result boots
 
 ---
@@ -107,8 +107,8 @@ can be detected but not rewritten.
 - [x] zoxide, fzf-tab, you-should-use, autopair, urltools, jsontools, dirhistory
 - [x] tmux, xterm terminal, git declared via Home Manager
 - [x] `nix.gc` — automatic weekly cleanup of old generations
-- [x] `modules/` — modular structure: `desktop.nix`, `xrdp.nix`, `security-tools.nix` (shell/user config lives under `home/`)
-- [ ] `modules/base/users.nix` — user management as a standalone module
+- [x] `system/` — modular structure: `desktop.nix`, `xrdp.nix`, `security-tools.nix` (shell/user config lives under `home/`)
+- [ ] `system/base/users.nix` — user management as a standalone module
 - [x] Additional shell environment: `direnv` integration via `programs.direnv` and `nix-direnv`
 
 ---
@@ -125,10 +125,10 @@ Rationale:
 - Stable X11 session required for reliable xrdp/Enhanced Session support
 - Wayland (Plasma 6) available as a future upgrade path once xrdp Wayland support matures
 
-- [x] KDE Plasma 6 declared in `modules/desktop.nix`; per-user Plasma settings extracted to `home/plasma.nix` (plasma-manager)
+- [x] KDE Plasma 6 declared in `system/desktop.nix`; per-user Plasma settings extracted to `home/desktop/plasma/` (plasma-manager)
 - [x] SDDM login manager with Breeze theme
 - [x] Krohnkite tiling script enabled (i3-style auto-tiling within Plasma)
-- [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Meta+Q close
+- [x] KDE shortcuts via `plasma-manager`: Meta+1-4 desktops, Meta+Return terminal, Alt+F4 close
 - [x] Breeze Dark theme set as default
 - [x] 4 virtual desktops preconfigured
 - [x] Theming pass — Breeze Dark, Slot Nord Dark icons, Nordzy cursor, JetBrains Mono
@@ -144,13 +144,13 @@ Rationale:
 - [x] `virtualisation.hypervGuest.enable = true`
 - [x] `boot.blacklistedKernelModules = [ "hyperv_fb" ]` — forces `hyperv_drm`
 - [x] `boot.kernelModules = [ "hv_sock" ]` — vsock transport loaded at boot
-- [x] xrdp `ExecStart` overridden to `vsock://-1:3389` via `lib.mkForce` in `modules/xrdp.nix`
+- [x] xrdp `ExecStart` overridden to `vsock://-1:3389` via `lib.mkForce` in `system/xrdp.nix`
 - [x] `vmconnect=true` patched into xrdp.ini via `preStart` hook
 - [x] KDE Plasma X11 session launches correctly over Enhanced Session
 - [x] Tested on Hyper-V with Windows 10 / Windows Server hosts
 - [ ] Performance tuning — compositor settings, RDP color depth, animation speed
 - [ ] Multi-monitor configuration declared in Nix
-- [ ] Audio passthrough verified end-to-end
+- [x] Audio passthrough verified end-to-end
 
 ---
 
@@ -159,7 +159,7 @@ Rationale:
 **Goal:** Users can drop personal dotfiles into a `user/` folder that survives reinstalls and never gets committed.
 
 - [x] `user/` directory with stub files tracked in the repo
-- [x] `user/home.nix` — optional user override, merged into base `home.nix` via `imports`
+- [x] `user/home.nix` — optional user override, merged into base `home/` via `imports`
 - [x] `user/configuration.nix` — optional system override, conditionally imported via `builtins.pathExists`
 - [x] All base options use `lib.mkDefault` (priority 1000) so user overrides win at normal priority — no `lib.mkForce` needed
 - [x] `user/examples/git.nix` — ready-to-use git identity and signing override
@@ -179,7 +179,7 @@ Rationale:
 - [x] `home/firefox/puppet.nix` — Puppet Master profile: Multi-Account Containers, Temporary Containers, CanvasBlocker, User-Agent Switcher, NoScript; search engines: Yandex, Baidu, social search
 - [x] Desktop launchers for each profile via `xdg.desktopEntries`
 - [x] Burp proxy set at profile level (`network.proxy.*`) rather than via FoxyProxy, so interception does not depend on a third-party extension (#25); `failover_direct = false` blocks leaks if Burp is down. FoxyProxy stays installed for ad-hoc switching, shipped disabled with the Burp entry as a worked example
-- [x] VPN enforcement rebuilt in the kernel (`modules/vpn-enforcement.nix`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
+- [x] VPN enforcement rebuilt in the kernel (`system/vpn/`, #21/#26): enforced applications run in a dedicated cgroup slice, an nftables rule permits egress only via a tunnel interface, and `annixion-vpn-browser` / `annixion-vpn-run` hard-fail when no tunnel is up. Replaces the old SOCKS5 placeholder at 127.0.0.1:1080, which nothing ever served
 - [x] VPN enforcement covers OSINT and Puppet Master. Red Team was enforced too until #37: an attribution control gating a reachability workflow made the profile unusable on internal engagements, where the target is on the LAN and no tunnel is involved. It now launches direct, with `annixion-vpn-browser "Red Team"` available when the tunnel is wanted — and Burp must go through `annixion-vpn-run` alongside it, since the browser only reaches loopback
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
@@ -195,7 +195,7 @@ Rationale:
 
 **Goal:** Complete Nix development setup without leaving NixOS.
 
-- [x] VSCodium module with Nix IDE extension (`home/vscodium.nix`)
+- [x] VSCodium module with Nix IDE extension (`home/apps/vscodium.nix`)
 - [x] Language server (`nil`) configured with auto-format and linting
 - [x] Development dependencies: `nixfmt`, `statix`, `deadnix`
 - [x] `direnv` integration via `programs.direnv` and `nix-direnv`
@@ -208,13 +208,15 @@ Rationale:
 
 **Goal:** RedTeam, OSINT, Privacy, and SDR tool sets as independently selectable modules.
 
-> **Current status:** `modules/security-tools.nix` contains all tools as a single flat module. Phase 8 refactors this into separate, independently selectable modules wired through the flake installer.
+> **Current status:** the split landed, finer than this phase planned. `catalog/`
+> declares each tool in its own file — package, menu entry and mark together —
+> grouped by kill-chain phase rather than by the four sets below. The per-set
+> module list is therefore superseded; what remains is making a *selection*
+> of tools installable, which the catalog makes a filter rather than a refactor.
 
-- [ ] `modules/tools/redteam.nix` — nmap, metasploit, burpsuite, sqlmap, gobuster, evil-winrm, impacket, crackmapexec, netcat, wireshark, john, hashcat, hydra, aircrack-ng, ghidra, binwalk
-- [ ] `modules/tools/osint.nix` — theHarvester, spiderfoot, sherlock, holehe, recon-ng, maltego, ExifTool, metagoofil, photon
-- [ ] `modules/tools/privacy.nix` — tor, torbrowser, proxychains-ng, mullvad-vpn, protonvpn, macchanger
-- [ ] `modules/tools/sdr.nix` — hackrf, gqrx, gnuradio (RF/SDR toolchain)
-- [ ] Refactor `modules/security-tools.nix` into independent modules
+- [x] ~~`system/tools/{redteam,osint,privacy,sdr}.nix` as separate modules~~ — superseded by `catalog/`, which goes one file per tool. See [architecture.md](architecture.md)
+- [x] Refactor `system/security-tools.nix` into independent files
+- [ ] A profile flag that selects which catalog phases are installed
 - [ ] Wire profile flags from Phase 3 installer into flake outputs
 - [ ] `flake.nix` conditionally includes tool modules based on selected profile
 
@@ -235,7 +237,7 @@ Rationale:
 
 **Goal:** System-level privacy and hardening beyond tool selection.
 
-Pass one landed in `modules/hardening.nix` — see [hardening.md](hardening.md).
+Pass one landed in `system/hardening.nix` — see [hardening.md](hardening.md).
 Everything below is what remains; the next pass gets its own branch.
 
 - [x] Kernel hardening:
@@ -265,6 +267,11 @@ Everything below is what remains; the next pass gets its own branch.
   - [ ] Verify system does not contact unknown hosts on boot
   - [ ] Baseline network traffic analysis
   - [ ] Document all default network connections and how to disable them
+  - [x] Publish a CycloneDX SBOM as a release asset — what is in the closure, captured at release time, while it is still knowable
+  - [x] Publish the build closure alongside it, and a readable page splitting what runs from what merely built it
+  - [x] Measure closure size and store-path count at release time rather than quoting a figure from a past one
+  - [x] Weekly-regenerated CVE status page over that SBOM, linked from each release
+  - [ ] `nix run .#cve-audit` — scan the running system for known CVEs
 
 ---
 
@@ -280,7 +287,7 @@ Everything below is what remains; the next pass gets its own branch.
 - [x] Versioned releases with tagged ISOs (semantic versioning via `VERSION` file)
 - [ ] Release notes per version
 - [x] GitHub Actions CI — flake eval, system closure build, VM tests, ISO build + size gate, release publish
-- [ ] Sign the ISO in CI — publish `SHA256SUMS` and a detached GPG signature over it, signing key in Actions secrets, public key committed and fingerprint in the README. Today the release job uploads the raw ISO with no checksum and no signature
+- [ ] Sign the ISO in CI — a detached GPG signature over `SHA256SUMS`, signing key in Actions secrets, public key committed and fingerprint in the README. The release job now publishes `SHA256SUMS` over the ISO and the SBOM; the signature is what is still missing
 - [ ] Document UEFI as a requirement — the ISO is a hybrid image and boots happily in legacy mode, then fails at the very end of the install with the disk already wiped. Requirements section, the Rufus setting that produces a UEFI stick (`GPT` + `UEFI (non CSM)`), the firmware settings to change, and the `ls /sys/firmware/efi` check
 - [ ] Document the one BIOS path that does work: an existing BIOS-booted NixOS install can override `boot.loader.systemd-boot.enable` (it is `mkDefault`) and keep GRUB — disabling systemd-boot explicitly is required or NixOS trips its one-boot-loader assertion
 
@@ -306,4 +313,4 @@ Everything below is what remains; the next pass gets its own branch.
 - Auto-updating tool definitions via flake inputs and pinned tool versions
 - Dedicated OSINT VM image — lighter, browser-forward, no pentest tools
 - Offline package cache for air-gapped deployments
-- Containerized tool environments (podman) for isolation
+- Rootless container tool environments — shipped as Docker in `system/docker.nix`; podman remains the option if a daemonless runtime is wanted instead
