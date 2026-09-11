@@ -71,9 +71,12 @@ in
       "dom.security.https_only_mode" = true;
       "dom.security.https_only_mode_ever_enabled" = true;
 
-      # ── Fingerprinting resistance ──────────────────────────────
-      # RFP spoofs window size, timezone, locale, canvas and fonts.
-      "privacy.resistFingerprinting" = true;
+      # ── Fingerprinting — targeted only (RFP breaks WebAuthn/passkeys) ──
+      # Full RFP spoofs OS, platform and timing details that the WebAuthn
+      # ceremony checks against real hardware, so platform authenticators
+      # and security keys fail or time out. canvasblocker (below) plus
+      # trackingprotection.fingerprinting cover canvas/font fingerprinting
+      # without it — same tradeoff osint.nix and puppet.nix already make.
       "privacy.fingerprintingProtection" = true;
 
       # ── Enhanced tracking protection — strict ──────────────────
