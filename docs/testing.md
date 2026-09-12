@@ -85,6 +85,7 @@ a path a module chose.
 | `tests/shell/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
 | `tests/shell/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
 | `tests/shell/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects, and that every un-namespaced file in that theme is an alias onto a mark that exists. A name that resolves nowhere draws a blank placeholder rather than erroring. |
+| `tests/shell/menu-exec.sh` | That a catalog tool's `Exec=` is a real binary on `PATH`, not only a `programs.zsh.shellAliases` entry — a menu launch runs non-interactively and never sources `.zshrc`, so an alias-only command fails with "command not found" from every launcher except a prompt already inside an interactive shell (#126). |
 | `tests/shell/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
 | `tests/shell/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
 | `tests/repo/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
@@ -97,6 +98,7 @@ a path a module chose.
 | `tests/repo/pr-cve-scan.sh` | That the pull request scan stays scoped to what the branch adds: the generated paths that reference the whole closure are kept out of it, a finding against a dependency the branch did not introduce is left out, and the target handed to the scanner really depends on the paths it was built from — one that does not scans clean and reports nothing wrong. Also that the comment replaces the previous one rather than stacking up. |
 | `tests/repo/cve-report.sh` | That `annixion-cve-report` scans the config it claims to (`AnNIXion` vs the `AnNIXion-ci` fallback), that the version it stamps a report with turns `+dirty` for an edited tracked file and separately warns when a file is untracked — since Nix cannot see that one at all — and that the scan always targets the flakeref, never an SBOM, which would make `vulnix` sit it out silently. |
 | `tests/repo/supply-chain.sh` | That the readable page keeps the installed closure and the build-only inputs apart — a compiler that never ships must not appear in the half a reader treats as their exposure — and that it still says, in words, why the two halves are not to be added together. |
+| `tests/repo/package-provenance.sh` | That resolving maintainers and licences for a batch of flagged package names survives a name nixpkgs keeps only as an alias to a removed package — an attribute that evaluates to a `throw` rather than being absent, which used to crash the whole batch rather than just that one name. Drives the real script against the real flake; no stub can stand in for "nixpkgs evaluates this attribute to a throw." |
 | `tests/shell/dns-axfr.sh` | That a zone transfer actually leaves this machine, and that an intercepting resolver is named as such rather than read as a locked-down zone. **The one test that uses the network.** |
 
 **VM tests — L3**
@@ -105,7 +107,7 @@ a path a module chose.
 |---|---|
 | `tests/system/boot.nix` | The system boots, and the services a login depends on come up. |
 | `tests/system/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
-| `tests/system/vpn/` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
+| `tests/system/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
 | `tests/system/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
 | `tests/system/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
 | `tests/system/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
@@ -122,13 +124,22 @@ a path a module chose.
 tests/repo/milestone.sh
 tests/shell/prompt-width.sh
 tests/shell/firefox-profiles.sh
+tests/shell/catalog.sh
 tests/shell/menu-icons.sh
+tests/shell/menu-exec.sh
 tests/shell/branding.sh
 tests/shell/etc-hosts.sh
 tests/repo/workflow-injection.sh
 tests/repo/workflow-permissions.sh
 tests/repo/stale-reviews.sh
 tests/repo/pr-column.sh
+tests/repo/sbom.sh
+tests/repo/supply-chain.sh
+tests/repo/package-provenance.sh
+tests/repo/security-pages.sh
+tests/repo/cve-status-workflow.sh
+tests/repo/pr-cve-scan.sh
+tests/repo/cve-report.sh
 tests/shell/dns-axfr.sh   # the one that needs the internet
 
 # L1 — evaluates every VM test without building any of them.

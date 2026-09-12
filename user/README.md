@@ -81,7 +81,7 @@ networking.hostName = "my-machine";
 time.timeZone = "America/Chicago";
 
 # Extra system-wide package
-environment.systemPackages = with pkgs; [ docker ];
+environment.systemPackages = with pkgs; [ tcpdump ];
 
 # Add yourself to a group
 users.users.operator.extraGroups = [ "wheel" "networkmanager" "docker" ];
