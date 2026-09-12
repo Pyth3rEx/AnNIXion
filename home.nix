@@ -177,6 +177,7 @@ in
   imports = [
     ./home/firefox
     ./home/plasma.nix
+    ./home/panel-separator.nix
     ./home/vscodium.nix
     ./home/only-office.nix
     ./home/apps-menu.nix

@@ -40,13 +40,36 @@
 
       # ── Single top panel ──────────────────────────────────────────────────
       # Layout (left → right):
-      #   [vol] [net] [BT] ┃ [window title] [app menu] [tasks] ── [music] [clock] [tray] [kickoff]
+      #   [desktops] ┃ [tasks] [vol] [net] [BT] ┃ [window title] [app menu] ── [music] [clock] [tray] [kickoff]
       {
         location = "top";
         screen = 0;
         height = 32;
         opacity = "adaptive";
         widgets = [
+
+          # ── Workspace (far left) ─────────────────────────────────────────
+          {
+            pager = {
+              general = {
+                displayedText = "desktopNumber";
+                navigationWrapsAround = true;
+              };
+            };
+          }
+
+          # Divides the desktop pager from the pinned launchers, which
+          # otherwise read as one run of squares. home/panel-separator.nix.
+          "com.annixion.separator"
+
+          {
+            iconTasks = {
+              launchers = [
+                "applications:org.kde.konsole.desktop"
+                "applications:org.kde.dolphin.desktop"
+              ];
+            };
+          }
 
           # ── Control center (left) ──────────────────────────────────────
           "org.kde.plasma.volume"
@@ -95,16 +118,6 @@
             };
           }
           "org.kde.plasma.appmenu"
-
-          # ── Task manager ──────────────────────────────────────────────
-          {
-            iconTasks = {
-              launchers = [
-                "applications:org.kde.dolphin.desktop"
-                "applications:org.kde.konsole.desktop"
-              ];
-            };
-          }
 
           # ── Flexible space ────────────────────────────────────────────
           "org.kde.plasma.panelspacer"
