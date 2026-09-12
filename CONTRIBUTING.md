@@ -118,31 +118,41 @@ Use `hotfix` for an urgent fix to what's already shipped on `main` — a bug bad
 enough that it can't wait for `dev`'s next release. It forks from `main`
 rather than `dev`, so it never carries unfinished work in flight there.
 
+**1. Cut the branch.** The maintainer runs this once per incident:
+
 ```bash
-./scripts/cut-hotfix.sh    # bumps VERSION to the next patch, e.g. 0.4.0 -> 0.4.1
+./scripts/cut-hotfix.sh          # bumps VERSION to the next patch, e.g. 0.4.0 -> 0.4.1
+git push --force -u origin hotfix
 ```
 
-This creates (or resets) the `hotfix` branch from `main`'s current tip with
-`VERSION` already bumped, so you never have to work out the next patch number
-by hand. Before opening the release PR:
+This creates (or resets) `hotfix` from `main`'s current tip with `VERSION`
+already bumped, so nobody has to work out the next patch number by hand.
 
-1. Set `RELEASE_NAME` to a new codename — required, and must differ from
-   `main`'s current one, same as any release PR.
-2. `git push --force -u origin hotfix`
+**2. Open your fix PR against `hotfix`, not `dev` or `main`:**
 
-Fix PRs for the incident target `hotfix`, not `dev` — it carries the same
-required checks as `dev` (`Nix CI`, `Lint`) and the same low-friction review,
-just scoped to this one incident instead of everything in flight.
+```bash
+git checkout -b fix/whatever-broke hotfix
+# ... make the fix ...
+git push -u origin fix/whatever-broke
+gh pr create --base hotfix --head fix/whatever-broke
+```
 
-The `hotfix → main` PR is a release PR like any other: `ci.yml`'s ISO build,
-version-bump and release-name gates all fire on it exactly as they do for
-`dev → main`, and the same `Release PR form` requirements apply — start from
-`.github/RELEASE_TEMPLATE.md` as usual.
+This is the same low-friction review as a `dev` PR — same two required
+checks (`Nix CI`, `Lint`), no code-owner review — just scoped to this one
+incident's branch instead of everything in flight on `dev`. Multiple fix PRs
+can land on `hotfix` before it ships, same as `dev`.
 
-Once merged to `main`, open a second PR, `hotfix → dev`, so the fix isn't lost
-when `dev` eventually ships its own release. `dev`'s later version bump will
-overwrite whatever patch number rode in from `hotfix` — that's expected, not
-a conflict.
+**3. Ship it.** Once `hotfix` has what it needs, set `RELEASE_NAME` to a new
+codename (required, must differ from `main`'s current one, same as any
+release PR) and open `hotfix → main`. This is a release PR like any other:
+`ci.yml`'s ISO build, version-bump and release-name gates all fire on it
+exactly as they do for `dev → main`, and the same `Release PR form`
+requirements apply — start from `.github/RELEASE_TEMPLATE.md` as usual.
+
+**4. Sync `dev`.** Once merged to `main`, open a second PR, `hotfix → dev`, so
+the fix isn't lost when `dev` eventually ships its own release. `dev`'s later
+version bump will overwrite whatever patch number rode in from `hotfix` —
+that's expected, not a conflict.
 
 ---
 
