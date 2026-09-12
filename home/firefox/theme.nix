@@ -180,14 +180,9 @@ in
     techAnchor = cssId addons.foxyproxy-standard;
   };
 
-  # ── OSINT — neon amber (#ffd000) ─────────────────────────────────
-  # Disabled: addon removed. Kept as reference for the cssId anchor pattern.
-  /*
-    programs.firefox.profiles."osint".userChrome = nordCSS {
-      accent     = "#ffd000";
-      techAnchor = cssId addons.someAddon;   # apply cssId to a pinned addon
-    };
-  */
+  # ── OSINT — no custom chrome ──────────────────────────────────────
+  # The addon its accent anchored to was removed; nothing pins the
+  # left separator without it.
 
   # ── Puppet Master — neon green (#00e676) ─────────────────────────
   programs.firefox.profiles."puppet".settings = makeSettings [ ];
