@@ -38,7 +38,7 @@ body:
       label: Use case
       description: What does this tool do and which operator workflow does it support?
       placeholder: |
-        CrackMapExec is a post-exploitation tool for Windows/AD environments. It belongs in the RedTeam layer alongside impacket for lateral movement and credential testing.
+        CrackMapExec is a post-exploitation tool for Windows/AD environments. It belongs in 07. Post-Exploitation — Lateral Movement alongside impacket for lateral movement and credential testing.
     validations:
       required: true
 
@@ -46,14 +46,31 @@ body:
     id: category
     attributes:
       label: Category
+      description: Matches the kill-chain menu structure in the AnNIXion app launcher.
       options:
-        - Offensive / Red Team
-        - OSINT / Recon
-        - SDR / RF
-        - Privacy / Anonymity
-        - Forensics / Reverse Engineering
-        - Networking / Wireless
-        - Post-exploitation
+        - 01. Reconnaissance — Passive OSINT
+        - 01. Reconnaissance — Active Scanning
+        - 01. Reconnaissance — RF / Signal Intel
+        - 02. Weaponization — Disassembly
+        - 02. Weaponization — Firmware Analysis
+        - 03. Delivery — Web Proxy
+        - 03. Delivery — Web Injection
+        - 04. Exploitation — Frameworks
+        - 04. Exploitation — Credential Attacks
+        - 04. Exploitation — Wireless
+        - 05. Installation — Tunneling & Shells
+        - 06. C2 — Frameworks
+        - 07. Post-Exploitation — Lateral Movement
+        - 08. Forensics — Memory Analysis
+        - 08. Forensics — Disk Analysis
+        - 09. Reverse Engineering — Disassemblers
+        - 09. Reverse Engineering — Firmware
+        - 10. Sniffing & Analysis
+        - Tools — Internet
+        - Tools — Development
+        - Tools — Utilities
+        - Tools — Productivity
+        - System
         - Other
     validations:
       required: true
