@@ -62,7 +62,7 @@ that read. It is expected and safe here.
 ### How do I add a security tool?
 
 Add the nixpkgs package to `environment.systemPackages` in
-`modules/security-tools.nix` and run `rebuild`. See
+`system/security-tools.nix` and run `rebuild`. See
 [customization.md](customization.md).
 
 ### How do I change a setting without touching shared config?
@@ -76,6 +76,86 @@ values win without `lib.mkForce` (the one exception is Firefox proxy prefs; see
 
 Flakes only see git-tracked files. Run `git add` on the new file before
 `rebuild`. Editing an existing tracked file needs no `git add`.
+
+---
+
+## Hyper-V Enhanced Session
+
+### I have no audio in the guest
+
+Two things have to be true, and the second one is easy to miss.
+
+The guest side is handled by `system/xrdp.nix`: Hyper-V emulates no sound
+card, so audio only travels over xrdp's redirection channel, which the module
+enables. See [Installation](installation.md#audio) for why that requires
+PulseAudio rather than PipeWire.
+
+The host side is not automatic. The Enhanced Session connection must be allowed
+to play the guest's audio on the host — in Hyper-V Manager, connect to the VM,
+choose **Show Options → Local Resources**, and direct audio playback to the
+local computer. Without it there is no channel to redirect into and the guest
+shows no audio device, however the guest is configured. The exact wording moves
+around between Windows versions.
+
+The setting is per connection, so check it again after connecting from a
+different machine or Windows profile. A console login has no redirection
+channel at all and will never have audio.
+
+### Reconnecting hangs, or vmconnect says to contact the admin
+
+Fixed in `system/xrdp.nix` — rebuild and the next login is clean. Generations
+before the fix set the operator account to linger, so `systemd --user` outlived
+the session it belonged to. It kept `graphical-session.target` active pointing
+at a `DISPLAY` that had gone away with the old X server, and the next login
+asked systemd for a Plasma session it already believed was running: Enhanced
+Session drops the connection, and a console login sits on the loading screen.
+
+To recover a machine still running an affected generation, log in on the
+console and clear the stale manager:
+
+```sh
+loginctl disable-linger operator
+loginctl terminate-user operator
+```
+
+Rebooting works too. Rebuilding clears the linger flag for good.
+
+If a reconnect fails after the fix, xrdp now logs to the journal — nixpkgs
+sends its log to `/dev/null` by default, so before this there was nothing to
+read:
+
+```sh
+journalctl -u xrdp -u xrdp-sesman -b
+```
+
+### Enhanced Session sits on the splash screen
+
+Because you are already logged in on the console.
+
+Plasma is one desktop per user, not one per session. Both logins share a
+single `systemd --user` manager and a single session bus, so whichever
+desktop started first owns `org.kde.KWin`. The second one's `kwin` is a
+`Type=dbus` unit waiting on a name it will never be given: systemd times the
+start job out after ninety seconds, restarts it, and repeats, while
+`startplasma-x11` waits on `org.kde.KSplash` for as long as you leave it
+there. The xrdp log says nothing, because nothing is wrong with the
+connection — it authenticates, gets its X server, and hands over to a
+desktop that never arrives.
+
+Ask who holds the name and the answer is the console session's compositor:
+
+```sh
+busctl --user list | grep org.kde.KWin
+```
+
+`system/xrdp.nix` now stops the running workspace before it starts its own,
+so connecting takes the desktop over and the console drops back to SDDM.
+On a generation without that fix, log out on the console, or clear it by
+hand from either session:
+
+```sh
+systemctl --user stop plasma-workspace.target graphical-session.target
+```
 
 ---
 
@@ -157,10 +237,29 @@ NXDOMAIN in another.
 
 ## CI & contributing
 
+### `gh auth login` worked, but pushing still can't authenticate
+
+AnNIXion wires the gh credential helper into `/etc/gitconfig` for every user
+(`system/git.nix`), so `gh auth login` is the only step there is.
+
+Do not run `gh auth setup-git`. It writes the store path of whichever `gh` ran
+it into your `~/.gitconfig`, and the next garbage collection deletes that path.
+The helper then fails to start — `git push` prints
+`.gh-wrapped auth git-credential get: No such file or directory` and falls back
+to asking for a password nobody has.
+
+`~/.gitconfig` overrides `/etc/gitconfig`, so a machine that has already been
+through that needs the stale line removed:
+
+```bash
+git config --global --unset-all credential.https://github.com.helper
+git config --global --unset-all credential.https://gist.github.com.helper
+```
+
 ### CI rejects my PR for committing `hardware-configuration.nix`
 
 It's machine-specific and gitignored. Remove it from your commit; CI and the dev
-shell generate a stub from `ci/hardware-stub.nix` automatically. See
+shell generate a stub from `system/hardware-stub.nix` automatically. See
 [dev.md](dev.md) and [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ### CI fails on a version bump

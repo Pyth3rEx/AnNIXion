@@ -2,8 +2,7 @@
 
 Thanks for wanting to improve AnNIXion. This guide covers the branch model,
 how to set up a working environment, and what to check before opening a pull
-request. For the detailed local-CI reference (levels, VSCodium tasks, terminal
-commands) see [docs/dev.md](docs/dev.md).
+request. For the detailed local-CI reference (levels and commands) see [docs/dev.md](docs/dev.md).
 
 ---
 
@@ -33,7 +32,7 @@ nix develop        # provides nixfmt, statix, deadnix, nil, nix-output-monitor
 ```
 
 You do not need a `hardware-configuration.nix` to work on AnNIXion. The
-`AnNIXion-ci` configuration pairs the full system with `ci/hardware-stub.nix`,
+`AnNIXion-ci` configuration pairs the full system with `system/hardware-stub.nix`,
 so the flake evaluates and builds on any machine. `AnNIXion` itself is only
 offered once you have a real `hardware-configuration.nix` in the repo root.
 
@@ -48,9 +47,12 @@ Run at least L0 + L1 locally (see [docs/dev.md](docs/dev.md) for all levels):
 
 ```bash
 .github/scripts/lint.sh        # L0 — nixfmt, statix, deadnix, shellcheck, eval
-tests/milestone.sh             # L0 — script fixture tests
+tests/repo/milestone.sh             # L0 — script fixture tests
 nix flake check --no-build     # L1 — syntax / type / references
 ```
+
+Plus the fixture tests for whatever you touched, and any VM test covering it —
+[docs/testing.md](docs/testing.md) lists the suite and what each test is for.
 
 L0 is the same script CI runs as the **Lint** check, so a clean run locally
 means a clean run there. Run `nixfmt <file>` to apply formatting.
@@ -74,6 +76,11 @@ pushes to `main`.
 - Keep each commit focused on one logical change — small, reviewable diffs.
 - Write PR descriptions that state the **problem**, the **fix**, and how you
   **tested** it.
+- **Every feature ships with its tests, in the same PR as the feature.** See
+  [docs/testing.md](docs/testing.md) for which kind a change needs and how to
+  wire it in. Where a change genuinely needs no test — docs, comments, cosmetic
+  theming, a version bump — say so in one line, so a reviewer knows it was
+  considered rather than forgotten.
 - Link the issue with a **closing keyword** — `Closes #12`, `Fixes #12`. A bare
   `(#12)` reads like a link but closes nothing on merge.
 - Do not add `Co-Authored-By` trailers.
@@ -120,7 +127,7 @@ the code changes without it.
 
 ```nix
 # Good — the reason is not visible from the code.
-environment.etc.hosts.mode = "0700"; # Makes /etc/hosts writable.
+environment.etc.hosts.mode = "0644"; # A real file, so root can edit it.
 
 # Noise — the code already says this.
 # Set the hostname to AnNIXion
@@ -131,10 +138,15 @@ networking.hostName = "AnNIXion";
 
 ## Adding tools
 
-System-wide security tools live in `modules/security-tools.nix`. Add the
-nixpkgs package to `environment.systemPackages` with a short inline comment,
-then rebuild and confirm it resolves. For tools not yet in nixpkgs, see the
-overlays plan in [docs/roadmap.md](docs/roadmap.md) (Phase 9).
+A tool is one file in `catalog/`, declaring its package, its menu entry and its
+icon together — put it in the kill-chain phase it belongs to. Nothing registers
+it anywhere; the file being there is the registration. The schema is in
+[docs/architecture.md](docs/architecture.md#adding-a-tool).
+
+Run `tests/shell/catalog.sh` and `tests/shell/menu-icons.sh` afterwards: the
+first checks the catalog still describes a menu that can be built, the second
+that every `Icon=` resolves. For tools not yet in nixpkgs, see the overlays plan
+in [docs/roadmap.md](docs/roadmap.md) (Phase 9).
 
 ## Adding or changing user-facing config
 
@@ -207,7 +219,8 @@ rather than being left to rot in Backlog.
 | **Backlog** | Filed, not yet triaged | Opening the issue |
 | **Ready** | Triaged and agreed, but not scoped into the next release | Removing `needs triage` |
 | **Up next** | Scoped into the release being built, nobody has started | Putting it on the nearest open milestone |
-| **In progress** | Someone is on it | Assigning the issue, or opening a PR |
+| **In progress** | Someone is on it | Assigning the issue, or opening a PR that is not a draft |
+| **Ready** (a PR) | Opened as a draft, not ready to be looked at | Opening a draft PR, or converting one back to draft |
 | **In review** | Merged into `dev`, awaiting release | Merging a PR into `dev` |
 | **Done** | Shipped in a release | Merging the release PR into `main` |
 

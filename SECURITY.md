@@ -22,7 +22,7 @@ reach.
 
 **What is configured**
 
-- Attack surface reduction — `modules/hardening.nix` disables OpenSSH,
+- Attack surface reduction — `system/hardening.nix` disables OpenSSH,
   ModemManager, geoclue, fwupd, the KDE PIM stack and the rest of what the
   distro does not use; enables the firewall with no ports open; sets kernel
   sysctls covering `dmesg`, kernel pointers, kexec, unprivileged BPF, `ptrace`
@@ -74,6 +74,50 @@ Harden per deployment through the `user/` override system — see
 AnNIXion is pre-1.0 and under active development. Only the **latest release**
 (and the `dev` branch) receive fixes. Version is tracked in the `VERSION` file
 and mirrored in the GitHub release tag.
+
+---
+
+## What a release tells you about itself
+
+Every release carries three files describing its own contents, plus a
+`SHA256SUMS` covering them and the ISO. The closure is fixed by the tag's
+`flake.lock`, so all of this is exact rather than approximate — and it is
+captured at release time because it stops being recoverable later, once
+binary-cache entries are collected and upstream sources move.
+
+| Asset | What it describes |
+|---|---|
+| `annixion-<version>.cdx.json` | The **installed** closure: every package and version present on a running system. |
+| `annixion-<version>.buildtime.cdx.json` | The same, plus every toolchain, source archive and patch that produced it. |
+| `annixion-<version>.supply-chain.md` | Both, rendered as a page, in two halves. |
+
+Closure size and store-path count are measured per release and carried in the
+SBOMs themselves, so an archived artifact still reports the closure it came from
+once the release page is the only other record.
+
+**Point a scanner at the first one.** The build closure is provenance, not
+exposure: a CVE against a compiler that produced the image is not running on
+your machine, is not reachable by an attacker, and is not grounds to treat the
+release as vulnerable. The two are published separately, and counted
+separately, for exactly that reason.
+
+None of this is a verdict. Nothing here claims the release is free of known
+vulnerabilities; the SBOM is what lets you check that yourself, against a
+scanner you chose:
+
+```bash
+grype sbom:annixion-<version>.cdx.json
+```
+
+That SBOM describes a past release, though — not a checkout with `user/`
+overrides, extra packages, or an unmerged branch. For that, `annixion-cve-report`
+runs the same pipeline (a fresh SBOM, a live scan, the same rendered pages)
+against your own checkout, right now, and marks the result `-local+<commit>`
+so it is never mistaken for that release's. See [docs/usage.md](docs/usage.md).
+
+Note what such a scan does *not* know: it sees what is present, not what is
+reachable. Findings against services this system disables (see the hardening
+notes above) are still findings, and some CPE ranges upstream are simply stale.
 
 ---
 

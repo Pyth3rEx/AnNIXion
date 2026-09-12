@@ -58,13 +58,13 @@ jobs:
             --name lint-summary --dir summary || echo "no summary artifact"
 
       # Only forks are guarded, so only forks get the warning.
-      - name: Describe any flake change
+      - name: Describe what the fork changes
         if: steps.pr.outputs.number && steps.pr.outputs.fork
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.pr.outputs.number }}
           MODE: markdown
-        run: bash .github/scripts/check-flake-inputs.sh >flake-note.md
+        run: bash .github/scripts/check-fork-changes.sh >fork-note.md
 
       - name: Post code quality summary
         if: steps.pr.outputs.number
@@ -72,5 +72,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.pr.outputs.number }}
           SUMMARY: summary/lint-summary.md
-          NOTE: flake-note.md
+          NOTE: fork-note.md
         run: bash .github/scripts/lint-comment.sh

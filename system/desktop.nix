@@ -1,0 +1,45 @@
+# Desktop session: Plasma 6 on X11, SDDM, KDE extras.
+{
+  lib,
+  pkgs,
+  ...
+}:
+
+{
+  # ── Display & desktop — KDE Plasma 6 ────────────────────────────────────
+  # X11 by default: Enhanced Session runs over xrdp, which has no Wayland
+  # backend. Both sessions are offered at SDDM. "plasma" is the Wayland
+  # session — the X11 one is "plasmax11". Not mkDefault: plasma6 already
+  # claims the option at that priority, which is how this came to read
+  # "plasma" and quietly agree with it.
+
+  services = {
+    xserver.enable = lib.mkDefault true;
+    displayManager.sddm.enable = lib.mkDefault true;
+    displayManager.defaultSession = "plasmax11";
+    desktopManager.plasma6.enable = lib.mkDefault true;
+  };
+
+  # ── KDE extras not pulled in automatically ──────────────────────────────
+  environment.systemPackages = with pkgs; [
+    kdePackages.kate
+    kdePackages.ark
+    kdePackages.kcalc
+    kdePackages.filelight
+    kdePackages.kwalletmanager
+  ];
+
+  # ── Default applications ────────────────────────────────────────────────
+  xdg.mime.defaultApplications = {
+    "text/html" = "firefox-osint.desktop";
+    "x-scheme-handler/http" = "firefox-osint.desktop";
+    "x-scheme-handler/https" = "firefox-osint.desktop";
+    "x-scheme-handler/about" = "firefox-osint.desktop";
+    "x-scheme-handler/unknown" = "firefox-osint.desktop";
+    "text/markdown" = "annixion-glow.desktop";
+  };
+
+  # ── KWallet ─────────────────────────────────────────────────────────────
+  # Unlock the secret store on login.
+  security.pam.services.sddm.enableKwallet = lib.mkDefault true;
+}
