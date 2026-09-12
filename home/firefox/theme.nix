@@ -180,9 +180,13 @@ in
     techAnchor = cssId addons.foxyproxy-standard;
   };
 
-  # ── OSINT — no custom chrome ──────────────────────────────────────
-  # The addon its accent anchored to was removed; nothing pins the
-  # left separator without it.
+  # ── OSINT — neon amber (#ffd000) ─────────────────────────────────
+  # No pinned extras, so the developer button anchors the separator.
+  programs.firefox.profiles."osint".settings = makeSettings [ ];
+  programs.firefox.profiles."osint".userChrome = nordCSS {
+    accent = "#ffd000";
+    techAnchor = "#developer-button";
+  };
 
   # ── Puppet Master — neon green (#00e676) ─────────────────────────
   programs.firefox.profiles."puppet".settings = makeSettings [ ];
