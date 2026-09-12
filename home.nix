@@ -213,6 +213,7 @@ in
     ripgrep
     fd
     bat
+    glow
     # fzf is managed by programs.fzf in home/zsh.nix
     jq
     unzip

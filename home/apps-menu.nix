@@ -603,6 +603,15 @@ let
       categories = [ "X-AnNIXion-Utils" ];
       comment = "OpenPGP and X.509 certificate management";
     };
+    "annixion-glow" = de {
+      name = "Glow";
+      genericName = "Markdown Viewer";
+      icon = "text-markdown";
+      exec = term "glow %f";
+      categories = [ "X-AnNIXion-Utils" ];
+      mimeType = [ "text/markdown" ];
+      comment = "Render Markdown on the command line";
+    };
 
     # ── System ─────────────────────────────────────────────────────────────────
     "annixion-konsole" = de {

@@ -34,6 +34,7 @@
     "x-scheme-handler/https" = "firefox-red.desktop";
     "x-scheme-handler/about" = "firefox-red.desktop";
     "x-scheme-handler/unknown" = "firefox-red.desktop";
+    "text/markdown" = "annixion-glow.desktop";
   };
 
   # ── Shell ───────────────────────────────────────────────────────────────
