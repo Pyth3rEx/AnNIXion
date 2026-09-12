@@ -9,7 +9,9 @@ request. For the detailed local-CI reference (levels and commands) see [docs/dev
 ## Branch model
 
 ```
-feature-branch  →  dev  →  (maintainer)  →  main
+feature-branch  →  dev      →  (maintainer)  →  main
+fix-branch      →  hotfix   →  (maintainer)  →  main
+                                              ↘  dev
 ```
 
 - **Open every PR against `dev`, never `main`.**
@@ -20,6 +22,11 @@ feature-branch  →  dev  →  (maintainer)  →  main
   characters, never reused. It forms the release title (`AnNIXion 0.3.0 —
   Killswitch`), so keep it short and punchy. The maintainer sets it with the
   version bump; CI rejects the release PR if it is missing, empty or unchanged.
+- For an urgent fix to what's already on `main` that can't wait for `dev`'s
+  next release, target `hotfix` instead — see
+  [Hotfix PRs](#hotfix-prs-hotfix--main) below. It carries the same
+  requirements as `dev` (same required checks, same low-friction review) but
+  is scoped to a single incident rather than everything in flight.
 
 ---
 
@@ -104,6 +111,48 @@ Check a draft before opening the PR:
 ```bash
 python3 .github/scripts/check-release-form.py my-draft.md
 ```
+
+### Hotfix PRs (`hotfix` → `main`)
+
+Use `hotfix` for an urgent fix to what's already shipped on `main` — a bug bad
+enough that it can't wait for `dev`'s next release. It forks from `main`
+rather than `dev`, so it never carries unfinished work in flight there.
+
+**1. Cut the branch.** The maintainer runs this once per incident:
+
+```bash
+./scripts/cut-hotfix.sh          # bumps VERSION to the next patch, e.g. 0.4.0 -> 0.4.1
+git push --force -u origin hotfix
+```
+
+This creates (or resets) `hotfix` from `main`'s current tip with `VERSION`
+already bumped, so nobody has to work out the next patch number by hand.
+
+**2. Open your fix PR against `hotfix`, not `dev` or `main`:**
+
+```bash
+git checkout -b fix/whatever-broke hotfix
+# ... make the fix ...
+git push -u origin fix/whatever-broke
+gh pr create --base hotfix --head fix/whatever-broke
+```
+
+This is the same low-friction review as a `dev` PR — same two required
+checks (`Nix CI`, `Lint`), no code-owner review — just scoped to this one
+incident's branch instead of everything in flight on `dev`. Multiple fix PRs
+can land on `hotfix` before it ships, same as `dev`.
+
+**3. Ship it.** Once `hotfix` has what it needs, set `RELEASE_NAME` to a new
+codename (required, must differ from `main`'s current one, same as any
+release PR) and open `hotfix → main`. This is a release PR like any other:
+`ci.yml`'s ISO build, version-bump and release-name gates all fire on it
+exactly as they do for `dev → main`, and the same `Release PR form`
+requirements apply — start from `.github/RELEASE_TEMPLATE.md` as usual.
+
+**4. Sync `dev`.** Once merged to `main`, open a second PR, `hotfix → dev`, so
+the fix isn't lost when `dev` eventually ships its own release. `dev`'s later
+version bump will overwrite whatever patch number rode in from `hotfix` —
+that's expected, not a conflict.
 
 ---
 
