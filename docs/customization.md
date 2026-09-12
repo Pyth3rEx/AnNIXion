@@ -55,7 +55,7 @@ is organised by function into three groups:
 
 | Group | Contents |
 |---|---|
-| Left | Virtual desktop pager, a rule, icon-only task manager pinned to the everyday five |
+| Left | Virtual desktop pager, a rule, icon-only task manager pinned to the everyday six |
 | Centre | Compact app menu, then the focused app's name |
 | Right | Camera indicator, system categories, status tray, clock, application menu |
 
@@ -69,15 +69,16 @@ Two things to know before editing the widget list:
 An applet placed on the bar directly must **also** appear in the tray's
 `items.hidden`, or it renders twice — once standalone, once in the tray.
 
-The task manager pins five launchers — the two terminals and the three Firefox
-profiles — in `Meta+F<N>` order, so they read as `F1`, `F2`, `F4`, `F5`, `F6`.
-That is a subset of `hotkeys.commands`, not a mirror of it: everything else
-keeps its key and its menu entry without spending panel width. Adding a
-quicklaunch key does not oblige you to pin it. Where an app has both a stock
-entry and an `annixion-*` one, pin the stock id: Plasma matches a running window
-to a launcher by window class, and `annixion-wireshark` does not resolve against
-a window whose class is `wireshark`. The ids with no stock equivalent — the root
-terminal, the Firefox profiles — carry their own `StartupWMClass` instead.
+The task manager pins six launchers — the two terminals, the file manager and
+the three Firefox profiles — in `Meta+F<N>` order, so they read as `F1`
+through `F6`. That is a subset of `hotkeys.commands`, not a mirror of it:
+everything else keeps its key and its menu entry without spending panel width.
+Adding a quicklaunch key does not oblige you to pin it. Where an app has both
+a stock entry and an `annixion-*` one, pin the stock id: Plasma matches a
+running window to a launcher by window class, and `annixion-wireshark` does
+not resolve against a window whose class is `wireshark`. The ids with no
+stock equivalent — the root terminal, the Firefox profiles — carry their own
+`StartupWMClass` instead.
 
 The rule between the pager and the launchers is `com.annixion.separator`, a
 two-file KPackage written by `home/desktop/panel-separator.nix`. Plasma 5's
