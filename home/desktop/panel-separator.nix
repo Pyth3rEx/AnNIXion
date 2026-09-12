@@ -64,7 +64,14 @@ let
             Layout.preferredHeight: rule.horizontal ? -1 : Kirigami.Units.smallSpacing * 3
 
             Rectangle {
-                anchors.centerIn: parent
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                // Centered in the box alone still reads as off-center in a
+                // horizontal panel: Icon Tasks pads its first icon further
+                // from its edge than the pager pads its last digit, so the
+                // gap right of the rule looks wider than the gap left of it.
+                // Nudge the rule toward the pager to split that gap evenly.
+                anchors.horizontalCenterOffset: rule.horizontal ? -Kirigami.Units.smallSpacing / 2 : 0
                 width: rule.horizontal ? 1 : Math.round(rule.width * 0.6)
                 height: rule.horizontal ? Math.round(rule.height * 0.5) : 1
                 color: Kirigami.Theme.textColor
