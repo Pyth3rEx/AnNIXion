@@ -6,8 +6,12 @@ name: Project
 #   triage label removed  → Ready, or Up next when it is on the next release
 #   milestone changed     → Up next or Ready, for work nobody has started
 #   issue assigned        → In progress
-#   PR opened             → In progress, milestone assigned
-#   PR merged into dev    → In review, with the issues it closes
+#   PR opened             → In progress, milestone assigned — Ready while a draft
+#   PR draft state moved  → Ready as a draft, In progress once ready for review
+#   PR closed unmerged    → Done; it is not coming back
+#   PR merged, not main   → In review, with the issues it closes — a
+#                           stacked PR's merge into the branch below it
+#                           counts here too, not only a merge into dev
 #   PR merged into main   → Done, with everything else in review
 #   milestone closed      → the next release's Ready work rises to Up next
 #
@@ -22,7 +26,8 @@ on:
   issues:
     types: [opened, assigned, unlabeled, milestoned, demilestoned]
   pull_request_target:
-    types: [opened, closed, milestoned, demilestoned]
+    types:
+      [opened, closed, milestoned, demilestoned, ready_for_review, converted_to_draft]
   milestone:
     types: [closed]
 
@@ -160,21 +165,53 @@ jobs:
           HAS_MILESTONE: ${{ github.event.pull_request.milestone != null }}
         run: .github/scripts/assign-milestone.sh
 
-      - name: Add to the board
+  # ── Where a pull request sits while it is open ────────────────────────
+  # One job for every state a pull request reaches on its own: opened, moved
+  # in or out of draft, or closed without merging. The merge jobs below own
+  # the rest, because they also have to move the issues the PR closes.
+  pr-column:
+    name: Pull request column
+    if: >-
+      github.event_name == 'pull_request_target'
+      && (
+        github.event.action == 'opened'
+        || github.event.action == 'ready_for_review'
+        || github.event.action == 'converted_to_draft'
+        || (github.event.action == 'closed' && github.event.pull_request.merged == false)
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read the column this pull request belongs in
+        id: column
+        env:
+          ACTION: ${{ github.event.action }}
+          DRAFT: ${{ github.event.pull_request.draft }}
+          MERGED: ${{ github.event.pull_request.merged }}
+        run: echo "status=$(.github/scripts/pr-column.sh)" >> "$GITHUB_OUTPUT"
+
+      - name: Put it there
         env:
           GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          STATUS: ${{ steps.column.outputs.status }}
         run: |
           .github/scripts/project-sync.sh sync \
             --content "${{ github.event.pull_request.node_id }}" \
-            --status "In progress"
+            --status "$STATUS"
 
-  # ── Merged into dev ───────────────────────────────────────────────────
-  pr-merged-dev:
-    name: Merged into dev
+  # ── Merged upstream ───────────────────────────────────────────────────
+  # Not just base == dev: a stacked pull request merges into the branch
+  # below it in the stack, not into dev directly, and that merge is just as
+  # much progress as a direct one. Only a release PR's base is main, so
+  # excluding that is what tells the two apart — every other base is a step
+  # on the way to dev, however many hops from it.
+  pr-merged-upstream:
+    name: Merged upstream
     if: >-
       github.event_name == 'pull_request_target' && github.event.action == 'closed'
       && github.event.pull_request.merged == true
-      && github.event.pull_request.base.ref == 'dev'
+      && github.event.pull_request.base.ref != 'main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

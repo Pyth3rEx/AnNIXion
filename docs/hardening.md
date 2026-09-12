@@ -1,6 +1,6 @@
 # Hardening
 
-`modules/hardening.nix` removes services, packages and kernel features AnNIXion
+`system/hardening.nix` removes services, packages and kernel features AnNIXion
 does not need, so what remains is what it actually uses.
 
 ## Restoring anything
@@ -27,7 +27,7 @@ services.openssh.enable = true;
 | `documentation.nixos`, `.info`, `.doc` | Offline manuals. **Man pages stay** — this is a tooling distro, so only the three sub-switches are set. `documentation.enable` is the master gate and takes man pages with it. |
 | `programs.kde-pim` | Plasma enables it by default, putting `akonadi` and `kdepim-runtime` on PATH — a database and agents speaking IMAP, EWS, Google, Kolab and DAV, with no mail client to use them. |
 | `environment.plasma6.excludePackages` | `krdp` (a second RDP server beside xrdp), `plasma-browser-integration` (bridges the desktop into the browser through a native messaging host), `ffmpegthumbs` (parses whatever video a directory holds), `elisa`, `khelpcenter`, the wallpaper pack, the touch keyboard. |
-| Baloo indexing | Indexing file contents means parsing them. Set in `home/plasma.nix`. |
+| Baloo indexing | Indexing file contents means parsing them. Set in `home/desktop/plasma/`. |
 | `environment.stub-ld` | Loader stub for unpatched foreign binaries. |
 | `nix.settings.allowed-users` | Defaulted to `*`, letting any account submit builds. Now `@wheel`. |
 | Firewall ports | Nothing listens that should be reachable, so nothing is opened. |
@@ -36,7 +36,7 @@ The **NUR** flake input was removed: it was declared and referenced nowhere, so
 it pinned a community package collection into the lock file and every evaluation
 for nothing.
 
-xrdp's `openFirewall` is off in `modules/xrdp.nix` as well: Enhanced Session
+xrdp's `openFirewall` is off in `system/xrdp.nix` as well: Enhanced Session
 arrives over vsock, so the TCP port was open with nothing behind it. Bare-metal
 RDP over TCP needs it set back to `true`.
 
@@ -77,16 +77,59 @@ the control centre killswitch goes through polkit.
 the panel launches some, the zsh aliases edit with `kate`, and the rest are how
 you read what you collect.
 
+## Docker
+
+`system/docker.nix` runs the daemon **rootless** — as the desktop user, not as
+root. That is the whole reason the module exists rather than a one-line
+`virtualisation.docker.enable = true`.
+
+A rootful daemon listens on a socket owned by root, and everyone who may talk to
+it is in the `docker` group. That group is not a lesser privilege: a member runs
+`docker run -v /:/host` and reads or writes the entire filesystem as root, with
+no password and no polkit prompt. Adding the operator to it would hand every
+process in the session a way around everything else on this page. Rootless keeps
+containers at exactly the privilege of the account that started them, and
+creates no `docker` group at all.
+
+What rootless costs, and when to give it up:
+
+| Needs rootful | Why |
+|---|---|
+| `--net=host` against the real host stack | rootless containers live in their own network namespace |
+| Binding a port below 1024 | no `CAP_NET_BIND_SERVICE` on the host side |
+| Raw sockets — a container running `nmap -sS`, `arpspoof`, a sniffer | no `CAP_NET_RAW` on the host interface |
+
+Those are real needs on this machine, so the escape hatch is one line:
+
+```nix
+# user/configuration.nix
+annixion.docker.rootless = false;
+```
+
+It enables the root daemon and puts the operator in the `docker` group. Take it
+when a container genuinely needs the host network — not to make a permission
+error go away.
+
+**Containers are outside the VPN killswitch.** `system/vpn/`
+matches one cgroup, `annixion-vpn.slice` under the user manager, and arms
+nftables against it. A container is not in that cgroup under either daemon:
+rootful containers sit under `system.slice`, and even the rootless daemon runs
+as its own user unit rather than inside the enforced slice. So a container's
+traffic leaves through whatever route the host has, tunnel or not, and it keeps
+leaving after the tunnel drops. If what runs in the container must be tunnelled,
+tunnel it inside the container or start the whole daemon under
+`annixion-vpn-run` — do not assume the killswitch reaches it.
+
 ## File visibility
 
 A hidden file is one you cannot judge, and this machine exists to handle other
-people's artefacts. `home/file-visibility.nix` turns concealment off in each
+people's artefacts. `home/desktop/file-visibility.nix` turns concealment off in each
 place that does it independently:
 
 | Where | How |
 |---|---|
 | Dolphin | `HiddenFilesShown` in the global view-properties file it reads instead of `dolphinrc` |
-| KDE open/save dialogs | `Show Hidden Files` in `kdeglobals` (set in `home/plasma.nix`) |
+| KDE open/save dialogs | `Show Hidden Files` in `kdeglobals` (set in `home/desktop/plasma/`) |
 | GTK file chooser (Firefox) | `show-hidden` via dconf, for GTK3 and GTK4 |
 | `rg` and `fd` | `--hidden`, which they otherwise skip |
 
@@ -102,7 +145,7 @@ trusted.
 
 ## Measured effect
 
-Against the same configuration without `modules/hardening.nix`:
+Against the same configuration without `system/hardening.nix`:
 
 | | Baseline | Hardened |
 |---|---|---|

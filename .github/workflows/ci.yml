@@ -6,6 +6,16 @@ on:
   # Pushes only matter on main (system closure + ISO release).
   push:
     branches: [main]
+    # cve-status.yml commits here weekly. The iso job fires on any push to
+    # main with no path filter, so without this every Monday starts a
+    # three-hour ISO build to republish a tag that already exists.
+    paths-ignore:
+      - "docs/security/**"
+
+# Read-only floor for every job. Build ISO raises its own to publish a release;
+# nothing else writes, so nothing else declares more.
+permissions:
+  contents: read
 
 jobs:
   # Lint is its own job so it reports separately from the build and finishes in
@@ -13,8 +23,6 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - uses: actions/checkout@v6
@@ -29,14 +37,14 @@ jobs:
           path: .lint-base
 
       # Runs before Nix is installed: a rejected lock must never be fetched.
-      - name: Guard flake inputs
+      - name: Guard what a fork changes
         if: >-
           github.event_name == 'pull_request'
           && github.event.pull_request.head.repo.full_name != github.repository
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
-        run: bash .github/scripts/check-flake-inputs.sh
+        run: bash .github/scripts/check-fork-changes.sh
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31
@@ -62,7 +70,31 @@ jobs:
         run: nix develop --command bash .github/scripts/lint.sh
 
       - name: "[L0] Script tests"
-        run: nix develop --command bash tests/milestone.sh
+        run: |
+          nix develop --command bash tests/repo/milestone.sh
+          nix develop --command bash tests/shell/prompt-width.sh
+          nix develop --command bash tests/shell/firefox-profiles.sh
+          nix develop --command bash tests/shell/catalog.sh
+          nix develop --command bash tests/shell/menu-icons.sh
+          nix develop --command bash tests/shell/menu-exec.sh
+          nix develop --command bash tests/shell/branding.sh
+          nix develop --command bash tests/shell/etc-hosts.sh
+          nix develop --command bash tests/repo/workflow-injection.sh
+          nix develop --command bash tests/repo/workflow-permissions.sh
+          nix develop --command bash tests/repo/stale-reviews.sh
+          nix develop --command bash tests/repo/pr-column.sh
+          nix develop --command bash tests/repo/sbom.sh
+          nix develop --command bash tests/repo/supply-chain.sh
+          nix develop --command bash tests/repo/package-provenance.sh
+          nix develop --command bash tests/repo/security-pages.sh
+          nix develop --command bash tests/repo/cve-status-workflow.sh
+          nix develop --command bash tests/repo/pr-cve-scan.sh
+          nix develop --command bash tests/repo/cve-report.sh
+
+      # Its own step: the only test here that leaves the runner, so a red
+      # build points at the network rather than at the hermetic tests above.
+      - name: "[L0] Zone transfer"
+        run: nix develop --command bash tests/shell/dns-axfr.sh
 
       # Uploaded even when linting failed — that is when the summary matters
       # most. pr-summary.yml posts it, holding the token a fork PR cannot get.
@@ -115,21 +147,42 @@ jobs:
 
       # L2 — full system closure: proves every package in the config
       # resolves and all modules compose without conflicts.
-      # AnNIXion-ci is the real config with ci/hardware-stub.nix as its disk
+      # AnNIXion-ci is the real config with system/hardware-stub.nix as its disk
       # layout — the only part CI cannot know.
+      # The out-link is what the SBOM step is taken from: --no-link leaves the
+      # closure eligible for collection with nothing naming it.
       - name: "[L2] System closure build"
         run: |
           nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel \
-            --print-build-logs --no-link
+            --print-build-logs --out-link result-toplevel
 
       # L3 — VM tests: boot + service behaviour, security tool presence.
       # Runs in QEMU via the NixOS test framework.
+      # Every check the flake defines, discovered rather than listed: a test
+      # that is written and wired in must not be able to never run.
       - name: "[L3] VM tests"
         run: |
-          nix build \
-            .#checks.x86_64-linux.boot \
-            .#checks.x86_64-linux.security-tools \
+          mapfile -t checks < <(nix eval --json '.#checks.x86_64-linux' \
+            --apply builtins.attrNames | jq -r '.[]')
+          printf 'running %s VM test(s): %s\n' "${#checks[@]}" "${checks[*]}"
+          nix build "${checks[@]/#/.#checks.x86_64-linux.}" \
             --print-build-logs --no-link
+
+      # Generated here rather than in `iso` because separate jobs share no Nix
+      # store, and this one has already built the closure they describe. The
+      # closure metrics are read off the live store, which is the other reason
+      # L2 above keeps its out-link.
+      - name: "[L2] Supply-chain artifacts"
+        env:
+          SBOM_DIR: ${{ runner.temp }}/sbom
+        run: nix develop --command bash .github/scripts/generate-sbom.sh --out-dir "$SBOM_DIR"
+
+      - name: Upload the supply-chain artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: ${{ runner.temp }}/sbom/
+          if-no-files-found: error
 
   iso:
     name: Build ISO
@@ -229,7 +282,7 @@ jobs:
         run: |
           ISO=$(find result-iso/ -name "*.iso" -type f | head -1)
           if [ -z "$ISO" ]; then
-            echo "::error file=iso.nix::No .iso file found under result-iso/. Build may have failed silently."
+            echo "::error file=iso/default.nix::No .iso file found under result-iso/. Build may have failed silently."
             echo "Directory contents:"
             find result-iso/ -type f || echo "(empty)"
             exit 1
@@ -238,17 +291,61 @@ jobs:
           echo "Found ISO: $ISO ($(du -sh "$ISO" | cut -f1))"
 
       - name: Check ISO size
+        env:
+          ISO_PATH: ${{ steps.iso.outputs.path }}
         run: |
-          ISO="${{ steps.iso.outputs.path }}"
+          ISO="$ISO_PATH"
           MAX_MB=1900
           MAX_BYTES=$((MAX_MB * 1024 * 1024))
           ISO_BYTES=$(stat -c%s "$ISO")
           ISO_MB=$((ISO_BYTES / 1024 / 1024))
           if [ "$ISO_BYTES" -gt "$MAX_BYTES" ]; then
-            echo "::error file=iso.nix::ISO is ${ISO_MB} MB — exceeds the ${MAX_MB} MB GitHub release limit. Remove packages from iso.nix to reduce size."
+            echo "::error file=iso/default.nix::ISO is ${ISO_MB} MB — exceeds the ${MAX_MB} MB GitHub release limit. Remove packages from iso/default.nix to reduce size."
             exit 1
           fi
           echo "ISO size: ${ISO_MB} MB / ${MAX_MB} MB limit ✓"
+
+      # Built in `check`, where the closure lives. This job only publishes them.
+      - name: Download the supply-chain artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: ${{ runner.temp }}/sbom
+
+      - name: Locate the supply-chain artifacts
+        id: sbom
+        env:
+          SBOM_DIR: ${{ runner.temp }}/sbom
+        run: |
+          set -u
+          # The generator is the single source of truth for the asset names, so
+          # a rename cannot leave this step looking for the old ones.
+          mapfile -t assets < <(.github/scripts/generate-sbom.sh --name)
+          for a in "${assets[@]}"; do
+            if [ ! -s "$SBOM_DIR/$a" ]; then
+              echo "::error::$a is missing from the artifact the check job published."
+              ls -la "$SBOM_DIR" || true
+              exit 1
+            fi
+          done
+          {
+            echo "runtime=$SBOM_DIR/${assets[0]}"
+            echo "buildtime=$SBOM_DIR/${assets[1]}"
+            echo "page=$SBOM_DIR/${assets[2]}"
+          } >> "$GITHUB_OUTPUT"
+
+          # Recomputed each release by the generator and carried in the SBOM, so
+          # the release body never quotes a figure from a previous closure.
+          prop() {
+            jq -r --arg n "$1" '(.metadata.properties // [])
+              | map(select(.name == $n)) | (.[0].value // "")' "$SBOM_DIR/${assets[0]}"
+          }
+          {
+            echo "paths=$(prop annixion:closure_store_paths)"
+            echo "size=$(prop annixion:closure_size)"
+            echo "components=$(jq '.components | length' "$SBOM_DIR/${assets[0]}")"
+            echo "build_components=$(jq '.components | length' "$SBOM_DIR/${assets[1]}")"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Read version
         id: version
@@ -282,25 +379,44 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
         run: |
-          BODY=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/pulls" \
-            --jq '.[0].body // ""')
+          BODY=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].body // ""')
           if [ -z "$BODY" ]; then
             BODY="_No changelog provided._"
             echo "::warning::No merged PR found for this commit — release notes will be empty."
           fi
+          # Random delimiter: a body containing the marker would otherwise be
+          # able to close the heredoc and write further outputs of its own.
+          DELIM="body_$(openssl rand -hex 16)"
           {
-            echo "body<<__EOF__"
-            echo "$BODY"
-            echo "__EOF__"
+            printf 'body<<%s\n' "$DELIM"
+            printf '%s\n' "$BODY"
+            printf '%s\n' "$DELIM"
           } >> "$GITHUB_OUTPUT"
 
       - name: Publish GitHub Release
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          COMMIT_SHA: ${{ github.sha }}
+          TAG: ${{ steps.version.outputs.tag }}
+          TITLE: ${{ steps.version.outputs.title }}
+          ISO_PATH: ${{ steps.iso.outputs.path }}
+          SBOM_PATH: ${{ steps.sbom.outputs.runtime }}
+          BUILDTIME_PATH: ${{ steps.sbom.outputs.buildtime }}
+          PAGE_PATH: ${{ steps.sbom.outputs.page }}
+          CLOSURE_PATHS: ${{ steps.sbom.outputs.paths }}
+          CLOSURE_SIZE: ${{ steps.sbom.outputs.size }}
+          COMPONENTS: ${{ steps.sbom.outputs.components }}
+          BUILD_COMPONENTS: ${{ steps.sbom.outputs.build_components }}
+          # Via env, never interpolated into the shell, exactly as pr-form.yml
+          # takes the body: ${{ }} is pasted in before bash runs, so backticks
+          # in a changelog would be command substitution rather than markup.
+          CHANGELOG: ${{ steps.changelog.outputs.body }}
         run: |
-          TAG="${{ steps.version.outputs.tag }}"
 
           if gh release view "$TAG" > /dev/null 2>&1; then
             echo "Release $TAG already exists — bump VERSION to publish a new release."
@@ -309,24 +425,55 @@ jobs:
 
           # Auto-generated PR list since the previous tag
           PREV_TAG=$(git tag --sort=-version:refname | head -1)
-          AUTO_NOTES=$(gh api "repos/${{ github.repository }}/releases/generate-notes" \
+          AUTO_NOTES=$(gh api "repos/$REPO/releases/generate-notes" \
             -X POST \
             -f tag_name="$TAG" \
             ${PREV_TAG:+-f previous_tag_name="$PREV_TAG"} \
             --jq '.body' 2>/dev/null || echo "")
 
+          # One checksum file over every asset, so the detached signature
+          # planned for Phase 11 covers the SBOM as well as the ISO. Bare
+          # filenames: `sha256sum -c SHA256SUMS` runs where they were downloaded.
+          SUMS="$RUNNER_TEMP/SHA256SUMS"
+          : > "$SUMS"
+          for asset in "$ISO_PATH" "$SBOM_PATH" "$BUILDTIME_PATH" "$PAGE_PATH"; do
+            (cd "$(dirname "$asset")" && sha256sum "$(basename "$asset")") >> "$SUMS"
+          done
+
           NOTES_FILE=$(mktemp)
           {
-            echo "${{ steps.changelog.outputs.body }}"
+            printf '%s\n' "$CHANGELOG"
             if [ -n "$AUTO_NOTES" ]; then
               printf '\n---\n\n## All changes in this release\n\n%s\n' "$AUTO_NOTES"
             fi
             printf '\n---\n\n**Live credentials:** `operator` / `operator`\n'
             printf 'Flash the ISO with Rufus (Windows) or `dd` (Linux/macOS), boot, run `annixion-install`.\n'
-            printf 'Built from commit `${{ github.sha }}`.\n'
+            printf '\n---\n\n## What is in this release\n\n'
+            printf 'Measured on this closure, not carried over from a previous one.\n\n'
+            printf '| | |\n|---|---|\n'
+            printf '| Installed closure | %s store paths, %s |\n' "$CLOSURE_PATHS" "$CLOSURE_SIZE"
+            printf '| Packages on the system | %s |\n' "$COMPONENTS"
+            printf '| Including what built it | %s |\n\n' "$BUILD_COMPONENTS"
+            printf -- '- `%s` — the supply chain as a page: what runs, and separately what built it.\n' \
+              "$(basename "$PAGE_PATH")"
+            printf -- '- `%s` — CycloneDX SBOM of the installed closure. **This is the one to scan.**\n' \
+              "$(basename "$SBOM_PATH")"
+            printf -- '- `%s` — the same plus every build input, for provenance. A CVE in here is not running on your machine.\n' \
+              "$(basename "$BUILDTIME_PATH")"
+            printf -- '- `SHA256SUMS` — verify with `sha256sum -c SHA256SUMS`.\n'
+            # A link, not a number: the CVE set against a frozen closure only
+            # grows, so a count published here is wrong within weeks and wrong
+            # in the flattering direction.
+            printf '\n**Known CVEs in this release:** [live status](https://github.com/%s/blob/main/docs/security/README.md), regenerated weekly.\n' \
+              "$REPO"
+            printf '\nBuilt from commit `%s`.\n' "$COMMIT_SHA"
           } > "$NOTES_FILE"
 
           gh release create "$TAG" \
-            --title "${{ steps.version.outputs.title }}" \
+            --title "$TITLE" \
             --notes-file "$NOTES_FILE" \
-            "${{ steps.iso.outputs.path }}"
+            "$ISO_PATH" \
+            "$SBOM_PATH" \
+            "$BUILDTIME_PATH" \
+            "$PAGE_PATH" \
+            "$SUMS"

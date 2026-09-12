@@ -8,6 +8,11 @@ on:
     branches: [main]
     types: [opened, edited, reopened, synchronize, ready_for_review]
 
+# Reads the pull request body out of the event payload and checks its shape.
+# Nothing is written, and no API call is made.
+permissions:
+  contents: read
+
 jobs:
   form:
     name: Release PR form
