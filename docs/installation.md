@@ -119,6 +119,7 @@ See [docs/zsh.md](zsh.md) for a full reference of shell shortcuts and aliases.
 │   │   ├── puppet.nix             # Puppet Master: VPN-enforced, persona and containers
 │   │   └── theme.nix              # Per-profile Nord CSS and toolbar layouts
 │   ├── plasma.nix                 # KDE Plasma: panels, shortcuts, Krohnkite tiling
+│   ├── panel-separator.nix        # com.annixion.separator, a hairline rule for the panel
 │   ├── zsh.nix                    # ZSH: oh-my-zsh, oh-my-posh, aliases, plugins
 │   ├── fastfetch.nix              # Fastfetch system-info banner
 │   ├── vscodium.nix               # VSCodium with the Nix toolchain

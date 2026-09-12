@@ -184,7 +184,7 @@ Rationale:
 - [ ] ResistFingerprinting flags wired in OSINT profile settings
 - [x] Per-profile custom `userChrome.css` for immediate visual distinction:
   - [x] Red Team — neon crimson `#ff2244`; FoxyProxy + HackTools pinned to toolbar
-  - [x] OSINT — neon amber `#ffd000`
+  - [x] OSINT — neon amber `#ffd000`; anchored on the developer button, not a pinned addon
   - [x] Puppet Master — neon green `#00e676`; container tab strip always visible
 - [x] Developer button pinned to toolbar in all profiles
 - [x] Firefox Account sign-in button hidden from all profiles
