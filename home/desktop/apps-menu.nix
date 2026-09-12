@@ -191,6 +191,7 @@ let
       genericName = tool.genericName or null;
       comment = tool.comment or null;
       wmClass = tool.wmClass or null;
+      mimeType = tool.mimeType or null;
       icon = "annixion-${key}";
       exec = execOf tool;
       # The phase the tool lives under, then any it also earns a place in.

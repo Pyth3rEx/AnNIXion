@@ -36,6 +36,7 @@
     "x-scheme-handler/https" = "firefox-osint.desktop";
     "x-scheme-handler/about" = "firefox-osint.desktop";
     "x-scheme-handler/unknown" = "firefox-osint.desktop";
+    "text/markdown" = "annixion-glow.desktop";
   };
 
   # ── KWallet ─────────────────────────────────────────────────────────────
