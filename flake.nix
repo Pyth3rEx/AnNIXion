@@ -157,6 +157,7 @@
                   category
                   launch
                   name
+                  exec
                   ;
                 icon = "annixion-${key}";
                 hasPackage = (t.package or null) != null;

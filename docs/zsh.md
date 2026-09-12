@@ -186,7 +186,6 @@ $>
 | `b64d` | `base64 -d` |
 | `hashfile` | `sha256sum` |
 | `serve` | `python3 -m http.server` (quick HTTP file server on port 8000) |
-| `seclists` | Browse the SecLists wordlist directory |
 
 ---
 
