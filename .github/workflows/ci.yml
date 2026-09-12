@@ -76,6 +76,7 @@ jobs:
           nix develop --command bash tests/shell/firefox-profiles.sh
           nix develop --command bash tests/shell/catalog.sh
           nix develop --command bash tests/shell/menu-icons.sh
+          nix develop --command bash tests/shell/menu-exec.sh
           nix develop --command bash tests/shell/branding.sh
           nix develop --command bash tests/shell/etc-hosts.sh
           nix develop --command bash tests/repo/workflow-injection.sh

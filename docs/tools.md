@@ -219,7 +219,7 @@ ffuf -u http://target/FUZZ -w /run/current-system/sw/share/wordlists/seclists/Di
 hydra -L /run/current-system/sw/share/wordlists/seclists/Usernames/top-usernames-shortlist.txt ...
 ```
 
-Set `SECLISTS_PATH` in your environment to override the default path for the `seclists` alias.
+Set `SECLISTS_PATH` in your environment to override the default path `seclists` uses.
 
 ---
 

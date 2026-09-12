@@ -74,6 +74,7 @@ in
     ./desktop/window-raise.nix
     ./desktop/redteam-launch.nix
     ./desktop/panel-separator.nix
+    ./desktop/seclists-explorer.nix
   ];
 
   home.username = lib.mkDefault "operator";
