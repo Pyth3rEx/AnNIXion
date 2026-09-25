@@ -11,6 +11,7 @@ day-to-day operation.
 |---|---|
 | [Installation](installation.md) | Fresh install from ISO, install on existing NixOS, Hyper-V Enhanced Session, repository layout |
 | [Usage](usage.md) | The `annixion-*` commands, browser profiles, Burp interception, VPN enforcement, override examples |
+| [AdaptixC2](adaptixc2.md) | Building and running the dockerised teamserver + extenders and the native client on AnNIXion |
 | [FAQ](faq.md) | Install, boot, browser, proxy and CI troubleshooting |
 
 ## Making it yours
