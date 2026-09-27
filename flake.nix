@@ -54,6 +54,7 @@
         ./system/shell.nix
         ./system/git.nix
         ./system/docker.nix
+        ./system/toolchain.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
