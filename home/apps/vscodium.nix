@@ -34,6 +34,11 @@ in
         # ── CI/CD ───────────────────────────────────────────────
         github-local-actions # needs act + Docker
         timonwong.shellcheck
+
+        # ── C/C++ development ───────────────────────────────────
+        llvm-vs-code-extensions.vscode-clangd
+        vadimcn.vscode-lldb
+        ms-vscode.cmake-tools
       ];
       userSettings = {
         # ── Nix IDE ─────────────────────────────────────────────
@@ -47,6 +52,18 @@ in
           "editor.formatOnSave" = true;
           "editor.tabSize" = 2;
           "editor.insertSpaces" = true;
+        };
+
+        # ── C/C++ ───────────────────────────────────────────────
+        "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
+        "lldb.executable" = "${pkgs.lldb}/bin/lldb";
+        "[c]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
+        };
+        "[cpp]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
         };
 
         "editor.wordWrap" = "on";
