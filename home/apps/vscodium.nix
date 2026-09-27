@@ -56,6 +56,10 @@ in
 
         # ── C/C++ ───────────────────────────────────────────────
         "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
+        "clangd.arguments" = [
+          "--clang-tidy"
+          "--header-insertion=iwyu"
+        ];
         "lldb.executable" = "${pkgs.lldb}/bin/lldb";
         "[c]" = {
           "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
