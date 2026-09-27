@@ -201,6 +201,32 @@ VSCodium ships as part of the base user environment (`home/apps/vscodium.nix`) w
 
 No manual activation needed — it is included by default. Open VSCodium after the first `rebuild`.
 
+### C/C++ toolchain
+
+VSCodium also ships `clangd` (language server, formatter), `codelldb` and
+`cmake-tools` for C/C++ (`home/apps/vscodium.nix`). `codelldb` is pointed at
+the system `lldb` rather than its own bundled copy, so the editor's debugger
+and everything below agree on one build. The tools behind them are installed
+system-wide from `catalog/support/`: `clang`, `clang-tools`, `gnumake`,
+`cmake`, `ninja`, `bear` (generates `compile_commands.json` for Makefile
+projects — clangd needs a build system to produce one for), `gdb`, `lldb`,
+and `llvm` (`llvm-objdump`, `llvm-nm`, `llvm-readobj`, `llvm-mca` — binary
+inspection for RE work). `shellcheck` is there too, system-wide rather than
+left to the VSCodium extension, because the extension's bundled binary
+doesn't run on NixOS.
+
+`gdb` and `lldb` being on `PATH` also means **Ghidra's Debugger plugin finds
+them automatically** — both its GDB and LLDB launch modes default to the
+bare binary name, resolved via `PATH`, with nothing to configure. Ghidra's
+decompiler is unaffected either way: it works from the binary alone and has
+no notion of which compiler produced it.
+
+`CC` and `CXX` default to `clang`/`clang++` system-wide (`system/toolchain.nix`)
+— sharper diagnostics and working sanitizers, and it matches the
+clangd/lldb pair above. This only steers build systems that respect
+`CC`/`CXX` (make, cmake, autotools); nixpkgs still builds its own packages
+with gcc, so nothing here forces a rebuild of the closure.
+
 ---
 
 ## Adding tools
