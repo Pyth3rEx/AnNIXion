@@ -18,6 +18,7 @@ in
   programs.vscodium = {
     enable = true;
     package = pkgs.vscodium;
+    mutableExtensionsDir = false;
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
@@ -34,6 +35,11 @@ in
         # ── CI/CD ───────────────────────────────────────────────
         github-local-actions # needs act + Docker
         timonwong.shellcheck
+
+        # ── C/C++ development ───────────────────────────────────
+        llvm-vs-code-extensions.vscode-clangd
+        vadimcn.vscode-lldb
+        ms-vscode.cmake-tools
       ];
       userSettings = {
         # ── Nix IDE ─────────────────────────────────────────────
@@ -47,6 +53,22 @@ in
           "editor.formatOnSave" = true;
           "editor.tabSize" = 2;
           "editor.insertSpaces" = true;
+        };
+
+        # ── C/C++ ───────────────────────────────────────────────
+        "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
+        "clangd.arguments" = [
+          "--clang-tidy"
+          "--header-insertion=iwyu"
+        ];
+        "lldb.executable" = "${pkgs.lldb}/bin/lldb";
+        "[c]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
+        };
+        "[cpp]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
         };
 
         "editor.wordWrap" = "on";
