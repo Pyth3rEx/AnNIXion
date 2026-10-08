@@ -38,6 +38,56 @@ you built in March and the one you build today.
 
 ---
 
+## What you boot into
+
+<div align="center">
+
+<img src="assets/branding/screenshots/0-4-3_StartMenu.png" alt="The AnNIXion application menu open over the graffiti wallpaper. Down the left, ten numbered categories from 01. Reconnaissance to 10. Sniffing and Analysis, each with a hand-drawn mark; 03 through 07 are red, 08 Forensics is blue, 09 Reverse Engineering is magenta. On the right, pinned tiles grouped Engagement, Analysis and RE, and Workspace: Konsole, Burp Suite, Wireshark, Ghidra, VSCodium, Obsidian." width="100%">
+
+</div>
+
+**The menu is the kill chain.** Ten numbered phases in the order the work
+happens, and under each one only the tools that belong to it. The pinned tiles
+on the right are what you reach for daily.
+
+Every mark in that menu is drawn for this system on a 24-unit grid, and its
+colour is a fact rather than a decoration: green sends nothing to the target,
+amber shows up in their logs, red needs written authorisation behind it. The
+unbroken red band down the middle — 03 through 07 — is the stretch where you
+are inside someone else's estate. 08 turns forensic blue the moment the job is
+reading evidence instead of making it. And the mark on 07 is the wall's own
+X-eyed smiley, the one motif allowed off the wallpaper and into the menu,
+because there it states something true.
+
+<div align="center">
+
+<img src="assets/branding/screenshots/0-4-3_Neofetch.png" alt="A Konsole window on the graffiti wallpaper running neofetch. The glitched AnNIXion snowflake sits left of four blocks: general stats, nets configuration showing DNS and network IO on the ie-dub-wg tunnel interface, hardware configuration reading AnNIXion v0.4.3 on Linux 6.18.50 under Hyper-V UEFI, and usage statistics. The oh-my-posh prompt below shows operator at AnNIXion, the dotfiles path, and the dev branch with its dirty state." width="100%">
+
+</div>
+
+**A shell that opens already knowing where you are standing.** Konsole at 85%
+with blur, oh-my-posh on the chrome palette, the prompt carrying path, branch
+and what is dirty. Above it, the system block puts the tunnel interface and its
+throughput ahead of the hardware — so a new terminal answers *is egress still
+where I left it* before you have typed anything.
+
+The version it prints is the commit you built. On this system there is no other
+answer it could give.
+
+---
+
+## In the box
+
+| | |
+|---|---|
+| [**Egress that fails closed**](#egress-that-fails-closed) | A cgroup and an nftables rule, not a setting in browser preferences |
+| [**Four browsers that cannot contaminate each other**](#four-browsers-that-cannot-contaminate-each-other) | Separate cookies, extensions and route out of the machine, per profile |
+| [**A menu shaped like the work**](#a-menu-shaped-like-the-work) | Ten kill-chain phases, 81 marks, one file per tool |
+| [**A system that can account for itself**](#a-system-that-can-account-for-itself) | Two SBOMs and a weekly CVE scan, published with every release |
+| [**Making it yours**](#making-it-yours) | Everything upstream ships is a default; `user/` wins without `mkForce` |
+
+---
+
 ## Annexing the system
 
 *Annexion* — to take full control of a territory, absorb it completely, make it
@@ -160,9 +210,8 @@ AnNIXion
 ```
 
 Every icon is drawn for this system rather than pulled from a pack, and the
-colour of a mark tells you what running that tool does to a target — green for
-passive, amber for probing, red for offensive, blue for forensic. You can read
-the menu without reading the labels.
+[class colour](docs/visual-identity.md#semantic-classes) carries the meaning
+rather than the label. You can read this menu without reading it.
 
 The menu is not maintained by hand. A tool is one file, and the package list,
 the desktop entry, the menu tree and the icon are all derived from it:
@@ -221,6 +270,9 @@ closure.
 ---
 
 ## The desktop
+
+The two shots [at the top of this page](#what-you-boot-into) are straight off a
+running machine — that panel, that menu, that prompt, out of this repository.
 
 KDE Plasma 6 on X11 with Krohnkite tiling. Hyper-V Enhanced Session over vsock,
 so it is usable as a guest rather than merely bootable. ZSH with oh-my-posh, fzf
@@ -286,6 +338,7 @@ Hyper-V setup and the full walkthrough:
 | [Customization](docs/customization.md) | The override system, adding tools, the dev environment |
 | [Architecture](docs/architecture.md) | Repository layout, the tool catalog, how to add a tool |
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, plugins |
+| [Tool index](docs/tool-index.md) | Every tool on the system in one line each, with a link to its official manual |
 | [CLI tools](docs/tools.md) | bat, ripgrep, fd, fzf, jq and the rest |
 | [Hardening](docs/hardening.md) | What is disabled, what is deliberately left alone, how to restore it |
 | [Visual identity](docs/visual-identity.md) | Palette, typography, the mark system |
