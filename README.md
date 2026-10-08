@@ -338,6 +338,7 @@ Hyper-V setup and the full walkthrough:
 | [Customization](docs/customization.md) | The override system, adding tools, the dev environment |
 | [Architecture](docs/architecture.md) | Repository layout, the tool catalog, how to add a tool |
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, plugins |
+| [Tool index](docs/tool-index.md) | Every tool on the system in one line each, with a link to its official manual |
 | [CLI tools](docs/tools.md) | bat, ripgrep, fd, fzf, jq and the rest |
 | [Hardening](docs/hardening.md) | What is disabled, what is deliberately left alone, how to restore it |
 | [Visual identity](docs/visual-identity.md) | Palette, typography, the mark system |
