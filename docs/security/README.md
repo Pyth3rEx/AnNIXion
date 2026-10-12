@@ -1,12 +1,12 @@
 # Security status — AnNIXion 0.4.3
 
-`2026-10-05 14:55 UTC` · coverage `full` · closure 2660 store paths, 24.27 GiB
+`2026-10-12 15:49 UTC` · coverage `full` · closure 2660 store paths, 24.27 GiB
 
 Generated. Do not edit by hand.
 
 | Page | Contents |
 |---|---|
-| [CVEs](cves.md) | 281 findings, **116 actionable**, across 76 packages |
+| [CVEs](cves.md) | 523 findings, **287 actionable**, across 101 packages |
 | [Packages](packages.md) | 2206 in the installed closure |
 | [Applications](apps.md) | 313 declared in `systemPackages` |
 
@@ -14,19 +14,19 @@ Generated. Do not edit by hand.
 
 | | 🔴 Critical | 🟠 High | 🟡 Medium | 🟢 Low | ⚪ Ungraded | Total |
 |---|---:|---:|---:|---:|---:|---:|
-| **[Fix in nixpkgs](cves.md)** | 5 | 73 | 28 | 2 | 0 | **108** |
-| **[Fixed upstream](cves.md)** | 3 | 3 | 2 | 0 | 0 | **8** |
-| [No fix](cves.md) | 1 | 7 | 3 | 1 | 3 | 15 |
-| [Unclassified](cves.md) | 1 | 3 | 4 | 0 | 0 | 8 |
-| [Not applicable](cves.md) | 9 | 34 | 42 | 9 | 48 | 142 |
-| Total | 19 | 120 | 79 | 12 | 51 | 281 |
+| **[Fix in nixpkgs](cves.md)** | 41 | 154 | 64 | 12 | 0 | **271** |
+| **[Fixed upstream](cves.md)** | 5 | 4 | 5 | 2 | 0 | **16** |
+| [No fix](cves.md) | 0 | 10 | 16 | 2 | 3 | 31 |
+| [Unclassified](cves.md) | 7 | 20 | 12 | 1 | 0 | 40 |
+| [Not applicable](cves.md) | 11 | 41 | 55 | 9 | 49 | 165 |
+| Total | 64 | 229 | 152 | 26 | 52 | 523 |
 
 ## Highest
 
 | | CVE | CVSS | Package | Class |
 |---|---|---|---|---|
-| Actionable | [CVE-2026-40962](https://nvd.nist.gov/vuln/detail/CVE-2026-40962) | 🔴 9.8 Critical | `ffmpeg` | has a fix |
-| Any | [CVE-2026-63073](https://nvd.nist.gov/vuln/detail/CVE-2026-63073) | 🔴 9.8 Critical | `openssl` | including not-applicable |
+| Actionable | [CVE-2026-19931](https://nvd.nist.gov/vuln/detail/CVE-2026-19931) | 🔴 9.8 Critical | `curl` | has a fix |
+| Any | [CVE-2026-106016](https://nvd.nist.gov/vuln/detail/CVE-2026-106016) | 🔴 9.8 Critical | `firefox` | including not-applicable |
 
 ## Maintainer coverage
 
@@ -36,9 +36,9 @@ Packages nobody in nixpkgs has signed up for. A fix landing upstream does not re
 |---|---:|
 | nixpkgs applications with no maintainer | 44 / 301 |
 | Applications defined in this repo | 12 |
-| Flagged packages with no maintainer | 25 / 76 |
+| Flagged packages with no maintainer | 32 / 101 |
 
-Flagged and unmaintained: `alsa-lib`, `avahi`, `bison`, `bluez`, `cairo`, `cpio`, `dmg2img`, `giflib`, `inetutils`, `jbig2dec`, `libcaca`, `libcap`, `libmad`, `libraw`, `libssh`, `libupnp`, `libvpx`, `lua`, `md4c`, `nghttp2`, `openjpeg`, `p11-kit`, `pixman`, `pulseaudio`, `shaderc`
+Flagged and unmaintained: `alsa-lib`, `avahi`, `bison`, `bluez`, `cairo`, `cpio`, `cups`, `dash`, `dhcpcd`, `dmg2img`, `giflib`, `inetutils`, `jbig2dec`, `libcaca`, `libcap`, `libmad`, `libraw`, `libsndfile`, `libssh`, `libupnp`, `libvpx`, `lua`, `md4c`, `nghttp2`, `oh-my-zsh`, `openjpeg`, `orc`, `p11-kit`, `pixman`, `pulseaudio`, `shaderc`, `snappy`
 
 ## Caveats
 
