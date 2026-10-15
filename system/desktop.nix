@@ -17,6 +17,11 @@
     xserver.enable = lib.mkDefault true;
     displayManager.sddm.enable = lib.mkDefault true;
     displayManager.defaultSession = "plasmax11";
+
+    # A Wayland greeter handing off to an X11 session is never reaped, and
+    # its scope holds a second kwin_wayland for the whole uptime (#165).
+    displayManager.sddm.wayland.enable = false;
+
     desktopManager.plasma6.enable = lib.mkDefault true;
   };
 
