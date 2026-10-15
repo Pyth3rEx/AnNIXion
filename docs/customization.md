@@ -44,6 +44,44 @@ ZSH configuration lives in `home/shell/` — `default.nix` for the shell,
 
 ---
 
+## Desktop compositing
+
+The compositor is off by default. The deployment target is a Hyper-V guest,
+where `hyperv_drm` gives a KMS display device and no render node, so KWin would
+composite every frame through Mesa's llvmpipe software rasterizer — about three
+quarters of a core, continuously, on a machine meant to be running security
+tooling.
+
+Check whether this machine has acceleration:
+
+```bash
+ls /dev/dri/renderD*     # a node here means the GPU can do the work
+```
+
+If one exists, turn the compositor on in `user/configuration.nix`:
+
+```nix
+annixion.desktop.compositing = true;
+```
+
+| | Compositing off (default) | Compositing on |
+|---|---|---|
+| Blur and transparency | None — the panel renders opaque | As themed |
+| Desktop animations | None | At `AnimationSpeed = 3` |
+| Screen tearing | Visible | Absent |
+| Cost with no render node | None | ~75% of a core, continuously |
+
+Krohnkite tiling, virtual desktops, the panel and every keyboard shortcut work
+the same either way. Over an Enhanced Session the visual loss is small — the
+RDP client is already re-encoding the framebuffer.
+
+KWin 6 has no cheaper middle ground: the X11 XRender compositor was removed, so
+it is OpenGL-through-llvmpipe or nothing. It also dropped the D-Bus method that
+used to suspend compositing live, so this setting only takes effect on
+`rebuild` and a fresh session.
+
+---
+
 ## Desktop panel
 
 The top bar is declared in `home/desktop/plasma/` under `programs.plasma.panels`, and

@@ -36,6 +36,12 @@
 #   # docker group, which is root-equivalent. See docs/hardening.md.
 #   annixion.docker.rootless = false;
 #
+#   # KWin composites through llvmpipe on a guest with no render node, which
+#   # costs about three quarters of a core. Turn it on where there is real
+#   # acceleration — "ls /dev/dri/renderD*" finds a node. See
+#   # docs/customization.md.
+#   annixion.desktop.compositing = true;
+#
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;
 #

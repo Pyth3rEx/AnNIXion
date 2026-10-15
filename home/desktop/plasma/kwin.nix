@@ -1,6 +1,7 @@
 # kwinrc and kdeglobals: the Krohnkite tiling script and the window
 # behaviour KWin will not take from anywhere else.
-_: {
+{ osConfig, ... }:
+{
   programs.plasma = {
 
     # ── KWin config (Krohnkite tiling script) ─────────────────
@@ -18,9 +19,14 @@ _: {
       "kwinrc"."Windows"."FocusPolicy" = "FocusFollowsMouse";
       "kwinrc"."Windows"."FocusStealingPreventionLevel" = 1;
 
-      # Compositor — minimal effects for VM performance
+      # Compositor — off on a guest with no render node, where every frame
+      # would go through llvmpipe. annixion.desktop.compositing turns it back
+      # on where there is real acceleration (#167).
+      "kwinrc"."Compositing"."Enabled" = osConfig.annixion.desktop.compositing;
+
+      # Animation duration, not per-frame cost: moot while compositing is off,
+      # and still wanted when it is on.
       "kwinrc"."Compositing"."AnimationSpeed" = 3;
-      "kwinrc"."Compositing"."Enabled" = true;
 
       # Indexing file contents means parsing them.
       "baloofilerc"."Basic Settings"."Indexing-Enabled" = false;

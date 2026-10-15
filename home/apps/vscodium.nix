@@ -17,7 +17,11 @@ in
 {
   programs.vscodium = {
     enable = true;
-    package = pkgs.vscodium;
+    # No DRM render node on a Hyper-V guest, so Chromium falls back to
+    # SwiftShader's software GL, whose worker pool burns 150-300% of a core
+    # whenever anything renders (#166). --disable-gpu takes the CPU raster
+    # path instead.
+    package = pkgs.vscodium.override { commandLineArgs = "--disable-gpu"; };
     mutableExtensionsDir = false;
 
     profiles.default = {
