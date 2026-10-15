@@ -129,6 +129,12 @@
         # <nixpkgs>, which a CI runner does not set.
         sddm-theme = (import ./branding { inherit pkgs; }).sddmTheme;
 
+        # The plasma activation step, as a file. tests/shell/kwin-compositing.sh
+        # reads the kwinrc activation would write through here: the generated
+        # data.json has no attribute of its own, and building it this way does
+        # not drag in the operator's whole closure.
+        plasma-activation = pkgs.writeText "annixion-plasma-activation" self.nixosConfigurations.AnNIXion-ci.config.home-manager.users.operator.home.activation.configure-plasma.data;
+
         # The catalog as plain data, for the same reason: tests/catalog.sh
         # reads it through here rather than importing it against <nixpkgs>.
         # Only what a test can assert about — no drawings, no functions.

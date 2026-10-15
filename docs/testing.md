@@ -89,6 +89,7 @@ a path a module chose.
 | `tests/shell/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
 | `tests/shell/greeter-session.sh` | That the greeter runs the display server the session runs. A Wayland greeter handing off to an X11 session is never reaped, so its scope keeps a second compositor and ~680 MB for the whole uptime (#165) — asserted on the config SDDM actually reads, not only on the option upstream takes. Also that dropping the Wayland greeter did not drop the Wayland session from the list. |
 | `tests/shell/vscodium-gpu.sh` | That the editor still launches with `--disable-gpu`. With no DRM render node Chromium falls back to SwiftShader, whose eight rasterizer threads are 83% of the editor's entire CPU time (#166). Built, not read out of the expression — the flag lives in a wrapper, and the failure is a package bump that drops it. Also that every launch path (desktop entry, menu, `Meta+F11`) goes through that wrapper rather than round it. |
+| `tests/shell/kwin-compositing.sh` | The compositing gate: off by default, because llvmpipe costs about three quarters of a core on a guest with no render node (#167), and still answers to `annixion.desktop.compositing` so bare metal can have its compositor back. Read out of the kwinrc activation would write, since KWin 6 dropped the D-Bus method that allowed a live toggle. |
 | `tests/shell/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
 | `tests/repo/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
 | `tests/repo/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
@@ -132,6 +133,7 @@ tests/shell/menu-exec.sh
 tests/shell/branding.sh
 tests/shell/greeter-session.sh
 tests/shell/vscodium-gpu.sh
+tests/shell/kwin-compositing.sh
 tests/shell/etc-hosts.sh
 tests/repo/workflow-injection.sh
 tests/repo/workflow-permissions.sh
