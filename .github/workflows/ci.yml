@@ -86,6 +86,8 @@ jobs:
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
           nix develop --command bash tests/repo/pr-column.sh
+          nix develop --command bash tests/repo/closing-issues.sh
+          nix develop --command bash tests/repo/form-fields.sh
           nix develop --command bash tests/repo/sbom.sh
           nix develop --command bash tests/repo/supply-chain.sh
           nix develop --command bash tests/repo/package-provenance.sh
