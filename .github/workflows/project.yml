@@ -12,7 +12,8 @@ name: Project
 #   PR merged, not main   → In review, with the issues it closes — a
 #                           stacked PR's merge into the branch below it
 #                           counts here too, not only a merge into dev
-#   PR merged into main   → Done, with everything else in review
+#   PR merged into main   → Done, with everything else in review, and the
+#                           milestone it shipped is closed
 #   milestone closed      → the next release's Ready work rises to Up next
 #
 # Ready and Up next split triaged work by release: the nearest open milestone
@@ -278,6 +279,16 @@ jobs:
         run: |
           .github/scripts/project-sync.sh sweep \
             --from "In progress" --to Done --milestone "$MILESTONE"
+
+      # Before the step below, not after: --nearest reads the open milestones
+      # to find the release being built, and while the one just shipped is
+      # still open it is the one that answer lands on.
+      - name: Close the milestone this release shipped
+        if: github.event.pull_request.milestone.title != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MILESTONE: ${{ github.event.pull_request.milestone.title }}
+        run: .github/scripts/close-milestone.sh
 
       - name: Read the upcoming release
         id: upcoming
