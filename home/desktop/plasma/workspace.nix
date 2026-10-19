@@ -9,7 +9,10 @@
 
     # ── Global aesthetics ────────────────────────────────────
     workspace = lib.mkDefault {
-      clickItemTo = "open";
+      # Single click selects; double click opens. The other way round, a
+      # click that lands while the pointer is moving opens whatever was
+      # under it (#171) — and FocusFollowsMouse makes that easy to do.
+      clickItemTo = "select";
       lookAndFeel = "org.kde.breezedark.desktop";
       cursor = {
         theme = "Nordzy-cursors";

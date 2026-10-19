@@ -81,6 +81,7 @@ jobs:
           nix develop --command bash tests/shell/greeter-session.sh
           nix develop --command bash tests/shell/vscodium-gpu.sh
           nix develop --command bash tests/shell/kwin-compositing.sh
+          nix develop --command bash tests/shell/click-behaviour.sh
           nix develop --command bash tests/shell/etc-hosts.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
