@@ -1,6 +1,6 @@
 # Packages — AnNIXion 0.4.3
 
-`2026-10-12 15:49 UTC` · 2206 packages in the installed closure · 2660 store paths · 24.27 GiB
+`2026-10-19 13:29 UTC` · 2206 packages in the installed closure · 2660 store paths · 24.27 GiB
 
 [← index](README.md) · [CVEs](cves.md) · [apps](apps.md)
 
@@ -188,7 +188,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `docbook-xml` | `4.5` | *unresolved* | *unresolved* |  |  |
 | `docbook-xsl-nons` | `1.79.2` | MIT License | **none** |  |  |
 | `docbook-xsl-ns` | `1.79.2` | MIT License | **none** |  |  |
-| `docker` | `29.7.2` | Apache License 2.0 | [@vdemeester](https://github.com/vdemeester) [@teutat3s](https://github.com/teutat3s) |  |  |
+| `docker` | `29.7.2` | Apache License 2.0 | [@vdemeester](https://github.com/vdemeester) [@teutat3s](https://github.com/teutat3s) | 1 |  |
 | `docker-buildx` | `0.31.1` | Apache License 2.0 | [@bobrik](https://github.com/bobrik) [@developer-guy](https://github.com/developer-guy) |  |  |
 | `docker-compose` | `5.4.0` | Apache License 2.0 | [@airone01](https://github.com/airone01) |  |  |
 | `docker-containerd` | `29.7.2` | *unresolved* | *unresolved* |  |  |
@@ -282,8 +282,8 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `fdk-aac` | `2.0.3` | *unresolved* | *unresolved* |  |  |
 | `feedbroreader-4.16.3` | `` | *unresolved* | *unresolved* |  |  |
 | `ffado` | `2.4.9` | GNU General Public License v3.0 | [@michojel](https://github.com/michojel) |  |  |
-| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 57 | 47 |
-| `ffmpeg` | `8.1.2` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 57 | 47 |
+| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 82 | 62 |
+| `ffmpeg` | `8.1.2` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 82 | 62 |
 | `ffmpeg-headless` | `8.1.2` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) |  |  |
 | `fftw-double-3.3.11` | `` | *unresolved* | *unresolved* |  |  |
 | `fftw-single-3.3.11` | `` | *unresolved* | *unresolved* |  |  |
@@ -385,7 +385,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `graphene` | `1.10.8` | MIT License | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `graphics-driver.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `graphics-drivers` | `` | *unresolved* | *unresolved* |  |  |
-| `graphite2` | `1.3.15` | GNU Lesser General Public License v2.1 | [@7c6f434c](https://github.com/7c6f434c) | 1 |  |
+| `graphite2` | `1.3.15` | GNU Lesser General Public License v2.1 | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `graphviz` | `12.2.1` | Eclipse Public License 1.0 | [@bjornfor](https://github.com/bjornfor) [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `groff` | `1.24.1` | GNU General Public License v3.0 or later | [@pSub](https://github.com/pSub) |  |  |
 | `groupadd.pam` | `` | *unresolved* | *unresolved* |  |  |
@@ -570,7 +570,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `icu4c` | `76.1` | *unresolved* | *unresolved* |  |  |
 | `icu4c` | `78.3` | *unresolved* | *unresolved* |  |  |
 | `ijs` | `10.07.1` | GNU General Public License v3.0 or later | **none** |  |  |
-| `imagemagick` | `7.1.2-30` | Apache License 2.0 | [@dotlambda](https://github.com/dotlambda) [@rhendric](https://github.com/rhendric) [@faukah](https://github.com/faukah) | 4 |  |
+| `imagemagick` | `7.1.2-30` | Apache License 2.0 | [@dotlambda](https://github.com/dotlambda) [@rhendric](https://github.com/rhendric) [@faukah](https://github.com/faukah) | 28 | 7 |
 | `imath` | `3.2.2` | BSD 3-clause "New" or "Revised" License | [@paperdigits](https://github.com/paperdigits) |  |  |
 | `inetutils` | `2.7` | GNU General Public License v3.0 or later | **none** | 1 | 1 |
 | `inih` | `62` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
@@ -920,7 +920,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libsmi` | `0.5.0` | Unspecified free software license | **none** |  |  |
 | `libsndfile` | `1.2.2` | GNU Library General Public License v2 or later | **none** | 5 |  |
 | `libsodium` | `1.0.22-unstable-2026-04-09` | ISC License | [@mdaniels5757](https://github.com/mdaniels5757) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `libsoup` | `3.6.6` | *unresolved* | *unresolved* |  |  |
+| `libsoup` | `3.6.6` | *unresolved* | *unresolved* | 4 | 4 |
 | `libspectre` | `0.2.12` | GNU General Public License v2.0 or later | **none** |  |  |
 | `libsrtp` | `2.8.0` | *unresolved* | *unresolved* |  |  |
 | `libssh` | `0.12.2` | GNU Library General Public License v2 or later | **none** | 7 |  |
@@ -930,7 +930,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libtatsu` | `1.0.5` | GNU Lesser General Public License v2.1 or later | [@nxm](https://github.com/nxm) |  |  |
 | `libthai` | `0.1.30` | GNU Lesser General Public License v2.1 or later | [@crertel](https://github.com/crertel) |  |  |
 | `libtheora` | `1.2.0` | BSD 3-clause "New" or "Revised" License | [@getchoo](https://github.com/getchoo) |  |  |
-| `libtiff` | `4.7.2` | libtiff License | [@imincik](https://github.com/imincik) [@autra](https://github.com/autra) [@l0b0](https://github.com/l0b0) [@nh2](https://github.com/nh2) [@nialov](https://github.com/nialov) [@sikmir](https://github.com/sikmir) [@willcohen](https://github.com/willcohen) | 3 |  |
+| `libtiff` | `4.7.2` | libtiff License | [@imincik](https://github.com/imincik) [@autra](https://github.com/autra) [@l0b0](https://github.com/l0b0) [@nh2](https://github.com/nh2) [@nialov](https://github.com/nialov) [@sikmir](https://github.com/sikmir) [@willcohen](https://github.com/willcohen) | 1 |  |
 | `libtiger` | `0.3.4` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libtirpc-1.3.7` | `` | *unresolved* | *unresolved* |  |  |
 | `libtool` | `2.5.4` | GNU General Public License v2.0 or later | **none** |  |  |
@@ -1189,7 +1189,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `openjpeg` | `2.5.4` | BSD 2-clause "Simplified" License | **none** | 1 |  |
 | `openldap` | `2.6.13` | Open LDAP Public License v2.8 | [@Conni2461](https://github.com/Conni2461) [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
 | `openresolv` | `3.17.4` | BSD 2-clause "Simplified" License | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `openssh` | `10.5p1` | BSD 2-clause "Simplified" License | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) [@numinit](https://github.com/numinit) [@philiptaron](https://github.com/philiptaron) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 9 | 1 |
+| `openssh` | `10.5p1` | BSD 2-clause "Simplified" License | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) [@numinit](https://github.com/numinit) [@philiptaron](https://github.com/philiptaron) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 17 | 9 |
 | `openssl` | `3.6.3` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 24 | 22 |
 | `openssl.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `openvpn` | `2.6.21` | GNU General Public License v2.0 only | [@peterhoeg](https://github.com/peterhoeg) | 7 |  |
