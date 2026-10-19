@@ -72,6 +72,25 @@ Use the `user/` override system — `user/configuration.nix` (system) and
 values win without `lib.mkForce` (the one exception is Firefox proxy prefs; see
 [usage.md](usage.md)). Details in [user/README.md](../user/README.md).
 
+### An AppImage fails with "cannot execute: required file not found"
+
+The file is fine — the message names the wrong thing. Prebuilt Linux binaries
+ask for the interpreter `/lib64/ld-linux-x86-64.so.2`, and it is the
+*interpreter* the kernel cannot find; the shell reports it as if the executable
+were missing. Re-downloading will not help.
+
+AnNIXion ships `programs.nix-ld` (`system/nix-ld.nix`) to provide that path,
+along with the X11, Wayland, GL and D-Bus libraries a GUI binary loads at run
+time. If something still fails after `rebuild`, it wants a library outside that
+set — add it to `programs.nix-ld.libraries` in `user/configuration.nix`:
+
+```nix
+programs.nix-ld.libraries = with pkgs; [ libsomething ];
+```
+
+Libraries loaded through `dlopen` do not show up in `ldd` output, so a binary
+that starts and then dies on a missing symbol is usually this.
+
 ### I created a new file in `user/` and Nix doesn't see it
 
 Flakes only see git-tracked files. Run `git add` on the new file before

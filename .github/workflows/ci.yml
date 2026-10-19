@@ -82,6 +82,7 @@ jobs:
           nix develop --command bash tests/shell/vscodium-gpu.sh
           nix develop --command bash tests/shell/kwin-compositing.sh
           nix develop --command bash tests/shell/etc-hosts.sh
+          nix develop --command bash tests/shell/nix-ld.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
