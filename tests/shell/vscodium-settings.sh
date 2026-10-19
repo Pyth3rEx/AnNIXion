@@ -30,6 +30,14 @@ report "$([ "$dispatch" = "keyCode" ] && echo 0 || echo 1)" \
   "keybindings dispatch on the layout, not scan codes" \
   "keyboard.dispatch is ${dispatch:-<unset>}"
 
+# ── Hidden files in the explorer ───────────────────────────────────────────
+# Unsetting this is not the same as emptying it: with no value the editor
+# falls back to a default list that hides .git, which is what #162 reported.
+excluded=$(nix eval --json "$SETTINGS.\"files.exclude\"" 2>/dev/null)
+report "$([ "$excluded" = "{}" ] && echo 0 || echo 1)" \
+  "the explorer hides nothing" \
+  "files.exclude is ${excluded:-<unset>}"
+
 echo
 if [ "$fails" -gt 0 ]; then
   printf 'vscodium-settings: %d check(s) failed\n' "$fails"

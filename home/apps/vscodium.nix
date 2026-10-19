@@ -75,6 +75,13 @@ in
           "editor.formatOnSave" = true;
         };
 
+        # ── Files ───────────────────────────────────────────────
+        # The explorer's default exclude list hides .git and friends, which
+        # is the one place dotfiles stayed invisible after the desktop-wide
+        # switches in home/desktop/file-visibility.nix (#162). Empty, not
+        # absent: an unset value falls back to that default list.
+        "files.exclude" = { };
+
         "editor.wordWrap" = "on";
         "editor.formatOnPaste" = true;
         "files.autoSave" = "afterDelay";
