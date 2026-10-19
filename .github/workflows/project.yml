@@ -265,6 +265,20 @@ jobs:
           done
           .github/scripts/project-sync.sh sweep --from "In review" --to Done
 
+      # The sweep above only rescues what reached "In review". An issue whose
+      # closing link resolved after its feature PR merged never got there
+      # (#169), so it would stay "In progress" forever after shipping. Scoped
+      # to the milestone being released: unscoped, this would retire work
+      # somebody has merely started.
+      - name: Retire what shipped without ever reaching review
+        if: github.event.pull_request.milestone.title != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          MILESTONE: ${{ github.event.pull_request.milestone.title }}
+        run: |
+          .github/scripts/project-sync.sh sweep \
+            --from "In progress" --to Done --milestone "$MILESTONE"
+
       - name: Read the upcoming release
         id: upcoming
         env:
