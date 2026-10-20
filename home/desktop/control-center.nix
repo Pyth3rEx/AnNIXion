@@ -29,6 +29,7 @@ let
       kdePackages.kdialog # dialog UI
       procps # pkill
       systemd # systemctl
+      coreutils # timeout
     ];
     text = ''
             case "''${1:-}" in
@@ -43,14 +44,15 @@ let
                 ;;
             esac
 
-            # Toggle: if already open, close it
-            if pgrep -x kdialog > /dev/null 2>&1; then
-              pkill -x kdialog
+            # Toggle: if already open, close it. kdialog runs wrapped
+            # (.kdialog-wrapped), so match the command line, not comm.
+            if pgrep -f kdialog > /dev/null 2>&1; then
+              pkill -f kdialog
               exit 0
             fi
 
             WIFI=$(nmcli radio wifi 2>/dev/null || echo "unknown")
-            BT_RAW=$(bluetoothctl show 2>/dev/null | awk '/Powered:/{print $2}')
+            BT_RAW=$(timeout 2 bluetoothctl show 2>/dev/null | awk '/Powered:/{print $2}' || true)
             BT=$([ "$BT_RAW" = "yes" ] && echo "on" || echo "off")
             ${lib.optionalString offensiveEnabled ''OFF_RAW=$(systemctl is-active annixion-offensive.service 2>/dev/null || echo inactive); OFFENSIVE=$([ "$OFF_RAW" = active ] && echo on || echo off)''}
 
