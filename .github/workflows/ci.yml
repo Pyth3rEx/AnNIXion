@@ -80,12 +80,17 @@ jobs:
           nix develop --command bash tests/shell/branding.sh
           nix develop --command bash tests/shell/greeter-session.sh
           nix develop --command bash tests/shell/vscodium-gpu.sh
+          nix develop --command bash tests/shell/vscodium-settings.sh
           nix develop --command bash tests/shell/kwin-compositing.sh
+          nix develop --command bash tests/shell/click-behaviour.sh
           nix develop --command bash tests/shell/etc-hosts.sh
+          nix develop --command bash tests/shell/resource-housekeeping.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
           nix develop --command bash tests/repo/pr-column.sh
+          nix develop --command bash tests/repo/closing-issues.sh
+          nix develop --command bash tests/repo/form-fields.sh
           nix develop --command bash tests/repo/sbom.sh
           nix develop --command bash tests/repo/supply-chain.sh
           nix develop --command bash tests/repo/package-provenance.sh
@@ -480,3 +485,23 @@ jobs:
             "$BUILDTIME_PATH" \
             "$PAGE_PATH" \
             "$SUMS"
+
+  # ── Security pages for the release just published ─────────────────────
+  # The weekly cron keeps these tracking newly-disclosed CVEs; this is the
+  # other moment they have to be right. Without it a release shipping
+  # mid-week linked to the previous release's findings until the following
+  # Monday, or to nothing at all before the first run (#142).
+  #
+  # needs: iso, so the tag and the release body exist before the page that
+  # describes them is regenerated. Called rather than triggered: the release
+  # is published with GITHUB_TOKEN, and GitHub starts no workflow run from
+  # an event that token creates.
+  #
+  # The push it makes lands under docs/security, which this workflow's
+  # paths-ignore excludes — so it cannot start another ISO build.
+  cve-status:
+    name: Security pages
+    needs: iso
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/cve-status.yml
+    secrets: inherit
