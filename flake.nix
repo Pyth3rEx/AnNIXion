@@ -51,6 +51,7 @@
         ./system/cve-report.nix
         ./system/vpn
         ./system/hardening.nix
+        ./system/offensive-net.nix
         ./system/shell.nix
         ./system/git.nix
         ./system/docker.nix
