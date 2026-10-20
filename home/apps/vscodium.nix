@@ -75,6 +75,13 @@ in
           "editor.formatOnSave" = true;
         };
 
+        # ── Files ───────────────────────────────────────────────
+        # The explorer's default exclude list hides .git and friends, which
+        # is the one place dotfiles stayed invisible after the desktop-wide
+        # switches in home/desktop/file-visibility.nix (#162). Empty, not
+        # absent: an unset value falls back to that default list.
+        "files.exclude" = { };
+
         "editor.wordWrap" = "on";
         "editor.formatOnPaste" = true;
         "files.autoSave" = "afterDelay";
@@ -83,6 +90,13 @@ in
         # ── Git ─────────────────────────────────────────────────
         "gitlens.hovers.currentLine.enabled" = true;
         "gitlens.codeLens.enabled" = true;
+
+        # ── Keyboard ────────────────────────────────────────────
+        # Dispatching on scan codes assumes the OS reports them correctly.
+        # Hyper-V Enhanced Session does not, so AltGr arrives as a bare
+        # cursor-left (#163, microsoft/vscode#24783). keyCode reads the
+        # layout instead, which AZERTY composition needs.
+        "keyboard.dispatch" = "keyCode";
 
         # ── Terminal ────────────────────────────────────────────
         "terminal.integrated.defaultProfile.linux" = "zsh";

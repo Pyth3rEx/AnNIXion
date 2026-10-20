@@ -42,6 +42,12 @@
 #   # docs/customization.md.
 #   annixion.desktop.compositing = true;
 #
+#   # wpa_supplicant runs for the whole uptime even with no radio, because
+#   # NetworkManager turns wireless on unconditionally. Turn it back on
+#   # where there is one — "ls /sys/class/ieee80211" finds it. See
+#   # docs/customization.md.
+#   annixion.hardware.wireless = true;
+#
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;
 #

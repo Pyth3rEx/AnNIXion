@@ -82,6 +82,53 @@ used to suspend compositing live, so this setting only takes effect on
 
 ---
 
+## Wireless
+
+`wpa_supplicant` is off by default. NetworkManager's wifi backend defaults to
+it and turns `networking.wireless` on unconditionally, so on a Hyper-V guest —
+which has no radio at all — the daemon runs for the whole uptime with nothing
+to manage.
+
+Check whether this machine has one:
+
+```bash
+ls /sys/class/ieee80211    # a directory here means there is a radio
+```
+
+If it exists, turn wireless on in `user/configuration.nix`:
+
+```nix
+annixion.hardware.wireless = true;
+```
+
+Ethernet, the OpenVPN plugin and the VPN killswitch are unaffected either way —
+this only governs whether NetworkManager has a wifi backend to drive.
+
+---
+
+## Resource limits
+
+Three bounds ship as defaults, each overridable in `user/configuration.nix`:
+
+| | Default | Why |
+|---|---|---|
+| `services.journald.extraConfig` | `SystemMaxUse=512M` | With no cap journald takes 10% of the filesystem — a ~19 GB ceiling on a 195 GB root |
+| `zramSwap.enable` | `true` | No swap at all means a heavy scan or parallel build meets the OOM killer instead of degrading |
+| `nix.optimise.automatic` | `true` | Hardlinks identical files in the store; a toolchain-heavy closure carries a lot of them |
+
+The journal stays `Storage=persistent`: boot and killswitch behaviour is
+exactly what it gets read for, and those are the logs a volatile journal would
+lose. Raise the cap if an engagement needs longer history:
+
+```nix
+services.journald.extraConfig = "SystemMaxUse=2G";
+```
+
+Store optimisation is a space/time trade with no semantic effect — unlike a
+shorter GC window, which reclaims space by discarding rollback targets.
+
+---
+
 ## Desktop panel
 
 The top bar is declared in `home/desktop/plasma/` under `programs.plasma.panels`, and

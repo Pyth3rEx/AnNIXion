@@ -103,6 +103,7 @@
         ./system/core/os-release.nix
         ./system/core/networking.nix
         ./system/core/nix.nix
+        ./system/core/resources.nix
         ./system/core/locale.nix
         ./system/core/audio.nix
         ./system/core/security.nix
