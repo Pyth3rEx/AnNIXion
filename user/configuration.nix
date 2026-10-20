@@ -36,6 +36,13 @@
 #   # docker group, which is root-equivalent. See docs/hardening.md.
 #   annixion.docker.rootless = false;
 #
+#   # Offensive work needs inbound callbacks (reverse shells, responder) on the
+#   # engagement VPN, which the base firewall drops. Opt in to install the toggle,
+#   # then arm per session: `annixion-offensive on` (off / status). Boots hardened.
+#   # Add your tunnel's interface if it isn't tun0. See docs/hardening.md.
+#   annixion.offensiveNet.enable = true;
+#   # annixion.offensiveNet.trustedInterfaces = [ "tun0" "wg0" ];
+#
 #   # KWin composites through llvmpipe on a guest with no render node, which
 #   # costs about three quarters of a core. Turn it on where there is real
 #   # acceleration — "ls /dev/dri/renderD*" finds a node. See

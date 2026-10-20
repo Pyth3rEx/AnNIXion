@@ -82,6 +82,30 @@ used to suspend compositing live, so this setting only takes effect on
 
 ---
 
+## Offensive networking
+
+The base firewall drops all inbound traffic, which also drops the callback from a
+reverse shell — the exploit completes but no session lands. `annixion.offensiveNet`
+is an opt-in runtime toggle that opens inbound on the engagement VPN interface and
+relaxes the redirect/MITM sysctls, armed per session and gone on reboot.
+
+```nix
+annixion.offensiveNet.enable = true;
+# annixion.offensiveNet.trustedInterfaces = [ "tun0" "wg0" ];  # default [ "tun0" ]
+```
+
+Enabling installs the toggle but leaves the box hardened at boot. Arm and disarm it
+for the session:
+
+```
+annixion-offensive on | off | status
+```
+
+The same toggle appears in the control centre (`annixion-cc`) when the module is
+enabled. Full behaviour, scope and caveats: [docs/hardening.md](hardening.md).
+
+---
+
 ## Wireless
 
 `wpa_supplicant` is off by default. NetworkManager's wifi backend defaults to

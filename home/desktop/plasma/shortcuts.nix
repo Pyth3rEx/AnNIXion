@@ -74,6 +74,15 @@
         };
       in
       lib.mkDefault {
+        # ── System ──────────────────────────────────────────────
+        # Not a raise: annixion-cc is a toggle dialog, not a window to focus.
+        control-center = {
+          name = "AnNIXion Control Center";
+          comment = "AnNIXion Control Center";
+          key = "Meta+Shift+C";
+          command = "annixion-cc";
+        };
+
         # ── Heavy use ───────────────────────────────────────────
         konsole = raise "Meta+F1" "Konsole" "konsole.konsole" "konsole";
 
