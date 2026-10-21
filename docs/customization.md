@@ -358,6 +358,24 @@ its own, so the `[shellscript]` block sets `editor.tabSize` to 2 and
 is `shfmt -i 2 -ci`, which is how every script in this repository is already
 written — without it, the first save reformats the file entirely.
 
+### PowerShell
+
+`pwsh` is installed system-wide from `catalog/tools/dev/powershell.nix` and has
+a menu entry under Development, so there is a console to work a script through
+rather than only run it. The editor side is `ms-vscode.powershell`, which
+brings PowerShell Editor Services, PSReadLine and PSScriptAnalyzer — all three
+bundled in the extension as portable assemblies loaded by `pwsh`, so
+completion, diagnostics and formatting work with no network and no companion
+package.
+
+nixpkgs does not patch this extension the way it patches the bash one: it
+looks for `pwsh` on `PATH` and keeps its own list of discovered installs, so
+`powershell.powerShellAdditionalExePaths` names the store path explicitly and
+`powershell.powerShellDefaultVersion` selects it. Without both, the language
+server either never starts or starts against something else.
+`powershell.promptToUpdatePowerShell` is off — the version is the flake's to
+decide, and the check goes over the network.
+
 `CC` and `CXX` default to `clang`/`clang++` system-wide (`system/toolchain.nix`)
 — sharper diagnostics and working sanitizers, and it matches the
 clangd/lldb pair above. This only steers build systems that respect

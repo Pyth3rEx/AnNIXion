@@ -46,6 +46,7 @@ in
         # ── Shell ───────────────────────────────────────────────
         mads-hartmann.bash-ide-vscode
         timonwong.shellcheck
+        ms-vscode.powershell # bundles PSES, PSReadLine and PSScriptAnalyzer
 
         # ── C/C++ development ───────────────────────────────────
         llvm-vs-code-extensions.vscode-clangd
@@ -94,6 +95,20 @@ in
           "editor.formatOnSave" = true;
           "editor.tabSize" = 2;
           "editor.insertSpaces" = true;
+        };
+
+        # ── PowerShell ──────────────────────────────────────────
+        # nixpkgs leaves this extension unpatched, and it looks for pwsh on
+        # PATH, so the store path has to be named or the server never starts.
+        "powershell.powerShellAdditionalExePaths" = {
+          "PowerShell 7" = "${pkgs.powershell}/bin/pwsh";
+        };
+        "powershell.powerShellDefaultVersion" = "PowerShell 7";
+        # Checks for a newer release over the network; the flake decides it.
+        "powershell.promptToUpdatePowerShell" = false;
+        "[powershell]" = {
+          "editor.defaultFormatter" = "ms-vscode.powershell";
+          "editor.formatOnSave" = true;
         };
 
         # ── Files ───────────────────────────────────────────────
