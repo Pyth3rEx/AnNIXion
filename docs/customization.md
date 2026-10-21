@@ -310,6 +310,12 @@ VSCodium ships as part of the base user environment (`home/apps/vscodium.nix`) w
 
 No manual activation needed — it is included by default. Open VSCodium after the first `rebuild`.
 
+Two reading aids ride along, both purely visual: `better-comments` colours a
+comment by its marker — `!` for a warning, `?` for a query, `TODO` for work
+left — and `indent-rainbow` tints each indent level, which is what makes a
+deeply nested Nix attribute set or a long `if` in a shell script readable at a
+glance.
+
 ### C/C++ toolchain
 
 VSCodium also ships `clangd` (language server, formatter), `codelldb` and

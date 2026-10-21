@@ -36,6 +36,10 @@ in
         tamasfe.even-better-toml
         redhat.vscode-yaml
 
+        # ── Readability ─────────────────────────────────────────
+        aaron-bond.better-comments
+        oderwat.indent-rainbow
+
         # ── CI/CD ───────────────────────────────────────────────
         github-local-actions # needs act + Docker
 
