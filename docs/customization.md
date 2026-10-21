@@ -310,6 +310,12 @@ VSCodium ships as part of the base user environment (`home/apps/vscodium.nix`) w
 
 No manual activation needed — it is included by default. Open VSCodium after the first `rebuild`.
 
+Two reading aids ride along, both purely visual: `better-comments` colours a
+comment by its marker — `!` for a warning, `?` for a query, `TODO` for work
+left — and `indent-rainbow` tints each indent level, which is what makes a
+deeply nested Nix attribute set or a long `if` in a shell script readable at a
+glance.
+
 ### C/C++ toolchain
 
 VSCodium also ships `clangd` (language server, formatter), `codelldb` and
@@ -329,6 +335,46 @@ them automatically** — both its GDB and LLDB launch modes default to the
 bare binary name, resolved via `PATH`, with nothing to configure. Ghidra's
 decompiler is unaffected either way: it works from the binary alone and has
 no notion of which compiler produced it.
+
+### Shell scripting
+
+`bash-ide-vscode` runs the bash language server over every `.sh` in the tree
+(`home/apps/vscodium.nix`) — completion, hover documentation from the local man
+pages, go-to-definition across sourced files, and `shfmt` formatting on save.
+It is wired for a machine with no network: nothing it does reaches out, and
+`bashIde.explainshellEndpoint` is deliberately left unset, since pointing it at
+explainshell.com would post the command line under your cursor to a third
+party.
+
+nixpkgs patches the extension to the store `shellcheck` and `shfmt` rather than
+the binaries it bundles, so neither needs a path setting. The server's own
+shellcheck is then switched off — `bashIde.shellcheckPath` is set to the empty
+string — because `timonwong.shellcheck` already reports those findings, and
+leaving both on shows every warning twice.
+
+`shfmt` takes its indent width from the editor rather than from a setting of
+its own, so the `[shellscript]` block sets `editor.tabSize` to 2 and
+`editor.insertSpaces`, and `bashIde.shfmt.caseIndent` supplies the `-ci`. That
+is `shfmt -i 2 -ci`, which is how every script in this repository is already
+written — without it, the first save reformats the file entirely.
+
+### PowerShell
+
+`pwsh` is installed system-wide from `catalog/tools/dev/powershell.nix` and has
+a menu entry under Development, so there is a console to work a script through
+rather than only run it. The editor side is `ms-vscode.powershell`, which
+brings PowerShell Editor Services, PSReadLine and PSScriptAnalyzer — all three
+bundled in the extension as portable assemblies loaded by `pwsh`, so
+completion, diagnostics and formatting work with no network and no companion
+package.
+
+nixpkgs does not patch this extension the way it patches the bash one: it
+looks for `pwsh` on `PATH` and keeps its own list of discovered installs, so
+`powershell.powerShellAdditionalExePaths` names the store path explicitly and
+`powershell.powerShellDefaultVersion` selects it. Without both, the language
+server either never starts or starts against something else.
+`powershell.promptToUpdatePowerShell` is off — the version is the flake's to
+decide, and the check goes over the network.
 
 `CC` and `CXX` default to `clang`/`clang++` system-wide (`system/toolchain.nix`)
 — sharper diagnostics and working sanitizers, and it matches the

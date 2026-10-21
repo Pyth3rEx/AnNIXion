@@ -209,6 +209,7 @@ get worked examples in [tools.md](tools.md).
 | [act](https://nektosact.com/) | Runs GitHub Actions workflows locally | [Docs](https://nektosact.com/) |
 | [any-nix-shell](https://github.com/haslersn/any-nix-shell#readme) | Keeps zsh as the shell inside `nix-shell` | [README](https://github.com/haslersn/any-nix-shell#readme) |
 | [Python 3](https://www.python.org/doc/) | Interpreter plus `pip`; the `serve` alias runs `http.server` | [Docs](https://www.python.org/doc/) |
+| [PowerShell](https://learn.microsoft.com/powershell/scripting/overview) | `pwsh` — the shell Windows tooling is written in; also a Development menu entry | [Docs](https://learn.microsoft.com/powershell/scripting/overview) |
 
 ---
 
