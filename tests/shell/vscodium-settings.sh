@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Editor settings that only misbehave on this deployment. Hyper-V Enhanced
+# Editor settings and extensions nothing in the editor surfaces, so a profile
+# rename or an upstream default flip would drop them silently. Hyper-V Enhanced
 # Session reports scan codes the editor cannot trust, so dispatching on them
 # turns AltGr into a bare cursor-left and AZERTY loses its third level (#163,
-# microsoft/vscode#24783). Nothing in the editor surfaces the setting, and a
-# profile rename or an upstream default flip would drop it silently.
+# microsoft/vscode#24783).
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -22,6 +22,13 @@ report() {
   fi
 }
 
+installed() {
+  case "$exts" in
+    *"\"$1\""*) report 0 "$1 is in the profile" "" ;;
+    *) report 1 "$1 is in the profile" "not in the extension list" ;;
+  esac
+}
+
 cd "$ROOT" || exit 1
 
 # ── Keyboard dispatch ──────────────────────────────────────────────────────
@@ -37,6 +44,33 @@ excluded=$(nix eval --json "$SETTINGS.\"files.exclude\"" 2>/dev/null)
 report "$([ "$excluded" = "{}" ] && echo 0 || echo 1)" \
   "the explorer hides nothing" \
   "files.exclude is ${excluded:-<unset>}"
+
+# ── Shell language support ─────────────────────────────────────────────────
+exts=$(nix eval --json "$HM.programs.vscodium.profiles.default.extensions" \
+  --apply 'map (e: e.vscodeExtUniqueId or e.pname)' 2>/dev/null)
+installed mads-hartmann.bash-ide-vscode
+installed timonwong.shellcheck
+
+formatter=$(nix eval --raw "$SETTINGS.\"[shellscript]\".\"editor.defaultFormatter\"" 2>/dev/null)
+report "$([ "$formatter" = "mads-hartmann.bash-ide-vscode" ] && echo 0 || echo 1)" \
+  "shell scripts format with the bash server" \
+  "formatter is ${formatter:-<unset>}"
+
+# shfmt reads its indent off the editor, so these are the -i 2 -ci every script
+# in the repo is written to; losing them reformats all of them on first save.
+indent=$(nix eval --json "$SETTINGS.\"[shellscript]\".\"editor.tabSize\"" 2>/dev/null)
+spaces=$(nix eval --json "$SETTINGS.\"[shellscript]\".\"editor.insertSpaces\"" 2>/dev/null)
+case_indent=$(nix eval --json "$SETTINGS.\"bashIde.shfmt.caseIndent\"" 2>/dev/null)
+report "$([ "$indent" = 2 ] && [ "$spaces" = true ] && [ "$case_indent" = true ] && echo 0 || echo 1)" \
+  "shfmt formats to the style the scripts are written in" \
+  "tabSize=${indent:-<unset>} insertSpaces=${spaces:-<unset>} caseIndent=${case_indent:-<unset>}"
+
+# Empty, not absent: nixpkgs patches the path to the store shellcheck, and the
+# server would then report every finding timonwong.shellcheck already reports.
+sc_path=$(nix eval --json "$SETTINGS.\"bashIde.shellcheckPath\"" 2>/dev/null)
+report "$([ "$sc_path" = '""' ] && echo 0 || echo 1)" \
+  "shellcheck is reported once, not twice" \
+  "bashIde.shellcheckPath is ${sc_path:-<unset>}"
 
 echo
 if [ "$fails" -gt 0 ]; then

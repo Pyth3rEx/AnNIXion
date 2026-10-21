@@ -38,6 +38,9 @@ in
 
         # ── CI/CD ───────────────────────────────────────────────
         github-local-actions # needs act + Docker
+
+        # ── Shell ───────────────────────────────────────────────
+        mads-hartmann.bash-ide-vscode
         timonwong.shellcheck
 
         # ── C/C++ development ───────────────────────────────────
@@ -73,6 +76,20 @@ in
         "[cpp]" = {
           "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
           "editor.formatOnSave" = true;
+        };
+
+        # ── Shell ───────────────────────────────────────────────
+        # Cleared, not unset: nixpkgs patches the server's shellcheck path to
+        # the store, which would report every finding timonwong.shellcheck
+        # already reports.
+        "bashIde.shellcheckPath" = "";
+        "bashIde.shfmt.caseIndent" = true;
+        # shfmt reads its indent from the editor; repo scripts are -i 2 -ci.
+        "[shellscript]" = {
+          "editor.defaultFormatter" = "mads-hartmann.bash-ide-vscode";
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 2;
+          "editor.insertSpaces" = true;
         };
 
         # ── Files ───────────────────────────────────────────────

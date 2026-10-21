@@ -330,6 +330,28 @@ bare binary name, resolved via `PATH`, with nothing to configure. Ghidra's
 decompiler is unaffected either way: it works from the binary alone and has
 no notion of which compiler produced it.
 
+### Shell scripting
+
+`bash-ide-vscode` runs the bash language server over every `.sh` in the tree
+(`home/apps/vscodium.nix`) — completion, hover documentation from the local man
+pages, go-to-definition across sourced files, and `shfmt` formatting on save.
+It is wired for a machine with no network: nothing it does reaches out, and
+`bashIde.explainshellEndpoint` is deliberately left unset, since pointing it at
+explainshell.com would post the command line under your cursor to a third
+party.
+
+nixpkgs patches the extension to the store `shellcheck` and `shfmt` rather than
+the binaries it bundles, so neither needs a path setting. The server's own
+shellcheck is then switched off — `bashIde.shellcheckPath` is set to the empty
+string — because `timonwong.shellcheck` already reports those findings, and
+leaving both on shows every warning twice.
+
+`shfmt` takes its indent width from the editor rather than from a setting of
+its own, so the `[shellscript]` block sets `editor.tabSize` to 2 and
+`editor.insertSpaces`, and `bashIde.shfmt.caseIndent` supplies the `-ci`. That
+is `shfmt -i 2 -ci`, which is how every script in this repository is already
+written — without it, the first save reformats the file entirely.
+
 `CC` and `CXX` default to `clang`/`clang++` system-wide (`system/toolchain.nix`)
 — sharper diagnostics and working sanitizers, and it matches the
 clangd/lldb pair above. This only steers build systems that respect
