@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "e37ca361-f2e6-57c6-8dc7-53f51a491aba",
+  "tags": [
+    "osint",
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4d26e446-2e9f-5235-8163-560282680cd6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Social Media Discloses Premises and Routine",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Photographs and posts published by the organisation and its staff disclosed the interior of the premises, badge designs, access control hardware, screen contents and daily routine — the reconnaissance a physical intrusion would otherwise have to perform on site.\n",
+        "description": "Office photography is published constantly: recruitment material, culture posts, team celebrations, conference stands. Each image is a survey.\n\nWhat they give away is specific. A worn badge shows the card design and often the number, which is enough to produce a convincing visual forgery. Doors show the reader model and the hardware, which decides which bypass is worth attempting. Desks show screens, whiteboards and the layout of the floor. Lobby photographs show whether reception is staffed and where the turnstiles are.\n\nRoutine completes it. Posts establish when the office is busy, when it is empty, when the cleaning contractor attends, and which day the leadership team is off site — which is the day an impersonation of them is least likely to be checked.\n",
+        "recommendation": "* Review photographs before publication: badges, screens, whiteboards, access hardware and door signage.\n* Ask staff not to photograph their badge, and to wear it out of sight outside the building.\n* Avoid publishing floor layouts and security arrangements in recruitment material.\n* Include published imagery in your own physical assessments — it is what an attacker starts from.\n",
+        "short_recommendation": "Check photographs for badges, screens and access control before posting.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1592/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

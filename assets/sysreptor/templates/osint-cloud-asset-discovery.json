@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "ed6c612e-2bc2-5f54-bbea-d54449b00a92",
+  "tags": [
+    "osint",
+    "cloud",
+    "external"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "40a782ff-57c3-5432-a79c-0455aa116750",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Cloud Resources Discoverable by Name",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Cloud storage, function endpoints and container registries were discoverable by guessing names derived from the organisation, exposing which services exist and in some cases their contents.\n",
+        "description": "Cloud resources live in global namespaces with predictable patterns: the company name, a product, an environment suffix. Enumerating those combinations is cheap, and third parties publish catalogues of what they find.\n\nDiscovery alone is reconnaissance rather than compromise, but it reliably identifies the non-production environments — the ones with weaker credentials, older code and production data copied in for testing.\n\nWhere a resource is also readable, discovery and compromise are the same step, and the organisation has no log of the enumeration that preceded it.\n",
+        "recommendation": "* Do not treat an unguessable name as a control; apply authentication and network restrictions regardless.\n* Include name-based enumeration in your own external assessment, so you find the forgotten resources first.\n* Prefer resource names that do not encode the environment where the namespace is public.\n* Enable access logging, so attempts against discovered resources are visible.\n",
+        "short_recommendation": "Do not rely on resource names being unguessable.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1526/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

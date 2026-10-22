@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "74fb54c1-1825-54ac-8279-b5910ec88833",
+  "tags": [
+    "puppet",
+    "social",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4b4c0144-e61a-52ea-b50c-95a5632ed7fa",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Verification Treated as Discourtesy",
+        "cvss": "n/a",
+        "summary": "Staff who had correctly identified a request as suspicious complied with it anyway, because refusing would have meant challenging a colleague or delaying someone senior. The knowledge was present; the permission to act on it was not.\n",
+        "description": "This is the finding underneath most successful social engineering. People frequently recognise that something is wrong and proceed regardless, because the cost of being wrong is social and immediate while the cost of complying is abstract and deferred.\n\nHierarchy is the strongest factor. Challenging a request that appears to come from a senior person requires an employee to risk a relationship on a suspicion, and few will. Speed pressure compounds it: a process measured on response time punishes the person who pauses to verify.\n\nTraining does not fix this, because it is not a knowledge problem. It is fixed by removing the judgement: when verification is a mandatory step that applies to everyone, nobody is challenging anyone — they are following the process.\n",
+        "recommendation": "* Make verification mandatory and non-waivable for defined actions, so compliance needs no courage.\n* Have leadership visibly submit to the same verification, and thank the people who apply it to them.\n* Remove speed from the measures applied to identity-sensitive work.\n* Give staff a script and a named escalation point, so verification does not require improvisation.\n* Publicise cases where verification caught something, and never penalise a false positive.\n",
+        "short_recommendation": "Make verification a required step, not a personal judgement.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1598/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "b1f804ce-6f67-52ec-a7f6-102fd2ca7b92",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "0e6a7dd9-8e4f-569e-a101-c9c71c8038e2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Mechanical Key and Lock Management Inadequate",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "Mechanical keys were held without a register, could be copied without authorisation, and were not recovered or rekeyed after staff departures. Locks protecting technical rooms used common keyways that are trivially bypassed.\n",
+        "description": "Mechanical locks sit underneath electronic access control and are usually forgotten by it. Comms cupboards, risers, cabinets and server racks are secured with keys that nobody tracks.\n\nSeveral failures recur. Keys are not registered, so nobody knows how many exist or who holds them. They are not restricted, so any locksmith will copy them — and a photograph is enough to have one cut. They are not recovered on departure, and are never rekeyed, so every former employee and contractor retains whatever access they had.\n\nThe hardware itself is often the cheapest available: cam locks and cabinet keys that are keyed alike across an entire product line, where one widely available key opens every unit.\n",
+        "recommendation": "* Maintain a key register: every key, its holder, and the lock it opens, reconciled periodically.\n* Use restricted keyways where copying requires authorisation, and resist photographing keys.\n* Recover keys on departure and rekey when one is unaccounted for.\n* Replace keyed-alike cabinet and rack locks on anything protecting infrastructure.\n",
+        "short_recommendation": "Register every key, restrict copying, and rekey on loss.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

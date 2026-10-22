@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "a3f98c22-3398-5a01-bf95-c4797ca339f9",
+  "tags": [
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "cec37fdf-a59c-5a16-a533-49042c34c060",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Callback Phishing (Telephone-Oriented Attack Delivery)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Messages containing no link or attachment, only a telephone number and a plausible pretext, led staff to call attacker-operated support lines and follow instructions — including installing remote access software.\n",
+        "description": "Callback phishing defeats mail security by containing nothing to detect: a plain message about a subscription renewal or an unexpected invoice, with a number to call to dispute it.\n\nThe victim initiates the call, which inverts the usual suspicion — they chose to make contact, so the person answering is treated as legitimate. A practised operator then walks them through installing a remote access tool, which is a legitimate signed product and therefore unlikely to be blocked.\n\nThe result is interactive access to a corporate workstation with the user's cooperation, and often their assistance in bypassing a prompt the security tooling raises.\n",
+        "recommendation": "* Publish how IT and finance contact staff, and state that support will never ask for remote access following an inbound message.\n* Restrict installation of remote access tooling, and alert on it appearing on a workstation.\n* Give staff a single internal number to verify any unexpected request, and make that reflex the training.\n* Include no-link pretexts in simulations; a programme that only measures clicks does not measure this at all.\n",
+        "short_recommendation": "Publish how support contacts staff, and verify callbacks independently.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1566/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

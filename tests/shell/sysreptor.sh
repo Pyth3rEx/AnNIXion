@@ -246,11 +246,25 @@ nsrc=$(find "$ROOT/assets/sysreptor/templates" -maxdepth 1 -name '*.json' | wc -
 report "$([ "$nown" -eq "$nsrc" ] && echo 0 || echo 1)" \
   "every authored template reaches the pack" \
   "$nsrc under assets/, $nown in the archive"
-report "$([ "$nown" -ge 50 ] && echo 0 || echo 1)" \
+report "$([ "$nown" -ge 100 ] && echo 0 || echo 1)" \
   "the library is an extensive one" "only $nown templates"
 
+# Each discipline has to be covered in depth, not just represented: an area
+# with three templates in it is a gap wearing a tag.
+for tag in red puppet osint; do
+  n=$(grep -l "\"$tag\"" "$TMP"/own/*.json | wc -l)
+  report "$([ "$n" -ge 20 ] && echo 0 || echo 1)" \
+    "the $tag discipline is covered in depth" "only $n templates tagged $tag"
+done
+for tag in physical social; do
+  n=$(grep -l "\"$tag\"" "$TMP"/own/*.json | wc -l)
+  report "$([ "$n" -ge 15 ] && echo 0 || echo 1)" \
+    "the $tag area is covered in depth" "only $n templates tagged $tag"
+done
+
 owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
-for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage"; do
+for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
+            "Subdomain Takeover" "Look-Alike" "QR Code" "Key and Lock" "Disposal" "Insider"; do
   report "$(grep -qi "$want" <<<"$owntitles" && echo 0 || echo 1)" \
     "the library covers: $want" "no template title matches '$want'"
 done

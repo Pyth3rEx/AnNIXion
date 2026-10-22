@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "5420a070-d6fd-5f4e-a9cd-69e9d0eccc67",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "af87e640-2371-5ef4-b734-6cfefa608723",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Biometric and PIN Controls Bypassable",
+        "cvss": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "Biometric readers and keypads protecting sensitive areas could be defeated by observation, by presenting artefacts, or by falling back to a weaker method when the primary failed.\n",
+        "description": "Biometrics are treated as unforgeable and are not. Fingerprint readers at the consumer end of the market are defeated by lifted prints; facial systems without liveness detection by a photograph. More reliably, the fallback is the weakness: when the reader fails, the door accepts a PIN or a card, and the fallback is what an attacker uses.\n\nKeypads give their secret away through use. Observation from a distance is enough, and wear patterns on the keys narrow the combination to a handful of guesses. Codes are rarely changed and are shared freely, so the population who knows one is much larger than the list of people entitled to enter.\n\nEnrolment is the overlooked control: a system that enrols a new credential on the authority of a telephone call is only as strong as that call.\n",
+        "recommendation": "* Pair biometrics with a card or PIN rather than relying on one factor, and require both at sensitive doors.\n* Choose readers with liveness detection, and test them rather than trusting the specification.\n* Change door codes on a schedule and on any departure; avoid codes shared across a whole team.\n* Control enrolment: require in-person verification, and log and review every credential issued.\n",
+        "short_recommendation": "Pair biometrics with a second factor and protect the enrolment process.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

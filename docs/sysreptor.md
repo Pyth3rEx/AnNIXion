@@ -276,19 +276,19 @@ first run needs no network beyond the container images.
 
 ### Finding templates
 
-A design is the layout; a template is the finding already written. AnNIXion
-ships its own library, imported by default, in `assets/sysreptor/templates` —
-one JSON file per finding, which is also how you add to it.
+A design is the layout; a template is the finding already written. AnNIXion ships its own library of **109 findings**, imported by default, in
+`assets/sysreptor/templates` — one JSON file per finding, which is also how
+you add to it.
 
 It is organised along the three disciplines the browser profiles already
 divide by, so the tag filter in **Templates** matches the way the rest of the
 distribution is laid out:
 
-| Tag | Covers |
-|---|---|
-| `red` | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and the **physical** intrusion findings: tailgating, badge cloning, door hardware bypass, live network ports, server-room access, covert devices, perimeter and camera coverage |
-| `puppet` | The persona side: phishing, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site impersonation, dropped media, synthetic voice, reporting culture |
-| `osint` | What an attacker finds before touching anything: breach credentials, staff exposure that supports pretexts, document metadata, forgotten internet-facing assets |
+| Tag | Count | Covers |
+|---|---|---|
+| `red` | 75 | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and 25 **physical** findings: tailgating, badge cloning, door and biometric bypass, key and lock management, live network ports, server rooms, covert devices, alarm response, media disposal, out-of-hours contractors, building systems on the corporate network, sightlines, wireless reaching the car park |
+| `puppet` | 26 | The persona side: phishing, QR and callback phishing, OAuth consent, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site and courier impersonation, dropped media, synthetic voice, new-starter targeting, insider recruitment, conference elicitation, reporting culture and the cost of challenging a colleague |
+| `osint` | 21 | What an attacker finds before touching anything: breach and infostealer credentials, staff and executive exposure, document metadata, forgotten assets and subdomain takeover, certificate transparency, look-alike domains, recruitment material, supplier mapping, social media disclosing premises and routine, archived content |
 
 Each carries a CVSS vector where one is meaningful — physical findings use
 `AV:P`, social engineering `UI:R` — and `n/a` where a severity score would be

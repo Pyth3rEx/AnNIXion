@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "3eeaff24-0566-562e-93de-47641cf569fc",
+  "tags": [
+    "red",
+    "physical",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4d1c4bc5-ecd4-5a18-8d85-fb594e97ddcb",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Alarm and Monitoring Response Untested",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Intrusion detection was installed but its response was never exercised: activations produced no attendance within a useful time, and in places no activation reached anyone at all.\n",
+        "description": "An alarm is a notification, not a control. What protects the site is the response: somebody attending, promptly, and knowing what to do.\n\nThe failures are in the chain rather than the sensors. Activations route to a console nobody watches out of hours; the monitoring contract specifies an attendance time nobody has measured; a history of false alarms has trained staff to clear activations without investigating; and zones have been disabled to stop nuisance alerts, with no record of which.\n\nTesting the alarm — the usual practice — confirms the sensor and the siren. It does not confirm that a person arrives, which is the part an intruder is betting against.\n",
+        "recommendation": "* Test the response rather than the alarm: trigger a zone unannounced and measure what happens and how long it takes.\n* Review which zones are disabled or in fault, and treat a disabled zone as an open door.\n* Investigate repeated false activations as a reliability problem, since they train the response away.\n* Confirm the out-of-hours path reaches a person with the authority to act, and rehearse it.\n",
+        "short_recommendation": "Test the response, not the alarm, and measure how long it takes.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}
