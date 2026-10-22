@@ -117,22 +117,44 @@ in
         lib.types.enum [
           "htb"
           "offsec"
+          "demo"
         ]
       );
       default = [ "htb" ];
       example = [
         "htb"
-        "offsec"
+        "demo"
       ];
       description = ''
         Official report designs imported the first time the platform starts.
         They are pinned in the catalog entry and imported from the store, so
         a first run needs no network beyond the images themselves.
 
-        `htb` is the Hack The Box set — CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
-        CJCA, CWPE and COAE. `offsec` is the OffSec set, OSCP included. Each
-        pack is imported once and then left alone, so a design edited in the
-        UI stays edited.
+        - `htb` — the Hack The Box set: CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
+          CJCA, CWPE and COAE.
+        - `offsec` — the OffSec set, OSCP included.
+        - `demo` — the three designs behind upstream's online demo
+          (Margherita, Matrix, Calzone). Client-report layouts rather than
+          certification ones, and the usual starting point for your own.
+
+        Each pack is imported once and then left alone, so a design edited in
+        the UI stays edited.
+      '';
+    };
+
+    findingTemplates = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Import upstream's finding-template library: ten written-up web
+        findings — SQLi, stored XSS, XXE, CSRF, session management, security
+        headers, insecure cookies, user enumeration, untrusted TLS
+        certificates, secrets in URL parameters.
+
+        On by default. A template is the difference between writing a finding
+        and picking one, and they land in their own library rather than in
+        any project. Treat them as a starting point to edit — the wording is
+        upstream's, not yours.
       '';
     };
 
@@ -140,9 +162,9 @@ in
       type = lib.types.bool;
       default = false;
       description = ''
-        Also import Hack The Box's filled-in example reports, which show what
-        a finished deliverable looks like in each design. Off by default:
-        they appear as projects beside real engagements.
+        Also import the filled-in example reports that go with each enabled
+        design pack, which show what a finished deliverable looks like. Off
+        by default: they appear as projects beside real engagements.
       '';
     };
   };
@@ -171,6 +193,7 @@ in
           ${set "ENCRYPT" (if cfg.encryptAtRest then "yes" else "no")}
           ${set "DESIGNS" (lib.concatStringsSep " " cfg.designs)}
           ${set "DEMO_PROJECTS" (if cfg.demoProjects then "yes" else "no")}
+          ${set "FINDING_TEMPLATES" (if cfg.findingTemplates then "yes" else "no")}
         '';
     };
 

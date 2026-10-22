@@ -208,7 +208,7 @@ report "$(grep -q '^SECRET_KEY=' "$plainenv" && echo 0 || echo 1)" \
 # The HTB set is what the install promises; it is imported from the store, so
 # a first run needs no network beyond the images.
 packs="$out/share/sysreptor/designs"
-for pack in design-htb design-offsec project-htb; do
+for pack in design-htb design-offsec design-demo project-htb project-offsec project-demo template-demo; do
   report "$([ -f "$packs/$pack.tar.gz" ] && echo 0 || echo 1)" \
     "the $pack pack is bundled" "no $packs/$pack.tar.gz"
 done
@@ -220,6 +220,17 @@ report "$(grep -q 'HTB CPTS' <<<"$names" && echo 0 || echo 1)" \
   "the HTB pack carries the CPTS design" "found: $(tr '\n' ' ' <<<"$names")"
 report "$([ "$(wc -l <<<"$names")" -ge 5 ] && echo 0 || echo 1)" \
   "and the rest of the certification set" "found: $(tr '\n' ' ' <<<"$names")"
+
+# The finding templates are the pack that saves the most typing, so it is
+# worth knowing it is really a template library and not an empty archive.
+mkdir -p "$TMP/tpl"
+tar xzf "$packs/template-demo.tar.gz" -C "$TMP/tpl" 2>/dev/null
+titles=$(grep -ho '"title": "[^"]*"' "$TMP"/tpl/*.json 2>/dev/null | sort -u)
+report "$(grep -q 'SQL Injection' <<<"$titles" && echo 0 || echo 1)" \
+  "the template pack carries written-up findings" \
+  "found: $(tr '\n' ' ' <<<"$titles" | head -c 200)"
+ntpl=$(find "$TMP/tpl" -maxdepth 1 -name '*.json' | wc -l)
+report "$([ "$ntpl" -ge 10 ] && echo 0 || echo 1)" "ten of them" "found $ntpl templates"
 
 # ── What the NixOS module writes, and what the wrapper does with it ────────
 etcpath='.environment.etc."annixion/sysreptor.conf".text'
@@ -288,6 +299,7 @@ ANNIXION_SYSREPTOR_ALLOWED_HOSTS="localhost,127.0.0.1,reports.local"
 ANNIXION_SYSREPTOR_ENCRYPT="yes"
 ANNIXION_SYSREPTOR_DESIGNS="htb"
 ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES="no"
 CONF
 
 shown=$(drive "$conf_home" config)
@@ -417,16 +429,40 @@ proj="$TMP/h5"
 mkdir -p "$proj"
 cat >"$proj/sysreptor.conf" <<CONF
 ANNIXION_SYSREPTOR_PORT="$hport"
-ANNIXION_SYSREPTOR_DESIGNS="htb offsec"
+ANNIXION_SYSREPTOR_DESIGNS="htb demo"
 ANNIXION_SYSREPTOR_DEMO_PROJECTS="yes"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES="yes"
 CONF
 run_setup "$proj" >/dev/null
 drive "$proj" designs >/dev/null
 report "$([ "$(grep -c 'importdemodata --type=design' "$proj/docker.log")" -eq 2 ] && echo 0 || echo 1)" \
   "both configured design packs are imported" \
   "design imports: $(grep -c 'importdemodata --type=design' "$proj/docker.log")"
-report "$(grep -q 'importdemodata --type=project' "$proj/docker.log" && echo 0 || echo 1)" \
-  "demoProjects brings the example reports in" "no project import ran"
+# One per enabled pack, not just HTB's: the example reports are the ones that
+# go with the designs actually installed.
+report "$([ "$(grep -c 'importdemodata --type=project' "$proj/docker.log")" -eq 2 ] && echo 0 || echo 1)" \
+  "the example reports follow the design packs" \
+  "project imports: $(grep -c 'importdemodata --type=project' "$proj/docker.log")"
+report "$([ "$(grep -c 'importdemodata --type=template' "$proj/docker.log")" -eq 1 ] && echo 0 || echo 1)" \
+  "the finding templates are imported once" \
+  "template imports: $(grep -c 'importdemodata --type=template' "$proj/docker.log")"
+
+# Default-on, so the install that asks for nothing still gets the library.
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)" = "yes" ] && echo 0 || echo 1)" \
+  "finding templates are on by default" \
+  "config says $(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)"
+
+off="$TMP/h7"
+mkdir -p "$off"
+cat >"$off/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS="htb"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES="no"
+CONF
+run_setup "$off" >/dev/null
+drive "$off" designs >/dev/null
+report "$(grep -q 'type=template' "$off/docker.log" && echo 1 || echo 0)" \
+  "and stay out when turned off" "a template pack was imported anyway"
 
 echo
 if [ "$fails" -gt 0 ]; then

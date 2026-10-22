@@ -104,8 +104,9 @@ annixion.sysreptor = {
   port = 8000;                  # above 1024, so rootless docker can bind it
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
-  designs = [ "htb" ];          # official design packs to import
-  demoProjects = false;         # HTB's filled-in example reports
+  designs = [ "htb" ];          # official design packs: htb, offsec, demo
+  findingTemplates = true;      # upstream's library of written-up findings
+  demoProjects = false;         # the filled-in example reports
 };
 ```
 
@@ -117,8 +118,9 @@ annixion.sysreptor = {
 | `networkAccessible` | `false` | `false` binds `127.0.0.1`; `true` binds every interface **and opens the port in the firewall** |
 | `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
 | `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
-| `designs` | `[ "htb" ]` | Which official design packs to import — `"htb"`, `"offsec"` |
-| `demoProjects` | `false` | Also import HTB's example reports |
+| `designs` | `[ "htb" ]` | Which official design packs to import — `"htb"`, `"offsec"`, `"demo"` |
+| `findingTemplates` | `true` | Import upstream's library of ten written-up findings |
+| `demoProjects` | `false` | Also import the example reports for each enabled pack |
 
 The module writes `/etc/annixion/sysreptor.conf`, which the wrapper reads at
 runtime. To apply a change:
@@ -223,14 +225,46 @@ CDSA, CDEP, CWEE, CAPE, CJCA, CWPE and COAE. The
 [CPTS example report](https://docs.sysreptor.com/assets/reports/HTB-CPTS-Report.pdf)
 is what that design produces.
 
-The OffSec set (OSCP and siblings) is pinned too, and off by default:
+Every pack upstream publishes is pinned here; the rest are a word away:
+
+| Pack | What it is | Default |
+|---|---|---|
+| `htb` | The Hack The Box certification designs, nine of them | **on** |
+| `offsec` | The OffSec set, OSCP included | off |
+| `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones | off |
 
 ```nix
-annixion.sysreptor.designs = [ "htb" "offsec" ];
+annixion.sysreptor.designs = [ "htb" "demo" ];
 ```
 
-Both packs are fetched at build time and imported from the Nix store, so a
+All of them are fetched at build time and imported from the Nix store, so a
 first run needs no network beyond the container images.
+
+### Finding templates
+
+Separately from designs, upstream publishes a **finding-template library** —
+ten written-up web findings (SQLi, stored XSS, XXE, CSRF, session management,
+security headers, insecure cookies, user enumeration, untrusted TLS
+certificates, secrets in URL parameters). This one is **on by default**,
+because a template is the difference between writing a finding and picking
+one:
+
+```nix
+annixion.sysreptor.findingTemplates = false;   # to leave them out
+```
+
+They land in **Templates** rather than in any project, and the wording is
+upstream's — edit them into your own voice before a client sees one.
+
+### Example reports
+
+Each design pack also has filled-in example reports showing what a finished
+deliverable looks like. They are off by default, because they appear as
+projects beside real engagements:
+
+```nix
+annixion.sysreptor.demoProjects = true;   # one set per enabled design pack
+```
 
 Each pack is imported **once**, recorded in
 `~/.local/share/sysreptor/imported`, and then left alone — `importdemodata`
