@@ -138,11 +138,16 @@ start. The settings live under `annixion.sysreptor`:
 
 ```nix
 annixion.sysreptor = {
-  user = "operator";            # the login `sysreptor superuser` creates
+  user = "operator";            # the login created on first start
+  hashedPassword = "pbkdf2_sha256$600000$...";  # `sysreptor hash` mints one
   designs = [ "htb" "offsec" ]; # official design packs to import
   # networkAccessible = true;   # publishes it on every interface, opens the port
 };
 ```
+
+The login ships with the same password as the operator account, so change it —
+in the UI, or by putting a fresh `sysreptor hash` here. There is no login-less
+mode: skipping the login screen is a Professional-edition feature.
 
 `networkAccessible` is the one with teeth: it serves every engagement's
 deliverables over plain HTTP to anything that can route here. Options,

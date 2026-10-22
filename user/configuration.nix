@@ -54,8 +54,13 @@
 #   # imported on first start; add "offsec" for the OSCP set. Making it
 #   # network-accessible publishes every engagement's deliverables over plain
 #   # HTTP — read docs/sysreptor.md before you do.
+#   # The login is created on first start from the hash below — mint one with
+#   # `sysreptor hash`. The default is the shipped operator password, so it is
+#   # public: change it here or in the UI. There is no login-less mode; every
+#   # way to skip the login screen is Professional-edition only.
 #   annixion.sysreptor = {
 #     user = "operator";
+#     hashedPassword = "pbkdf2_sha256$600000$...";
 #     designs = [ "htb" "offsec" ];
 #     # networkAccessible = true;
 #     # allowedHosts = [ "reports.engagement.local" ];

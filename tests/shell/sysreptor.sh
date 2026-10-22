@@ -224,12 +224,33 @@ report "$([ "$(wc -l <<<"$names")" -ge 5 ] && echo 0 || echo 1)" \
 # ── What the NixOS module writes, and what the wrapper does with it ────────
 etcpath='.environment.etc."annixion/sysreptor.conf".text'
 conf_default=$(nix eval --raw "$CFG$etcpath" 2>/dev/null)
-report "$(grep -q 'ANNIXION_SYSREPTOR_BIND="127.0.0.1"' <<<"$conf_default" && echo 0 || echo 1)" \
-  "the default config binds loopback only" "wrote: $conf_default"
-report "$(grep -q 'ANNIXION_SYSREPTOR_DESIGNS="htb"' <<<"$conf_default" && echo 0 || echo 1)" \
-  "the HTB designs are configured by default" "wrote: $conf_default"
-report "$(grep -q 'ANNIXION_SYSREPTOR_ENCRYPT="yes"' <<<"$conf_default" && echo 0 || echo 1)" \
-  "encryption at rest is the default" "wrote: $conf_default"
+
+# The wrapper sources this file, so the test reads it the same way. A Django
+# hash is full of `$`: written unquoted, bash would expand `$600000` to the
+# sixth positional parameter and the account would be bootstrapped with a
+# password nobody holds.
+printf '%s\n' "$conf_default" >"$TMP/conf.default"
+# shellcheck disable=SC1091 # written just above
+read_conf() { (set -u; . "$TMP/conf.default"; eval "printf '%s' \"\${$1:-}\""); }
+
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_BIND)" = "127.0.0.1" ] && echo 0 || echo 1)" \
+  "the default config binds loopback only" "bind is $(read_conf ANNIXION_SYSREPTOR_BIND)"
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_DESIGNS)" = "htb" ] && echo 0 || echo 1)" \
+  "the HTB designs are configured by default" "designs are $(read_conf ANNIXION_SYSREPTOR_DESIGNS)"
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_ENCRYPT)" = "yes" ] && echo 0 || echo 1)" \
+  "encryption at rest is the default" "encrypt is $(read_conf ANNIXION_SYSREPTOR_ENCRYPT)"
+
+hash_declared=$(nix eval --raw "$CFG.annixion.sysreptor.hashedPassword" 2>/dev/null)
+hash_read=$(read_conf ANNIXION_SYSREPTOR_HASHED_PASSWORD)
+report "$([ -n "$hash_declared" ] && [ "$hash_read" = "$hash_declared" ] && echo 0 || echo 1)" \
+  "the password hash survives being sourced by a shell" \
+  "declared '$hash_declared', read back '$hash_read'"
+report "$(grep -q '^pbkdf2_sha256\$[0-9]*\$' <<<"$hash_read" && echo 0 || echo 1)" \
+  "and it is a Django hash rather than a plaintext password" "read back: $hash_read"
+
+mode=$(nix eval --raw "$CFG"'.environment.etc."annixion/sysreptor.conf".mode' 2>/dev/null)
+report "$([ "$mode" = "0400" ] && echo 0 || echo 1)" \
+  "the file holding that hash is not world-readable" "mode is ${mode:-<unset>}"
 
 # Loopback-only must mean a closed port: an open 8000 with nothing behind it
 # is the kind of drift nobody notices.
@@ -242,12 +263,15 @@ report "$(grep -q '8000' <<<"$openports" && echo 1 || echo 0)" \
 variant='c: (c.extendModules { modules = [ { annixion.sysreptor.networkAccessible = true; } ]; }).config'
 conf_net=$(nix eval --raw ".#nixosConfigurations.AnNIXion-ci" \
   --apply "$variant"'.environment.etc."annixion/sysreptor.conf".text' 2>/dev/null)
-report "$(grep -q 'ANNIXION_SYSREPTOR_BIND="0.0.0.0"' <<<"$conf_net" && echo 0 || echo 1)" \
-  "networkAccessible publishes on every interface" "wrote: $conf_net"
+printf '%s\n' "$conf_net" >"$TMP/conf.net"
+# shellcheck disable=SC1091 # written just above
+read_net() { (set -u; . "$TMP/conf.net"; eval "printf '%s' \"\${$1:-}\""); }
+report "$([ "$(read_net ANNIXION_SYSREPTOR_BIND)" = "0.0.0.0" ] && echo 0 || echo 1)" \
+  "networkAccessible publishes on every interface" "bind is $(read_net ANNIXION_SYSREPTOR_BIND)"
 hostname=$(nix eval --raw "$CFG.networking.hostName" 2>/dev/null)
-report "$(grep -q "ALLOWED_HOSTS=\".*$hostname" <<<"$conf_net" && echo 0 || echo 1)" \
+report "$(grep -q "$hostname" <<<"$(read_net ANNIXION_SYSREPTOR_ALLOWED_HOSTS)" && echo 0 || echo 1)" \
   "and adds the hostname to ALLOWED_HOSTS" \
-  "Django would 400 every request to $hostname. Wrote: $conf_net"
+  "Django would 400 every request to $hostname. Allowed: $(read_net ANNIXION_SYSREPTOR_ALLOWED_HOSTS)"
 ports_net=$(nix eval --json ".#nixosConfigurations.AnNIXion-ci" \
   --apply "$variant"'.networking.firewall.allowedTCPPorts' 2>/dev/null)
 report "$(grep -q '8000' <<<"$ports_net" && echo 0 || echo 1)" \
@@ -352,6 +376,42 @@ drive "$imp" designs --force >/dev/null
 imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
 report "$([ "${imports:-0}" -eq 2 ] && echo 0 || echo 1)" \
   "--force imports again when you ask it to" "importdemodata ran ${imports:-0} time(s) in total"
+
+# ── The declared login is created once ─────────────────────────────────────
+# Re-applying it on every start would silently revert a password changed in
+# the UI, which is the only place it can be changed.
+# shellcheck disable=SC2016 # a hash, not an expansion — the $ must stay literal
+login_hash='pbkdf2_sha256$600000$testsalt$dGVzdGhhc2g='
+logins=$(grep -c 'manage.py shell' "$imp/docker.log")
+report "$([ "${logins:-0}" -eq 0 ] && echo 0 || echo 1)" \
+  "no login is bootstrapped without a declared hash" "a shell ran anyway"
+
+acct="$TMP/h6"
+mkdir -p "$acct"
+cat >"$acct/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_USER="scribe"
+ANNIXION_SYSREPTOR_HASHED_PASSWORD='$login_hash'
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+CONF
+
+run_setup "$acct" >/dev/null
+drive "$acct" up >/dev/null
+logins=$(grep -c 'manage.py shell' "$acct/docker.log")
+report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "the declared login is created on the first start" "manage.py shell ran ${logins:-0} time(s)"
+report "$(grep -q 'BOOTSTRAP_USERNAME=scribe' "$acct/docker.log" && echo 0 || echo 1)" \
+  "under the configured name" "compose saw: $(grep -o 'BOOTSTRAP_USERNAME=[^ ]*' "$acct/docker.log" | head -1)"
+report "$(grep -qF "BOOTSTRAP_PASSWORD_HASH=$login_hash" "$acct/docker.log" && echo 0 || echo 1)" \
+  "with the hash intact, not a shell-mangled one" \
+  "compose saw: $(grep -o 'BOOTSTRAP_PASSWORD_HASH=[^ ]*' "$acct/docker.log" | head -1)"
+
+drive "$acct" up >/dev/null
+logins=$(grep -c 'manage.py shell' "$acct/docker.log")
+report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "a later start never re-applies the password" \
+  "manage.py shell ran ${logins:-0} time(s) — a UI password change would have been reverted"
 
 proj="$TMP/h5"
 mkdir -p "$proj"

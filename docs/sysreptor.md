@@ -41,10 +41,13 @@ network and a few minutes.
 
 ```bash
 sysreptor setup        # write the deployment and its secrets, create the volumes
-sysreptor up           # pull and start app, database and cache; import the designs
-sysreptor superuser    # create your login (prompts for a password)
+sysreptor up           # start it, create the login, import the designs
 sysreptor open         # wait for it to answer, then open the UI
 ```
+
+The first `up` creates the login declared in your config — `operator`, with the
+same password the operator account ships with. **Change it at the first login**
+(see [Accounts](#accounts)).
 
 The UI is at **<http://127.0.0.1:8000>**. The menu entry runs `sysreptor open`,
 which does the last two steps for you — including the wait, because the app
@@ -63,7 +66,8 @@ takes a while to answer after the containers start.
 | `sysreptor open` | bring it up, wait for the health check, open the UI |
 | `sysreptor logs` | follow the stack's logs |
 | `sysreptor status` | list running `sysreptor` containers |
-| `sysreptor superuser [name]` | create a login (default: `annixion.sysreptor.user`) |
+| `sysreptor superuser [name]` | create another login, interactively |
+| `sysreptor hash` | mint a password hash for the config |
 | `sysreptor designs [--force]` | import the configured report designs |
 | `sysreptor manage <args…>` | run `manage.py` inside the app container |
 | `sysreptor backup [file.zip]` | full backup through `manage.py backup` |
@@ -95,7 +99,8 @@ wrapper: an install should come back the same way twice.
 ```nix
 # user/configuration.nix
 annixion.sysreptor = {
-  user = "operator";            # the login `sysreptor superuser` creates
+  user = "operator";            # the login created on first start
+  hashedPassword = "pbkdf2_sha256$600000$...";  # `sysreptor hash` mints one
   port = 8000;                  # above 1024, so rootless docker can bind it
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
@@ -106,7 +111,8 @@ annixion.sysreptor = {
 
 | Option | Default | What it decides |
 |---|---|---|
-| `user` | the desktop account's name | The login `sysreptor superuser` offers. The platform's own account, not a Unix user — the password is typed at the prompt and never appears in the config |
+| `user` | the desktop account's name | The login created on the first start. The platform's own account, not a Unix user |
+| `hashedPassword` | the shipped default, hashed | That login's password, as a Django hash from `sysreptor hash`. `""` creates no account — see [Accounts](#accounts) |
 | `port` | `8000` | Host port the UI answers on |
 | `networkAccessible` | `false` | `false` binds `127.0.0.1`; `true` binds every interface **and opens the port in the firewall** |
 | `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
@@ -138,6 +144,63 @@ annixion.sysreptor = {
 
 For one operator, leave it off. Nothing about the local deployment is
 degraded by loopback-only — `reptor` talks to it over the same address.
+
+---
+
+## Accounts
+
+The login is declared, not set up by hand. `annixion.sysreptor.user` names it
+and `hashedPassword` holds its password as a Django PBKDF2 hash; the first
+start creates the account from the two.
+
+```nix
+annixion.sysreptor = {
+  user = "operator";
+  hashedPassword = "pbkdf2_sha256$600000$...";   # from `sysreptor hash`
+};
+```
+
+The plaintext never enters the config, the Nix store or the generated
+`/etc/annixion/sysreptor.conf` — which is `0400` and owned by the operator,
+because a hash is still worth guessing offline. To change the password:
+
+```bash
+sysreptor hash    # prompts twice, prints a hash to paste into the config
+```
+
+...or just change it in the UI, which is simpler. **The account is created
+once and never touched again**, so a password changed in the UI survives every
+later start — the config cannot know about it, so it does not try to.
+
+The shipped default is the same password the operator account ships with,
+which means it is public knowledge. The Community Edition has no way to force
+a change at first login — `must_change_password` exists in the data model but
+only Professional enforces it — so changing it is on you. The roadmap retires
+this default along with the system one, at the point the installer can ask.
+
+`sysreptor superuser [name]` creates further accounts interactively, and user
+management lives in the UI.
+
+### There is no login-less mode
+
+Every route that skips the login screen is Professional-edition only:
+
+| Route | Status in the Community Edition |
+|---|---|
+| Remote-User header auth (`REMOTE_USER_AUTH_ENABLED`) | `professional_only` in upstream's settings; the endpoint refuses |
+| SSO via OIDC | `professional_only` |
+| Disabling local auth (`LOCAL_USER_AUTH_ENABLED`) | `professional_only` |
+
+So the login stays. What AnNIXion does instead is make it cost nothing: the
+account exists before you first open the UI, with a password you declared, so
+there is no setup step between `rebuild` and writing a finding. Let the
+browser remember it, and `reptor` never sees the login screen at all — it
+authenticates with an API token.
+
+Worth saying plainly: header-based auth would not be a good idea here even if
+it were available. Upstream's own warning is that the header is trusted
+unconditionally, so anything able to reach the app could log in as any user —
+which, on a box holding client findings, trades a password for an open door.
 
 ---
 

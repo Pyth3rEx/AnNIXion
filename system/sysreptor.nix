@@ -74,6 +74,30 @@ in
       '';
     };
 
+    hashedPassword = lib.mkOption {
+      type = lib.types.str;
+      # The same password the operator account ships with, hashed the way
+      # Django stores one. Shared defaults are a known weakness and the
+      # roadmap retires both together, at the point the installer can ask.
+      default = "pbkdf2_sha256$600000$1Zx7Fw2rgHIcWI5lftgEYR$9w5SB3pd+ObVoR5XrXwmvIyIwoVRFqPe1S8qLdW6CLM=";
+      example = "pbkdf2_sha256$600000$<salt>$<hash>";
+      description = ''
+        Password for the declared login, as a Django PBKDF2 hash — mint one
+        with `sysreptor hash`. The plaintext never enters the config or the
+        Nix store, and the hash is encrypted again at rest by the database.
+
+        It bootstraps the account the first time the platform starts, and is
+        never applied again: a password changed in the UI stays changed. Set
+        this to `""` to create no account at all and use
+        `sysreptor superuser` by hand.
+
+        The default is the same one the operator account ships with, which
+        means it is public. Change it, or at least change it in the UI after
+        the first login — the Community Edition cannot force that, as
+        `must_change_password` is a Professional-edition feature.
+      '';
+    };
+
     encryptAtRest = lib.mkOption {
       type = lib.types.bool;
       default = true;
@@ -126,17 +150,29 @@ in
   config = {
     # Sourced by the `sysreptor` wrapper. Shell syntax rather than JSON so a
     # tool that has to run before any interpreter is available can read it.
-    environment.etc."annixion/sysreptor.conf".text = ''
-      # Generated from annixion.sysreptor — edit user/configuration.nix, then
-      # `sysreptor restart` to pick the change up.
-      ANNIXION_SYSREPTOR_USER="${cfg.user}"
-      ANNIXION_SYSREPTOR_BIND="${if cfg.networkAccessible then "0.0.0.0" else "127.0.0.1"}"
-      ANNIXION_SYSREPTOR_PORT="${toString cfg.port}"
-      ANNIXION_SYSREPTOR_ALLOWED_HOSTS="${lib.concatStringsSep "," cfg.allowedHosts}"
-      ANNIXION_SYSREPTOR_ENCRYPT="${if cfg.encryptAtRest then "yes" else "no"}"
-      ANNIXION_SYSREPTOR_DESIGNS="${lib.concatStringsSep " " cfg.designs}"
-      ANNIXION_SYSREPTOR_DEMO_PROJECTS="${if cfg.demoProjects then "yes" else "no"}"
-    '';
+    # Every value is shell-quoted: a Django hash is full of `$`, which a
+    # double-quoted line would hand to the shell as variables to expand.
+    environment.etc."annixion/sysreptor.conf" = {
+      # It carries a password hash, so it is the operator's to read.
+      user = config.users.users.operator.name;
+      mode = "0400";
+      text =
+        let
+          set = k: v: "ANNIXION_SYSREPTOR_${k}=${lib.escapeShellArg v}";
+        in
+        ''
+          # Generated from annixion.sysreptor — edit user/configuration.nix, then
+          # `sysreptor restart` to pick the change up.
+          ${set "USER" cfg.user}
+          ${set "HASHED_PASSWORD" cfg.hashedPassword}
+          ${set "BIND" (if cfg.networkAccessible then "0.0.0.0" else "127.0.0.1")}
+          ${set "PORT" (toString cfg.port)}
+          ${set "ALLOWED_HOSTS" (lib.concatStringsSep "," cfg.allowedHosts)}
+          ${set "ENCRYPT" (if cfg.encryptAtRest then "yes" else "no")}
+          ${set "DESIGNS" (lib.concatStringsSep " " cfg.designs)}
+          ${set "DEMO_PROJECTS" (if cfg.demoProjects then "yes" else "no")}
+        '';
+    };
 
     networking.firewall.allowedTCPPorts = lib.mkIf cfg.networkAccessible [ cfg.port ];
   };

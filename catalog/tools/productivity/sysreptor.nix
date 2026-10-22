@@ -48,6 +48,7 @@ _: {
           p.gnugrep
           p.gnused
           p.openssl
+          p.python3 # `sysreptor hash`; already in the closure via reptor
           p.rsync
           p.util-linux # uuidgen, for the encryption key id
           p.xdg-utils # xdg-open, for `sysreptor open`
@@ -65,9 +66,16 @@ _: {
           # below are the same ones that module declares. The path moves for a
           # throwaway second instance, and for the tests.
           conf="''${ANNIXION_SYSREPTOR_CONF:-/etc/annixion/sysreptor.conf}"
-          # shellcheck source=/dev/null
-          [ -r "$conf" ] && . "$conf"
+          if [ -r "$conf" ]; then
+            # shellcheck source=/dev/null
+            . "$conf"
+          elif [ -e "$conf" ]; then
+            # It is 0400 and the operator's: another account reading it would
+            # otherwise silently get the defaults instead.
+            echo "sysreptor: $conf is not readable by $(id -un) — using defaults." >&2
+          fi
           user="''${ANNIXION_SYSREPTOR_USER:-operator}"
+          hashed_password="''${ANNIXION_SYSREPTOR_HASHED_PASSWORD:-}"
           bind="''${ANNIXION_SYSREPTOR_BIND:-127.0.0.1}"
           port="''${ANNIXION_SYSREPTOR_PORT:-8000}"
           allowed_hosts="''${ANNIXION_SYSREPTOR_ALLOWED_HOSTS:-localhost,127.0.0.1}"
@@ -209,6 +217,54 @@ _: {
             echo "$pack" >>"$imported"
           }
 
+          # The declared login, created once so a fresh install has something
+          # to log in as. Never re-applied: a password changed in the UI has
+          # to survive the next start, and the config cannot know about it.
+          bootstrap_login() {
+            [ -n "$hashed_password" ] || return 0
+            if grep -qxF login "$imported" 2>/dev/null; then
+              return 0
+            fi
+            wait_healthy || die "no answer from $url — check 'sysreptor logs'."
+            compose exec --no-TTY \
+              -e BOOTSTRAP_USERNAME="$user" \
+              -e BOOTSTRAP_PASSWORD_HASH="$hashed_password" \
+              app python3 manage.py shell <<'PY'
+          import os
+          from django.contrib.auth import get_user_model
+
+          U = get_user_model()
+          name = os.environ["BOOTSTRAP_USERNAME"]
+          if U.objects.filter(username=name).exists():
+              print("sysreptor: the %s login already exists" % name)
+          else:
+              u = U.objects.create_superuser(username=name, email=None, password=None)
+              u.password = os.environ["BOOTSTRAP_PASSWORD_HASH"]
+              u.save(update_fields=["password"])
+              print("sysreptor: created the %s login" % name)
+          PY
+            echo login >>"$imported"
+          }
+
+          # Django's own format, so the plaintext never reaches the config.
+          mint_hash() {
+            local pw1 pw2
+            read -r -s -p "sysreptor: new password: " pw1; echo
+            read -r -s -p "sysreptor: again:        " pw2; echo
+            [ -n "$pw1" ] || die "an empty password is not one."
+            [ "$pw1" = "$pw2" ] || die "those did not match."
+            SYSREPTOR_NEW_PW="$pw1" python3 -c '
+          import base64, hashlib, os, secrets, string
+
+          alphabet = string.ascii_letters + string.digits
+          salt = "".join(secrets.choice(alphabet) for _ in range(22))
+          iterations = 600000
+          dk = hashlib.pbkdf2_hmac("sha256", os.environ["SYSREPTOR_NEW_PW"].encode(), salt.encode(), iterations)
+          print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode()))
+          '
+            echo "Put that in annixion.sysreptor.hashedPassword, or change the password in the UI." >&2
+          }
+
           import_pending() {
             local pending pack
             pending=$(pending_packs)
@@ -231,7 +287,8 @@ _: {
             logs | status             follow logs / list running sysreptor containers
 
           Operating:
-            superuser [name]          create a login (default: $user)
+            superuser [name]          create another login, interactively
+            hash                      mint a password hash for the NixOS config
             designs [--force]         import the configured report designs
             manage <args...>          run manage.py inside the app container
             backup [file.zip]         full backup through manage.py backup
@@ -239,6 +296,9 @@ _: {
             env | url | config        print the secrets path / the URL / the settings in force
 
           Notes:
+            - The first start creates the login named above from the password
+              hash in the config. There is no login-less mode: every way to
+              skip the login screen is Professional-edition only.
             - \`reptor\` (on PATH) is the API client: it pushes findings and tool
               output into a report from the shell. \`reptor conf\` to point it here.
             - Settings come from annixion.sysreptor in your NixOS config, not
@@ -254,6 +314,7 @@ _: {
             up)
               need_docker; ensure
               compose up -d
+              bootstrap_login
               import_pending
               echo "sysreptor: $url"
               ;;
@@ -268,6 +329,7 @@ _: {
             open)
               need_docker; ensure
               compose up -d
+              bootstrap_login
               import_pending
               echo "sysreptor: waiting for $url ..."
               wait_healthy || die "no answer from $url after three minutes — check 'sysreptor logs'."
@@ -321,10 +383,12 @@ _: {
               compose run --rm --no-TTY app python3 manage.py restorebackup <"$1"
               echo "sysreptor: restored from $1"
               ;;
+            hash) mint_hash ;;
             env) echo "$deploy/app.env" ;;
             url) echo "$url" ;;
             config)
               echo "user            $user"
+              echo "password        $([ -n "$hashed_password" ] && echo "declared (hashed)" || echo "none — create a login by hand")"
               echo "bind            $bind:$port"
               echo "allowed hosts   $allowed_hosts"
               echo "encrypt at rest $encrypt"
