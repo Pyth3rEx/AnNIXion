@@ -1,0 +1,924 @@
+{
+  "format": "projecttypes/v2",
+  "id": "abc2fa2c-8074-53e3-87d3-0c572ef5e821",
+  "name": "AnNIXion OSINT Report",
+  "language": "en-US",
+  "status": "finished",
+  "tags": [
+    "annixion"
+  ],
+  "report_sections": [
+    {
+      "id": "meta",
+      "label": "Report Details",
+      "fields": [
+        {
+          "id": "title",
+          "type": "string",
+          "label": "Report Title",
+          "origin": "core",
+          "default": "OSINT Assessment",
+          "required": true,
+          "spellcheck": false
+        },
+        {
+          "id": "customer_name",
+          "type": "string",
+          "label": "Client",
+          "origin": "custom",
+          "required": true,
+          "spellcheck": false,
+          "default": "TODO Client Ltd"
+        },
+        {
+          "id": "subject",
+          "type": "string",
+          "label": "Subject",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "TODO the organisation, person or infrastructure assessed"
+        },
+        {
+          "id": "engagement_ref",
+          "type": "string",
+          "label": "Reference",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "ANX-OSINT-0000"
+        },
+        {
+          "id": "classification",
+          "type": "combobox",
+          "label": "Classification",
+          "origin": "custom",
+          "required": false,
+          "default": "TLP:AMBER",
+          "suggestions": [
+            "TLP:RED",
+            "TLP:AMBER+STRICT",
+            "TLP:AMBER",
+            "TLP:GREEN",
+            "TLP:CLEAR"
+          ]
+        },
+        {
+          "id": "date_start",
+          "type": "date",
+          "label": "Collection — Start",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_end",
+          "type": "date",
+          "label": "Collection — End",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_report",
+          "type": "date",
+          "label": "Report Date",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "report_version",
+          "type": "string",
+          "label": "Version",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "1.0"
+        },
+        {
+          "id": "analysts",
+          "type": "list",
+          "label": "Analysts",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "analyst",
+            "type": "object",
+            "label": "Analyst",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Name",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "email",
+                "type": "string",
+                "label": "Email",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "label": "Summary & Judgements",
+      "fields": [
+        {
+          "id": "bluf",
+          "type": "markdown",
+          "label": "Bottom Line Up Front",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the answer to the client's question, in three sentences, before any method."
+        },
+        {
+          "id": "judgements",
+          "type": "list",
+          "label": "Key Judgements",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "judgement",
+            "type": "object",
+            "label": "Judgement",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "statement",
+                "type": "string",
+                "label": "Judgement",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "confidence",
+                "type": "combobox",
+                "label": "Confidence",
+                "origin": "custom",
+                "required": false,
+                "default": "Moderate confidence",
+                "suggestions": [
+                  "High confidence",
+                  "Moderate confidence",
+                  "Low confidence"
+                ]
+              },
+              {
+                "id": "basis",
+                "type": "string",
+                "label": "Basis",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "confidence_note",
+          "type": "markdown",
+          "label": "Confidence & Caveats",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what would change these judgements, and what was not establishable. An intelligence product that hides its uncertainty is not one."
+        }
+      ]
+    },
+    {
+      "id": "tasking",
+      "label": "Tasking & Legal Basis",
+      "fields": [
+        {
+          "id": "requirements",
+          "type": "markdown",
+          "label": "Intelligence Requirements",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the questions this collection was run to answer, numbered so the findings can cite them."
+        },
+        {
+          "id": "scope",
+          "type": "markdown",
+          "label": "Scope",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: entities, domains, individuals and time period in scope."
+        },
+        {
+          "id": "legal_basis",
+          "type": "markdown",
+          "label": "Legal & Ethical Basis",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the authorisation for this collection, the jurisdictions involved, and the data-protection position for personal data gathered. Passive collection is still processing."
+        },
+        {
+          "id": "limitations",
+          "type": "markdown",
+          "label": "Limitations",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what was not collected and why — paywalled sources, out-of-scope jurisdictions, platforms that require an account, anything declined on ethical grounds."
+        }
+      ]
+    },
+    {
+      "id": "methodology",
+      "label": "Collection Methodology",
+      "fields": [
+        {
+          "id": "approach",
+          "type": "markdown",
+          "label": "Approach",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the collection plan, in the order it was run, and how results were corroborated."
+        },
+        {
+          "id": "opsec",
+          "type": "markdown",
+          "label": "Collection OPSEC",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: attribution control — personas, infrastructure, and what the subject could have observed. State plainly whether any collection was capable of being noticed."
+        },
+        {
+          "id": "sources_used",
+          "type": "markdown",
+          "label": "Source Categories",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: registries, certificate transparency, passive DNS, breach corpora, social platforms, imagery, public filings, code repositories."
+        },
+        {
+          "id": "tooling",
+          "type": "markdown",
+          "label": "Tooling",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: significant tooling and any custom collection."
+        }
+      ]
+    },
+    {
+      "id": "subject",
+      "label": "Subject Profile",
+      "fields": [
+        {
+          "id": "subject_overview",
+          "type": "markdown",
+          "label": "Overview",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what the subject is, structurally — entities, sites, size, sector."
+        },
+        {
+          "id": "entities",
+          "type": "list",
+          "label": "Entities",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "entity",
+            "type": "object",
+            "label": "Entity",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Name",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "kind",
+                "type": "combobox",
+                "label": "Type",
+                "origin": "custom",
+                "required": false,
+                "default": "Organisation",
+                "suggestions": [
+                  "Organisation",
+                  "Subsidiary",
+                  "Person",
+                  "Brand",
+                  "Infrastructure"
+                ]
+              },
+              {
+                "id": "identifier",
+                "type": "string",
+                "label": "Identifier",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "relationship",
+                "type": "string",
+                "label": "Relationship",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "source",
+                "type": "string",
+                "label": "Source",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "footprint",
+      "label": "Digital Footprint",
+      "fields": [
+        {
+          "id": "footprint_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the shape of the internet-facing estate as an outsider sees it."
+        },
+        {
+          "id": "assets",
+          "type": "list",
+          "label": "Assets Identified",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "asset",
+            "type": "object",
+            "label": "Asset",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "asset",
+                "type": "string",
+                "label": "Asset",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "kind",
+                "type": "combobox",
+                "label": "Type",
+                "origin": "custom",
+                "required": false,
+                "default": "Domain",
+                "suggestions": [
+                  "Domain",
+                  "Subdomain",
+                  "IP",
+                  "Certificate",
+                  "Cloud resource",
+                  "Mail",
+                  "Repository",
+                  "Service"
+                ]
+              },
+              {
+                "id": "detail",
+                "type": "string",
+                "label": "Detail",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "source",
+                "type": "string",
+                "label": "Source",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "inventory",
+                "type": "combobox",
+                "label": "In client inventory?",
+                "origin": "custom",
+                "required": false,
+                "default": "Unknown",
+                "suggestions": [
+                  "Yes",
+                  "No",
+                  "Unknown"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "shadow_assets",
+          "type": "markdown",
+          "label": "Undocumented & Forgotten Assets",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what was found that the client did not know it owned — usually the most actionable section."
+        },
+        {
+          "id": "technology",
+          "type": "markdown",
+          "label": "Technology & Versions",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what the estate discloses about its own stack, and where that came from."
+        }
+      ]
+    },
+    {
+      "id": "exposure",
+      "label": "Exposure",
+      "fields": [
+        {
+          "id": "credential_exposure",
+          "type": "markdown",
+          "label": "Credential Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: breach corpora and infostealer logs — counts, recency, and whether session material was included."
+        },
+        {
+          "id": "document_exposure",
+          "type": "markdown",
+          "label": "Document & Metadata Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: published documents, their metadata, and what it reveals (usernames, paths, software)."
+        },
+        {
+          "id": "code_exposure",
+          "type": "markdown",
+          "label": "Code & Secret Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: public repositories, forks, package registries, build logs."
+        },
+        {
+          "id": "data_exposure",
+          "type": "markdown",
+          "label": "Data Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: open storage, indexes, dashboards and anything else reachable without authentication."
+        }
+      ]
+    },
+    {
+      "id": "people",
+      "label": "People & Pretext Surface",
+      "fields": [
+        {
+          "id": "people_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what is published about staff, and what it enables. Keep this proportionate: the finding is the organisational exposure, not a dossier on individuals."
+        },
+        {
+          "id": "roles",
+          "type": "list",
+          "label": "High-Exposure Roles",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "role",
+            "type": "object",
+            "label": "Role",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "exposure",
+                "type": "string",
+                "label": "Exposure",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "enables",
+                "type": "string",
+                "label": "What it enables",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "pretext_potential",
+          "type": "markdown",
+          "label": "Pretext Potential",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the specific, credible pretexts this exposure supports — this is what a social engineering engagement would build on."
+        },
+        {
+          "id": "physical_geo",
+          "type": "markdown",
+          "label": "Physical & Geographic",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: sites, imagery, access control visible in photographs, patterns of life relevant to a physical assessment."
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "label": "Assessment",
+      "fields": [
+        {
+          "id": "attack_paths",
+          "type": "markdown",
+          "label": "Attack Paths Enabled",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how the exposures combine. One finding is rarely the risk; the chain is."
+        },
+        {
+          "id": "risk_assessment",
+          "type": "markdown",
+          "label": "Risk Assessment",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what an actor with this material could plausibly attempt, and how soon."
+        },
+        {
+          "id": "comparison",
+          "type": "markdown",
+          "label": "Comparison & Trend",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: change since the last assessment, if there was one."
+        }
+      ]
+    },
+    {
+      "id": "recommendations",
+      "label": "Recommendations",
+      "fields": [
+        {
+          "id": "recommendations_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the shape of the reduction work."
+        },
+        {
+          "id": "remove",
+          "type": "markdown",
+          "label": "Remove",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO What should not be public and can be taken down."
+        },
+        {
+          "id": "reduce",
+          "type": "markdown",
+          "label": "Reduce",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO What must stay public but can say less."
+        },
+        {
+          "id": "monitor",
+          "type": "markdown",
+          "label": "Monitor",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO What cannot be removed and must therefore be watched."
+        },
+        {
+          "id": "harden",
+          "type": "markdown",
+          "label": "Harden",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO The controls that make the remaining exposure not matter."
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "label": "Appendices",
+      "fields": [
+        {
+          "id": "appendix_sources",
+          "type": "markdown",
+          "label": "Source Log",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: each source, when it was collected, and its reliability grading."
+        },
+        {
+          "id": "appendix_indicators",
+          "type": "markdown",
+          "label": "Indicators",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: domains, addresses, hashes and handles, in a form that can be ingested."
+        },
+        {
+          "id": "appendix_glossary",
+          "type": "markdown",
+          "label": "Grading Scheme",
+          "origin": "custom",
+          "required": false,
+          "default": "Source reliability and information credibility are graded on the Admiralty scale: a letter for the source (A–F) and a digit for the information (1–6). A judgement graded B2 rests on a usually-reliable source reporting something probably true."
+        },
+        {
+          "id": "appendix_extra",
+          "type": "markdown",
+          "label": "Additional Material",
+          "origin": "custom",
+          "required": false,
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "finding_fields": [
+    {
+      "id": "title",
+      "type": "string",
+      "label": "Exposure",
+      "origin": "core",
+      "default": "TODO Exposure Title",
+      "required": true,
+      "spellcheck": false
+    },
+    {
+      "id": "cvss",
+      "type": "cvss",
+      "label": "CVSS",
+      "origin": "predefined",
+      "default": "n/a",
+      "required": false
+    },
+    {
+      "id": "exposure_type",
+      "type": "combobox",
+      "label": "Exposure Type",
+      "origin": "custom",
+      "required": false,
+      "default": "Infrastructure",
+      "suggestions": [
+        "Credential",
+        "Infrastructure",
+        "Document",
+        "Code",
+        "Personnel",
+        "Physical",
+        "Brand",
+        "Third party"
+      ]
+    },
+    {
+      "id": "exposure_severity",
+      "type": "combobox",
+      "label": "Assessed Severity",
+      "origin": "custom",
+      "required": false,
+      "default": "Medium",
+      "suggestions": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Informational"
+      ]
+    },
+    {
+      "id": "reliability",
+      "type": "combobox",
+      "label": "Source Reliability",
+      "origin": "custom",
+      "required": false,
+      "default": "B — Usually reliable",
+      "suggestions": [
+        "A — Completely reliable",
+        "B — Usually reliable",
+        "C — Fairly reliable",
+        "D — Not usually reliable",
+        "E — Unreliable",
+        "F — Cannot be judged"
+      ]
+    },
+    {
+      "id": "credibility",
+      "type": "combobox",
+      "label": "Information Credibility",
+      "origin": "custom",
+      "required": false,
+      "default": "2 — Probably true",
+      "suggestions": [
+        "1 — Confirmed",
+        "2 — Probably true",
+        "3 — Possibly true",
+        "4 — Doubtful",
+        "5 — Improbable",
+        "6 — Cannot be judged"
+      ]
+    },
+    {
+      "id": "requirement",
+      "type": "string",
+      "label": "Answers Requirement",
+      "origin": "custom",
+      "required": false,
+      "spellcheck": false
+    },
+    {
+      "id": "source",
+      "type": "string",
+      "label": "Source",
+      "origin": "custom",
+      "required": false,
+      "spellcheck": false
+    },
+    {
+      "id": "collected",
+      "type": "date",
+      "label": "Collected",
+      "origin": "custom",
+      "required": false
+    },
+    {
+      "id": "summary",
+      "type": "markdown",
+      "label": "Summary",
+      "origin": "custom",
+      "required": true,
+      "default": "TODO: what is exposed, in two sentences."
+    },
+    {
+      "id": "description",
+      "type": "markdown",
+      "label": "Detail",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: what was found, where, and how it was corroborated."
+    },
+    {
+      "id": "evidence",
+      "type": "markdown",
+      "label": "Evidence",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: the record — URL, capture, timestamp, hash."
+    },
+    {
+      "id": "impact",
+      "type": "markdown",
+      "label": "What It Enables",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: the attack this makes possible, concretely."
+    },
+    {
+      "id": "recommendation",
+      "type": "markdown",
+      "label": "Recommendation",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: remove, reduce, monitor or harden — and who owns it."
+    },
+    {
+      "id": "references",
+      "type": "list",
+      "label": "References",
+      "origin": "predefined",
+      "required": false,
+      "items": {
+        "id": "",
+        "type": "string",
+        "label": "Reference",
+        "origin": "predefined"
+      }
+    }
+  ],
+  "finding_ordering": [
+    {
+      "field": "cvss",
+      "order": "desc"
+    },
+    {
+      "field": "title",
+      "order": "asc"
+    }
+  ],
+  "report_template": "<div id=\"header-left\" data-sysreptor-generated=\"page-header\">\n  <span id=\"header-mark\">@LOGO_SVG@</span>{{ report.customer_name }}\n</div>\n<div id=\"header-right\" data-sysreptor-generated=\"page-header\">{{ report.engagement_ref }}</div>\n\n<div id=\"footer-left\" data-sysreptor-generated=\"page-footer\">{{ report.classification }}</div>\n<div id=\"footer-center\" data-sysreptor-generated=\"page-footer\">{{ report.title }}</div>\n<div id=\"footer-right\" data-sysreptor-generated=\"page-footer\"></div>\n\n<section id=\"page-cover\" data-sysreptor-generated=\"page-cover\">\n  <div id=\"page-cover-classification\">{{ report.classification }}</div>\n  <div id=\"page-cover-mark\">@LOGO_SVG@</div>\n  <div id=\"page-cover-wordmark\">AnNIXion</div>\n  <div id=\"page-cover-rule\"></div>\n  <h1 id=\"page-cover-title\">{{ report.title }}</h1>\n  <div id=\"page-cover-subtitle\">Open Source Intelligence &middot; {{ report.subject }}</div>\n\n  <div id=\"page-cover-meta\">\n    <table>\n      <tr><td class=\"k\">Prepared for</td><td>{{ report.customer_name }}</td></tr>\n      <tr><td class=\"k\">Reference</td><td>{{ report.engagement_ref }}</td></tr>\n      <tr><td class=\"k\">Collection</td><td>{{ formatDate(report.date_start, 'long') }} &mdash; {{ formatDate(report.date_end, 'long') }}</td></tr>\n      <tr><td class=\"k\">Report Date</td><td>{{ formatDate(report.date_report, 'long') }}</td></tr>\n      <tr><td class=\"k\">Handling</td><td>{{ report.classification }}</td></tr>\n    </table>\n  </div>\n</section>\n<pagebreak />\n\n<section>\n  <h1 id=\"handling\" class=\"in-toc numbered\">Handling</h1>\n  <p>\n    This assessment was produced for {{ report.customer_name }} from open sources and is\n    released under the marking {{ report.classification }}. It contains information about\n    identifiable individuals: handle it as personal data, share it only with recipients who\n    need it, and dispose of it on the agreed schedule.\n  </p>\n  <p>\n    Findings record what was observable at the time of collection. Open sources change,\n    and absence of a finding is not evidence that the exposure does not exist.\n  </p>\n  <div class=\"note\" v-if=\"report.analysts.length > 0\">\n    <div class=\"label\">Prepared by</div>\n    <table class=\"finding-meta\">\n      <tr v-for=\"a in report.analysts\"><td class=\"k\">{{ a.role }}</td><td>{{ a.name }} &middot; {{ a.email }}</td></tr>\n    </table>\n  </div>\n  <pagebreak />\n</section>\n\n<table-of-contents id=\"toc\" v-slot=\"tocItems\">\n  <h1>Contents</h1>\n  <ul>\n    <li v-for=\"item in tocItems\" :class=\"'toc-level' + item.level\">\n      <ref :to=\"item.id\" />\n    </li>\n  </ul>\n  <pagebreak />\n</table-of-contents>\n\n<section>\n  <h1 id=\"bluf\" class=\"in-toc numbered\">Bottom Line Up Front</h1>\n  <markdown :text=\"report.bluf\" />\n\n  <h2 id=\"judgements\" class=\"in-toc\">Key Judgements</h2>\n  <table v-if=\"report.judgements.length > 0\">\n    <thead><tr><th>Judgement</th><th style=\"width:12em\">Confidence</th><th style=\"width:16em\">Basis</th></tr></thead>\n    <tbody>\n      <tr v-for=\"j in report.judgements\">\n        <td>{{ j.statement }}</td><td>{{ j.confidence }}</td><td>{{ j.basis }}</td>\n      </tr>\n    </tbody>\n  </table>\n\n  <h2 id=\"confidence\" class=\"in-toc\">Confidence &amp; Caveats</h2>\n  <markdown :text=\"report.confidence_note\" />\n\n  <h2 id=\"exposure-overview\" class=\"in-toc\">Exposures at a Glance</h2>\n  <table>\n    <thead>\n      <tr><th style=\"width:3em\" align=\"center\">#</th><th style=\"width:8em\">Severity</th>\n          <th>Exposure</th><th style=\"width:8em\">Type</th><th style=\"width:6em\">Grading</th>\n          <th style=\"width:3em\" align=\"center\">Page</th></tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"finding in findings\">\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-finding-number\" /></td>\n        <td>{{ finding.exposure_severity }}</td>\n        <td><ref :to=\"finding.id\">{{ finding.title }}</ref></td>\n        <td>{{ finding.exposure_type }}</td>\n        <td>{{ finding.reliability.substring(0,1) }}{{ finding.credibility.substring(0,1) }}</td>\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-page\" /></td>\n      </tr>\n    </tbody>\n  </table>\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"tasking\" class=\"in-toc numbered\">Tasking &amp; Legal Basis</h1>\n  <h2 id=\"requirements\" class=\"in-toc\">Intelligence Requirements</h2>\n  <markdown :text=\"report.requirements\" />\n  <h2 id=\"osint-scope\" class=\"in-toc\">Scope</h2>\n  <markdown :text=\"report.scope\" />\n  <h2 id=\"legal-basis\" class=\"in-toc\">Legal &amp; Ethical Basis</h2>\n  <markdown :text=\"report.legal_basis\" />\n  <h2 id=\"osint-limitations\" class=\"in-toc\">Limitations</h2>\n  <markdown :text=\"report.limitations\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"methodology\" class=\"in-toc numbered\">Collection Methodology</h1>\n  <markdown :text=\"report.approach\" />\n  <h2 id=\"opsec\" class=\"in-toc\">Collection OPSEC</h2>\n  <markdown :text=\"report.opsec\" />\n  <h2 id=\"source-categories\" class=\"in-toc\">Source Categories</h2>\n  <markdown :text=\"report.sources_used\" />\n  <h2 id=\"osint-tooling\" class=\"in-toc\">Tooling</h2>\n  <markdown :text=\"report.tooling\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"subject\" class=\"in-toc numbered\">Subject Profile</h1>\n  <markdown :text=\"report.subject_overview\" />\n  <table v-if=\"report.entities.length > 0\">\n    <thead><tr><th>Name</th><th style=\"width:8em\">Type</th><th>Identifier</th><th>Relationship</th><th style=\"width:9em\">Source</th></tr></thead>\n    <tbody>\n      <tr v-for=\"e in report.entities\">\n        <td>{{ e.name }}</td><td>{{ e.kind }}</td><td>{{ e.identifier }}</td>\n        <td>{{ e.relationship }}</td><td>{{ e.source }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"footprint\" class=\"in-toc numbered\">Digital Footprint</h1>\n  <markdown :text=\"report.footprint_summary\" />\n  <table v-if=\"report.assets.length > 0\">\n    <thead><tr><th>Asset</th><th style=\"width:7em\">Type</th><th>Detail</th><th style=\"width:8em\">Source</th><th style=\"width:7em\">In inventory</th></tr></thead>\n    <tbody>\n      <tr v-for=\"a in report.assets\">\n        <td>{{ a.asset }}</td><td>{{ a.kind }}</td><td>{{ a.detail }}</td>\n        <td>{{ a.source }}</td><td>{{ a.inventory }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"shadow-assets\" class=\"in-toc\">Undocumented &amp; Forgotten Assets</h2>\n  <markdown :text=\"report.shadow_assets\" />\n  <h2 id=\"technology\" class=\"in-toc\">Technology &amp; Versions</h2>\n  <markdown :text=\"report.technology\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"exposure\" class=\"in-toc numbered\">Exposure</h1>\n  <h2 id=\"credential-exposure\" class=\"in-toc\">Credential Exposure</h2>\n  <markdown :text=\"report.credential_exposure\" />\n  <h2 id=\"document-exposure\" class=\"in-toc\">Document &amp; Metadata Exposure</h2>\n  <markdown :text=\"report.document_exposure\" />\n  <h2 id=\"code-exposure\" class=\"in-toc\">Code &amp; Secret Exposure</h2>\n  <markdown :text=\"report.code_exposure\" />\n  <h2 id=\"data-exposure\" class=\"in-toc\">Data Exposure</h2>\n  <markdown :text=\"report.data_exposure\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"people\" class=\"in-toc numbered\">People &amp; Pretext Surface</h1>\n  <markdown :text=\"report.people_summary\" />\n  <table v-if=\"report.roles.length > 0\">\n    <thead><tr><th style=\"width:12em\">Role</th><th>Exposure</th><th>What it enables</th></tr></thead>\n    <tbody>\n      <tr v-for=\"r in report.roles\"><td>{{ r.role }}</td><td>{{ r.exposure }}</td><td>{{ r.enables }}</td></tr>\n    </tbody>\n  </table>\n  <h2 id=\"pretext-potential\" class=\"in-toc\">Pretext Potential</h2>\n  <markdown :text=\"report.pretext_potential\" />\n  <h2 id=\"physical-geo\" class=\"in-toc\">Physical &amp; Geographic</h2>\n  <markdown :text=\"report.physical_geo\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"exposures\" class=\"in-toc numbered\">Exposures in Detail</h1>\n  <div v-for=\"finding in findings\" :id=\"finding.id\">\n    <div class=\"finding-head\">\n      <h2 class=\"in-toc\">{{ finding.title }}</h2>\n    </div>\n    <table class=\"finding-meta\">\n      <tr><td class=\"k\">Severity</td><td>{{ finding.exposure_severity }}</td></tr>\n      <tr><td class=\"k\">Type</td><td>{{ finding.exposure_type }}</td></tr>\n      <tr><td class=\"k\">Grading</td><td>{{ finding.reliability }} / {{ finding.credibility }}</td></tr>\n      <tr v-if=\"finding.requirement\"><td class=\"k\">Requirement</td><td>{{ finding.requirement }}</td></tr>\n      <tr v-if=\"finding.source\"><td class=\"k\">Source</td><td>{{ finding.source }}</td></tr>\n      <tr v-if=\"finding.collected\"><td class=\"k\">Collected</td><td>{{ formatDate(finding.collected, 'long') }}</td></tr>\n    </table>\n\n    <markdown :text=\"finding.summary\" />\n    <h3>Detail</h3>\n    <markdown :text=\"finding.description\" />\n    <h3 v-if=\"finding.evidence\">Evidence</h3>\n    <markdown :text=\"finding.evidence\" />\n    <h3 v-if=\"finding.impact\">What It Enables</h3>\n    <markdown :text=\"finding.impact\" />\n    <h3>Recommendation</h3>\n    <markdown :text=\"finding.recommendation\" />\n    <div v-if=\"finding.references.length > 0\">\n      <h3>References</h3>\n      <ul><li v-for=\"r in finding.references\">{{ r }}</li></ul>\n    </div>\n    <pagebreak />\n  </div>\n</section>\n\n<section>\n  <h1 id=\"assessment\" class=\"in-toc numbered\">Assessment</h1>\n  <h2 id=\"attack-paths\" class=\"in-toc\">Attack Paths Enabled</h2>\n  <markdown :text=\"report.attack_paths\" />\n  <h2 id=\"risk-assessment\" class=\"in-toc\">Risk Assessment</h2>\n  <markdown :text=\"report.risk_assessment\" />\n  <h2 id=\"comparison\" class=\"in-toc\">Comparison &amp; Trend</h2>\n  <markdown :text=\"report.comparison\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"recommendations\" class=\"in-toc numbered\">Recommendations</h1>\n  <markdown :text=\"report.recommendations_summary\" />\n  <h2 id=\"remove\" class=\"in-toc\">Remove</h2>\n  <markdown :text=\"report.remove\" />\n  <h2 id=\"reduce\" class=\"in-toc\">Reduce</h2>\n  <markdown :text=\"report.reduce\" />\n  <h2 id=\"monitor\" class=\"in-toc\">Monitor</h2>\n  <markdown :text=\"report.monitor\" />\n  <h2 id=\"harden\" class=\"in-toc\">Harden</h2>\n  <markdown :text=\"report.harden\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"appendix\" class=\"in-toc numbered\">Appendices</h1>\n  <h2 id=\"appendix-sources\" class=\"in-toc\">Source Log</h2>\n  <markdown :text=\"report.appendix_sources\" />\n  <h2 id=\"appendix-indicators\" class=\"in-toc\">Indicators</h2>\n  <markdown :text=\"report.appendix_indicators\" />\n  <h2 id=\"appendix-grading\" class=\"in-toc\">Grading Scheme</h2>\n  <markdown :text=\"report.appendix_glossary\" />\n  <markdown :text=\"report.appendix_extra\" />\n</section>\n",
+  "report_styles": "@import \"/assets/global/base.css\";\n\n:root {\n    /* The conventional CVSS ramp. A reader knows what an orange High means;\n       the house palette does not get to repaint that. */\n    --color-risk-critical: #E8002B;\n    --color-risk-high: #FF9300;\n    --color-risk-medium: #FFC400;\n    --color-risk-low: #4285F5;\n    --color-risk-info: #00AE51;\n\n    /* AnNIXion */\n    --annixion-red: #FF0033;\n    --annixion-ground: #0E0F13;\n    --annixion-surface: #14171D;\n    --annixion-rule: #2E323D;\n    --annixion-muted: #5C6474;\n    --annixion-ink: #14171D;\n}\n\n@page {\n    size: A4 portrait;\n    margin: 32mm 18mm 24mm 18mm;\n}\n\n/* The cover is a named page: full bleed, no running header or footer. The\n   page background is what paints to the edge — an element background stops\n   at the margin box. */\n@page page-cover {\n    margin: 0;\n    background-color: var(--annixion-ground);\n    @top-left-corner { content: none !important; }\n    @top-left { content: none !important; }\n    @top-center { content: none !important; }\n    @top-right { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n    @bottom-left { content: none !important; }\n    @bottom-center { content: none !important; }\n    @bottom-right { content: none !important; }\n    @bottom-right-corner { content: none !important; }\n    @top-left-corner { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n}\n\nhtml {\n    font-family: \"Noto Sans\", sans-serif;\n    font-size: 10pt;\n    color: var(--annixion-ink);\n    -weasy-hyphens: auto;\n}\n\np { text-align: justify; text-align-last: start; }\na { color: var(--annixion-red); text-decoration: none; border-bottom: 0.5pt solid var(--annixion-red); }\n\n/* ── Headings: a red rule above the number, labels in mono ─────────────── */\nh1, h2, h3, h4, h5, h6 { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; color: var(--annixion-ink); font-weight: 700; }\nh1 {\n    font-size: 15pt;\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n    letter-spacing: -0.02em;\n}\nh2 { font-size: 12pt; margin-top: 6mm; }\nh3 { font-size: 10.5pt; color: #3A4050; margin-top: 4mm; }\nh4 { font-size: 10pt; color: var(--annixion-muted); }\n\n/* ── Page furniture ────────────────────────────────────────────────────── */\n/* Each piece is pulled out of the flow and placed in a page margin box. The\n   borders on the boxes are what draw the rules across the page. */\n#header-left { position: running(header-left); }\n#header-right { position: running(header-right); }\n#footer-left { position: running(footer-left); }\n#footer-center { position: running(footer-center); }\n#footer-right { position: running(footer-right); }\n\n@page {\n    --furniture: \"JetBrains Mono\", \"Noto Sans Mono\", monospace;\n\n    @top-left {\n        content: element(header-left);\n        white-space: nowrap;\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        text-transform: uppercase;\n        color: #5C6474;\n        vertical-align: bottom;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-right {\n        content: element(header-right);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #5C6474;\n        vertical-align: bottom;\n        text-align: right;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-center { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-left-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-right-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n\n    @bottom-left {\n        content: element(footer-left);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #FF0033;\n        vertical-align: top;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-center {\n        content: element(footer-center);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.06em;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: center;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-right {\n        content: counter(page) \" / \" counter(pages);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: right;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-left-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n    @bottom-right-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n}\n\n#header-mark { display: inline-block; height: 3.5mm; width: 3.5mm; margin-right: 1.5mm; }\n#header-mark svg { width: 3.5mm; height: 3.5mm; display: inline-block; vertical-align: middle; }\n\n/* ── Cover ─────────────────────────────────────────────────────────────── */\n/* This is what binds the section to the named page above; without it the\n   cover inherits the body page and keeps the header, footer and margins. */\n#page-cover { page: page-cover; }\n\n#page-cover {\n    background-color: var(--annixion-ground);\n    color: #DFE4EA;\n    height: 297mm;\n    padding: 28mm 22mm;\n    box-sizing: border-box;\n    position: relative;\n}\n#page-cover-mark { display: block; width: 24mm; height: 24mm; }\n#page-cover-mark svg { width: 24mm; height: 24mm; display: block; }\n#header-mark svg { width: 4mm; height: 4mm; display: inline-block; vertical-align: middle; }\n#page-cover-wordmark {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 13pt;\n    letter-spacing: 0.42em;\n    text-transform: uppercase;\n    margin-top: 6mm;\n    color: #DFE4EA;\n}\n#page-cover-rule { width: 32mm; border-top: 2pt solid var(--annixion-red); margin: 10mm 0; }\n#page-cover-title {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 26pt;\n    line-height: 1.15;\n    letter-spacing: -0.03em;\n    font-weight: 700;\n    color: #FFFFFF;\n    margin: 0;\n    border: none;\n    padding: 0;\n}\n#page-cover-subtitle { font-size: 12pt; color: var(--annixion-red); margin-top: 4mm; font-family: \"JetBrains Mono\", monospace; letter-spacing: 0.08em; }\n#page-cover-meta {\n    position: absolute;\n    bottom: 28mm;\n    left: 22mm;\n    right: 22mm;\n    font-size: 9pt;\n    border-top: 0.5pt solid var(--annixion-rule);\n    padding-top: 5mm;\n}\n#page-cover-meta table { width: 100%; border: none; }\n#page-cover-meta tr td, #page-cover-meta tr:nth-child(even) td {\n    border: none;\n    padding: 1mm 0;\n    color: #DFE4EA;\n    background: none;\n}\n#page-cover-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 38mm;\n}\n#page-cover-classification {\n    position: absolute;\n    top: 14mm;\n    right: 22mm;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.18em;\n    color: var(--annixion-red);\n    border: 0.75pt solid var(--annixion-red);\n    padding: 1.5mm 3mm;\n}\n\n/* ── Table of contents ─────────────────────────────────────────────────── */\n#toc li { list-style: none; margin: 1.2mm 0; }\n#toc .toc-level1 { font-weight: 700; font-family: \"JetBrains Mono\", monospace; font-size: 9.5pt; }\n#toc .toc-level2 { margin-left: 6mm; }\n#toc .toc-level3 { margin-left: 12mm; color: var(--annixion-muted); }\n#toc a { border: none; color: var(--annixion-ink); }\n#toc .ref-page::before { content: target-counter(attr(href), page); float: right; font-family: \"JetBrains Mono\", monospace; }\n\n/* ── Tables ────────────────────────────────────────────────────────────── */\ntable { width: 100%; border-collapse: collapse; font-size: 9pt; }\nth {\n    background-color: var(--annixion-surface);\n    color: #DFE4EA;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    text-align: left;\n    padding: 2mm;\n}\ntd { border-bottom: 0.5pt solid #D8DCE3; padding: 2mm; vertical-align: top; }\ntr:nth-child(even) td { background-color: #F6F7F9; }\n\n/* ── Findings ──────────────────────────────────────────────────────────── */\n.finding-head {\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n}\n.finding-meta { width: 100%; margin: 3mm 0 5mm 0; font-size: 8.5pt; }\n.finding-meta td { border: none; padding: 1mm 2mm 1mm 0; }\n.finding-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 30mm;\n}\n.risk-pill {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: #FFFFFF;\n    padding: 0.8mm 2.5mm;\n}\n.risk-bg-critical { background-color: var(--color-risk-critical); color: #FFFFFF; }\n.risk-bg-high { background-color: var(--color-risk-high); color: #14171D; }\n.risk-bg-medium { background-color: var(--color-risk-medium); color: #14171D; }\n.risk-bg-low { background-color: var(--color-risk-low); color: #FFFFFF; }\n.risk-bg-info { background-color: var(--color-risk-info); color: #FFFFFF; }\n\n/* ── Callouts ──────────────────────────────────────────────────────────── */\n#page-cover a { border: none; color: #DFE4EA; }\n\n.note {\n    border-left: 2pt solid var(--annixion-red);\n    background-color: #F6F7F9;\n    padding: 3mm 4mm;\n    margin: 4mm 0;\n}\n.label {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n}\npre, code { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; font-size: 8.5pt; }\npre { background-color: var(--annixion-surface); color: #DFE4EA; padding: 3mm; border-radius: 0; }\nblockquote { border-left: 2pt solid var(--annixion-rule); margin-left: 0; padding-left: 4mm; color: #3A4050; }\n",
+  "report_preview_data": {
+    "report": {
+      "title": "OSINT Assessment",
+      "customer_name": "Northwind Trading Ltd",
+      "subject": "Northwind Trading Ltd and subsidiaries",
+      "engagement_ref": "ANX-OSINT-0007",
+      "classification": "TLP:AMBER",
+      "date_start": "2026-09-01",
+      "date_end": "2026-09-12",
+      "date_report": "2026-09-15",
+      "report_version": "1.0",
+      "analysts": [
+        {
+          "name": "Analyst",
+          "role": "Lead",
+          "email": "analyst@example.com"
+        }
+      ],
+      "judgements": [
+        {
+          "statement": "Credential exposure makes account takeover likely without MFA.",
+          "confidence": "High confidence",
+          "basis": "Infostealer logs, corroborated"
+        }
+      ],
+      "entities": [
+        {
+          "name": "Northwind Trading Ltd",
+          "kind": "Organisation",
+          "identifier": "Company no. 00000000",
+          "relationship": "Parent",
+          "source": "Registry"
+        }
+      ],
+      "assets": [
+        {
+          "asset": "staging.northwind.example",
+          "kind": "Subdomain",
+          "detail": "Pre-production copy, reachable",
+          "source": "Certificate transparency",
+          "inventory": "No"
+        }
+      ],
+      "roles": [
+        {
+          "role": "Service desk",
+          "exposure": "Named publicly with direct numbers",
+          "enables": "Pretext calls for password resets"
+        }
+      ]
+    },
+    "findings": [
+      {
+        "title": "Corporate credentials in infostealer logs",
+        "cvss": "n/a",
+        "exposure_type": "Credential",
+        "exposure_severity": "High",
+        "reliability": "B — Usually reliable",
+        "credibility": "1 — Confirmed",
+        "requirement": "IR-2",
+        "source": "Breach corpus",
+        "collected": "2026-09-04",
+        "summary": "Corporate addresses and passwords appear in recent infostealer output.",
+        "description": "Records include session cookies as well as passwords.",
+        "evidence": "Withheld from this preview.",
+        "impact": "Direct account takeover where MFA is absent.",
+        "recommendation": "Force resets, revoke sessions, and deploy phishing-resistant MFA.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1589/001/"
+        ]
+      }
+    ]
+  },
+  "assets": [],
+  "default_notes": []
+}

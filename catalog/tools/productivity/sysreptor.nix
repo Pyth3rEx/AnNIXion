@@ -33,6 +33,16 @@ _: {
           sha256 = hash;
         };
 
+      # The launcher's own mark, flattened to one line with single-quoted
+      # attributes so it can be substituted into a JSON string. The drawing is
+      # catalog/logo.nix; only the colour is decided here.
+      logo = import ../../logo.nix { };
+      markSvg =
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1.3 -1.3 26.6 26.6'>"
+        + "<g fill='none' stroke='#FF0033' stroke-width='2.3275' stroke-linecap='round' stroke-linejoin='round'>"
+        + builtins.replaceStrings [ "\"" "\n" ] [ "'" " " ] logo.body
+        + "</g></svg>";
+
       # Named <type>-<pack>: the wrapper reads the type back off the filename
       # and hands it to `importdemodata --type=`, which takes design, project
       # or template.
@@ -53,6 +63,21 @@ _: {
           --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
           -C ${../../../assets/sysreptor/templates} .
         chmod 444 $d/template-annixion.tar.gz
+
+        # The designs carry the mark inline rather than as an asset file, so
+        # it is substituted from catalog/logo.nix at build time and cannot
+        # drift from the drawing the launcher wears. Single-quoted attributes:
+        # the SVG goes inside a JSON string and must not carry a double quote.
+        mkdir -p designs
+        cp ${../../../assets/sysreptor/designs}/*.json designs/
+        chmod u+w designs/*.json
+        for f in designs/*.json; do
+          sed -i "s|@LOGO_SVG@|${markSvg}|g" "$f"
+        done
+        tar -czf $d/design-annixion.tar.gz \
+          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -C designs .
+        chmod 444 $d/design-annixion.tar.gz
       '';
 
       driver = p.writeShellApplication {

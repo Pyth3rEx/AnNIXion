@@ -18,16 +18,17 @@ let
 
   # ── The AnNIXion theme ──────────────────────────────────────────────────
   # Chrome and semantic classes from docs/visual-identity.md. The risk scale
-  # is the mark system's own: the signature red at the top, then reverse
-  # magenta, probe amber, forensic blue, and passive green for informational
-  # — so a severity in the UI reads in the colours the menu already taught.
+  # keeps the conventional CVSS ramp — red, orange, amber, blue, green — and
+  # only borrows AnNIXion's values where they land on it. A report is read by
+  # people who know what an orange "High" means; the house style does not get
+  # to repaint that, so the orange is a severity colour and nothing else.
   ground = "#0E0F13"; # deepest ground
   surface = "#14171D"; # the menu ground marks are measured against
   raised = "#1A1D24"; # raised surface
   divider = "#2E323D"; # segment, divider
   text = "#DFE4EA"; # primary text
   red = "#FF0033"; # the signature accent
-  magenta = "#F213A0";
+  orange = "#FF9300"; # severity ramp only — not a mark class
   amber = "#FFD000";
   blue = "#4A90FF";
   green = "#33E62B";
@@ -35,7 +36,7 @@ let
 
   riskColours = {
     "risk-critical" = red;
-    "risk-high" = magenta;
+    "risk-high" = orange;
     "risk-medium" = amber;
     "risk-low" = blue;
     "risk-info" = green;
@@ -220,12 +221,14 @@ in
     designs = lib.mkOption {
       type = lib.types.listOf (
         lib.types.enum [
+          "annixion"
           "htb"
           "offsec"
           "demo"
         ]
       );
       default = [
+        "annixion"
         "htb"
         "offsec"
         "demo"
@@ -241,6 +244,13 @@ in
         a design you have is one you can copy rather than write. Narrow the
         list if an empty Designs page is worth more than the choice.
 
+        - `annixion` — this distribution's own two. **Engagement Report**
+          carries a full-spectrum engagement: reconnaissance and OSINT, social
+          engineering with campaign metrics, the physical assessment, the
+          attack narrative, and what the defenders saw. **OSINT Report** is an
+          intelligence product rather than a pentest one — it leads with
+          judgements and confidence, grades its sources on the Admiralty
+          scale, and records the legal basis for the collection.
         - `htb` — the Hack The Box set: CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
           CJCA, CWPE and COAE.
         - `offsec` — the OffSec set, OSCP included.

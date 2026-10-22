@@ -234,6 +234,7 @@ imported by default:
 
 | Pack | What it is |
 |---|---|
+| `annixion` | **This distribution's own two** — see below |
 | `htb` | The Hack The Box certification designs — CPTS, CWES, CDSA, CDEP, CWEE, CAPE, CJCA, CWPE, COAE |
 | `offsec` | The OffSec set, OSCP included |
 | `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones, and the usual starting point for a house design |
@@ -241,8 +242,34 @@ imported by default:
 Narrow the list if you would rather not have them all:
 
 ```nix
-annixion.sysreptor.designs = [ "htb" ];
+annixion.sysreptor.designs = [ "annixion" ];
 ```
+
+### The AnNIXion designs
+
+Two, both built from `assets/sysreptor/designs` and rendered with the mark
+substituted from `catalog/logo.nix` at build time:
+
+**Engagement Report** covers a whole engagement rather than one discipline:
+reconnaissance and OSINT, social engineering with a campaign-results table
+(targets, interactions, credentials given, **reported**, time to first
+report), the physical assessment with a per-site entry table and a narrative
+the facilities team can act on, the attack narrative from initial access to
+objective, and a detection timeline measuring what the defenders actually
+saw. Findings carry a category and one of the three discipline tags.
+
+**OSINT Report** is an intelligence product, not a pentest report. It opens
+with a bottom line and key judgements carrying explicit confidence, records
+the tasking and the legal basis for the collection, grades every source on
+the Admiralty scale (reliability A–F, credibility 1–6), and separates what
+was found from what it enables. Exposures replace findings, and severity is
+assessed rather than computed — CVSS is optional throughout.
+
+Both put the identity on the cover and keep the body pages white: a
+deliverable gets printed, forwarded and read in a meeting, and a dark report
+is a poor citizen in all three. The severity ramp is the conventional one —
+red, orange, amber, blue, green — because a reader knows what an orange
+*High* means, and the house palette does not get to repaint that.
 
 All of them are fetched at build time and imported from the Nix store, so a
 first run needs no network beyond the container images.
@@ -308,17 +335,20 @@ An empty list leaves the UI in charge.
 
 `customizetheme` carries the distribution's palette into the web interface:
 the signature red on the near-black ground the desktop uses, with the risk
-scale drawn from the mark system's semantic classes —
+scale on its conventional CVSS ramp, borrowing AnNIXion's values only where
+they land on it —
 
 | Severity | Colour | Class it borrows |
 |---|---|---|
 | Critical | `#FF0033` | offensive — the signature red |
-| High | `#F213A0` | reverse magenta |
+| High | `#FF9300` | — the conventional orange |
 | Medium | `#FFD000` | probe amber |
 | Low | `#4A90FF` | forensic blue |
 | Info | `#33E62B` | passive green |
 
-— so a severity in the UI reads in the colours the menu already taught.
+Critical takes the signature red because it is already the colour of
+"stop"; High stays orange, because a reader of a CVSS score knows what orange
+means and a house colour there would read as a different severity.
 
 The header logo goes with it. The mark is rendered from `catalog/logo.nix`,
 the same drawing the launcher wears, and handed to the theme as a base64

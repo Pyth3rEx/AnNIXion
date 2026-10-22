@@ -208,7 +208,7 @@ report "$(grep -q '^SECRET_KEY=' "$plainenv" && echo 0 || echo 1)" \
 # The HTB set is what the install promises; it is imported from the store, so
 # a first run needs no network beyond the images.
 packs="$out/share/sysreptor/designs"
-for pack in design-htb design-offsec design-demo project-htb project-offsec project-demo template-demo template-annixion; do
+for pack in design-annixion design-htb design-offsec design-demo project-htb project-offsec project-demo template-demo template-annixion; do
   report "$([ -f "$packs/$pack.tar.gz" ] && echo 0 || echo 1)" \
     "the $pack pack is bundled" "no $packs/$pack.tar.gz"
 done
@@ -290,7 +290,7 @@ report "$([ "$(read_conf ANNIXION_SYSREPTOR_BIND)" = "127.0.0.1" ] && echo 0 || 
 # writes its first report in the wrong design.
 default_designs=$(read_conf ANNIXION_SYSREPTOR_DESIGNS)
 missing_packs=""
-for pack in htb offsec demo; do
+for pack in annixion htb offsec demo; do
   grep -qw "$pack" <<<"$default_designs" || missing_packs="$missing_packs $pack"
 done
 report "$([ -z "$missing_packs" ] && echo 0 || echo 1)" \
@@ -336,6 +336,75 @@ ports_net=$(nix eval --json ".#nixosConfigurations.AnNIXion-ci" \
 report "$(grep -q '8000' <<<"$ports_net" && echo 0 || echo 1)" \
   "and opens the port in the firewall" "open TCP ports: $ports_net"
 
+# ── The distribution's own report designs ──────────────────────────────────
+# A design is a field definition plus a Vue template; both fail at render
+# time, in front of a client, so what is asserted here is that the two agree
+# and that the mark really is the one catalog/logo.nix draws.
+mkdir -p "$TMP/designs"
+tar xzf "$packs/design-annixion.tar.gz" -C "$TMP/designs" 2>/dev/null
+chmod -R u+w "$TMP/designs"
+ndesign=$(find "$TMP/designs" -maxdepth 1 -name '*.json' | wc -l)
+report "$([ "$ndesign" -eq 2 ] && echo 0 || echo 1)" \
+  "both AnNIXion designs are packed" "found $ndesign"
+
+for d in engagement osint; do
+  f="$TMP/designs/annixion-$d.json"
+  report "$([ -f "$f" ] && echo 0 || echo 1)" "the $d design is present" "no annixion-$d.json"
+  [ -f "$f" ] || continue
+  out=$(python3 -c "
+import json, re, sys
+d = json.load(open(sys.argv[1]))
+t = d['report_template']
+declared = {fl['id'] for s in d['report_sections'] for fl in s['fields']}
+used = set(re.findall(r'report\.([a-z_]+)', t))
+fdeclared = {fl['id'] for fl in d['finding_fields']} | {'id'}
+fused = set(re.findall(r'finding\.([a-z_]+)', t))
+print('fields=%d sections=%d missing=%s fmissing=%s placeholder=%s svg=%d'
+      % (sum(len(s['fields']) for s in d['report_sections']), len(d['report_sections']),
+         ','.join(sorted(used - declared)) or 'none',
+         ','.join(sorted(fused - fdeclared)) or 'none',
+         '@LOGO_SVG@' in t, t.count('<svg')))
+" "$f" 2>/dev/null)
+  report "$(grep -q 'missing=none' <<<"$out" && echo 0 || echo 1)" \
+    "the $d template references only declared fields" "$out"
+  report "$(grep -q 'fmissing=none' <<<"$out" && echo 0 || echo 1)" \
+    "and only declared finding fields" "$out"
+  report "$(grep -q 'placeholder=False' <<<"$out" && echo 0 || echo 1)" \
+    "the $d design has its logo substituted" "$out"
+  report "$(grep -q 'svg=2' <<<"$out" && echo 0 || echo 1)" \
+    "the $d design carries the mark on cover and header" "$out"
+  # The mark goes inside a JSON string; a double quote in it breaks the file.
+  report "$(python3 -c "
+import json, re, sys
+t = json.load(open(sys.argv[1]))['report_template']
+sys.exit(0 if '\"' not in re.search(r'<svg.*?</svg>', t, re.S).group(0) else 1)
+" "$f" 2>/dev/null && echo 0 || echo 1)" \
+    "the $d inline mark carries no double quotes" "it would break the JSON"
+done
+
+# The engagement design is the one that has to cover a whole engagement.
+engsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$TMP/designs/annixion-engagement.json" 2>/dev/null)
+missing_sections=""
+for want in recon social physical attack_path detection remediation; do
+  grep -qw "$want" <<<"$engsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the engagement design covers every phase" "no section for:$missing_sections"
+
+osintsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$TMP/designs/annixion-osint.json" 2>/dev/null)
+missing_sections=""
+for want in tasking methodology subject footprint exposure people assessment; do
+  grep -qw "$want" <<<"$osintsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the OSINT design is an intelligence product" "no section for:$missing_sections"
+
 # ── Plugins and the theme ──────────────────────────────────────────────────
 conf_plugins=$(read_conf ANNIXION_SYSREPTOR_PLUGINS)
 missing_plugins=""
@@ -355,13 +424,18 @@ report "$([ -n "$theme_file" ] && [ -f "$theme_file" ] && echo 0 || echo 1)" \
 if [ -f "$theme_file" ]; then
   report "$(python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$theme_file" 2>/dev/null && echo 0 || echo 1)" \
     "the theme is valid JSON" "the plugin would reject it"
-  critical=$(python3 -c "
+  ramp=$(python3 -c "
 import json, sys
-print(json.load(open(sys.argv[1]))['all']['colors']['risk-critical'])
+c = json.load(open(sys.argv[1]))['all']['colors']
+print(' '.join(c['risk-' + k] for k in ('critical', 'high', 'medium', 'low', 'info')))
 " "$theme_file" 2>/dev/null)
-  report "$([ "$critical" = "#FF0033" ] && echo 0 || echo 1)" \
-    "the risk scale is drawn in the mark system's colours" \
-    "risk-critical is ${critical:-<unset>}, not the signature red"
+  report "$([ "${ramp%% *}" = "#FF0033" ] && echo 0 || echo 1)" \
+    "critical is the signature red" "ramp is ${ramp:-<unset>}"
+  # High is orange everywhere a CVSS score is read. A house colour here would
+  # be read as a different severity, which is the one thing a ramp must not do.
+  high=$(cut -d' ' -f2 <<<"$ramp")
+  report "$([ "$high" = "#FF9300" ] && echo 0 || echo 1)" \
+    "high keeps the conventional orange" "high is ${high:-<unset>}"
   # The logo travels as a data URI, so it must decode to the real mark.
   logo=$(python3 -c "
 import base64, json, sys
