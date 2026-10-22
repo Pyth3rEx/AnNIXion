@@ -62,7 +62,7 @@ takes a while to answer after the containers start.
 | `sysreptor setup [--no-encryption]` | materialise the pinned deployment, generate secrets, create the volumes |
 | `sysreptor up` | start app, database and cache |
 | `sysreptor down` | stop them |
-| `sysreptor restart` | restart them (e.g. after editing `app.env`) |
+| `sysreptor restart` | restart them in place — keeps the containers, so it does **not** pick up a settings change |
 | `sysreptor open` | bring it up, wait for the health check, open the UI |
 | `sysreptor logs` | follow the stack's logs |
 | `sysreptor status` | list running `sysreptor` containers |
@@ -121,9 +121,19 @@ annixion.sysreptor = {
 | `demoProjects` | `false` | Also import HTB's example reports |
 
 The module writes `/etc/annixion/sysreptor.conf`, which the wrapper reads at
-runtime. After a `rebuild`, `sysreptor restart` picks the change up — the
-wrapper re-syncs `ALLOWED_HOSTS` into `app.env` on its next run, without
-touching the keys beside it.
+runtime. To apply a change:
+
+```bash
+sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion   # or: rebuild
+sysreptor up
+```
+
+`up` and not `restart`: the settings reach the app through `app.env` and the
+published port, both of which a container reads when it is **created**.
+`docker compose restart` reuses the container it already has, so it restarts
+the old settings. `up` recreates whatever the change touched and leaves the
+rest alone. The wrapper re-syncs `ALLOWED_HOSTS` into `app.env` on its next
+run, without touching the keys beside it.
 
 ### Making it reachable from elsewhere
 

@@ -137,7 +137,9 @@ _: {
               { grep -v '^ALLOWED_HOSTS=' "$deploy/app.env" || true; } >"$tmp"
               echo "ALLOWED_HOSTS=\"$allowed_hosts\"" >>"$tmp"
               mv "$tmp" "$deploy/app.env"
-              [ -z "$current" ] || echo "sysreptor: ALLOWED_HOSTS is now $allowed_hosts — 'sysreptor restart' to apply."
+              # `up`, not `restart`: restart reuses the container it has, and
+              # env_file is read when one is created.
+              [ -z "$current" ] || echo "sysreptor: ALLOWED_HOSTS is now $allowed_hosts — 'sysreptor up' to apply."
             fi
           }
 

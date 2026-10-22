@@ -161,8 +161,8 @@ in
           set = k: v: "ANNIXION_SYSREPTOR_${k}=${lib.escapeShellArg v}";
         in
         ''
-          # Generated from annixion.sysreptor — edit user/configuration.nix, then
-          # `sysreptor restart` to pick the change up.
+          # Generated from annixion.sysreptor — edit user/configuration.nix,
+          # rebuild, then `sysreptor up` to pick the change up.
           ${set "USER" cfg.user}
           ${set "HASHED_PASSWORD" cfg.hashedPassword}
           ${set "BIND" (if cfg.networkAccessible then "0.0.0.0" else "127.0.0.1")}
