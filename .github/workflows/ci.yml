@@ -86,6 +86,7 @@ jobs:
           nix develop --command bash tests/shell/etc-hosts.sh
           nix develop --command bash tests/shell/nix-ld.sh
           nix develop --command bash tests/shell/resource-housekeeping.sh
+          nix develop --command bash tests/shell/sysreptor.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
