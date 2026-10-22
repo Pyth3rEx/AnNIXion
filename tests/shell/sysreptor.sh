@@ -246,8 +246,17 @@ read_conf() { (set -u; . "$TMP/conf.default"; eval "printf '%s' \"\${$1:-}\""); 
 
 report "$([ "$(read_conf ANNIXION_SYSREPTOR_BIND)" = "127.0.0.1" ] && echo 0 || echo 1)" \
   "the default config binds loopback only" "bind is $(read_conf ANNIXION_SYSREPTOR_BIND)"
-report "$([ "$(read_conf ANNIXION_SYSREPTOR_DESIGNS)" = "htb" ] && echo 0 || echo 1)" \
-  "the HTB designs are configured by default" "designs are $(read_conf ANNIXION_SYSREPTOR_DESIGNS)"
+# Every published design pack ships: they are the layouts a report renders
+# through, and an install that has to go and fetch one is an install that
+# writes its first report in the wrong design.
+default_designs=$(read_conf ANNIXION_SYSREPTOR_DESIGNS)
+missing_packs=""
+for pack in htb offsec demo; do
+  grep -qw "$pack" <<<"$default_designs" || missing_packs="$missing_packs $pack"
+done
+report "$([ -z "$missing_packs" ] && echo 0 || echo 1)" \
+  "every design pack is configured by default" \
+  "not imported on a fresh install:$missing_packs (designs are '$default_designs')"
 report "$([ "$(read_conf ANNIXION_SYSREPTOR_ENCRYPT)" = "yes" ] && echo 0 || echo 1)" \
   "encryption at rest is the default" "encrypt is $(read_conf ANNIXION_SYSREPTOR_ENCRYPT)"
 

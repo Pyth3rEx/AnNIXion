@@ -140,7 +140,7 @@ start. The settings live under `annixion.sysreptor`:
 annixion.sysreptor = {
   user = "operator";            # the login created on first start
   hashedPassword = "pbkdf2_sha256$600000$...";  # `sysreptor hash` mints one
-  designs = [ "htb" "demo" ];   # design packs: htb, offsec, demo
+  designs = [ "htb" ];          # narrow it: all three packs ship by default
   # networkAccessible = true;   # publishes it on every interface, opens the port
 };
 ```

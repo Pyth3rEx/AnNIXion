@@ -104,7 +104,7 @@ annixion.sysreptor = {
   port = 8000;                  # above 1024, so rootless docker can bind it
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
-  designs = [ "htb" ];          # official design packs: htb, offsec, demo
+  designs = [ "htb" "offsec" "demo" ];   # all the published design packs
   findingTemplates = true;      # upstream's library of written-up findings
   demoProjects = false;         # the filled-in example reports
 };
@@ -118,7 +118,7 @@ annixion.sysreptor = {
 | `networkAccessible` | `false` | `false` binds `127.0.0.1`; `true` binds every interface **and opens the port in the firewall** |
 | `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
 | `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
-| `designs` | `[ "htb" ]` | Which official design packs to import — `"htb"`, `"offsec"`, `"demo"` |
+| `designs` | `[ "htb" "offsec" "demo" ]` | Which official design packs to import |
 | `findingTemplates` | `true` | Import upstream's library of ten written-up findings |
 | `demoProjects` | `false` | Also import the example reports for each enabled pack |
 
@@ -225,16 +225,19 @@ CDSA, CDEP, CWEE, CAPE, CJCA, CWPE and COAE. The
 [CPTS example report](https://docs.sysreptor.com/assets/reports/HTB-CPTS-Report.pdf)
 is what that design produces.
 
-Every pack upstream publishes is pinned here; the rest are a word away:
+Every design pack upstream publishes is pinned here, and all three are
+imported by default:
 
-| Pack | What it is | Default |
-|---|---|---|
-| `htb` | The Hack The Box certification designs, nine of them | **on** |
-| `offsec` | The OffSec set, OSCP included | off |
-| `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones | off |
+| Pack | What it is |
+|---|---|
+| `htb` | The Hack The Box certification designs — CPTS, CWES, CDSA, CDEP, CWEE, CAPE, CJCA, CWPE, COAE |
+| `offsec` | The OffSec set, OSCP included |
+| `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones, and the usual starting point for a house design |
+
+Narrow the list if you would rather not have them all:
 
 ```nix
-annixion.sysreptor.designs = [ "htb" "demo" ];
+annixion.sysreptor.designs = [ "htb" ];
 ```
 
 All of them are fetched at build time and imported from the Nix store, so a

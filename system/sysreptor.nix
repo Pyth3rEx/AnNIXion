@@ -120,15 +120,21 @@ in
           "demo"
         ]
       );
-      default = [ "htb" ];
-      example = [
+      default = [
         "htb"
+        "offsec"
         "demo"
       ];
+      example = [ "htb" ];
       description = ''
         Official report designs imported the first time the platform starts.
         They are pinned in the catalog entry and imported from the store, so
         a first run needs no network beyond the images themselves.
+
+        All three ship by default: they are a few megabytes between them,
+        they are the layouts the reports are actually rendered through, and
+        a design you have is one you can copy rather than write. Narrow the
+        list if an empty Designs page is worth more than the choice.
 
         - `htb` — the Hack The Box set: CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
           CJCA, CWPE and COAE.

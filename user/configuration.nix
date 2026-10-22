@@ -61,7 +61,7 @@
 #   annixion.sysreptor = {
 #     user = "operator";
 #     hashedPassword = "pbkdf2_sha256$600000$...";
-#     designs = [ "htb" "offsec" "demo" ]; # demo = Margherita, Matrix, Calzone
+#     designs = [ "htb" ];       # all three packs ship; narrow it here
 #     # findingTemplates = false;  # ten written-up findings, on by default
 #     # demoProjects = true;       # the filled-in example reports
 #     # networkAccessible = true;
