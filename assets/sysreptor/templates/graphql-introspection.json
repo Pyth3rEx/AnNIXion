@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "cdeca24f-d16a-58c1-8829-38d1cdc9547b",
+  "tags": [
+    "red",
+    "web",
+    "api"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "362b4ff1-125e-50a6-9a33-c6ae05387b06",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "GraphQL Introspection and Query Depth Unrestricted",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:L",
+        "summary": "The GraphQL endpoint exposed its full schema through introspection and accepted arbitrarily deep and expensive queries. The first hands an attacker a complete map of the API; the second allows a single request to exhaust server resources.\n",
+        "description": "Introspection is a development convenience that, left enabled, publishes the entire API surface: every type, field, mutation and argument, including the ones not used by the front end and therefore least tested. Deprecated fields and internal mutations are routinely found this way.\n\nSeparately, GraphQL's nesting allows a small query to expand into an enormous amount of work — related objects resolved recursively, each resolver issuing its own database queries. Without a cost or depth limit, one request becomes a denial of service, and batching multiplies it.\n\nAuthorisation is also commonly applied at the resolver the front end uses rather than at every resolver, so reaching the same object by a different path through the graph returns data the direct query would refuse.\n",
+        "recommendation": "* Disable introspection in production, and disable any bundled query IDE.\n* Enforce query depth, complexity and cost limits, and cap or disable batching.\n* Apply authorisation in every resolver that returns data, not only at entry points.\n* Prefer persisted queries, so only known operations are accepted.\n",
+        "short_recommendation": "Disable introspection in production and bound query cost.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

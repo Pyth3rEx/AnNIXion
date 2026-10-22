@@ -1,0 +1,31 @@
+{
+  "format": "templates/v2",
+  "id": "9920afda-362a-5854-a2ac-ed7c2ce6d54a",
+  "tags": [
+    "red",
+    "web",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e2399908-0bda-5c9c-9c91-1651955f3f8b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Stored Cross-Site Scripting (XSS)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Input submitted by one user was stored and later rendered into another user's page without encoding, so script supplied by an attacker executed in the browser of everyone who viewed the affected content. Stored XSS needs no interaction beyond visiting a normal page, and runs with the privileges of whoever views it — including administrators.\n",
+        "description": "Cross-site scripting is an output-encoding failure. The application takes a value it has stored and writes it into an HTML response without encoding it for the context it lands in, so markup in that value is parsed as markup rather than displayed as text.\n\nThe stored variant is the more serious one. The payload is persisted server-side and served to every user who views the page, so no bait or link is needed. Script executing in that context runs with the session of the viewing user and can act as them: read and exfiltrate page contents, issue authenticated requests, change account details, or chain into an administrative function if an administrator views the content.\n\nSession cookies marked `HttpOnly` limit cookie theft but do not contain the issue — the script can still act through the browser's own authenticated session, which is usually the more direct route.\n",
+        "recommendation": "* Encode data on output, for the context it is written into — HTML body, attribute, JavaScript string, URL and CSS each require different encoding.\n* Prefer templating engines that encode by default, and treat each use of a raw-output construct as something to justify in review.\n* Where HTML from users must be rendered, run it through a vetted sanitiser with an allow-list of elements and attributes rather than filtering for known-bad strings.\n* Deploy a `Content-Security-Policy` that forbids inline script and restricts script sources. It does not fix the bug but reliably limits what a payload can do.\n* Set `HttpOnly` and `Secure` on session cookies, and `SameSite` where the application's flows allow it.\n",
+        "short_recommendation": "Encode on output and apply a strict Content-Security-Policy.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

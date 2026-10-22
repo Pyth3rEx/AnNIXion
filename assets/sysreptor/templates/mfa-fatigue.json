@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "60534df3-5ec8-55ef-a93a-d45259fe0dc5",
+  "tags": [
+    "puppet",
+    "social",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ee32fb7c-54b5-520e-9023-d2569d7f9be1",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Multi-Factor Push Approval Susceptible to Fatigue Attacks",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N",
+        "summary": "Multi-factor authentication relied on push approval, which can be defeated by repeated prompts until the user approves one to stop the interruption — particularly where the prompts arrive at night or are paired with a call claiming to be from IT.\n",
+        "description": "Push approval asks a single question — approve or deny — with no information about what is being approved. An attacker holding a valid password can send that question repeatedly.\n\nThe attack exploits ordinary human responses rather than any flaw: interruption at 3am, the assumption that a persistent prompt indicates a system fault, and the knowledge that approving makes it stop. A short call claiming to be IT resolving a sync problem converts most remaining refusals.\n\nNumber matching changes the interaction fundamentally, because the user must read a number from the legitimate sign-in screen, which an attacker who is merely prompting cannot supply. Hardware-backed factors remove the question entirely.\n",
+        "recommendation": "* Replace simple push approval with number matching, showing the application, location and device.\n* Deploy FIDO2 security keys or passkeys for privileged accounts, where nothing can be approved without the key present.\n* Rate limit and alert on repeated prompts for one account, and lock after a short series of denials.\n* Tell staff explicitly that unexpected prompts must be denied and reported, and that IT will never call to ask for approval.\n* Treat a denied-then-approved sequence as an incident indicator worth investigating.\n",
+        "short_recommendation": "Replace push approval with number matching or hardware keys.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1621/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

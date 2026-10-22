@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "353745a4-279a-5e88-8bab-b1cf04c511f8",
+  "tags": [
+    "osint",
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3890607a-c7eb-5e0e-96f9-dba15f666573",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Staff and Organisational Detail Supports Targeted Pretexts",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Publicly available sources provided a detailed picture of staff, reporting lines, internal systems and current projects — sufficient to construct pretexts that are specific, timely and credible to the people targeted.\n",
+        "description": "Pretexts fail on detail and succeed on it. The information that makes a request believable is rarely confidential: professional networking profiles give names, roles and reporting lines; job advertisements name the exact technologies and versions in use; press releases and social posts announce projects, acquisitions and travel; and conference talks reveal internal architecture.\n\nAssembled, this supports a message that names a real project, a real manager and a real system, sent while the person named is genuinely away — which is far more convincing than any technical trick.\n\nPhotographs are a specific and underestimated source. Pictures taken in offices disclose badge designs and numbers, screens, whiteboards, desk layouts and door hardware, and are published by the organisation itself in recruitment material.\n",
+        "recommendation": "* Review what the organisation publishes about staff, systems and projects, and reduce unnecessary specificity — particularly technology versions in job adverts.\n* Brief high-exposure roles — executives, finance, service desk, IT administrators — on how their public profile is used against them.\n* Check photographs for badges, screens and whiteboards before publication.\n* Monitor for look-alike domains and for impersonation profiles on social platforms.\n* Accept that this cannot be eliminated, and make verification processes strong enough that credible pretexts still fail.\n",
+        "short_recommendation": "Reduce published detail and brief high-exposure roles.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1589/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

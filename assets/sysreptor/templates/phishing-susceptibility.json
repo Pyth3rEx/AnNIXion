@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "27dfda9f-c54e-5d40-908e-6032499ac68e",
+  "tags": [
+    "puppet",
+    "social",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1121d4ae-c677-5c5f-ac15-9baef82ce528",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Staff Susceptible to Credential Phishing",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "A simulated phishing campaign obtained credentials from staff, and in some cases a valid session, by presenting a convincing sign-in page from a look-alike domain. Credential phishing remains the most reliable route to initial access.\n",
+        "description": "Phishing works because it asks people to do something they do every day. The message resembles legitimate traffic, the sign-in page is a copy of the real one, and the request — reauthenticate, review a document, confirm a payment — is ordinary.\n\nModern kits operate as transparent proxies between the user and the real service. The victim authenticates genuinely, completes multi-factor authentication, and the kit captures the resulting session cookie. Push and one-time-code factors are therefore bypassed, which is why phishing-resistant factors bound to the origin are the control that matters.\n\nBlaming users is both unfair and ineffective: the messages are designed to be indistinguishable, and a workforce that fears sanction reports less, which costs the defender the early warning that limits the damage.\n",
+        "recommendation": "* Deploy phishing-resistant MFA — FIDO2 or passkeys — for all staff, prioritising privileged and finance roles. This defeats proxy kits outright.\n* Provide a one-click report button and respond visibly to every report, so reporting is rewarded.\n* Measure the reporting rate and time-to-report, not only the click rate; the click is inevitable, the report is the control.\n* Block look-alike domains, flag external mail clearly, and monitor certificate transparency for domains resembling yours.\n* Run simulations as training with immediate, blame-free feedback, never as a disciplinary instrument.\n",
+        "short_recommendation": "Deploy phishing-resistant MFA and make reporting easy.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1566/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

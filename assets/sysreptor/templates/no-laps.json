@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "069d652c-c96b-50e4-8fd1-dc88acd402b8",
+  "tags": [
+    "red",
+    "windows",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "372296e3-3a39-51fc-a102-0daf973eb7d2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Shared Local Administrator Passwords",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The local administrator password was identical across multiple hosts, so recovering it from one machine permitted administrative access to every other machine sharing it. This converts a single compromised workstation into estate-wide lateral movement.\n",
+        "description": "A shared local administrator password is the mechanism behind most lateral movement in Windows estates. It usually originates in a disk image: the account is set during build, and every machine deployed from that image carries the same credential.\n\nAn attacker with administrative access to one host recovers the hash from the local account database. Because Windows accepts the hash itself for NTLM authentication, no cracking is needed — pass-the-hash authenticates to every other host with the same password.\n\nThe spread is immediate and difficult to detect, since each authentication is a valid administrative logon.\n",
+        "recommendation": "* Deploy LAPS (or Windows LAPS) so each host holds a unique, automatically rotated local administrator password.\n* Restrict who may read LAPS passwords in the directory.\n* Enable UAC remote restrictions so local accounts cannot be used for remote administration.\n* Separate administrative accounts by tier, so workstation administration cannot reach servers or domain controllers.\n",
+        "short_recommendation": "Deploy LAPS so every host has a unique local admin password.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1078/003/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "format": "templates/v2",
+  "id": "94e482bb-041f-518a-8f5b-2d33ecf4cf4c",
+  "tags": [
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "7045dc31-93bf-57eb-aae5-c2ad8b85ab85",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Internal Detail Disclosed in Published Document Metadata",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Documents published on the website retained metadata disclosing usernames, internal file paths, software versions and printer and server names, providing an attacker with the naming conventions needed for targeted attacks.\n",
+        "description": "Office documents and PDFs record their own production: the account that created them, the template path, the software and version, revision history, and sometimes the network path or printer used.\n\nCollected across a set of published documents, this yields the organisation's username format — which is exactly what is needed to turn a list of employee names into a list of valid accounts for spraying — together with internal server names, directory structures and a view of which software versions are deployed.\n\nImages carry the equivalent: camera and device identifiers, and sometimes GPS coordinates, which matter for physical reconnaissance of sites that are not publicly listed.\n",
+        "recommendation": "* Strip metadata as a mandatory step before publishing any document or image.\n* Automate it in the publication pipeline rather than relying on the author.\n* Audit documents already published and republish cleaned versions.\n* Prefer exporting to PDF with metadata removal enabled over converting in place.\n",
+        "short_recommendation": "Strip metadata from documents before publication.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1592/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

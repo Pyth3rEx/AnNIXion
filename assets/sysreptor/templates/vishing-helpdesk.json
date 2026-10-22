@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "7d7dcb1a-f8ad-5b33-bd5a-56c4a9c20d85",
+  "tags": [
+    "puppet",
+    "social",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ba422f40-b6fb-586b-828a-fc74e6ff5ff7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Help Desk Identity Verification Can Be Bypassed",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Telephone contact with the service desk resulted in password resets and multi-factor enrolment changes after verification using information that is publicly available or obtainable, allowing an account to be taken over without touching a technical control.\n",
+        "description": "The service desk exists to restore access to people who have lost it, under pressure, with a performance measure that rewards speed. An attacker presenting as a locked-out employee is asking for exactly the service the desk is there to provide.\n\nVerification typically relies on data that is not secret: employee number, date of birth, manager's name, office location — all recoverable from public sources and social media, which is what makes this a reconnaissance-driven attack rather than an improvised one.\n\nResetting multi-factor enrolment is the critical step. Once the attacker controls the second factor, every downstream protection follows, and the activity looks like a legitimate user who changed devices.\n\nAuthority and urgency amplify it: a caller presenting as a senior executive, or as support responding to an incident, reduces the agent's willingness to apply the process.\n",
+        "recommendation": "* Verify identity out-of-band before any credential or MFA change — a call back to the number of record, a manager confirmation, or a code delivered through an already-trusted channel.\n* Never verify using information available in the directory, on the website, or on social media.\n* Require a stronger, in-person or video-with-identity-document check for privileged accounts and for MFA re-enrolment.\n* Remove speed as the dominant measure for identity-sensitive calls, and give agents explicit authority to refuse and escalate.\n* Notify the account holder through a separate channel whenever credentials or factors change, and alert on resets outside normal patterns.\n",
+        "short_recommendation": "Verify callers out-of-band before any credential change.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1598/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

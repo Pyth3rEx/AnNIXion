@@ -9,11 +9,116 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
 let
   cfg = config.annixion.sysreptor;
+
+  # ── The AnNIXion theme ──────────────────────────────────────────────────
+  # Chrome and semantic classes from docs/visual-identity.md. The risk scale
+  # is the mark system's own: the signature red at the top, then reverse
+  # magenta, probe amber, forensic blue, and passive green for informational
+  # — so a severity in the UI reads in the colours the menu already taught.
+  ground = "#0E0F13"; # deepest ground
+  surface = "#14171D"; # the menu ground marks are measured against
+  raised = "#1A1D24"; # raised surface
+  divider = "#2E323D"; # segment, divider
+  text = "#DFE4EA"; # primary text
+  red = "#FF0033"; # the signature accent
+  magenta = "#F213A0";
+  amber = "#FFD000";
+  blue = "#4A90FF";
+  green = "#33E62B";
+  grey = "#7A8494";
+
+  riskColours = {
+    "risk-critical" = red;
+    "risk-high" = magenta;
+    "risk-medium" = amber;
+    "risk-low" = blue;
+    "risk-info" = green;
+  };
+
+  statusColours = {
+    "retest-open" = red;
+    "retest-new" = red;
+    "retest-changed" = red;
+    "retest-partial" = amber;
+    "retest-resolved" = green;
+    "retest-accepted" = green;
+  };
+
+  theme = {
+    all = {
+      colors = {
+        primary = red;
+        "on-primary" = ground;
+        "primary-bg" = red;
+        "on-primary-bg" = ground;
+        secondary = grey;
+        "on-secondary" = ground;
+        logo = red;
+        error = red;
+        warning = amber;
+        "on-warning" = ground;
+        info = blue;
+        success = green;
+        "search-match" = amber;
+        "on-search-match" = ground;
+      }
+      // riskColours
+      // statusColours;
+      variables = {
+        "header-logo-url" = "data:image/svg+xml;base64,@LOGO@";
+        "header-logo-height" = "26px";
+      };
+    };
+    dark = {
+      colors = {
+        background = ground;
+        "on-background" = text;
+        inherit surface;
+        "on-surface" = text;
+        "surface-container" = raised;
+        header = surface;
+        "on-header" = text;
+        drawer = surface;
+        "on-drawer" = text;
+        "codemirror-selection" = divider;
+      };
+      variables = {
+        "border-color" = text;
+        "theme-on-code" = text;
+      };
+    };
+    # The dark theme is the one AnNIXion means; light keeps the accent so a
+    # user who switches still lands somewhere recognisable.
+    light = {
+      colors = {
+        primary = red;
+        logo = red;
+        "on-primary" = "#FFFFFF";
+      };
+    };
+  };
+
+  # The mark as the launcher draws it, so the header logo and the menu icon
+  # are one drawing. 1.3 of padding holds the round caps; see
+  # home/desktop/icons/default.nix, which renders the same way.
+  logo = import ../catalog/logo.nix { };
+  logoSvg = pkgs.writeText "annixion-logo.svg" ''
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.3 -1.3 26.6 26.6" width="24" height="24">
+    <g fill="none" stroke="${red}" stroke-width="2.3275" stroke-linecap="round" stroke-linejoin="round">
+    ${logo.body}  </g>
+    </svg>
+  '';
+
+  themeJson = pkgs.runCommand "annixion-sysreptor-theme.json" { } ''
+    logo=$(base64 -w0 ${logoSvg})
+    sed "s|@LOGO@|$logo|" ${pkgs.writeText "theme.json" (builtins.toJSON theme)} > $out
+  '';
 in
 {
   options.annixion.sysreptor = {
@@ -149,18 +254,82 @@ in
     };
 
     findingTemplates = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
+      type = lib.types.listOf (
+        lib.types.enum [
+          "annixion"
+          "demo"
+        ]
+      );
+      default = [ "annixion" ];
+      example = [
+        "annixion"
+        "demo"
+      ];
       description = ''
-        Import upstream's finding-template library: ten written-up web
-        findings — SQLi, stored XSS, XXE, CSRF, session management, security
-        headers, insecure cookies, user enumeration, untrusted TLS
-        certificates, secrets in URL parameters.
+        Finding-template libraries imported on first start. A template is the
+        difference between writing a finding and picking one, and they land in
+        their own library rather than in any project.
 
-        On by default. A template is the difference between writing a finding
-        and picking one, and they land in their own library rather than in
-        any project. Treat them as a starting point to edit — the wording is
-        upstream's, not yours.
+        - `annixion` — this distribution's own library, in
+          `assets/sysreptor/templates`. Application, infrastructure, Active
+          Directory, cloud, wireless and endpoint findings, plus the physical
+          and social-engineering ones a red team actually reports: tailgating,
+          badge cloning, door bypass, pretext calls, MFA fatigue, payment
+          fraud. Tagged `red`, `puppet` or `osint` after the three disciplines
+          the browser profiles already divide along.
+        - `demo` — upstream's ten web findings. Overlaps the above; useful
+          mainly to compare wording.
+
+        Both are starting points to edit into your own voice before a client
+        reads them.
+      '';
+    };
+
+    plugins = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "cyberchef"
+        "checkthehash"
+        "graphqlvoyager"
+        "customizetheme"
+        "markdownexport"
+        "projectnumber"
+        "renderfindings"
+        "scanimport"
+      ];
+      example = [ "cyberchef" ];
+      description = ''
+        Plugins enabled in the application. The default is every official
+        plugin that does something in the Community Edition.
+
+        Left out deliberately: `demoplugin`, which exists to demonstrate the
+        plugin system, and `webhooks`, `rendersections` and `jira`, which are
+        Professional-edition features. `renderfindings` and `scanimport` are
+        upstream's own defaults and stay in the list.
+
+        Setting this writes `ENABLED_PLUGINS`, which takes precedence over the
+        application's settings page — the plugin checkboxes there become
+        read-only. Set this to `[ ]` to hand that control back to the UI.
+      '';
+    };
+
+    theme = lib.mkOption {
+      type = lib.types.enum [
+        "annixion"
+        "upstream"
+      ];
+      default = "annixion";
+      description = ''
+        Which colour scheme the web interface wears. `annixion` applies this
+        distribution's palette through the `customizetheme` plugin — the same
+        signature red on the same near-black ground the desktop uses, with the
+        risk scale drawn from the mark system's semantic classes.
+
+        The header logo goes with it: the mark is rendered from
+        `catalog/logo.nix` — the same drawing the launcher wears — and passed
+        to the theme as a data URI, so the two cannot drift apart.
+
+        `upstream` leaves SysReptor's own theme alone.
       '';
     };
 
@@ -199,7 +368,9 @@ in
           ${set "ENCRYPT" (if cfg.encryptAtRest then "yes" else "no")}
           ${set "DESIGNS" (lib.concatStringsSep " " cfg.designs)}
           ${set "DEMO_PROJECTS" (if cfg.demoProjects then "yes" else "no")}
-          ${set "FINDING_TEMPLATES" (if cfg.findingTemplates then "yes" else "no")}
+          ${set "FINDING_TEMPLATES" (lib.concatStringsSep " " cfg.findingTemplates)}
+          ${set "PLUGINS" (lib.concatStringsSep "," cfg.plugins)}
+          ${set "THEME_FILE" (if cfg.theme == "annixion" then "${themeJson}" else "")}
         '';
     };
 

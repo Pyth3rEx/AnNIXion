@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "cd2974c7-50e9-53dc-9bee-e2b8b8c80530",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3c22a6ea-c290-55b8-9b93-44c1b55353d7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Door Hardware Bypass",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Controlled doors were opened without a credential by manipulating the hardware: slipping the latch, reaching the inside handle through a gap, or triggering the request-to-exit sensor from outside. The access control system recorded a normal exit or nothing at all.\n",
+        "description": "Electronic access control secures the decision to unlock, not the door. The common bypasses target the mechanism underneath it and are performed in seconds with improvised tools.\n\nA spring latch with no deadlocking feature can be slipped with a shim. A gap under or beside the door admits a tool that reaches the interior handle or a push bar. Most effective of all is the request-to-exit sensor: a motion detector mounted inside, which releases the door for anyone leaving — and which can be triggered from outside through the door gap, releasing the lock and logging a legitimate exit.\n\nNone of these attacks leave an obvious trace, which means the compromise is both easy and unlikely to be investigated.\n",
+        "recommendation": "* Fit deadlatching hardware, and close gaps around door edges with astragals or latch guards.\n* Replace motion-based request-to-exit with a push bar or sensor positioned so it cannot be triggered through the door, and alarm doors that open without a corresponding badge event.\n* Fit door position sensors and alert on doors held or forced open.\n* Review hinge exposure, glazed panels beside locks, and ceiling voids above partition walls as alternative routes.\n* Include hardware bypass in physical testing, since it is invisible to an audit of the access control software.\n",
+        "short_recommendation": "Fit door hardware that resists latch and sensor attacks.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

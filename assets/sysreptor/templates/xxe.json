@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "f6743aad-76b6-5310-85c4-9f1eb4cba537",
+  "tags": [
+    "red",
+    "web",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "72d2f293-9cdb-58dd-9e14-6897641b2ac0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "XML External Entity Injection (XXE)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:L",
+        "summary": "The XML parser resolved external entities declared in submitted documents, allowing local files to be read and requests to be made from the server. Parsers that resolve entities by default turn any XML-accepting endpoint into a file-disclosure and SSRF primitive.\n",
+        "description": "XML permits a document to declare entities that the parser expands when it reads the document, including entities whose content is loaded from a URI. A parser left at its defaults will dutifully fetch `file:///etc/passwd` or an internal HTTP URL and place the result in the parsed document.\n\nWhere the expanded value is reflected, files are read directly. Where it is not, out-of-band techniques exfiltrate content to a server the attacker controls, and the same mechanism provides SSRF against internal services. Entity expansion also supports denial of service through exponential expansion — the \"billion laughs\" pattern.\n\nEndpoints are not always obviously XML: SOAP services, SAML assertions, SVG upload handling, office-document parsing and some REST endpoints that accept XML as an alternative content type are all reachable paths.\n",
+        "recommendation": "* Disable DTD processing entirely in every XML parser; where the library requires it, disable external general and parameter entities explicitly.\n* Prefer a data format without this facility where the choice exists.\n* Set parser limits for entity expansion and document size.\n* Audit every library that parses XML on your behalf, including SAML and document-handling libraries, rather than only application code.\n",
+        "short_recommendation": "Disable DTDs and external entities in every XML parser.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

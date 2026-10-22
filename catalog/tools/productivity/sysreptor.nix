@@ -45,6 +45,14 @@ _: {
         install -Dm444 ${designPack "offsec-demo-projects" "sha256-e+UaBoOoWHF0zqlmKd3XUFQFAWqwHq5sU1DjzSmLlDg="} $d/project-offsec.tar.gz
         install -Dm444 ${designPack "demo-projects" "sha256-FgdHfmgg4h2b0sqUQViDoy701D+notxd2hOdBbt4FDo="} $d/project-demo.tar.gz
         install -Dm444 ${designPack "demo-templates" "sha256-t5stjwZ3XAHae0vaGpihw/wk/jTu1YkuOjVu/sFFuko="} $d/template-demo.tar.gz
+
+        # Ours, from assets/sysreptor/templates — one JSON per finding. Fixed
+        # order and timestamp, so the archive is byte-identical per rebuild.
+        mkdir -p $d
+        tar -czf $d/template-annixion.tar.gz \
+          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -C ${../../../assets/sysreptor/templates} .
+        chmod 444 $d/template-annixion.tar.gz
       '';
 
       driver = p.writeShellApplication {
@@ -87,9 +95,11 @@ _: {
           port="''${ANNIXION_SYSREPTOR_PORT:-8000}"
           allowed_hosts="''${ANNIXION_SYSREPTOR_ALLOWED_HOSTS:-localhost,127.0.0.1}"
           encrypt="''${ANNIXION_SYSREPTOR_ENCRYPT:-yes}"
-          want_designs="''${ANNIXION_SYSREPTOR_DESIGNS:-htb}"
+          want_designs="''${ANNIXION_SYSREPTOR_DESIGNS-htb}"
           want_projects="''${ANNIXION_SYSREPTOR_DEMO_PROJECTS:-no}"
-          want_templates="''${ANNIXION_SYSREPTOR_FINDING_TEMPLATES:-yes}"
+          want_templates="''${ANNIXION_SYSREPTOR_FINDING_TEMPLATES-annixion}"
+          plugins="''${ANNIXION_SYSREPTOR_PLUGINS:-}"
+          theme_file="''${ANNIXION_SYSREPTOR_THEME_FILE:-}"
 
           url="http://127.0.0.1:$port"
           # Compose interpolates this; the shell beats the .env file.
@@ -133,21 +143,33 @@ _: {
             chmod 600 "$deploy/app.env"
           }
 
-          # ALLOWED_HOSTS is configuration, not a secret, so the NixOS config
-          # owns it and a flipped networkAccessible reaches an install that
-          # already has its keys. Every other line is left exactly as written.
+          # These lines are configuration rather than secrets, so the NixOS
+          # config owns them and a changed setting reaches an install that
+          # already holds its keys. Every other line is left exactly as
+          # written — which is what keeps the encryption keys intact.
+          managed='^(ALLOWED_HOSTS|ENABLED_PLUGINS|PLUGIN_CUSTOMIZETHEME_CONFIG)='
+
+          managed_lines() {
+            echo "ALLOWED_HOSTS=\"$allowed_hosts\""
+            [ -z "$plugins" ] || echo "ENABLED_PLUGINS=\"$plugins\""
+            # Single quotes: the value is JSON, and it travels through a file
+            # docker compose parses, not through a shell.
+            [ -z "$theme_file" ] || echo "PLUGIN_CUSTOMIZETHEME_CONFIG='$(cat "$theme_file")'"
+          }
+
           sync_app_env() {
-            local current tmp
-            current=$(sed -n 's/^ALLOWED_HOSTS="\(.*\)"/\1/p' "$deploy/app.env")
-            if [ "$current" != "$allowed_hosts" ]; then
+            local current desired tmp
+            current=$(grep -E "$managed" "$deploy/app.env" || true)
+            desired=$(managed_lines)
+            if [ "$current" != "$desired" ]; then
               tmp=$(mktemp "$deploy/.app.env.XXXXXX")
               chmod 600 "$tmp"
-              { grep -v '^ALLOWED_HOSTS=' "$deploy/app.env" || true; } >"$tmp"
-              echo "ALLOWED_HOSTS=\"$allowed_hosts\"" >>"$tmp"
+              { grep -vE "$managed" "$deploy/app.env" || true; } >"$tmp"
+              managed_lines >>"$tmp"
               mv "$tmp" "$deploy/app.env"
               # `up`, not `restart`: restart reuses the container it has, and
               # env_file is read when one is created.
-              [ -z "$current" ] || echo "sysreptor: ALLOWED_HOSTS is now $allowed_hosts — 'sysreptor up' to apply."
+              [ -z "$current" ] || echo "sysreptor: settings changed in app.env — 'sysreptor up' to apply."
             fi
           }
 
@@ -219,9 +241,9 @@ _: {
                 unimported "project-$pack"
               done
             fi
-            if [ "$want_templates" = yes ]; then
-              unimported template-demo
-            fi
+            for pack in $want_templates; do
+              unimported "template-$pack"
+            done
           }
 
           import_pack() {
@@ -412,6 +434,8 @@ _: {
               echo "designs         $want_designs"
               echo "example reports $want_projects"
               echo "find. templates $want_templates"
+              echo "plugins         ''${plugins:-<the UI decides>}"
+              echo "theme           $([ -n "$theme_file" ] && echo "annixion" || echo "upstream")"
               echo "settings from   $conf (annixion.sysreptor)"
               ;;
             help | -h | --help) usage ;;

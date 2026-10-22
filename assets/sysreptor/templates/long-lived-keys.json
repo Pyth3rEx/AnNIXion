@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "e3ef16fc-96c8-578b-a012-79d383a40aec",
+  "tags": [
+    "red",
+    "cloud",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "cdfc8781-1880-5205-a63d-75022d457dbc",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Long-Lived Credentials and Secret Sprawl",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Static credentials were used widely and rotated rarely, and copies were held in configuration files, CI variables, scripts and developer machines. Each copy is a place the credential can leak from, and none of them expire.\n",
+        "description": "A long-lived API key is a password that is written down everywhere. It appears in repositories, build logs, container images, shared drives and chat history, and every copy stays valid until someone revokes it — which requires first knowing it exists.\n\nBecause the credential does not expire, exposure has no time limit. Keys committed to repositories years ago are still found working, and keys embedded in container images remain readable to anyone who pulls them.\n\nRotation is avoided because nobody is confident which systems a key is used by, which is itself the symptom of having no inventory of secrets.\n",
+        "recommendation": "* Replace static keys with short-lived credentials issued by workload identity or an instance role.\n* Hold the remainder in a managed secrets store, retrieved at runtime, never written to configuration.\n* Scan repositories, images and build logs for secrets, and treat anything found as compromised.\n* Rotate on a schedule and on staff changes, and alert on use of credentials believed retired.\n",
+        "short_recommendation": "Use short-lived credentials and a managed secrets store.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

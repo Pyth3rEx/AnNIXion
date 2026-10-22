@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "4fde05c5-b2c8-5e94-8903-185ca008a35f",
+  "tags": [
+    "red",
+    "infrastructure",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "da9f2c03-7b8f-5edd-8d5d-94e242e78c32",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "End-of-Life or Unpatched Software",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Systems were running software versions that are unsupported or missing published security updates, including versions affected by vulnerabilities with public exploit code.\n",
+        "description": "Unpatched software is the most predictable finding on any infrastructure assessment, and the most reliably exploited in real incidents. Where a version is merely behind, the risk is a known vulnerability with an exploit that can be downloaded. Where it is end-of-life, no fix will ever be issued and the gap only widens.\n\nExploitation requires no research: the vulnerability is described, the exploit is packaged, and scanning identifies hosts at a rate that makes targeting unnecessary.\n\nThe systems involved are usually those outside routine management — appliances, embedded devices, build servers, a database nobody owns, or a legacy application whose vendor requires an old runtime.\n",
+        "recommendation": "* Maintain an inventory tied to vendor support dates, and plan replacement before end of life rather than after.\n* Patch to a defined schedule with an emergency path for actively exploited vulnerabilities.\n* Where a system cannot be updated, isolate it: restrict network reach, remove internet access, and monitor it specifically.\n* Track the CISA Known Exploited Vulnerabilities catalogue and prioritise against it.\n",
+        "short_recommendation": "Replace unsupported software and patch to a defined schedule.",
+        "references": [
+          "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "f376ac5e-ec6e-5db7-a538-3885af18d0b1",
+  "tags": [
+    "red",
+    "web",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "99991230-dee8-566d-88e3-82dd85fa1e8d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Insecure HTTP Cookies",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N",
+        "summary": "Cookies carrying session identifiers were set without the attributes that restrict how the browser handles them, leaving them exposed to interception in transit, to scripts running in the page, and to being sent with cross-site requests.\n",
+        "description": "Cookie attributes are the difference between a session identifier the browser protects and one it hands out freely.\n\nWithout `Secure`, the cookie is sent over plain HTTP, so any request that is not upgraded — a typed address, an old link, an attacker-forced downgrade — discloses it to anyone on the path. Without `HttpOnly`, script in the page can read it, turning any XSS into session theft. Without an appropriate `SameSite`, it accompanies cross-site requests, which is the precondition for CSRF.\n\nScope matters too: a cookie set on a parent domain is sent to every subdomain, so one compromised or third-party-hosted subdomain receives the session.\n",
+        "recommendation": "* Set `Secure`, `HttpOnly` and `SameSite=Lax` (or `Strict`) on all session cookies.\n* Scope cookies to the narrowest host and path that works, avoiding domain-wide cookies.\n* Use the `__Host-` prefix for session cookies where the application's structure allows it.\n* Keep non-essential data out of cookies entirely.\n",
+        "short_recommendation": "Set Secure, HttpOnly and SameSite on session cookies.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "357ba93d-365a-52c2-8b8b-7b4124dd7946",
+  "tags": [
+    "red",
+    "web",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2e2b6722-5b8c-5db7-9286-c72ae9d7ec88",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Missing Rate Limiting on Authentication",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+        "summary": "Authentication endpoints accepted unlimited attempts, so passwords could be guessed at speed and credentials leaked elsewhere could be tested against every account in bulk.\n",
+        "description": "Credential stuffing is the dominant route into accounts, and it depends entirely on being able to make many attempts cheaply. Attackers replay username and password pairs from public breach corpora; because password reuse is common, a small success rate across a large list still yields valid sessions.\n\nUnthrottled endpoints also allow password spraying — one common password against every account — which evades per-account lockout while remaining effective against any population with weak passwords.\n\nThe same gap applies to the endpoints around authentication: one-time-code verification, password reset, and registration, which additionally allows user enumeration at scale.\n",
+        "recommendation": "* Rate limit by account and by source address, with increasing delays, across login, reset, registration and code verification.\n* Lock or step up verification after repeated failures, preferring a temporary lock with notification over a permanent one.\n* Deploy multi-factor authentication; it is the control that makes stuffing uneconomic.\n* Check new and changed passwords against a breached-password corpus.\n* Alert on bulk failures and on successful logins following a burst of failures.\n",
+        "short_recommendation": "Rate limit and lock out by account and by source.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

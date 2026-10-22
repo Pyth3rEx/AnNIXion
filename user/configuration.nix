@@ -62,7 +62,9 @@
 #     user = "operator";
 #     hashedPassword = "pbkdf2_sha256$600000$...";
 #     designs = [ "htb" ];       # all three packs ship; narrow it here
-#     # findingTemplates = false;  # ten written-up findings, on by default
+#     # findingTemplates = [ "annixion" "demo" ];  # add upstream's ten
+#     # plugins = [ ];             # [] hands plugin choice back to the UI
+#     # theme = "upstream";        # drop the AnNIXion palette and logo
 #     # demoProjects = true;       # the filled-in example reports
 #     # networkAccessible = true;
 #     # allowedHosts = [ "reports.engagement.local" ];

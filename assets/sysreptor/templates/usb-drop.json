@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "4a781f72-1c1f-5c0a-996c-a26a5b2ddd29",
+  "tags": [
+    "puppet",
+    "physical",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "de2f77f8-fa11-51ca-892c-f17e33129a76",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Removable Media Introduced by Staff",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+        "summary": "Removable devices left in public areas of the site were connected to corporate workstations by staff, and device-based payloads executed, demonstrating both a behavioural and a technical control gap.\n",
+        "description": "Dropped media exploits curiosity and helpfulness in equal measure: a labelled drive is interesting, and an apparently lost one creates an impulse to find its owner — which usually means plugging it in to look.\n\nThe technical side is what makes it dangerous. Modern devices do not rely on autorun: they present themselves as a keyboard and type commands at machine speed, which the operating system cannot distinguish from a user typing. Others emulate network adapters to redirect traffic, or attack the USB stack directly.\n\nThe result is execution in the user's context within seconds of connection, with no file opened and no warning displayed, and a device that looks like an ordinary memory stick afterwards.\n",
+        "recommendation": "* Block untrusted removable storage by policy, allowing only managed, encrypted devices.\n* Restrict new human-interface devices through endpoint controls, so a drive cannot register as a keyboard.\n* Provide a defined route for found devices — hand to reception or IT, never connect — and make that the trained reflex.\n* Alert on new USB device enumeration, particularly HID and network adapters, on managed endpoints.\n* Where removable media is genuinely required, provide a standalone kiosk for inspection.\n",
+        "short_recommendation": "Block untrusted removable media and HID injection by policy.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1091/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

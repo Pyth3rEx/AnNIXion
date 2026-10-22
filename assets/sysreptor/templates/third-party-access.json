@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "af5f4b5c-c01e-52f8-b73e-3d833a0c557a",
+  "tags": [
+    "red",
+    "process",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "25b8800a-47c3-56be-87a6-1fbe7432518b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Third-Party and Supplier Access Insufficiently Controlled",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Suppliers and contractors held standing access to internal systems with broad privileges, weak authentication and little monitoring, extending the organisation's attack surface to every supplier's own security posture.\n",
+        "description": "Third-party access is granted during onboarding for a defined purpose and then persists indefinitely, usually with more privilege than the task requires and often through a shared account that cannot be attributed to an individual.\n\nThe practical effect is that the organisation inherits its suppliers' security. A compromise at a managed service provider or a support vendor becomes a compromise of every client reachable through that access — which is how several of the largest intrusions of recent years propagated.\n\nSupplier accounts are also attractive because they are exempt from controls applied to staff: excluded from MFA because the vendor's tooling does not support it, excluded from monitoring because their activity patterns are unfamiliar, and excluded from the leaver process because nobody owns the relationship.\n",
+        "recommendation": "* Scope third-party access to specific systems and actions, time-bound, and approved by a named internal owner.\n* Require named individual accounts with MFA — never shared credentials — and broker access through a jump host that records the session.\n* Review all third-party access quarterly and revoke what is not actively used.\n* Include security requirements and notification obligations in contracts, and verify rather than assume.\n* Monitor supplier account activity specifically, with alerting on use outside agreed windows.\n",
+        "short_recommendation": "Scope, time-bound and monitor every third-party connection.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1199/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

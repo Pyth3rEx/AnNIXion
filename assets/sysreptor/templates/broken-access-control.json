@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "ddcc762b-07e7-50d1-ba00-c438b78c21c3",
+  "tags": [
+    "red",
+    "web",
+    "authz"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "0b4848bb-160f-58fe-aa33-b3f08227a189",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Broken Access Control",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Functions and data were reachable by users who should not have had access to them, because authorisation was enforced in the interface rather than at the endpoint. Requests issued directly — without going through the UI that hides the option — were served normally.\n",
+        "description": "Access control fails when the server trusts the client to ask only for what it is entitled to. The interface hides an administrative menu, so the corresponding endpoint is assumed to be unreachable; the mobile client sends a role field, so the server believes it.\n\nBoth horizontal and vertical escalation follow. Horizontally, one user reaches another's data by changing an identifier. Vertically, a standard account reaches administrative functionality by calling the endpoint directly, or by replaying a request captured from a privileged session.\n\nThese flaws are rarely found by scanners, because every request is syntactically valid and the responses look normal. They are found by asking, for each endpoint, which identity may call it and whether that is actually checked.\n",
+        "recommendation": "* Enforce authorisation server-side on every request, including APIs consumed only by first-party clients.\n* Deny by default: a new endpoint should be unreachable until a rule grants access.\n* Derive identity and role from the server-side session, never from a field in the request.\n* Centralise the decision in middleware or a policy layer so it cannot be forgotten per-handler.\n* Add regression tests that call privileged endpoints with unprivileged sessions and assert the refusal.\n",
+        "short_recommendation": "Enforce authorisation server-side on every request.",
+        "references": [
+          "https://owasp.org/Top10/A01_2021-Broken_Access_Control/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

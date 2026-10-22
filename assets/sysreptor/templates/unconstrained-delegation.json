@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "9f9f7b81-3ffa-5b01-8333-4e5fa8132b60",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "15873e33-8e9d-5aa7-8901-008873fbc1ef",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unconstrained Kerberos Delegation",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Hosts were trusted for unconstrained delegation, meaning they cache the Kerberos ticket-granting ticket of every user who authenticates to them. Compromising such a host yields the credentials of every account that has connected, up to and including Domain Admins.\n",
+        "description": "Unconstrained delegation allows a service to impersonate a user to any other service. To do so it stores the user's TGT in memory — not a service ticket, the full ticket — which is extractable by anyone with administrative access to that host.\n\nA compromised host configured this way therefore becomes a credential trap. Worse, authentication can be coerced: an attacker can force a domain controller to authenticate to the host, capture its TGT, and use it to perform a replication attack against the domain.\n\nThis is legacy configuration. Constrained delegation and resource-based constrained delegation have been the correct answer for years, and unconstrained is found mainly on old application servers nobody revisits.\n",
+        "recommendation": "* Identify computers and accounts trusted for unconstrained delegation and migrate them to constrained or resource-based constrained delegation.\n* Add sensitive accounts to the Protected Users group and mark them \"sensitive and cannot be delegated\".\n* Treat any host with delegation rights as tier-0 and restrict administrative access to it accordingly.\n* Monitor for coerced authentication from domain controllers.\n",
+        "short_recommendation": "Replace unconstrained delegation with constrained delegation.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1558/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

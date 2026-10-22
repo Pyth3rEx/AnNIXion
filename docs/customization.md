@@ -141,6 +141,7 @@ annixion.sysreptor = {
   user = "operator";            # the login created on first start
   hashedPassword = "pbkdf2_sha256$600000$...";  # `sysreptor hash` mints one
   designs = [ "htb" ];          # narrow it: all three packs ship by default
+  theme = "upstream";           # or keep AnNIXion's palette and logo (default)
   # networkAccessible = true;   # publishes it on every interface, opens the port
 };
 ```

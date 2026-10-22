@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "6b5b519f-9d5c-5074-93cb-ef0bcc641e5f",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "65f915e0-c8f0-579a-951c-cfd826c5e8e2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Excessive Membership of Privileged Groups",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Privileged directory groups contained far more accounts than the environment required, including user accounts used for daily work and service accounts. Each is an additional route to full domain compromise.\n",
+        "description": "Privileged groups accumulate. Access is granted for a project, for a migration, or to resolve an incident, and is not removed; service accounts are added because it is quicker than determining the rights actually needed.\n\nEvery member is an equivalent target, so the group's membership is the real measure of how many credentials must be compromised to own the domain — often just one. Accounts used for everyday work are the weakest, because they browse the web and read mail from the same session that holds domain-wide rights.\n\nStale membership is particularly dangerous: accounts of departed staff, or of systems long decommissioned, which nobody is monitoring.\n",
+        "recommendation": "* Review privileged group membership and remove everything that cannot be justified in writing.\n* Give administrators separate accounts for administrative work, used only from hardened workstations.\n* Adopt a tiered model so credentials for one tier cannot be exposed on hosts of another.\n* Use time-bound, approved elevation rather than permanent membership.\n* Alert on any change to privileged group membership.\n",
+        "short_recommendation": "Reduce privileged group membership and separate admin accounts.",
+        "references": [
+          "https://learn.microsoft.com/en-us/security/privileged-access-workstations/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}
