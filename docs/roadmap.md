@@ -54,6 +54,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [ ] Keyboard layout selection, written as `console.keyMap` — also what the LUKS prompt uses
 - [ ] Profile selection (RedTeam, OSINT, Privacy — multi-select)
 - [ ] Desktop compositing, defaulted from the hardware rather than asked blind: `annixion.desktop.compositing` is off by default because a Hyper-V guest has no render node and KWin would rasterize every frame through llvmpipe (#167), but that is a property of the machine being installed to, not a preference — probe `/dev/dri/renderD*` and pre-select on, with the cost named, where one exists. Off costs Konsole transparency and panel blur, which reads as a theming bug rather than a performance setting, so the prompt has to say what it turns off
+- [ ] Reporting platform: the login for SysReptor (`annixion.sysreptor.user`, pre-filled with the account name just collected), and which report designs to import — Hack The Box by default, OffSec offered. Whether it is reachable off the machine is **not** a prompt: it publishes every engagement's deliverables over plain HTTP, and belongs in a config an operator edits deliberately, not in an install-time default
 - [ ] Secure Boot: offer key creation and enrolment (see Phase 10)
 - [ ] Error handling: graceful rollback on failed partitioning or install
 - [ ] Fix: the script ends on `[[ ... ]] && reboot`, so declining the reboot makes a successful install exit 1
@@ -64,7 +65,7 @@ The installer generates the user config on a first install and consumes it on
 later ones, so an install is reproducible from a folder the operator already
 owns — no second config format.
 
-- [ ] First install writes the answers (username, password hash, hostname, timezone, keymap, encryption, profiles, compositing) into `user/configuration.nix` and `user/home.nix`
+- [ ] First install writes the answers (username, password hash, hostname, timezone, keymap, encryption, profiles, compositing, reporting login and designs) into `user/configuration.nix` and `user/home.nix`
 - [ ] `--user-config <path|git-url>` imports an existing folder and skips the prompts it covers
 - [ ] Disk selection stays interactive in both modes — it describes the machine in front of you, not a preference
 - [ ] Validate a provided config **before the disk is wiped**: copy `system/hardware-stub.nix` into place and `nix eval` the toplevel `drvPath`, so an incompatible config costs seconds instead of a formatted disk

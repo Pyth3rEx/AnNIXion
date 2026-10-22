@@ -49,6 +49,18 @@
 #   # docs/customization.md.
 #   annixion.desktop.compositing = true;
 #
+#   # The reporting platform runs locally and keeps client findings, so it
+#   # binds loopback and encrypts at rest. The Hack The Box designs are
+#   # imported on first start; add "offsec" for the OSCP set. Making it
+#   # network-accessible publishes every engagement's deliverables over plain
+#   # HTTP — read docs/sysreptor.md before you do.
+#   annixion.sysreptor = {
+#     user = "operator";
+#     designs = [ "htb" "offsec" ];
+#     # networkAccessible = true;
+#     # allowedHosts = [ "reports.engagement.local" ];
+#   };
+#
 #   # wpa_supplicant runs for the whole uptime even with no radio, because
 #   # NetworkManager turns wireless on unconditionally. Turn it back on
 #   # where there is one — "ls /sys/class/ieee80211" finds it. See

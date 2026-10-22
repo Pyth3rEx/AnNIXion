@@ -4,7 +4,11 @@
 # Postgres, Redis), so the pinned release bundle is materialised into a state
 # dir and driven by the `sysreptor` wrapper. `reptor`, the API client that
 # pushes findings and tool output into a report, is a native Nix build and the
-# half of this you use from a shell. See docs/sysreptor.md, and
+# half of this you use from a shell.
+#
+# Deployment settings — the login, the port, whether it is reachable off this
+# machine, which designs to import — are system/sysreptor.nix, read at runtime
+# from /etc/annixion/sysreptor.conf. See docs/sysreptor.md, and
 # docs/hardening.md ("Docker") for the rootless daemon it leans on.
 _: {
   package =
@@ -19,11 +23,30 @@ _: {
         sha256 = "sha256-GZV0QJc4gvOTnawX/YQHt5ZTjOXQ9d4Rh2v0TmqKN30=";
       };
 
+      # Official designs, as `manage.py importdemodata` takes them. Upstream
+      # publishes these at an unversioned URL and refreshes them in place, so
+      # the hash is the pin — bump it when a new certification design lands.
+      designPack =
+        name: hash:
+        p.fetchurl {
+          url = "https://docs.sysreptor.com/assets/${name}.tar.gz";
+          sha256 = hash;
+        };
+
+      designs = p.runCommand "sysreptor-designs" { } ''
+        d=$out/share/sysreptor/designs
+        install -Dm444 ${designPack "htb-designs" "sha256-MrtwvZ48cgzLeA+xw7opIuT4MQ69+PdrS8/lG0GZh2I="} $d/design-htb.tar.gz
+        install -Dm444 ${designPack "offsec-designs" "sha256-IAOsPcZgfOmyH2j93pU93+TidyCsSkMcmUCIQjrieUo="} $d/design-offsec.tar.gz
+        install -Dm444 ${designPack "htb-demo-projects" "sha256-qQF8YXTku/s8X7l16Rb0oQVu4Jsz+mFo6WUeLif9zO8="} $d/project-htb.tar.gz
+      '';
+
       driver = p.writeShellApplication {
         name = "sysreptor";
         runtimeInputs = [
           p.coreutils
           p.curl
+          p.gnugrep
+          p.gnused
           p.openssl
           p.rsync
           p.util-linux # uuidgen, for the encryption key id
@@ -33,9 +56,28 @@ _: {
         # CLI already carrying the compose plugin this drives.
         text = ''
           deploySrc=${deploySrc}
-          url="http://127.0.0.1:8000"
+          packs=${designs}/share/sysreptor/designs
           state="''${XDG_DATA_HOME:-$HOME/.local/share}/sysreptor"
           deploy="$state/deploy"
+          imported="$state/imported"
+
+          # Deployment policy, from system/sysreptor.nix. Absent, the defaults
+          # below are the same ones that module declares. The path moves for a
+          # throwaway second instance, and for the tests.
+          conf="''${ANNIXION_SYSREPTOR_CONF:-/etc/annixion/sysreptor.conf}"
+          # shellcheck source=/dev/null
+          [ -r "$conf" ] && . "$conf"
+          user="''${ANNIXION_SYSREPTOR_USER:-operator}"
+          bind="''${ANNIXION_SYSREPTOR_BIND:-127.0.0.1}"
+          port="''${ANNIXION_SYSREPTOR_PORT:-8000}"
+          allowed_hosts="''${ANNIXION_SYSREPTOR_ALLOWED_HOSTS:-localhost,127.0.0.1}"
+          encrypt="''${ANNIXION_SYSREPTOR_ENCRYPT:-yes}"
+          want_designs="''${ANNIXION_SYSREPTOR_DESIGNS:-htb}"
+          want_projects="''${ANNIXION_SYSREPTOR_DEMO_PROJECTS:-no}"
+
+          url="http://127.0.0.1:$port"
+          # Compose interpolates this; the shell beats the .env file.
+          export BIND_PORT="$bind:$port:8000"
 
           die() { echo "sysreptor: $*" >&2; exit 1; }
 
@@ -57,14 +99,13 @@ _: {
           # Written once. Regenerating these orphans everything the old keys
           # encrypted, so setup refuses to overwrite an app.env that exists.
           app_env() {
-            local encrypt="$1" secret id key
+            local secret id key
             secret=$(openssl rand -base64 64 | tr -d '\r\n=')
             {
               echo "# Written by 'sysreptor setup'. Secret, and worth backing up:"
               echo "# without these keys the database cannot be read."
               echo "# Options: https://docs.sysreptor.com/setup/configuration/"
               echo "SECRET_KEY=\"$secret\""
-              echo "ALLOWED_HOSTS=\"localhost,127.0.0.1\""
               echo "DEBUG=off"
               if [ "$encrypt" = yes ]; then
                 id=$(uuidgen)
@@ -74,6 +115,22 @@ _: {
               fi
             } >"$deploy/app.env"
             chmod 600 "$deploy/app.env"
+          }
+
+          # ALLOWED_HOSTS is configuration, not a secret, so the NixOS config
+          # owns it and a flipped networkAccessible reaches an install that
+          # already has its keys. Every other line is left exactly as written.
+          sync_app_env() {
+            local current tmp
+            current=$(sed -n 's/^ALLOWED_HOSTS="\(.*\)"/\1/p' "$deploy/app.env")
+            if [ "$current" != "$allowed_hosts" ]; then
+              tmp=$(mktemp "$deploy/.app.env.XXXXXX")
+              chmod 600 "$tmp"
+              { grep -v '^ALLOWED_HOSTS=' "$deploy/app.env" || true; } >"$tmp"
+              echo "ALLOWED_HOSTS=\"$allowed_hosts\"" >>"$tmp"
+              mv "$tmp" "$deploy/app.env"
+              [ -z "$current" ] || echo "sysreptor: ALLOWED_HOSTS is now $allowed_hosts — 'sysreptor restart' to apply."
+            fi
           }
 
           # The compose file declares both volumes external, so nothing starts
@@ -86,7 +143,6 @@ _: {
           }
 
           setup() {
-            local encrypt=yes
             case "''${1:-}" in
               --no-encryption) encrypt=no ;;
               "") ;;
@@ -97,38 +153,75 @@ _: {
             if [ -f "$deploy/app.env" ]; then
               echo "sysreptor: keeping the secrets already in $deploy/app.env"
             else
-              app_env "$encrypt"
+              app_env
               echo "sysreptor: secrets written to $deploy/app.env"
               if [ "$encrypt" = yes ]; then
                 echo "sysreptor: encryption at rest is on — back up app.env, or the reports are unreadable."
               fi
             fi
+            sync_app_env
 
             need_docker
             volumes
             echo "sysreptor: ready — 'sysreptor up', then 'sysreptor superuser' for the first login."
           }
 
-          ensure() { [ -f "$deploy/docker-compose.yml" ] || setup; }
+          ensure() {
+            if [ -f "$deploy/docker-compose.yml" ] && [ -f "$deploy/app.env" ]; then
+              sync_app_env
+            else
+              setup
+            fi
+          }
 
-          open_ui() {
-            compose up -d
-            echo "sysreptor: waiting for $url ..."
+          wait_healthy() {
             local waited=0
-            while [ "$waited" -lt 120 ]; do
+            while [ "$waited" -lt 180 ]; do
               if curl -fsS "$url/api/public/utils/healthcheck/" >/dev/null 2>&1; then
-                echo "sysreptor: up at $url"
-                xdg-open "$url" >/dev/null 2>&1 &
                 return 0
               fi
               sleep 2
               waited=$((waited + 2))
             done
-            die "no answer from $url after two minutes — check 'sysreptor logs'."
+            return 1
+          }
+
+          # Which configured packs this install has not seen yet. Importing one
+          # twice creates a second copy of every design in it, so the record is
+          # what keeps `up` idempotent.
+          pending_packs() {
+            local pack
+            for pack in $want_designs; do
+              grep -qxF "design-$pack" "$imported" 2>/dev/null || echo "design-$pack"
+            done
+            if [ "$want_projects" = yes ]; then
+              grep -qxF "project-htb" "$imported" 2>/dev/null || echo "project-htb"
+            fi
+          }
+
+          import_pack() {
+            local pack="$1" kind
+            kind=''${pack%%-*}
+            [ -f "$packs/$pack.tar.gz" ] || die "no bundled pack called '$pack'."
+            echo "sysreptor: importing $pack ..."
+            compose exec --no-TTY app python3 manage.py importdemodata \
+              --type="$kind" <"$packs/$pack.tar.gz"
+            echo "$pack" >>"$imported"
+          }
+
+          import_pending() {
+            local pending pack
+            pending=$(pending_packs)
+            [ -n "$pending" ] || return 0
+            echo "sysreptor: waiting for $url before importing designs ..."
+            wait_healthy || die "no answer from $url — check 'sysreptor logs', then 'sysreptor designs'."
+            for pack in $pending; do
+              import_pack "$pack"
+            done
           }
 
           usage() {
-            cat <<'EOF'
+            cat <<EOF
           sysreptor — drive the dockerised SysReptor reporting platform.
 
           Lifecycle:
@@ -138,17 +231,20 @@ _: {
             logs | status             follow logs / list running sysreptor containers
 
           Operating:
-            superuser [name]          create a login (default: operator)
+            superuser [name]          create a login (default: $user)
+            designs [--force]         import the configured report designs
             manage <args...>          run manage.py inside the app container
             backup [file.zip]         full backup through manage.py backup
             restore <file.zip>        restore one — replaces everything in the database
-            env | url                 print the secrets path / the local URL
+            env | url | config        print the secrets path / the URL / the settings in force
 
           Notes:
-            - `reptor` (on PATH) is the API client: it pushes findings and tool
-              output into a report from the shell. `reptor conf` to point it here.
-            - The UI binds 127.0.0.1:8000 only, which rootless docker can serve.
-            - First `up` pulls the app, Postgres and Redis images — slow, online.
+            - \`reptor\` (on PATH) is the API client: it pushes findings and tool
+              output into a report from the shell. \`reptor conf\` to point it here.
+            - Settings come from annixion.sysreptor in your NixOS config, not
+              from flags: the port, the login, whether this is reachable off
+              the machine, and which designs get imported.
+            - First \`up\` pulls the app, Postgres and Redis images — slow, online.
           EOF
           }
 
@@ -158,6 +254,7 @@ _: {
             up)
               need_docker; ensure
               compose up -d
+              import_pending
               echo "sysreptor: $url"
               ;;
             down | restart)
@@ -168,11 +265,30 @@ _: {
               need_docker; ensure
               compose logs -f
               ;;
-            open) need_docker; ensure; open_ui ;;
+            open)
+              need_docker; ensure
+              compose up -d
+              import_pending
+              echo "sysreptor: waiting for $url ..."
+              wait_healthy || die "no answer from $url after three minutes — check 'sysreptor logs'."
+              echo "sysreptor: up at $url"
+              xdg-open "$url" >/dev/null 2>&1 &
+              ;;
             status) need_docker; docker ps --filter name=sysreptor ;;
             superuser)
               need_docker; ensure
-              compose exec app python3 manage.py createsuperuser --username "''${1:-operator}"
+              compose exec app python3 manage.py createsuperuser --username "''${1:-$user}"
+              ;;
+            designs)
+              need_docker; ensure
+              # Importing runs inside the app container, so it has to be up.
+              compose up -d
+              if [ "''${1:-}" = "--force" ]; then
+                rm -f "$imported"
+                echo "sysreptor: re-importing — designs already in the UI will gain a second copy."
+              fi
+              import_pending
+              echo "sysreptor: designs in place ($want_designs)"
               ;;
             manage)
               [ "$#" -gt 0 ] || die "manage needs a command, e.g. 'sysreptor manage help'"
@@ -207,6 +323,15 @@ _: {
               ;;
             env) echo "$deploy/app.env" ;;
             url) echo "$url" ;;
+            config)
+              echo "user            $user"
+              echo "bind            $bind:$port"
+              echo "allowed hosts   $allowed_hosts"
+              echo "encrypt at rest $encrypt"
+              echo "designs         $want_designs"
+              echo "demo projects   $want_projects"
+              echo "settings from   $conf (annixion.sysreptor)"
+              ;;
             help | -h | --help) usage ;;
             *) usage; exit 1 ;;
           esac
@@ -218,6 +343,7 @@ _: {
       paths = [
         p.python3Packages.reptor
         driver
+        designs
       ];
     };
 

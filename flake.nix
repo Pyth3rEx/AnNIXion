@@ -55,6 +55,7 @@
         ./system/shell.nix
         ./system/git.nix
         ./system/docker.nix
+        ./system/sysreptor.nix
         ./system/toolchain.nix
         ./system/nix-ld.nix
 

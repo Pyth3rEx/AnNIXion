@@ -41,7 +41,7 @@ network and a few minutes.
 
 ```bash
 sysreptor setup        # write the deployment and its secrets, create the volumes
-sysreptor up           # pull and start app, database and cache
+sysreptor up           # pull and start app, database and cache; import the designs
 sysreptor superuser    # create your login (prompts for a password)
 sysreptor open         # wait for it to answer, then open the UI
 ```
@@ -63,19 +63,115 @@ takes a while to answer after the containers start.
 | `sysreptor open` | bring it up, wait for the health check, open the UI |
 | `sysreptor logs` | follow the stack's logs |
 | `sysreptor status` | list running `sysreptor` containers |
-| `sysreptor superuser [name]` | create a login (default `operator`) |
+| `sysreptor superuser [name]` | create a login (default: `annixion.sysreptor.user`) |
+| `sysreptor designs [--force]` | import the configured report designs |
 | `sysreptor manage <args…>` | run `manage.py` inside the app container |
 | `sysreptor backup [file.zip]` | full backup through `manage.py backup` |
 | `sysreptor restore <file.zip>` | restore one — **replaces everything in the database** |
-| `sysreptor env` / `url` | print the secrets path / the local URL |
+| `sysreptor env` / `url` / `config` | print the secrets path / the URL / the settings in force |
 
 `sysreptor --help` prints the same table. `setup` runs automatically the first
 time you `up` or `open`.
+
+None of these take settings as flags. The port, the login, whether the instance
+is reachable off this machine and which designs it carries are NixOS options —
+see [Configuration](#configuration) below. `sysreptor config` prints what is in
+force and where it came from.
 
 The wrapper checks its preconditions and fails with a plain message rather than
 a raw Docker error: it verifies the daemon is reachable before any command, and
 creates the two external volumes the compose file requires but does not declare
 as its own.
+
+---
+
+## Configuration
+
+The deployment's settings are NixOS options under `annixion.sysreptor`, set in
+`user/configuration.nix`. They are what the installer will collect on a first
+install, which is why they live in the config rather than in flags on the
+wrapper: an install should come back the same way twice.
+
+```nix
+# user/configuration.nix
+annixion.sysreptor = {
+  user = "operator";            # the login `sysreptor superuser` creates
+  port = 8000;                  # above 1024, so rootless docker can bind it
+  networkAccessible = false;    # loopback only
+  encryptAtRest = true;         # AES-GCM, key in deploy/app.env
+  designs = [ "htb" ];          # official design packs to import
+  demoProjects = false;         # HTB's filled-in example reports
+};
+```
+
+| Option | Default | What it decides |
+|---|---|---|
+| `user` | the desktop account's name | The login `sysreptor superuser` offers. The platform's own account, not a Unix user — the password is typed at the prompt and never appears in the config |
+| `port` | `8000` | Host port the UI answers on |
+| `networkAccessible` | `false` | `false` binds `127.0.0.1`; `true` binds every interface **and opens the port in the firewall** |
+| `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
+| `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
+| `designs` | `[ "htb" ]` | Which official design packs to import — `"htb"`, `"offsec"` |
+| `demoProjects` | `false` | Also import HTB's example reports |
+
+The module writes `/etc/annixion/sysreptor.conf`, which the wrapper reads at
+runtime. After a `rebuild`, `sysreptor restart` picks the change up — the
+wrapper re-syncs `ALLOWED_HOSTS` into `app.env` on its next run, without
+touching the keys beside it.
+
+### Making it reachable from elsewhere
+
+`networkAccessible = true` is a real change of posture, not a convenience
+toggle. It publishes the UI on every interface over plain HTTP and opens the
+port: anything that can route to this machine reaches a login page holding
+every engagement's deliverables, with the session cookie in clear on the wire.
+
+If a team genuinely needs the same instance, put a TLS-terminating reverse
+proxy in front of it and name that proxy in `allowedHosts`:
+
+```nix
+annixion.sysreptor = {
+  networkAccessible = true;
+  allowedHosts = [ "reports.engagement.local" ];
+};
+```
+
+For one operator, leave it off. Nothing about the local deployment is
+degraded by loopback-only — `reptor` talks to it over the same address.
+
+---
+
+## Report designs
+
+A design is the template a report is rendered through: the HTML/CSS layout,
+the cover page, the finding fields. AnNIXion ships the official **Hack The
+Box** set and imports it the first time the platform starts — CPTS, CWES,
+CDSA, CDEP, CWEE, CAPE, CJCA, CWPE and COAE. The
+[CPTS example report](https://docs.sysreptor.com/assets/reports/HTB-CPTS-Report.pdf)
+is what that design produces.
+
+The OffSec set (OSCP and siblings) is pinned too, and off by default:
+
+```nix
+annixion.sysreptor.designs = [ "htb" "offsec" ];
+```
+
+Both packs are fetched at build time and imported from the Nix store, so a
+first run needs no network beyond the container images.
+
+Each pack is imported **once**, recorded in
+`~/.local/share/sysreptor/imported`, and then left alone — `importdemodata`
+adds a fresh copy of every design each time it runs, so a start that re-imported
+would leave nine HTB designs after nine starts. A design edited in the UI stays
+edited.
+
+```bash
+sysreptor designs           # import anything configured but not yet imported
+sysreptor designs --force   # import again, duplicates and all
+```
+
+To write your own, copy an imported design in the UI (**Designs › ⋮ ›
+Duplicate**) and edit it there — the originals stay as the reference.
 
 ---
 
@@ -85,6 +181,8 @@ as its own.
 ~/.local/share/sysreptor/deploy/     # the pinned compose files, refreshed by setup
 ├── app.env                          # your secrets — generated once, never overwritten
 └── docker-compose.yml               # upstream's, materialised read-write
+~/.local/share/sysreptor/imported    # which design packs this install has taken
+/etc/annixion/sysreptor.conf         # the settings, generated from your NixOS config
 
 docker volume sysreptor-db-data      # Postgres
 docker volume sysreptor-app-data     # uploads, designs, rendered reports
@@ -154,7 +252,9 @@ AnNIXion's Docker daemon is rootless (see
 [hardening.md](hardening.md#docker)). SysReptor needs nothing that rootless
 withholds: it binds `127.0.0.1:8000`, which is above 1024, and uses no host
 networking or raw sockets. Unlike the AdaptixC2 teamserver, it has no reason to
-want a rootful daemon.
+want a rootful daemon — unless you set `annixion.sysreptor.port` below 1024,
+which rootless cannot bind. Leave the port high and put a proxy in front
+instead.
 
 If the daemon is not running, the wrapper says so — rootless starts on first
 use, or `systemctl --user start docker`.
@@ -174,9 +274,11 @@ asks before it does it:
 sysreptor restore engagement-2026-10.zip
 ```
 
-The version is pinned in `catalog/tools/productivity/sysreptor.nix` (the
-`version` string and the source hash). Bump both, `rebuild` to get the new
-wrapper, then:
+The version is pinned in `catalog/tools/productivity/sysreptor.nix` — the
+`version` string, the deployment hash, and a hash per design pack. Upstream
+publishes the design packs at an unversioned URL and refreshes them in place,
+so those hashes are the only pin: bump one when a new certification design
+lands. Then `rebuild` to get the new wrapper, and:
 
 ```bash
 sysreptor backup pre-upgrade.zip   # first, always
