@@ -23,15 +23,42 @@ _: {
         sha256 = "sha256-GZV0QJc4gvOTnawX/YQHt5ZTjOXQ9d4Rh2v0TmqKN30=";
       };
 
-      # Official designs, as `manage.py importdemodata` takes them. Upstream
-      # publishes these at an unversioned URL and refreshes them in place, so
-      # the hash is the pin — bump it when a new certification design lands.
+      # Official designs and templates, as `manage.py importdemodata` takes
+      # them. Upstream publishes these at unversioned URLs and regenerates
+      # them on every docs deploy, minting fresh asset UUIDs each time — so a
+      # hash over the archive is not a pin, it is a time bomb that goes off
+      # within days on a change that is not a change.
+      #
+      # The fetch therefore yields canonicalised content rather than the
+      # archive: asset ids derived from the name the importer actually matches
+      # on, JSON sorted, no timestamps. The hash then moves only when upstream
+      # changes something real, such as adding a design.
+      # scripts/sysreptor-canonicalise.py explains the rest, and prints a new
+      # hash when one is needed.
       designPack =
         name: hash:
         p.fetchurl {
           url = "https://docs.sysreptor.com/assets/${name}.tar.gz";
           sha256 = hash;
+          recursiveHash = true;
+          downloadToTemp = true;
+          nativeBuildInputs = [ p.python3 ];
+          postFetch = ''
+            mkdir -p $out
+            tar xzf $downloadedFile -C $out
+            python3 ${../../../scripts/sysreptor-canonicalise.py} $out
+          '';
         };
+
+      # Each pack is repacked from its canonicalised tree, in a fixed order
+      # and with no timestamps, so the archive handed to the importer is
+      # byte-identical per rebuild.
+      packCmd = kind: src: ''
+        tar -czf $d/${kind}.tar.gz \
+          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -C ${src} .
+        chmod 444 $d/${kind}.tar.gz
+      '';
 
       # The launcher's own mark, flattened to one line with single-quoted
       # attributes so it can be substituted into a JSON string. The drawing is
@@ -48,36 +75,43 @@ _: {
       # or template.
       designs = p.runCommand "sysreptor-designs" { } ''
         d=$out/share/sysreptor/designs
-        install -Dm444 ${designPack "htb-designs" "sha256-MrtwvZ48cgzLeA+xw7opIuT4MQ69+PdrS8/lG0GZh2I="} $d/design-htb.tar.gz
-        install -Dm444 ${designPack "offsec-designs" "sha256-IAOsPcZgfOmyH2j93pU93+TidyCsSkMcmUCIQjrieUo="} $d/design-offsec.tar.gz
-        install -Dm444 ${designPack "demo-designs" "sha256-t4q27uVTIFc2eV784B5aE9H/nePWlKlFE/9k+JbaoDE="} $d/design-demo.tar.gz
-        install -Dm444 ${designPack "htb-demo-projects" "sha256-qQF8YXTku/s8X7l16Rb0oQVu4Jsz+mFo6WUeLif9zO8="} $d/project-htb.tar.gz
-        install -Dm444 ${designPack "offsec-demo-projects" "sha256-e+UaBoOoWHF0zqlmKd3XUFQFAWqwHq5sU1DjzSmLlDg="} $d/project-offsec.tar.gz
-        install -Dm444 ${designPack "demo-projects" "sha256-FgdHfmgg4h2b0sqUQViDoy701D+notxd2hOdBbt4FDo="} $d/project-demo.tar.gz
-        install -Dm444 ${designPack "demo-templates" "sha256-t5stjwZ3XAHae0vaGpihw/wk/jTu1YkuOjVu/sFFuko="} $d/template-demo.tar.gz
-
-        # Ours, from assets/sysreptor/templates — one JSON per finding. Fixed
-        # order and timestamp, so the archive is byte-identical per rebuild.
         mkdir -p $d
-        tar -czf $d/template-annixion.tar.gz \
-          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -C ${../../../assets/sysreptor/templates} .
-        chmod 444 $d/template-annixion.tar.gz
+        ${packCmd "design-htb" (
+          designPack "htb-designs" "sha256-wik9t/8bH9jaCn/lUrd9VG+U/y30WdjIKhKX9HGQM6I="
+        )}
+        ${packCmd "design-offsec" (
+          designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="
+        )}
+        ${packCmd "design-demo" (
+          designPack "demo-designs" "sha256-/PGNkFfiLYcUCzW+GhIi0PTwNtID/WqxZXX6B0HtcZU="
+        )}
+        ${packCmd "project-htb" (
+          designPack "htb-demo-projects" "sha256-HAdRmNI/F74h6rXg3c1zqyQOU9NYXjAN0Q4RIH6ONtI="
+        )}
+        ${packCmd "project-offsec" (
+          designPack "offsec-demo-projects" "sha256-KAXCErY1xQOxwecZ6Fd8ldS6FQRaAmPlyes6wmusoD8="
+        )}
+        ${packCmd "project-demo" (
+          designPack "demo-projects" "sha256-SA/+l92ABoKK2tN9GFGKL/v7P+ISZnNYeVSj7FBQmWw="
+        )}
+        ${packCmd "template-demo" (
+          designPack "demo-templates" "sha256-C6jbvTygJVC+969d2nI7sgJ5fEPr7RzoKp1R9gRm/VA="
+        )}
 
-        # The designs carry the mark inline rather than as an asset file, so
-        # it is substituted from catalog/logo.nix at build time and cannot
-        # drift from the drawing the launcher wears. Single-quoted attributes:
-        # the SVG goes inside a JSON string and must not carry a double quote.
+        # Ours, from assets/sysreptor — one JSON per finding and per design.
+        # The designs carry the mark inline rather than as an asset file, so it
+        # is substituted from catalog/logo.nix at build time and cannot drift
+        # from the drawing the launcher wears. Single-quoted attributes: the
+        # SVG goes inside a JSON string and must not carry a double quote.
+        ${packCmd "template-annixion" ../../../assets/sysreptor/templates}
+
         mkdir -p designs
         cp ${../../../assets/sysreptor/designs}/*.json designs/
         chmod u+w designs/*.json
         for f in designs/*.json; do
           sed -i "s|@LOGO_SVG@|${markSvg}|g" "$f"
         done
-        tar -czf $d/design-annixion.tar.gz \
-          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -C designs .
-        chmod 444 $d/design-annixion.tar.gz
+        ${packCmd "design-annixion" "designs"}
       '';
 
       driver = p.writeShellApplication {
