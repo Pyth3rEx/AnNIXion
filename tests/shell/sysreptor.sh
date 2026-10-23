@@ -358,10 +358,10 @@ mkdir -p "$TMP/designs"
 tar xzf "$packs/design-annixion.tar.gz" -C "$TMP/designs" 2>/dev/null
 chmod -R u+w "$TMP/designs"
 ndesign=$(find "$TMP/designs" -maxdepth 1 -name '*.json' | wc -l)
-report "$([ "$ndesign" -eq 2 ] && echo 0 || echo 1)" \
-  "both AnNIXion designs are packed" "found $ndesign"
+report "$([ "$ndesign" -eq 3 ] && echo 0 || echo 1)" \
+  "all three AnNIXion designs are packed" "found $ndesign"
 
-for d in engagement osint; do
+for d in engagement osint influence; do
   f="$TMP/designs/annixion-$d.json"
   report "$([ -f "$f" ] && echo 0 || echo 1)" "the $d design is present" "no annixion-$d.json"
   [ -f "$f" ] || continue
@@ -418,6 +418,31 @@ for want in tasking methodology subject footprint exposure people assessment; do
 done
 report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
   "the OSINT design is an intelligence product" "no section for:$missing_sections"
+
+# The influence design makes claims about who is behind coordinated activity.
+# Competing hypotheses and the persona record are not decoration: without the
+# first it is an accusation, and without the second the collection cannot be
+# defended.
+inflsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$TMP/designs/annixion-influence.json" 2>/dev/null)
+missing_sections=""
+for want in tasking methodology campaign network reach attribution response; do
+  grep -qw "$want" <<<"$inflsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the influence design covers the campaign end to end" "no section for:$missing_sections"
+
+inflfields=$(python3 -c "
+import json, sys
+d = json.load(open(sys.argv[1]))
+print(' '.join(f['id'] for s in d['report_sections'] for f in s['fields']))
+" "$TMP/designs/annixion-influence.json" 2>/dev/null)
+for want in hypotheses alternative_explanation attribution_caveats personas persona_opsec legal_basis; do
+  report "$(grep -qw "$want" <<<"$inflfields" && echo 0 || echo 1)" \
+    "the influence design records: $want" "no field '$want'"
+done
 
 # ── Plugins and the theme ──────────────────────────────────────────────────
 conf_plugins=$(read_conf ANNIXION_SYSREPTOR_PLUGINS)

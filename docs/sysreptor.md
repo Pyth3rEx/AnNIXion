@@ -247,8 +247,8 @@ annixion.sysreptor.designs = [ "annixion" ];
 
 ### The AnNIXion designs
 
-Two, both built from `assets/sysreptor/designs` and rendered with the mark
-substituted from `catalog/logo.nix` at build time:
+Three, one per discipline, built from `assets/sysreptor/designs` and rendered
+with the mark substituted from `catalog/logo.nix` at build time:
 
 **Engagement Report** covers a whole engagement rather than one discipline:
 reconnaissance and OSINT, social engineering with a campaign-results table
@@ -265,7 +265,17 @@ the Admiralty scale (reliability A–F, credibility 1–6), and separates what
 was found from what it enables. Exposures replace findings, and severity is
 assessed rather than computed — CVSS is optional throughout.
 
-Both put the identity on the cover and keep the body pages white: a
+**Influence Operation Report** is the Puppet Master half: analysis of a
+disinformation or influence campaign. It carries the narratives and the
+account clusters with the coordination indicators that were actually applied,
+reach separated from impact (visibility is not persuasion), a record of the
+research personas used to collect and the OPSEC around them, and an
+attribution section built on competing hypotheses rather than a single
+story — with explicit caveats, because saying who runs an account is a claim
+about a person. Elements are scored by assessed severity and authenticity,
+each carrying its own confidence.
+
+All three put the identity on the cover and keep the body pages white: a
 deliverable gets printed, forwarded and read in a meeting, and a dark report
 is a poor citizen in all three. The severity ramp is the conventional one —
 red, orange, amber, blue, green — because a reader knows what an orange

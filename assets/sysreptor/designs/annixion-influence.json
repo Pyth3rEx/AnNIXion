@@ -1,0 +1,1115 @@
+{
+  "format": "projecttypes/v2",
+  "id": "ae212032-79f0-58f3-8f26-260095ff4daa",
+  "name": "AnNIXion Influence Operation Report",
+  "language": "en-US",
+  "status": "finished",
+  "tags": [
+    "annixion"
+  ],
+  "report_sections": [
+    {
+      "id": "meta",
+      "label": "Report Details",
+      "fields": [
+        {
+          "id": "title",
+          "type": "string",
+          "label": "Report Title",
+          "origin": "core",
+          "default": "Influence Operation Analysis",
+          "required": true,
+          "spellcheck": false
+        },
+        {
+          "id": "customer_name",
+          "type": "string",
+          "label": "Client",
+          "origin": "custom",
+          "required": true,
+          "spellcheck": false,
+          "default": "TODO Client Ltd"
+        },
+        {
+          "id": "subject",
+          "type": "string",
+          "label": "Campaign / Subject",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "TODO the campaign, narrative or network under analysis"
+        },
+        {
+          "id": "engagement_ref",
+          "type": "string",
+          "label": "Reference",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "ANX-INFL-0000"
+        },
+        {
+          "id": "classification",
+          "type": "combobox",
+          "label": "Classification",
+          "origin": "custom",
+          "required": false,
+          "default": "TLP:AMBER",
+          "suggestions": [
+            "TLP:RED",
+            "TLP:AMBER+STRICT",
+            "TLP:AMBER",
+            "TLP:GREEN",
+            "TLP:CLEAR"
+          ]
+        },
+        {
+          "id": "date_start",
+          "type": "date",
+          "label": "Observation — Start",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_end",
+          "type": "date",
+          "label": "Observation — End",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_report",
+          "type": "date",
+          "label": "Report Date",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "report_version",
+          "type": "string",
+          "label": "Version",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "1.0"
+        },
+        {
+          "id": "analysts",
+          "type": "list",
+          "label": "Analysts",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "analyst",
+            "type": "object",
+            "label": "Analyst",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Name",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "email",
+                "type": "string",
+                "label": "Email",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "label": "Summary & Judgements",
+      "fields": [
+        {
+          "id": "bluf",
+          "type": "markdown",
+          "label": "Bottom Line Up Front",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what is happening, who appears to be doing it, how coordinated it is, and whether it is working — in three sentences, before any method."
+        },
+        {
+          "id": "judgements",
+          "type": "list",
+          "label": "Key Judgements",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "judgement",
+            "type": "object",
+            "label": "Judgement",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "statement",
+                "type": "string",
+                "label": "Judgement",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "confidence",
+                "type": "combobox",
+                "label": "Confidence",
+                "origin": "custom",
+                "required": false,
+                "default": "Moderate confidence",
+                "suggestions": [
+                  "High confidence",
+                  "Moderate confidence",
+                  "Low confidence"
+                ]
+              },
+              {
+                "id": "basis",
+                "type": "string",
+                "label": "Basis",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "campaign_status",
+          "type": "combobox",
+          "label": "Campaign Status",
+          "origin": "custom",
+          "required": false,
+          "default": "Active",
+          "suggestions": [
+            "Active",
+            "Dormant",
+            "Escalating",
+            "Declining",
+            "Concluded"
+          ]
+        },
+        {
+          "id": "coordination",
+          "type": "combobox",
+          "label": "Assessed Coordination",
+          "origin": "custom",
+          "required": false,
+          "default": "Undetermined",
+          "suggestions": [
+            "Coordinated inauthentic behaviour",
+            "Coordinated authentic activity",
+            "Opportunistic amplification",
+            "Organic",
+            "Undetermined"
+          ]
+        },
+        {
+          "id": "confidence_note",
+          "type": "markdown",
+          "label": "Confidence & Caveats",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what would change these judgements, and what the data cannot show. Platform data is partial by construction — say so here rather than implying a completeness the collection does not have."
+        }
+      ]
+    },
+    {
+      "id": "tasking",
+      "label": "Tasking, Legal & Ethical Basis",
+      "fields": [
+        {
+          "id": "requirements",
+          "type": "markdown",
+          "label": "Intelligence Requirements",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the questions this analysis answers, numbered so findings can cite them."
+        },
+        {
+          "id": "scope",
+          "type": "markdown",
+          "label": "Scope",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: platforms, languages, accounts, hashtags and the observation window."
+        },
+        {
+          "id": "legal_basis",
+          "type": "markdown",
+          "label": "Legal & Ethical Basis",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the authorisation for this work; the lawful basis for processing personal data about account holders; the platforms' terms as they apply to research accounts; and the line this analysis does not cross — naming private individuals as actors on inference alone."
+        },
+        {
+          "id": "limitations",
+          "type": "markdown",
+          "label": "Limitations",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: deleted content, private accounts, closed platforms, API restrictions, language coverage, and anything inferred rather than observed."
+        }
+      ]
+    },
+    {
+      "id": "methodology",
+      "label": "Methodology & Persona OPSEC",
+      "fields": [
+        {
+          "id": "approach",
+          "type": "markdown",
+          "label": "Approach",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how the campaign was found, scoped and sampled, and how coordination was tested rather than assumed."
+        },
+        {
+          "id": "indicators_method",
+          "type": "markdown",
+          "label": "Coordination Indicators Used",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the indicators applied — co-timing, identical or near-identical text, shared infrastructure, account creation clustering, posting rhythm, follower overlap — and the threshold at which each was treated as meaningful."
+        },
+        {
+          "id": "personas",
+          "type": "list",
+          "label": "Research Personas Used",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "persona",
+            "type": "object",
+            "label": "Persona",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "handle",
+                "type": "string",
+                "label": "Persona / Account",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "platform",
+                "type": "string",
+                "label": "Platform",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "purpose",
+                "type": "string",
+                "label": "Purpose",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "attribution_control",
+                "type": "string",
+                "label": "Attribution Control",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "persona_opsec",
+          "type": "markdown",
+          "label": "Persona OPSEC",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how the research accounts were created and separated — infrastructure, browser profile, identity material, payment, and what the subject could have observed. Record disposal as well as creation."
+        },
+        {
+          "id": "tooling",
+          "type": "markdown",
+          "label": "Tooling & Data Sources",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: collection tooling, platform APIs, archives, and how volumes were counted."
+        }
+      ]
+    },
+    {
+      "id": "campaign",
+      "label": "The Campaign",
+      "fields": [
+        {
+          "id": "campaign_overview",
+          "type": "markdown",
+          "label": "Overview",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what the campaign is, when it began, and how it has developed."
+        },
+        {
+          "id": "narratives",
+          "type": "list",
+          "label": "Narratives",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "narrative",
+            "type": "object",
+            "label": "Narrative",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Narrative",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "claim",
+                "type": "string",
+                "label": "Core Claim",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "target",
+                "type": "string",
+                "label": "Target",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "first_seen",
+                "type": "string",
+                "label": "First Seen",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "status",
+                "type": "combobox",
+                "label": "Status",
+                "origin": "custom",
+                "required": false,
+                "default": "Active",
+                "suggestions": [
+                  "Active",
+                  "Dormant",
+                  "Superseded",
+                  "Removed"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "framing",
+          "type": "markdown",
+          "label": "Framing & Techniques",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the devices in use — fabrication, selective truth, decontextualised imagery, impersonation, forgery, manufactured grassroots support, hijacked hashtags — with examples rather than labels alone."
+        },
+        {
+          "id": "synthetic_media",
+          "type": "markdown",
+          "label": "Synthetic & Manipulated Media",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: generated or altered images, audio and video; what the provenance analysis showed; and what remains unestablished. Note the absence of evidence of manipulation is not evidence of authenticity."
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "label": "Network & Coordination",
+      "fields": [
+        {
+          "id": "network_overview",
+          "type": "markdown",
+          "label": "Overview",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the shape of the network — clusters, bridges, and the accounts that actually move reach as opposed to those that merely post."
+        },
+        {
+          "id": "clusters",
+          "type": "list",
+          "label": "Account Clusters",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "cluster",
+            "type": "object",
+            "label": "Cluster",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Cluster",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "accounts",
+                "type": "string",
+                "label": "Accounts",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "platform",
+                "type": "string",
+                "label": "Platform",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "indicators",
+                "type": "string",
+                "label": "Coordination Indicators",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "authenticity",
+                "type": "combobox",
+                "label": "Assessed Authenticity",
+                "origin": "custom",
+                "required": false,
+                "default": "Undetermined",
+                "suggestions": [
+                  "Inauthentic",
+                  "Likely inauthentic",
+                  "Undetermined",
+                  "Likely authentic",
+                  "Authentic"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "automation",
+          "type": "markdown",
+          "label": "Automation & Inauthenticity",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what indicates automation and what merely indicates enthusiasm. State the limits: posting volume alone does not make an account a bot, and calling a real person's account automated is a claim with consequences."
+        },
+        {
+          "id": "infrastructure",
+          "type": "markdown",
+          "label": "Supporting Infrastructure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: domains, hosting, mail, link shorteners, registration patterns and anything shared across clusters."
+        }
+      ]
+    },
+    {
+      "id": "reach",
+      "label": "Reach & Impact",
+      "fields": [
+        {
+          "id": "reach_summary",
+          "type": "markdown",
+          "label": "Reach",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: volumes, timeline and the platforms that carried the campaign — with the distinction between posted, delivered and engaged-with made explicit."
+        },
+        {
+          "id": "timeline",
+          "type": "list",
+          "label": "Timeline",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "event",
+            "type": "object",
+            "label": "Event",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "date",
+                "type": "string",
+                "label": "Date",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "event",
+                "type": "string",
+                "label": "Event",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "platform",
+                "type": "string",
+                "label": "Platform",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "significance",
+                "type": "string",
+                "label": "Significance",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "amplification",
+          "type": "markdown",
+          "label": "Amplification Path",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how material travelled — which accounts, outlets or communities carried it out of its origin, and whether any of that amplification was authentic."
+        },
+        {
+          "id": "impact",
+          "type": "markdown",
+          "label": "Assessed Impact",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: effect on the client — brand, staff, customers, counterparties, regulatory exposure. Be careful here: visibility is not persuasion, and a campaign with large numbers and no behavioural effect should be reported as such rather than inflated."
+        },
+        {
+          "id": "staff_impact",
+          "type": "markdown",
+          "label": "Impact on Staff",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: individuals targeted, harassment observed, and the duty of care that follows. This is a safety matter before it is a communications one."
+        }
+      ]
+    },
+    {
+      "id": "attribution",
+      "label": "Attribution",
+      "fields": [
+        {
+          "id": "attribution_summary",
+          "type": "markdown",
+          "label": "Assessment",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: who is assessed to be behind the campaign, at what confidence, and on what evidence. Separate capability, infrastructure and motive, and never present convergent circumstantial indicators as proof."
+        },
+        {
+          "id": "hypotheses",
+          "type": "list",
+          "label": "Competing Hypotheses",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "hypothesis",
+            "type": "object",
+            "label": "Hypothesis",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "hypothesis",
+                "type": "string",
+                "label": "Hypothesis",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "supporting",
+                "type": "string",
+                "label": "Supporting Evidence",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "contradicting",
+                "type": "string",
+                "label": "Contradicting Evidence",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "assessment",
+                "type": "combobox",
+                "label": "Assessment",
+                "origin": "custom",
+                "required": false,
+                "default": "Consistent",
+                "suggestions": [
+                  "Most consistent",
+                  "Consistent",
+                  "Less consistent",
+                  "Inconsistent"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "alternative_explanation",
+          "type": "markdown",
+          "label": "Alternative Explanations Considered",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the innocent and the coincidental — a genuine grievance, a marketing campaign, a single prolific user, an unrelated network recycling the hashtag. An analysis that never considered these is not an analysis."
+        },
+        {
+          "id": "attribution_caveats",
+          "type": "markdown",
+          "label": "Attribution Caveats",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what is deliberately not claimed, and why. Attribution to a named person or organisation is a statement with legal weight."
+        }
+      ]
+    },
+    {
+      "id": "response",
+      "label": "Response & Recommendations",
+      "fields": [
+        {
+          "id": "response_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the shape of the response, and its sequencing."
+        },
+        {
+          "id": "platform_action",
+          "type": "markdown",
+          "label": "Platform Reporting & Escalation",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what has been reported, through which route, with what result, and what remains. Include the evidence package each platform requires."
+        },
+        {
+          "id": "communications",
+          "type": "markdown",
+          "label": "Communications Posture",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: whether to respond publicly at all. Amplification is the most common self-inflicted harm in these cases; say plainly when the recommendation is to do nothing visible."
+        },
+        {
+          "id": "monitoring",
+          "type": "markdown",
+          "label": "Monitoring",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the indicators to keep watching, thresholds for re-escalation, and who owns it."
+        },
+        {
+          "id": "resilience",
+          "type": "markdown",
+          "label": "Resilience",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what reduces exposure next time — executive footprint, verification of official channels, staff briefing, and a prepared response path."
+        },
+        {
+          "id": "legal_options",
+          "type": "markdown",
+          "label": "Legal & Regulatory Options",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: preservation of evidence, referral routes, and notification obligations where staff or customers are targeted."
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "label": "Appendices",
+      "fields": [
+        {
+          "id": "appendix_indicators",
+          "type": "markdown",
+          "label": "Indicators",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: accounts, handles, domains, URLs and hashes, in a form that can be ingested."
+        },
+        {
+          "id": "appendix_collection",
+          "type": "markdown",
+          "label": "Collection Log",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what was collected, when, by which persona, and how it was preserved — content is deleted, and an unpreserved observation cannot be defended later."
+        },
+        {
+          "id": "appendix_grading",
+          "type": "markdown",
+          "label": "Confidence & Grading Scheme",
+          "origin": "custom",
+          "required": false,
+          "default": "Confidence describes the analysis: *high* where judgements rest on corroborated evidence from reliable sources, *moderate* where the evidence is credible but incomplete, *low* where it is fragmentary or the sources are untested. Sources are graded separately on the Admiralty scale — a letter for the source (A–F), a digit for the information (1–6)."
+        },
+        {
+          "id": "appendix_glossary",
+          "type": "markdown",
+          "label": "Glossary",
+          "origin": "custom",
+          "required": false,
+          "default": "**Coordinated inauthentic behaviour** — accounts acting together while misrepresenting who they are.\n\n**Astroturfing** — manufactured grassroots support.\n\n**Sock puppet** — an account operated under a false identity, by us as well as by them.\n\n**Hashtag hijacking** — redirecting an existing conversation to carry a different message."
+        },
+        {
+          "id": "appendix_extra",
+          "type": "markdown",
+          "label": "Additional Material",
+          "origin": "custom",
+          "required": false,
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "finding_fields": [
+    {
+      "id": "title",
+      "type": "string",
+      "label": "Campaign Element",
+      "origin": "core",
+      "default": "TODO Element Title",
+      "required": true,
+      "spellcheck": false
+    },
+    {
+      "id": "cvss",
+      "type": "cvss",
+      "label": "CVSS",
+      "origin": "predefined",
+      "default": "n/a",
+      "required": false
+    },
+    {
+      "id": "element_type",
+      "type": "combobox",
+      "label": "Type",
+      "origin": "custom",
+      "required": false,
+      "default": "Narrative",
+      "suggestions": [
+        "Narrative",
+        "Account cluster",
+        "Inauthentic account",
+        "Fabricated artefact",
+        "Synthetic media",
+        "Impersonation",
+        "Infrastructure",
+        "Amplifier"
+      ]
+    },
+    {
+      "id": "element_severity",
+      "type": "combobox",
+      "label": "Assessed Severity",
+      "origin": "custom",
+      "required": false,
+      "default": "Medium",
+      "suggestions": [
+        "Critical",
+        "High",
+        "Medium",
+        "Low",
+        "Informational"
+      ]
+    },
+    {
+      "id": "authenticity",
+      "type": "combobox",
+      "label": "Assessed Authenticity",
+      "origin": "custom",
+      "required": false,
+      "default": "Undetermined",
+      "suggestions": [
+        "Inauthentic",
+        "Likely inauthentic",
+        "Undetermined",
+        "Likely authentic",
+        "Authentic"
+      ]
+    },
+    {
+      "id": "confidence",
+      "type": "combobox",
+      "label": "Confidence",
+      "origin": "custom",
+      "required": false,
+      "default": "Moderate confidence",
+      "suggestions": [
+        "High confidence",
+        "Moderate confidence",
+        "Low confidence"
+      ]
+    },
+    {
+      "id": "reliability",
+      "type": "combobox",
+      "label": "Source Reliability",
+      "origin": "custom",
+      "required": false,
+      "default": "B — Usually reliable",
+      "suggestions": [
+        "A — Completely reliable",
+        "B — Usually reliable",
+        "C — Fairly reliable",
+        "D — Not usually reliable",
+        "E — Unreliable",
+        "F — Cannot be judged"
+      ]
+    },
+    {
+      "id": "element_status",
+      "type": "combobox",
+      "label": "Status",
+      "origin": "custom",
+      "required": false,
+      "default": "Active",
+      "suggestions": [
+        "Active",
+        "Dormant",
+        "Removed by platform",
+        "Removed on request",
+        "Unresolved"
+      ]
+    },
+    {
+      "id": "platforms",
+      "type": "string",
+      "label": "Platforms",
+      "origin": "custom",
+      "required": false,
+      "spellcheck": false
+    },
+    {
+      "id": "requirement",
+      "type": "string",
+      "label": "Answers Requirement",
+      "origin": "custom",
+      "required": false,
+      "spellcheck": false
+    },
+    {
+      "id": "first_observed",
+      "type": "date",
+      "label": "First Observed",
+      "origin": "custom",
+      "required": false
+    },
+    {
+      "id": "summary",
+      "type": "markdown",
+      "label": "Summary",
+      "origin": "custom",
+      "required": true,
+      "default": "TODO: what this element is, in two sentences."
+    },
+    {
+      "id": "description",
+      "type": "markdown",
+      "label": "Detail",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: what was observed, where, over what period, and how it was corroborated."
+    },
+    {
+      "id": "evidence",
+      "type": "markdown",
+      "label": "Evidence",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: captures, archive links, hashes and timestamps — preserved, because this content gets deleted."
+    },
+    {
+      "id": "impact",
+      "type": "markdown",
+      "label": "Assessment",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: what this element achieves for the campaign, and what it does to the client."
+    },
+    {
+      "id": "recommendation",
+      "type": "markdown",
+      "label": "Recommendation",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: report, monitor, respond or ignore — and who owns it. Saying 'ignore' is a legitimate recommendation and often the right one."
+    },
+    {
+      "id": "references",
+      "type": "list",
+      "label": "References",
+      "origin": "predefined",
+      "required": false,
+      "items": {
+        "id": "",
+        "type": "string",
+        "label": "Reference",
+        "origin": "predefined"
+      }
+    }
+  ],
+  "finding_ordering": [
+    {
+      "field": "cvss",
+      "order": "desc"
+    },
+    {
+      "field": "title",
+      "order": "asc"
+    }
+  ],
+  "report_template": "<div id=\"header-left\" data-sysreptor-generated=\"page-header\">\n  <span id=\"header-mark\">@LOGO_SVG@</span>{{ report.customer_name }}\n</div>\n<div id=\"header-right\" data-sysreptor-generated=\"page-header\">{{ report.engagement_ref }}</div>\n\n<div id=\"footer-left\" data-sysreptor-generated=\"page-footer\">{{ report.classification }}</div>\n<div id=\"footer-center\" data-sysreptor-generated=\"page-footer\">{{ report.title }}</div>\n<div id=\"footer-right\" data-sysreptor-generated=\"page-footer\"></div>\n\n<section id=\"page-cover\" data-sysreptor-generated=\"page-cover\">\n  <div id=\"page-cover-classification\">{{ report.classification }}</div>\n  <div id=\"page-cover-mark\">@LOGO_SVG@</div>\n  <div id=\"page-cover-wordmark\">AnNIXion</div>\n  <div id=\"page-cover-rule\"></div>\n  <h1 id=\"page-cover-title\">{{ report.title }}</h1>\n  <div id=\"page-cover-subtitle\">Influence &amp; Disinformation &middot; {{ report.subject }}</div>\n\n  <div id=\"page-cover-meta\">\n    <table>\n      <tr><td class=\"k\">Prepared for</td><td>{{ report.customer_name }}</td></tr>\n      <tr><td class=\"k\">Reference</td><td>{{ report.engagement_ref }}</td></tr>\n      <tr><td class=\"k\">Observation</td><td>{{ formatDate(report.date_start, 'long') }} &mdash; {{ formatDate(report.date_end, 'long') }}</td></tr>\n      <tr><td class=\"k\">Report Date</td><td>{{ formatDate(report.date_report, 'long') }}</td></tr>\n      <tr><td class=\"k\">Status</td><td>{{ report.campaign_status }} &middot; {{ report.coordination }}</td></tr>\n      <tr><td class=\"k\">Handling</td><td>{{ report.classification }}</td></tr>\n    </table>\n  </div>\n</section>\n<pagebreak />\n\n<section>\n  <h1 id=\"handling\" class=\"in-toc numbered\">Handling</h1>\n  <p>\n    This assessment was produced for {{ report.customer_name }} and is released under the\n    marking {{ report.classification }}. It makes assessments about the authenticity of\n    accounts and, where the evidence supports it, about who operates them. Those are claims\n    about people: handle the report as personal data, and do not repeat its attributions\n    outside the recipients agreed with the client.\n  </p>\n  <p>\n    Judgements carry explicit confidence. Where this report says an account is\n    <em>likely inauthentic</em>, it means the indicators are consistent with coordination\n    and not that inauthenticity has been established. Nothing here should be used to take\n    action against a named individual without independent verification.\n  </p>\n  <div class=\"note\" v-if=\"report.analysts.length > 0\">\n    <div class=\"label\">Prepared by</div>\n    <table class=\"finding-meta\">\n      <tr v-for=\"a in report.analysts\"><td class=\"k\">{{ a.role }}</td><td>{{ a.name }} &middot; {{ a.email }}</td></tr>\n    </table>\n  </div>\n  <pagebreak />\n</section>\n\n<table-of-contents id=\"toc\" v-slot=\"tocItems\">\n  <h1>Contents</h1>\n  <ul>\n    <li v-for=\"item in tocItems\" :class=\"'toc-level' + item.level\">\n      <ref :to=\"item.id\" />\n    </li>\n  </ul>\n  <pagebreak />\n</table-of-contents>\n\n<section>\n  <h1 id=\"bluf\" class=\"in-toc numbered\">Bottom Line Up Front</h1>\n  <markdown :text=\"report.bluf\" />\n\n  <table class=\"finding-meta\">\n    <tr><td class=\"k\">Campaign status</td><td>{{ report.campaign_status }}</td></tr>\n    <tr><td class=\"k\">Coordination</td><td>{{ report.coordination }}</td></tr>\n  </table>\n\n  <h2 id=\"judgements\" class=\"in-toc\">Key Judgements</h2>\n  <table v-if=\"report.judgements.length > 0\">\n    <thead><tr><th>Judgement</th><th style=\"width:12em\">Confidence</th><th style=\"width:16em\">Basis</th></tr></thead>\n    <tbody>\n      <tr v-for=\"j in report.judgements\">\n        <td>{{ j.statement }}</td><td>{{ j.confidence }}</td><td>{{ j.basis }}</td>\n      </tr>\n    </tbody>\n  </table>\n\n  <h2 id=\"confidence\" class=\"in-toc\">Confidence &amp; Caveats</h2>\n  <markdown :text=\"report.confidence_note\" />\n\n  <h2 id=\"elements-overview\" class=\"in-toc\">Campaign Elements at a Glance</h2>\n  <table>\n    <thead>\n      <tr><th style=\"width:3em\" align=\"center\">#</th><th style=\"width:7em\">Severity</th>\n          <th>Element</th><th style=\"width:8em\">Type</th><th style=\"width:9em\">Authenticity</th>\n          <th style=\"width:7em\">Status</th><th style=\"width:3em\" align=\"center\">Page</th></tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"finding in findings\">\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-finding-number\" /></td>\n        <td>{{ finding.element_severity }}</td>\n        <td><ref :to=\"finding.id\">{{ finding.title }}</ref></td>\n        <td>{{ finding.element_type }}</td>\n        <td>{{ finding.authenticity }}</td>\n        <td>{{ finding.element_status }}</td>\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-page\" /></td>\n      </tr>\n    </tbody>\n  </table>\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"tasking\" class=\"in-toc numbered\">Tasking, Legal &amp; Ethical Basis</h1>\n  <h2 id=\"requirements\" class=\"in-toc\">Intelligence Requirements</h2>\n  <markdown :text=\"report.requirements\" />\n  <h2 id=\"infl-scope\" class=\"in-toc\">Scope</h2>\n  <markdown :text=\"report.scope\" />\n  <h2 id=\"legal-basis\" class=\"in-toc\">Legal &amp; Ethical Basis</h2>\n  <markdown :text=\"report.legal_basis\" />\n  <h2 id=\"infl-limitations\" class=\"in-toc\">Limitations</h2>\n  <markdown :text=\"report.limitations\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"methodology\" class=\"in-toc numbered\">Methodology &amp; Persona OPSEC</h1>\n  <markdown :text=\"report.approach\" />\n  <h2 id=\"indicators-method\" class=\"in-toc\">Coordination Indicators Used</h2>\n  <markdown :text=\"report.indicators_method\" />\n  <h2 id=\"personas\" class=\"in-toc\">Research Personas</h2>\n  <table v-if=\"report.personas.length > 0\">\n    <thead><tr><th>Persona</th><th style=\"width:8em\">Platform</th><th>Purpose</th><th>Attribution Control</th></tr></thead>\n    <tbody>\n      <tr v-for=\"p in report.personas\">\n        <td>{{ p.handle }}</td><td>{{ p.platform }}</td><td>{{ p.purpose }}</td>\n        <td>{{ p.attribution_control }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <markdown :text=\"report.persona_opsec\" />\n  <h2 id=\"infl-tooling\" class=\"in-toc\">Tooling &amp; Data Sources</h2>\n  <markdown :text=\"report.tooling\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"campaign\" class=\"in-toc numbered\">The Campaign</h1>\n  <markdown :text=\"report.campaign_overview\" />\n  <h2 id=\"narratives\" class=\"in-toc\">Narratives</h2>\n  <table v-if=\"report.narratives.length > 0\">\n    <thead><tr><th>Narrative</th><th>Core Claim</th><th style=\"width:8em\">Target</th>\n               <th style=\"width:7em\">First Seen</th><th style=\"width:6em\">Status</th></tr></thead>\n    <tbody>\n      <tr v-for=\"n in report.narratives\">\n        <td>{{ n.name }}</td><td>{{ n.claim }}</td><td>{{ n.target }}</td>\n        <td>{{ n.first_seen }}</td><td>{{ n.status }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"framing\" class=\"in-toc\">Framing &amp; Techniques</h2>\n  <markdown :text=\"report.framing\" />\n  <h2 id=\"synthetic-media\" class=\"in-toc\">Synthetic &amp; Manipulated Media</h2>\n  <markdown :text=\"report.synthetic_media\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"network\" class=\"in-toc numbered\">Network &amp; Coordination</h1>\n  <markdown :text=\"report.network_overview\" />\n  <table v-if=\"report.clusters.length > 0\">\n    <thead><tr><th>Cluster</th><th style=\"width:5em\" align=\"center\">Accounts</th>\n               <th style=\"width:7em\">Platform</th><th>Role</th><th>Indicators</th>\n               <th style=\"width:9em\">Authenticity</th></tr></thead>\n    <tbody>\n      <tr v-for=\"c in report.clusters\">\n        <td>{{ c.name }}</td><td align=\"center\">{{ c.accounts }}</td><td>{{ c.platform }}</td>\n        <td>{{ c.role }}</td><td>{{ c.indicators }}</td><td>{{ c.authenticity }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"automation\" class=\"in-toc\">Automation &amp; Inauthenticity</h2>\n  <markdown :text=\"report.automation\" />\n  <h2 id=\"infrastructure\" class=\"in-toc\">Supporting Infrastructure</h2>\n  <markdown :text=\"report.infrastructure\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"reach\" class=\"in-toc numbered\">Reach &amp; Impact</h1>\n  <markdown :text=\"report.reach_summary\" />\n  <table v-if=\"report.timeline.length > 0\">\n    <thead><tr><th style=\"width:8em\">Date</th><th>Event</th><th style=\"width:8em\">Platform</th><th>Significance</th></tr></thead>\n    <tbody>\n      <tr v-for=\"e in report.timeline\">\n        <td>{{ e.date }}</td><td>{{ e.event }}</td><td>{{ e.platform }}</td><td>{{ e.significance }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"amplification\" class=\"in-toc\">Amplification Path</h2>\n  <markdown :text=\"report.amplification\" />\n  <h2 id=\"impact\" class=\"in-toc\">Assessed Impact</h2>\n  <markdown :text=\"report.impact\" />\n  <h2 id=\"staff-impact\" class=\"in-toc\">Impact on Staff</h2>\n  <markdown :text=\"report.staff_impact\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"attribution\" class=\"in-toc numbered\">Attribution</h1>\n  <markdown :text=\"report.attribution_summary\" />\n  <h2 id=\"hypotheses\" class=\"in-toc\">Competing Hypotheses</h2>\n  <table v-if=\"report.hypotheses.length > 0\">\n    <thead><tr><th>Hypothesis</th><th>Supporting</th><th>Contradicting</th><th style=\"width:9em\">Assessment</th></tr></thead>\n    <tbody>\n      <tr v-for=\"h in report.hypotheses\">\n        <td>{{ h.hypothesis }}</td><td>{{ h.supporting }}</td>\n        <td>{{ h.contradicting }}</td><td>{{ h.assessment }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"alternatives\" class=\"in-toc\">Alternative Explanations Considered</h2>\n  <markdown :text=\"report.alternative_explanation\" />\n  <h2 id=\"attribution-caveats\" class=\"in-toc\">Attribution Caveats</h2>\n  <markdown :text=\"report.attribution_caveats\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"elements\" class=\"in-toc numbered\">Campaign Elements in Detail</h1>\n  <div v-for=\"finding in findings\" :id=\"finding.id\">\n    <div class=\"finding-head\">\n      <h2 class=\"in-toc\">{{ finding.title }}</h2>\n    </div>\n    <table class=\"finding-meta\">\n      <tr><td class=\"k\">Severity</td><td>{{ finding.element_severity }}</td></tr>\n      <tr><td class=\"k\">Type</td><td>{{ finding.element_type }}</td></tr>\n      <tr><td class=\"k\">Authenticity</td><td>{{ finding.authenticity }} &middot; {{ finding.confidence }}</td></tr>\n      <tr><td class=\"k\">Source grading</td><td>{{ finding.reliability }}</td></tr>\n      <tr><td class=\"k\">Status</td><td>{{ finding.element_status }}</td></tr>\n      <tr v-if=\"finding.platforms\"><td class=\"k\">Platforms</td><td>{{ finding.platforms }}</td></tr>\n      <tr v-if=\"finding.requirement\"><td class=\"k\">Requirement</td><td>{{ finding.requirement }}</td></tr>\n      <tr v-if=\"finding.first_observed\"><td class=\"k\">First observed</td><td>{{ formatDate(finding.first_observed, 'long') }}</td></tr>\n    </table>\n\n    <markdown :text=\"finding.summary\" />\n    <h3>Detail</h3>\n    <markdown :text=\"finding.description\" />\n    <h3 v-if=\"finding.evidence\">Evidence</h3>\n    <markdown :text=\"finding.evidence\" />\n    <h3 v-if=\"finding.impact\">Assessment</h3>\n    <markdown :text=\"finding.impact\" />\n    <h3>Recommendation</h3>\n    <markdown :text=\"finding.recommendation\" />\n    <div v-if=\"finding.references.length > 0\">\n      <h3>References</h3>\n      <ul><li v-for=\"r in finding.references\">{{ r }}</li></ul>\n    </div>\n    <pagebreak />\n  </div>\n</section>\n\n<section>\n  <h1 id=\"response\" class=\"in-toc numbered\">Response &amp; Recommendations</h1>\n  <markdown :text=\"report.response_summary\" />\n  <h2 id=\"platform-action\" class=\"in-toc\">Platform Reporting &amp; Escalation</h2>\n  <markdown :text=\"report.platform_action\" />\n  <h2 id=\"communications\" class=\"in-toc\">Communications Posture</h2>\n  <markdown :text=\"report.communications\" />\n  <h2 id=\"monitoring\" class=\"in-toc\">Monitoring</h2>\n  <markdown :text=\"report.monitoring\" />\n  <h2 id=\"resilience\" class=\"in-toc\">Resilience</h2>\n  <markdown :text=\"report.resilience\" />\n  <h2 id=\"legal-options\" class=\"in-toc\">Legal &amp; Regulatory Options</h2>\n  <markdown :text=\"report.legal_options\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"appendix\" class=\"in-toc numbered\">Appendices</h1>\n  <h2 id=\"appendix-indicators\" class=\"in-toc\">Indicators</h2>\n  <markdown :text=\"report.appendix_indicators\" />\n  <h2 id=\"appendix-collection\" class=\"in-toc\">Collection Log</h2>\n  <markdown :text=\"report.appendix_collection\" />\n  <h2 id=\"appendix-grading\" class=\"in-toc\">Confidence &amp; Grading Scheme</h2>\n  <markdown :text=\"report.appendix_grading\" />\n  <h2 id=\"appendix-glossary\" class=\"in-toc\">Glossary</h2>\n  <markdown :text=\"report.appendix_glossary\" />\n  <markdown :text=\"report.appendix_extra\" />\n</section>\n",
+  "report_styles": "@import \"/assets/global/base.css\";\n\n:root {\n    /* The conventional CVSS ramp. A reader knows what an orange High means;\n       the house palette does not get to repaint that. */\n    --color-risk-critical: #E8002B;\n    --color-risk-high: #FF9300;\n    --color-risk-medium: #FFC400;\n    --color-risk-low: #4285F5;\n    --color-risk-info: #00AE51;\n\n    /* AnNIXion */\n    --annixion-red: #FF0033;\n    --annixion-ground: #0E0F13;\n    --annixion-surface: #14171D;\n    --annixion-rule: #2E323D;\n    --annixion-muted: #5C6474;\n    --annixion-ink: #14171D;\n}\n\n@page {\n    size: A4 portrait;\n    margin: 32mm 18mm 24mm 18mm;\n}\n\n/* The cover is a named page: full bleed, no running header or footer. The\n   page background is what paints to the edge — an element background stops\n   at the margin box. */\n@page page-cover {\n    margin: 0;\n    background-color: var(--annixion-ground);\n    @top-left-corner { content: none !important; }\n    @top-left { content: none !important; }\n    @top-center { content: none !important; }\n    @top-right { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n    @bottom-left { content: none !important; }\n    @bottom-center { content: none !important; }\n    @bottom-right { content: none !important; }\n    @bottom-right-corner { content: none !important; }\n    @top-left-corner { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n}\n\nhtml {\n    font-family: \"Noto Sans\", sans-serif;\n    font-size: 10pt;\n    color: var(--annixion-ink);\n    -weasy-hyphens: auto;\n}\n\np { text-align: justify; text-align-last: start; }\na { color: var(--annixion-red); text-decoration: none; border-bottom: 0.5pt solid var(--annixion-red); }\n\n/* ── Headings: a red rule above the number, labels in mono ─────────────── */\nh1, h2, h3, h4, h5, h6 { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; color: var(--annixion-ink); font-weight: 700; }\nh1 {\n    font-size: 15pt;\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n    letter-spacing: -0.02em;\n}\nh2 { font-size: 12pt; margin-top: 6mm; }\nh3 { font-size: 10.5pt; color: #3A4050; margin-top: 4mm; }\nh4 { font-size: 10pt; color: var(--annixion-muted); }\n\n/* ── Page furniture ────────────────────────────────────────────────────── */\n/* Each piece is pulled out of the flow and placed in a page margin box. The\n   borders on the boxes are what draw the rules across the page. */\n#header-left { position: running(header-left); }\n#header-right { position: running(header-right); }\n#footer-left { position: running(footer-left); }\n#footer-center { position: running(footer-center); }\n#footer-right { position: running(footer-right); }\n\n@page {\n    --furniture: \"JetBrains Mono\", \"Noto Sans Mono\", monospace;\n\n    @top-left {\n        content: element(header-left);\n        white-space: nowrap;\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        text-transform: uppercase;\n        color: #5C6474;\n        vertical-align: bottom;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-right {\n        content: element(header-right);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #5C6474;\n        vertical-align: bottom;\n        text-align: right;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-center { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-left-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-right-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n\n    @bottom-left {\n        content: element(footer-left);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #FF0033;\n        vertical-align: top;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-center {\n        content: element(footer-center);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.06em;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: center;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-right {\n        content: counter(page) \" / \" counter(pages);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: right;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-left-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n    @bottom-right-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n}\n\n#header-mark { display: inline-block; height: 3.5mm; width: 3.5mm; margin-right: 1.5mm; }\n#header-mark svg { width: 3.5mm; height: 3.5mm; display: inline-block; vertical-align: middle; }\n\n/* ── Cover ─────────────────────────────────────────────────────────────── */\n/* This is what binds the section to the named page above; without it the\n   cover inherits the body page and keeps the header, footer and margins. */\n#page-cover { page: page-cover; }\n\n#page-cover {\n    background-color: var(--annixion-ground);\n    color: #DFE4EA;\n    height: 297mm;\n    padding: 28mm 22mm;\n    box-sizing: border-box;\n    position: relative;\n}\n#page-cover-mark { display: block; width: 24mm; height: 24mm; }\n#page-cover-mark svg { width: 24mm; height: 24mm; display: block; }\n#header-mark svg { width: 4mm; height: 4mm; display: inline-block; vertical-align: middle; }\n#page-cover-wordmark {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 13pt;\n    letter-spacing: 0.42em;\n    text-transform: uppercase;\n    margin-top: 6mm;\n    color: #DFE4EA;\n}\n#page-cover-rule { width: 32mm; border-top: 2pt solid var(--annixion-red); margin: 10mm 0; }\n#page-cover-title {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 26pt;\n    line-height: 1.15;\n    letter-spacing: -0.03em;\n    font-weight: 700;\n    color: #FFFFFF;\n    margin: 0;\n    border: none;\n    padding: 0;\n}\n#page-cover-subtitle { font-size: 12pt; color: var(--annixion-red); margin-top: 4mm; font-family: \"JetBrains Mono\", monospace; letter-spacing: 0.08em; }\n#page-cover-meta {\n    position: absolute;\n    bottom: 28mm;\n    left: 22mm;\n    right: 22mm;\n    font-size: 9pt;\n    border-top: 0.5pt solid var(--annixion-rule);\n    padding-top: 5mm;\n}\n#page-cover-meta table { width: 100%; border: none; }\n#page-cover-meta tr td, #page-cover-meta tr:nth-child(even) td {\n    border: none;\n    padding: 1mm 0;\n    color: #DFE4EA;\n    background: none;\n}\n#page-cover-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 38mm;\n}\n#page-cover-classification {\n    position: absolute;\n    top: 14mm;\n    right: 22mm;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.18em;\n    color: var(--annixion-red);\n    border: 0.75pt solid var(--annixion-red);\n    padding: 1.5mm 3mm;\n}\n\n/* ── Table of contents ─────────────────────────────────────────────────── */\n#toc li { list-style: none; margin: 1.2mm 0; }\n#toc .toc-level1 { font-weight: 700; font-family: \"JetBrains Mono\", monospace; font-size: 9.5pt; }\n#toc .toc-level2 { margin-left: 6mm; }\n#toc .toc-level3 { margin-left: 12mm; color: var(--annixion-muted); }\n#toc a { border: none; color: var(--annixion-ink); }\n#toc .ref-page::before { content: target-counter(attr(href), page); float: right; font-family: \"JetBrains Mono\", monospace; }\n\n/* ── Tables ────────────────────────────────────────────────────────────── */\ntable { width: 100%; border-collapse: collapse; font-size: 9pt; }\nth {\n    background-color: var(--annixion-surface);\n    color: #DFE4EA;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    text-align: left;\n    padding: 2mm;\n}\ntd { border-bottom: 0.5pt solid #D8DCE3; padding: 2mm; vertical-align: top; }\ntr:nth-child(even) td { background-color: #F6F7F9; }\n\n/* ── Findings ──────────────────────────────────────────────────────────── */\n.finding-head {\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n}\n.finding-meta { width: 100%; margin: 3mm 0 5mm 0; font-size: 8.5pt; }\n.finding-meta td { border: none; padding: 1mm 2mm 1mm 0; }\n.finding-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 30mm;\n}\n.risk-pill {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: #FFFFFF;\n    padding: 0.8mm 2.5mm;\n}\n.risk-bg-critical { background-color: var(--color-risk-critical); color: #FFFFFF; }\n.risk-bg-high { background-color: var(--color-risk-high); color: #14171D; }\n.risk-bg-medium { background-color: var(--color-risk-medium); color: #14171D; }\n.risk-bg-low { background-color: var(--color-risk-low); color: #FFFFFF; }\n.risk-bg-info { background-color: var(--color-risk-info); color: #FFFFFF; }\n\n/* ── Callouts ──────────────────────────────────────────────────────────── */\n#page-cover a { border: none; color: #DFE4EA; }\n\n.note {\n    border-left: 2pt solid var(--annixion-red);\n    background-color: #F6F7F9;\n    padding: 3mm 4mm;\n    margin: 4mm 0;\n}\n.label {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n}\npre, code { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; font-size: 8.5pt; }\npre { background-color: var(--annixion-surface); color: #DFE4EA; padding: 3mm; border-radius: 0; }\nblockquote { border-left: 2pt solid var(--annixion-rule); margin-left: 0; padding-left: 4mm; color: #3A4050; }\n",
+  "report_preview_data": {
+    "report": {
+      "title": "Influence Operation Analysis",
+      "customer_name": "Northwind Trading Ltd",
+      "subject": "Coordinated campaign against the Northwind brand",
+      "engagement_ref": "ANX-INFL-0003",
+      "classification": "TLP:AMBER",
+      "date_start": "2026-08-01",
+      "date_end": "2026-09-30",
+      "date_report": "2026-10-06",
+      "report_version": "1.0",
+      "campaign_status": "Active",
+      "coordination": "Coordinated inauthentic behaviour",
+      "analysts": [
+        {
+          "name": "Analyst",
+          "role": "Lead",
+          "email": "analyst@example.com"
+        }
+      ],
+      "judgements": [
+        {
+          "statement": "A cluster of 140 accounts is amplifying a fabricated safety claim.",
+          "confidence": "High confidence",
+          "basis": "Co-timing and shared infrastructure"
+        },
+        {
+          "statement": "The operator is assessed to be a commercial competitor's agency.",
+          "confidence": "Low confidence",
+          "basis": "Circumstantial only; see hypotheses"
+        }
+      ],
+      "personas": [
+        {
+          "handle": "research-01",
+          "platform": "Forum",
+          "purpose": "Read-only collection",
+          "attribution_control": "Dedicated profile, VPN egress"
+        }
+      ],
+      "narratives": [
+        {
+          "name": "Safety claim",
+          "claim": "Products fail certification",
+          "target": "Brand",
+          "first_seen": "2026-08-04",
+          "status": "Active"
+        }
+      ],
+      "clusters": [
+        {
+          "name": "Cluster A",
+          "accounts": "140",
+          "platform": "Microblog",
+          "role": "Primary amplification",
+          "indicators": "Created within 48h, identical phrasing",
+          "authenticity": "Likely inauthentic"
+        }
+      ],
+      "timeline": [
+        {
+          "date": "2026-08-04",
+          "event": "First post of the safety claim",
+          "platform": "Microblog",
+          "significance": "Campaign origin"
+        }
+      ],
+      "hypotheses": [
+        {
+          "hypothesis": "Commercial competitor",
+          "supporting": "Timing matches a tender",
+          "contradicting": "No infrastructure overlap",
+          "assessment": "Consistent"
+        }
+      ]
+    },
+    "findings": [
+      {
+        "title": "Account cluster amplifying the safety narrative",
+        "cvss": "n/a",
+        "element_type": "Account cluster",
+        "element_severity": "High",
+        "authenticity": "Likely inauthentic",
+        "confidence": "High confidence",
+        "reliability": "B — Usually reliable",
+        "element_status": "Active",
+        "platforms": "Microblog",
+        "requirement": "IR-1",
+        "first_observed": "2026-08-04",
+        "summary": "140 accounts created within 48 hours amplify one claim in near-identical wording.",
+        "description": "Co-timing and phrasing overlap are consistent with coordination.",
+        "evidence": "Captures preserved; archive links withheld from this preview.",
+        "impact": "Carries the narrative beyond its origin community.",
+        "recommendation": "Report to the platform with the co-timing evidence; do not respond publicly.",
+        "references": []
+      }
+    ]
+  },
+  "assets": [],
+  "default_notes": []
+}

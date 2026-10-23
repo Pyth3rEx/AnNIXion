@@ -244,13 +244,18 @@ in
         a design you have is one you can copy rather than write. Narrow the
         list if an empty Designs page is worth more than the choice.
 
-        - `annixion` — this distribution's own two. **Engagement Report**
+        - `annixion` — this distribution's own three, one per discipline.
+          **Engagement Report**
           carries a full-spectrum engagement: reconnaissance and OSINT, social
           engineering with campaign metrics, the physical assessment, the
           attack narrative, and what the defenders saw. **OSINT Report** is an
           intelligence product rather than a pentest one — it leads with
           judgements and confidence, grades its sources on the Admiralty
           scale, and records the legal basis for the collection.
+          **Influence Operation Report** analyses a disinformation campaign:
+          narratives, account clusters and the coordination indicators applied
+          to them, the research personas used to collect, and an attribution
+          section built on competing hypotheses rather than one story.
         - `htb` — the Hack The Box set: CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
           CJCA, CWPE and COAE.
         - `offsec` — the OffSec set, OSCP included.
