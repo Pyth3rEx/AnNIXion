@@ -293,6 +293,75 @@ for tag in physical social; do
     "the $tag area is covered in depth" "only $n templates tagged $tag"
 done
 
+# ── The matrices, and what the library reaches of them ─────────────────────
+# Both are checked in rather than fetched, so a build stays offline and a
+# design does not change shape because an upstream page was regenerated. The
+# mapping on a template is only worth having if every id in it resolves, and
+# the library is only comprehensive if it reaches every tactic of both.
+matrixout=$(python3 - "$ROOT/assets/sysreptor/matrices" "$TMP/own" <<'MATRIX'
+import glob, json, os, sys
+
+root, tpl = sys.argv[1], sys.argv[2]
+attack = json.load(open(os.path.join(root, "mitre-attack.json")))
+disarm = json.load(open(os.path.join(root, "disarm.json")))
+AT = {t["id"]: t for t in attack["techniques"]}
+DI = {t["id"]: t for t in disarm["techniques"]}
+
+bad, at_tac, di_tac, mapped = [], set(), set(), 0
+for path in glob.glob(os.path.join(tpl, "*.json")):
+    data = json.load(open(path))["translations"][0]["data"]
+    hit = False
+    for key, store, tactics in (("attack_techniques", AT, at_tac),
+                                ("disarm_techniques", DI, di_tac)):
+        for m in data.get(key, []):
+            hit = True
+            tid = m["technique"].split(" — ")[0]
+            if tid not in store:
+                bad.append("%s: %s" % (os.path.basename(path), tid))
+                continue
+            t = store[tid]
+            tactics.update(t["tactics"] if key == "attack_techniques" else [t["tactic"]])
+    mapped += hit
+
+print("attack_tactics=%d/%d" % (len(at_tac), len(attack["tactics"])))
+print("disarm_tactics=%d/%d" % (len(di_tac), len(disarm["tactics"])))
+print("mapped=%d" % mapped)
+print("bad=%d" % len(bad))
+print("attack_missing=%s" % ",".join(
+    sorted(t["id"] for t in attack["tactics"] if t["id"] not in at_tac)))
+print("disarm_missing=%s" % ",".join(
+    sorted(t["id"] for t in disarm["tactics"] if t["id"] not in di_tac)))
+MATRIX
+)
+getv() { sed -n "s/^$1=//p" <<<"$matrixout"; }
+
+report "$([ -f "$ROOT/assets/sysreptor/matrices/mitre-attack.json" ] &&
+  [ -f "$ROOT/assets/sysreptor/matrices/disarm.json" ] && echo 0 || echo 1)" \
+  "both matrices are checked in" "a matrix file is missing"
+report "$([ "$(getv bad)" = "0" ] && echo 0 || echo 1)" \
+  "every technique id on a template resolves in its matrix" \
+  "$(getv bad) id(s) do not resolve"
+report "$([ "$(getv attack_missing)" = "" ] && echo 0 || echo 1)" \
+  "the library reaches every ATT&CK tactic" \
+  "nothing maps to: $(getv attack_missing)"
+report "$([ "$(getv disarm_missing)" = "" ] && echo 0 || echo 1)" \
+  "the library reaches every DISARM tactic" \
+  "nothing maps to: $(getv disarm_missing)"
+nmapped=$(getv mapped)
+report "$([ "${nmapped:-0}" -ge 150 ] && echo 0 || echo 1)" \
+  "most templates carry a framework mapping" "only ${nmapped:-0} are mapped"
+
+# The influence design is the one that has to carry DISARM, and the engagement
+# ATT&CK — that is what makes the mapping appendix in each of them work.
+report "$(grep -q 'disarm_techniques' "$ROOT/assets/sysreptor/designs/annixion-influence.json" &&
+  grep -q 'DISARM Mapping' "$ROOT/assets/sysreptor/designs/annixion-influence.json" && echo 0 || echo 1)" \
+  "the influence design carries DISARM and its mapping appendix" \
+  "no disarm_techniques field or no appendix"
+report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
+  "the engagement design carries ATT&CK" "no attack_techniques field"
+report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
+  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no attack_techniques field"
+
 owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
 for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
             "Subdomain Takeover" "Look-Alike" "QR Code" "Key and Lock" "Disposal" "Insider"; do
@@ -444,7 +513,7 @@ done
 engsections=$(python3 -c "
 import json, sys
 print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
-" "$TMP/designs/annixion-engagement.json" 2>/dev/null)
+" "$ROOT/assets/sysreptor/designs/annixion-engagement.json" 2>/dev/null)
 missing_sections=""
 for want in recon social physical attack_path detection remediation; do
   grep -qw "$want" <<<"$engsections" || missing_sections="$missing_sections $want"
@@ -455,7 +524,7 @@ report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
 osintsections=$(python3 -c "
 import json, sys
 print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
-" "$TMP/designs/annixion-osint.json" 2>/dev/null)
+" "$ROOT/assets/sysreptor/designs/annixion-osint.json" 2>/dev/null)
 missing_sections=""
 for want in tasking methodology subject footprint exposure people assessment; do
   grep -qw "$want" <<<"$osintsections" || missing_sections="$missing_sections $want"
@@ -470,7 +539,7 @@ report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
 inflsections=$(python3 -c "
 import json, sys
 print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
-" "$TMP/designs/annixion-influence.json" 2>/dev/null)
+" "$ROOT/assets/sysreptor/designs/annixion-influence.json" 2>/dev/null)
 missing_sections=""
 for want in tasking methodology campaign network reach attribution response; do
   grep -qw "$want" <<<"$inflsections" || missing_sections="$missing_sections $want"
@@ -482,7 +551,7 @@ inflfields=$(python3 -c "
 import json, sys
 d = json.load(open(sys.argv[1]))
 print(' '.join(f['id'] for s in d['report_sections'] for f in s['fields']))
-" "$TMP/designs/annixion-influence.json" 2>/dev/null)
+" "$ROOT/assets/sysreptor/designs/annixion-influence.json" 2>/dev/null)
 for want in hypotheses alternative_explanation attribution_caveats personas persona_opsec legal_basis; do
   report "$(grep -qw "$want" <<<"$inflfields" && echo 0 || echo 1)" \
     "the influence design records: $want" "no field '$want'"
