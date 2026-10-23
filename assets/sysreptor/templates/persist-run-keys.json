@@ -24,7 +24,7 @@
           "https://attack.mitre.org/techniques/T1547/001/"
         ],
         "affected_components": [],
-        "attack_techniques": [
+        "mitre_techniques": [
           {
             "tactic": "TA0003 — Persistence",
             "technique": "T1547.001 — Registry Run Keys / Startup Folder",

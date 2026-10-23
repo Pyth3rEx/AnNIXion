@@ -300,6 +300,53 @@ report "$([ "$kept" -eq "$allnames" ] && [ "$kept" -gt 0 ] && echo 0 || echo 1)"
   "an instance holding nothing is missing the whole pack" \
   "kept $kept of $allnames designs"
 
+# A finding template is validated against the union of the custom finding
+# fields of every design in the instance, and the first definition of an id
+# wins. So an id shared with an upstream design that shapes it differently
+# makes the whole library unimportable — HTB CDEP's `attack_techniques` is
+# rows of detection content, ours were tactic/technique/procedure, and the
+# import died on the first template.
+clash=$(python3 - "$ROOT/assets/sysreptor/designs" "$packs" <<'CLASH'
+import glob, json, os, sys, tarfile
+
+ours_dir, packs = sys.argv[1], sys.argv[2]
+
+
+def shape(f):
+    items = f.get('items') or {}
+    sub = sorted(p['id'] for p in (items.get('properties') or []) if p.get('id'))
+    return '%s%s' % (f.get('type'), sub or '')
+
+
+def fields(doc):
+    return {f['id']: shape(f) for f in doc.get('finding_fields') or []
+            if isinstance(f, dict) and f.get('id')}
+
+
+ours = {}
+for path in sorted(glob.glob(os.path.join(ours_dir, '*.json'))):
+    ours.update(fields(json.load(open(path))))
+
+for pack in sorted(glob.glob(os.path.join(packs, 'design-*.tar.gz'))):
+    if 'annixion' in os.path.basename(pack):
+        continue
+    with tarfile.open(pack) as tar:
+        for m in tar.getmembers():
+            if not (m.isfile() and m.name.endswith('.json')):
+                continue
+            if '/' in m.name.removeprefix('./'):
+                continue
+            doc = json.load(tar.extractfile(m))
+            for fid, sh in fields(doc).items():
+                if fid in ours and ours[fid] != sh:
+                    print('%s in %s: %s vs ours %s'
+                          % (fid, doc.get('name'), sh, ours[fid]))
+CLASH
+)
+report "$([ -z "$clash" ] && echo 0 || echo 1)" \
+  "no finding field id is shaped one way here and another upstream" \
+  "$(tr '\n' ' ' <<<"$clash" | head -c 300)"
+
 mkdir -p "$TMP/htb"
 tar xzf "$packs/design-htb.tar.gz" -C "$TMP/htb" 2>/dev/null
 chmod -R u+w "$TMP/htb"
@@ -367,7 +414,7 @@ bad, at_tac, di_tac, mapped = [], set(), set(), 0
 for path in glob.glob(os.path.join(tpl, "*.json")):
     data = json.load(open(path))["translations"][0]["data"]
     hit = False
-    for key, store, tactics in (("attack_techniques", AT, at_tac),
+    for key, store, tactics in (("mitre_techniques", AT, at_tac),
                                 ("disarm_techniques", DI, di_tac)):
         for m in data.get(key, []):
             hit = True
@@ -376,7 +423,7 @@ for path in glob.glob(os.path.join(tpl, "*.json")):
                 bad.append("%s: %s" % (os.path.basename(path), tid))
                 continue
             t = store[tid]
-            tactics.update(t["tactics"] if key == "attack_techniques" else [t["tactic"]])
+            tactics.update(t["tactics"] if key == "mitre_techniques" else [t["tactic"]])
     mapped += hit
 
 print("attack_tactics=%d/%d" % (len(at_tac), len(attack["tactics"])))
@@ -413,10 +460,10 @@ report "$(grep -q 'disarm_techniques' "$ROOT/assets/sysreptor/designs/annixion-i
   grep -q 'DISARM Mapping' "$ROOT/assets/sysreptor/designs/annixion-influence.json" && echo 0 || echo 1)" \
   "the influence design carries DISARM and its mapping appendix" \
   "no disarm_techniques field or no appendix"
-report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
-  "the engagement design carries ATT&CK" "no attack_techniques field"
-report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
-  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no attack_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
+  "the engagement design carries ATT&CK" "no mitre_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
+  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no mitre_techniques field"
 
 owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
 for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
