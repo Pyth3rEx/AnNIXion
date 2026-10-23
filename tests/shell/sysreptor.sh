@@ -75,6 +75,13 @@ noargs=$("$bin" manage 2>&1)
 report "$(grep -q "manage needs a command" <<<"$noargs" && echo 0 || echo 1)" \
   "manage without a command says so" "said: $noargs"
 
+noprune=$("$bin" templates 2>&1)
+report "$(grep -q "templates prune" <<<"$noprune" && echo 0 || echo 1)" \
+  "templates without a subcommand says what it takes" "said: $noprune"
+badpack=$("$bin" templates prune 2>&1)
+report "$(grep -q "prune needs a pack name" <<<"$badpack" && echo 0 || echo 1)" \
+  "prune without a pack says so" "said: $badpack"
+
 badopt=$("$bin" setup --wat 2>&1)
 report "$(grep -q "unknown option" <<<"$badopt" && echo 0 || echo 1)" \
   "setup rejects an unknown option" "said: $badopt"
@@ -280,6 +287,12 @@ report "$([ "$untagged" -eq 0 ] && echo 0 || echo 1)" \
 report "$(grep -lq '"puppet"' "$TMP"/own/*.json && echo 0 || echo 1)" \
   "the social-engineering findings are tagged puppet" "no puppet-tagged template"
 
+# Duplicate titles are the complaint this guards against: two templates for
+# one finding means the operator picks between them in the UI every time.
+dupes=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort | uniq -d)
+report "$([ -z "$dupes" ] && echo 0 || echo 1)" \
+  "no two templates share a title" "duplicated: $(tr '\n' ' ' <<<"$dupes")"
+
 # Deterministic ids: a re-import must update a template, not clone it.
 dupids=$(grep -ho '"id": "[^"]*"' "$TMP"/own/*.json | sort | uniq -d | wc -l)
 report "$([ "$dupids" -eq 0 ] && echo 0 || echo 1)" \
@@ -387,6 +400,13 @@ print('fields=%d sections=%d missing=%s fmissing=%s placeholder=%s svg=%d'
     "the $d design has its logo substituted" "$out"
   report "$(grep -q 'svg=2' <<<"$out" && echo 0 || echo 1)" \
     "the $d design carries the mark on cover and header" "$out"
+  # The summary is the page that gets read; a severity chart belongs on it.
+  report "$(python3 -c "
+import json, sys
+t = json.load(open(sys.argv[1]))['report_template']
+sys.exit(0 if '<chart' in t and 'chart-figure' in t else 1)
+" "$f" 2>/dev/null && echo 0 || echo 1)" \
+    "the $d design charts its severities" "no chart in the summary"
   # The mark goes inside a JSON string; a double quote in it breaks the file.
   report "$(python3 -c "
 import json, re, sys
@@ -667,9 +687,10 @@ report "$([ "$(grep -c 'importdemodata --type=template' "$proj/docker.log")" -eq
   "template imports: $(grep -c 'importdemodata --type=template' "$proj/docker.log")"
 
 # Default-on, so the install that asks for nothing still gets the library.
-report "$(grep -qw annixion <<<"$(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)" && echo 0 || echo 1)" \
-  "the AnNIXion template library is on by default" \
-  "config says $(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)"
+configured_libs=$(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)
+report "$([ "$configured_libs" = "annixion" ] && echo 0 || echo 1)" \
+  "exactly one template library is configured" \
+  "config says '$configured_libs' — two libraries means every shared finding appears twice"
 
 off="$TMP/h7"
 mkdir -p "$off"

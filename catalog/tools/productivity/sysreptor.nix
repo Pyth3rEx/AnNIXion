@@ -340,6 +340,47 @@ _: {
             done
           }
 
+          # Remove a pack's templates from the instance. The ids come out of
+          # the bundled pack, so this deletes exactly what that pack imported
+          # and nothing a person wrote.
+          prune_pack() {
+            local pack="$1" ids count
+            [ -f "$packs/template-$pack.tar.gz" ] || die "no bundled pack called '$pack'."
+            ids=$(tar -xzOf "$packs/template-$pack.tar.gz" --wildcards '*.json' |
+              python3 -c '
+          import json, re, sys
+
+          # The archive concatenates one JSON document per template.
+          raw = sys.stdin.read()
+          print(" ".join(re.findall(r"\"id\": \"([0-9a-f-]{36})\"", raw)[::1]))
+          ')
+            [ -n "$ids" ] || die "found no template ids in the $pack pack."
+            count=$(wc -w <<<"$ids")
+
+            if [ -t 0 ]; then
+              read -r -p "sysreptor: delete up to $count templates imported from '$pack'? [y/N] " answer
+              case "$answer" in
+                y | Y | yes) ;;
+                *) die "cancelled." ;;
+              esac
+            fi
+
+            compose exec --no-TTY -e PRUNE_IDS="$ids" app python3 manage.py shell <<'PY'
+          import os
+          from sysreptor.pentests.models import FindingTemplate
+
+          ids = os.environ["PRUNE_IDS"].split()
+          qs = FindingTemplate.objects.filter(id__in=ids)
+          print("sysreptor: removing %d templates" % qs.count())
+          qs.delete()
+          PY
+            # Forget the record too, so the pack can be imported again later.
+            if [ -f "$imported" ]; then
+              grep -vxF "template-$pack" "$imported" >"$imported.tmp" || true
+              mv "$imported.tmp" "$imported"
+            fi
+          }
+
           usage() {
             cat <<EOF
           sysreptor — drive the dockerised SysReptor reporting platform.
@@ -354,6 +395,7 @@ _: {
             superuser [name]          create another login, interactively
             hash                      mint a password hash for the NixOS config
             designs [--force]         import the configured report designs
+            templates prune <pack>    remove the templates a pack imported
             manage <args...>          run manage.py inside the app container
             backup [file.zip]         full backup through manage.py backup
             restore <file.zip>        restore one — replaces everything in the database
@@ -404,6 +446,14 @@ _: {
             superuser)
               need_docker; ensure
               compose exec app python3 manage.py createsuperuser --username "''${1:-$user}"
+              ;;
+            templates)
+              [ "''${1:-}" = prune ] || die "usage: sysreptor templates prune <pack>"
+              [ -n "''${2:-}" ] || die "prune needs a pack name, e.g. 'sysreptor templates prune demo'"
+              need_docker; ensure
+              compose up -d
+              wait_healthy || die "no answer from $url — check 'sysreptor logs'."
+              prune_pack "$2"
               ;;
             designs)
               need_docker; ensure
