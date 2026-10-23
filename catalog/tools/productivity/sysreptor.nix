@@ -132,6 +132,7 @@ _: {
         text = ''
           deploySrc=${deploySrc}
           packs=${designs}/share/sysreptor/designs
+          syncpy=${../../../scripts/sysreptor-sync.py}
           state="''${XDG_DATA_HOME:-$HOME/.local/share}/sysreptor"
           deploy="$state/deploy"
           imported="$state/imported"
@@ -285,34 +286,68 @@ _: {
             return 1
           }
 
-          # Which configured packs this install has not seen yet. Importing one
-          # twice creates a second copy of every design in it, so the record is
-          # what keeps `up` idempotent.
-          unimported() { grep -qxF "$1" "$imported" 2>/dev/null || echo "$1"; }
+          # SysReptor mints a fresh id for every document it imports, so
+          # importing a pack twice duplicates it rather than updating it. The
+          # wrapper used to record that a pack had been imported and never look
+          # again, which made the first import the only one: a design added to
+          # the pack later could not reach an install that had already run.
+          #
+          # So the question asked here is not "was this pack imported" but
+          # "which of its documents is this instance missing", by name.
+          instance_names() {
+            python3 "$syncpy" names-script |
+              compose exec --no-TTY app python3 manage.py shell 2>/dev/null |
+              sed -n '/^__ANNIXION_NAMES_BEGIN__$/,/^__ANNIXION_NAMES_END__$/p' |
+              sed '1d;$d'
+          }
 
-          pending_packs() {
+          import_missing() {
+            local pack="$1" allnames="$2" kind have filtered listed count
+            kind=''${pack%%-*}
+            [ -f "$packs/$pack.tar.gz" ] || die "no bundled pack called '$pack'."
+            have="$state/have-$kind"
+            sed -n "s/^$kind://p" "$allnames" >"$have"
+            filtered="$state/missing-$pack.tar.gz"
+            listed="$state/missing-$pack.names"
+            if python3 "$syncpy" filter \
+                 "$packs/$pack.tar.gz" "$kind" "$have" "$filtered" 2>"$listed"; then
+              count=$(wc -l <"$listed")
+              echo "sysreptor: importing $count new document(s) from $pack ..."
+              compose exec --no-TTY app python3 manage.py importdemodata \
+                --type="$kind" <"$filtered"
+            fi
+            rm -f "$filtered" "$listed"
+          }
+
+          # Example reports are the exception: they are meant to be read and
+          # deleted, so a name check would import them again the moment someone
+          # tidied up. They stay once-only.
+          import_projects_once() {
             local pack
             for pack in $want_designs; do
-              unimported "design-$pack"
-            done
-            if [ "$want_projects" = yes ]; then
-              for pack in $want_designs; do
-                unimported "project-$pack"
-              done
-            fi
-            for pack in $want_templates; do
-              unimported "template-$pack"
+              grep -qxF "project-$pack" "$imported" 2>/dev/null && continue
+              [ -f "$packs/project-$pack.tar.gz" ] || continue
+              echo "sysreptor: importing project-$pack ..."
+              compose exec --no-TTY app python3 manage.py importdemodata \
+                --type=project <"$packs/project-$pack.tar.gz"
+              echo "project-$pack" >>"$imported"
             done
           }
 
-          import_pack() {
-            local pack="$1" kind
-            kind=''${pack%%-*}
-            [ -f "$packs/$pack.tar.gz" ] || die "no bundled pack called '$pack'."
-            echo "sysreptor: importing $pack ..."
-            compose exec --no-TTY app python3 manage.py importdemodata \
-              --type="$kind" <"$packs/$pack.tar.gz"
-            echo "$pack" >>"$imported"
+          # Rewrite the documents this repo owns, in place and by name, so a
+          # design that changed in the flake reaches an instance that already
+          # has a design of that name. Ids are kept, so projects using them keep
+          # working. This overwrites edits made in the UI to AnNIXion designs
+          # and templates, which is why nothing calls it without being asked.
+          update_owned() {
+            local pack kind
+            for pack in design-annixion template-annixion; do
+              [ -f "$packs/$pack.tar.gz" ] || continue
+              kind=''${pack%%-*}
+              python3 "$syncpy" update-script "$packs/$pack.tar.gz" "$kind" |
+                compose exec --no-TTY app python3 manage.py shell 2>/dev/null |
+                sed -n "s/^__ANNIXION_UPDATED__ \\(.*\\)/sysreptor: rewrote \\1 document(s) in $pack/p"
+            done
           }
 
           # The declared login, created once so a fresh install has something
@@ -364,14 +399,21 @@ _: {
           }
 
           import_pending() {
-            local pending pack
-            pending=$(pending_packs)
-            [ -n "$pending" ] || return 0
-            echo "sysreptor: waiting for $url before importing designs ..."
+            local names pack
+            [ -n "$want_designs$want_templates" ] || return 0
+            echo "sysreptor: waiting for $url before checking designs ..."
             wait_healthy || die "no answer from $url — check 'sysreptor logs', then 'sysreptor designs'."
-            for pack in $pending; do
-              import_pack "$pack"
+            names="$state/instance-names"
+            instance_names >"$names"
+            for pack in $want_designs; do
+              import_missing "design-$pack" "$names"
             done
+            for pack in $want_templates; do
+              import_missing "template-$pack" "$names"
+            done
+            [ "$want_projects" = yes ] && import_projects_once
+            rm -f "$names"
+            return 0
           }
 
           # Remove a pack's templates from the instance. The ids come out of
@@ -428,7 +470,9 @@ _: {
           Operating:
             superuser [name]          create another login, interactively
             hash                      mint a password hash for the NixOS config
-            designs [--force]         import the configured report designs
+            designs [--update]        import designs the instance is missing;
+                                      --update also rewrites the AnNIXion ones
+                                      from this build, replacing UI edits to them
             templates prune <pack>    remove the templates a pack imported
             manage <args...>          run manage.py inside the app container
             backup [file.zip]         full backup through manage.py backup
@@ -493,11 +537,12 @@ _: {
               need_docker; ensure
               # Importing runs inside the app container, so it has to be up.
               compose up -d
-              if [ "''${1:-}" = "--force" ]; then
-                rm -f "$imported"
-                echo "sysreptor: re-importing — designs already in the UI will gain a second copy."
-              fi
               import_pending
+              if [ "''${1:-}" = "--update" ]; then
+                echo "sysreptor: rewriting the AnNIXion designs and templates in place —"
+                echo "           any edit made to them in the UI is replaced."
+                update_owned
+              fi
               echo "sysreptor: designs in place ($want_designs)"
               ;;
             manage)

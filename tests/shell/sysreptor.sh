@@ -109,9 +109,31 @@ case "$1 $2" in
   "compose -f")
     # BIND_PORT is how the wrapper publishes the UI; record what compose saw.
     printf 'BIND_PORT=%s\n' "${BIND_PORT:-<unset>}" >>"$log"
-    # An import reads the pack on stdin; drain it so the wrapper sees no pipe
-    # error and the log line means "a pack really was handed over".
-    [[ "$*" == *importdemodata* ]] && cat >/dev/null
+    names="${DOCKER_STUB_NAMES:-/dev/null}"
+    if [[ "$*" == *importdemodata* ]]; then
+      # Behave like the database the wrapper is reconciling against: remember
+      # the names the pack carried, so a later query answers the way an
+      # instance that already holds them would. Without this the stub would
+      # report an empty instance for ever and every run would re-import.
+      kind=$(printf '%s' "$*" | sed -n 's/.*--type=\([a-z]*\).*/\1/p')
+      tmp=$(mktemp)
+      cat >"$tmp"
+      if [ -s "$tmp" ] && [ -n "${DOCKER_STUB_SYNC:-}" ]; then
+        python3 "$DOCKER_STUB_SYNC" names "$tmp" "$kind" 2>/dev/null |
+          sed "s/^/$kind:/" >>"$names"
+      fi
+      rm -f "$tmp"
+      exit 0
+    fi
+    if [[ "$*" == *"manage.py shell"* ]]; then
+      script=$(cat)
+      if [[ "$script" == *__ANNIXION_NAMES__* ]]; then
+        printf '__ANNIXION_NAMES_BEGIN__\n'
+        [ -f "$names" ] && cat "$names"
+        printf '__ANNIXION_NAMES_END__\n'
+      fi
+      exit 0
+    fi
     exit 0
     ;;
   *) exit 0 ;;
@@ -126,6 +148,8 @@ drive() {
   shift
   HOME="$home" XDG_DATA_HOME="$home/.local/share" \
     DOCKER_STUB_LOG="$home/docker.log" PATH="$stub:$PATH" \
+    DOCKER_STUB_NAMES="$home/instance-names" \
+    DOCKER_STUB_SYNC="$ROOT/scripts/sysreptor-sync.py" \
     ANNIXION_SYSREPTOR_CONF="$home/sysreptor.conf" \
     "$bin" "$@" 2>&1
 }
@@ -608,8 +632,9 @@ imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
 report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "the HTB designs are imported on the first run" \
   "importdemodata ran ${imports:-0} time(s): $first_import"
-report "$(grep -qxF 'design-htb' "$imp/.local/share/sysreptor/imported" && echo 0 || echo 1)" \
-  "and the import is recorded" "no record under the state dir"
+seen=$(grep -c '^design:' "$imp/instance-names" 2>/dev/null || echo 0)
+report "$([ "${seen:-0}" -ge 9 ] && echo 0 || echo 1)" \
+  "every design in the pack reaches the instance" "the instance holds ${seen:-0}"
 report "$(grep -q 'type=project' "$imp/docker.log" && echo 1 || echo 0)" \
   "the demo projects stay out unless asked for" "a project pack was imported anyway"
 
@@ -623,17 +648,31 @@ imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
 report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "nor does a later start" "importdemodata ran ${imports:-0} time(s) in total"
 
-drive "$imp" designs --force >/dev/null
+# The failure this reconciliation exists for: a pack that gains a design after
+# the instance has already imported it. The old gate recorded the pack as done
+# and the new design could never arrive. Drop one name from what the instance
+# reports and the next run must fetch exactly that one back.
+dropped=$(grep '^design:' "$imp/instance-names" | head -1)
+grep -vxF "$dropped" "$imp/instance-names" >"$imp/instance-names.tmp"
+mv "$imp/instance-names.tmp" "$imp/instance-names"
+drive "$imp" designs >/dev/null
 imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
 report "$([ "${imports:-0}" -eq 2 ] && echo 0 || echo 1)" \
-  "--force imports again when you ask it to" "importdemodata ran ${imports:-0} time(s) in total"
+  "a design missing from the instance is imported on the next run" \
+  "importdemodata ran ${imports:-0} time(s) in total"
+report "$(grep -qxF "$dropped" "$imp/instance-names" && echo 0 || echo 1)" \
+  "and it is the one that was missing" "'$dropped' did not come back"
+back=$(grep -c "^$dropped\$" "$imp/instance-names")
+report "$([ "${back:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "without duplicating the designs already there" \
+  "'$dropped' is present ${back:-0} time(s)"
 
 # ── The declared login is created once ─────────────────────────────────────
 # Re-applying it on every start would silently revert a password changed in
 # the UI, which is the only place it can be changed.
 # shellcheck disable=SC2016 # a hash, not an expansion — the $ must stay literal
 login_hash='pbkdf2_sha256$600000$testsalt$dGVzdGhhc2g='
-logins=$(grep -c 'manage.py shell' "$imp/docker.log")
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$imp/docker.log")
 report "$([ "${logins:-0}" -eq 0 ] && echo 0 || echo 1)" \
   "no login is bootstrapped without a declared hash" "a shell ran anyway"
 
@@ -649,9 +688,9 @@ CONF
 
 run_setup "$acct" >/dev/null
 drive "$acct" up >/dev/null
-logins=$(grep -c 'manage.py shell' "$acct/docker.log")
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$acct/docker.log")
 report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
-  "the declared login is created on the first start" "manage.py shell ran ${logins:-0} time(s)"
+  "the declared login is created on the first start" "the bootstrap ran ${logins:-0} time(s)"
 report "$(grep -q 'BOOTSTRAP_USERNAME=scribe' "$acct/docker.log" && echo 0 || echo 1)" \
   "under the configured name" "compose saw: $(grep -o 'BOOTSTRAP_USERNAME=[^ ]*' "$acct/docker.log" | head -1)"
 report "$(grep -qF "BOOTSTRAP_PASSWORD_HASH=$login_hash" "$acct/docker.log" && echo 0 || echo 1)" \
@@ -659,10 +698,10 @@ report "$(grep -qF "BOOTSTRAP_PASSWORD_HASH=$login_hash" "$acct/docker.log" && e
   "compose saw: $(grep -o 'BOOTSTRAP_PASSWORD_HASH=[^ ]*' "$acct/docker.log" | head -1)"
 
 drive "$acct" up >/dev/null
-logins=$(grep -c 'manage.py shell' "$acct/docker.log")
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$acct/docker.log")
 report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "a later start never re-applies the password" \
-  "manage.py shell ran ${logins:-0} time(s) — a UI password change would have been reverted"
+  "the bootstrap ran ${logins:-0} time(s) — a UI password change would have been reverted"
 
 proj="$TMP/h5"
 mkdir -p "$proj"
