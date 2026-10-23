@@ -244,6 +244,62 @@ for pack in design-annixion design-htb design-offsec design-demo project-htb pro
     "the $pack pack is bundled" "no $packs/$pack.tar.gz"
 done
 
+# SysReptor's importer resolves an asset by its exact member name,
+# `<document-id>-assets/<name>`, so an archive that writes `./` in front of
+# every name imports the JSON and then dies on the first logo. That traceback
+# only appears against a running instance, which is why the archives
+# themselves are read here the way the importer reads them.
+unresolved_assets() {
+  python3 - "$@" <<'ASSETS'
+import json, sys, tarfile
+from pathlib import Path
+
+for pack in sys.argv[1:]:
+    with tarfile.open(pack) as tar:
+        docs = [m.name for m in tar.getmembers()
+                if m.isfile() and Path(m.name).match('*.json')
+                and not Path(m.name).parent.parts]
+        if not docs:
+            print('%s: the importer reads no documents from it' % Path(pack).name)
+        for member in docs:
+            doc = json.load(tar.extractfile(member))
+            for key, suffix in (('assets', '-assets'), ('images', '-images'),
+                                ('files', '-files')):
+                for entry in doc.get(key) or []:
+                    name = entry.get('name_internal') or entry.get('name')
+                    if not name:
+                        continue
+                    path = '%s%s/%s' % (doc['id'], suffix, name)
+                    try:
+                        tar.getmember(path)
+                    except KeyError:
+                        print('%s: %s' % (Path(pack).name, path))
+ASSETS
+}
+
+unresolved=$(unresolved_assets "$packs"/*.tar.gz)
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "every asset a pack references resolves where the importer looks" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+# The wrapper pipes a filtered archive rather than the pack, so the filter has
+# to carry a document's assets along with it or the import fails the same way.
+: >"$TMP/have-none"
+python3 "$ROOT/scripts/sysreptor-sync.py" filter \
+  "$packs/design-htb.tar.gz" design "$TMP/have-none" "$TMP/filtered.tar.gz" \
+  2>"$TMP/filtered.names"
+unresolved=$(unresolved_assets "$TMP/filtered.tar.gz")
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "and the filtered archive carries them with the design" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+allnames=$(python3 "$ROOT/scripts/sysreptor-sync.py" names \
+  "$packs/design-htb.tar.gz" design | wc -l)
+kept=$(wc -l <"$TMP/filtered.names")
+report "$([ "$kept" -eq "$allnames" ] && [ "$kept" -gt 0 ] && echo 0 || echo 1)" \
+  "an instance holding nothing is missing the whole pack" \
+  "kept $kept of $allnames designs"
+
 mkdir -p "$TMP/htb"
 tar xzf "$packs/design-htb.tar.gz" -C "$TMP/htb" 2>/dev/null
 chmod -R u+w "$TMP/htb"

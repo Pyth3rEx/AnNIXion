@@ -32,13 +32,29 @@ import tarfile
 KINDS = ("design", "template", "project")
 
 
+def _plain(name):
+    """A member name without tar's `./` prefix or trailing slash — the
+    spelling the importer matches on."""
+    return name[2:].rstrip("/") if name.startswith("./") else name.rstrip("/")
+
+
+def _is_document(name):
+    """True for a member the importer reads as a document: JSON at the root of
+    the archive, rather than a file inside an assets directory."""
+    return name.endswith(".json") and "/" not in _plain(name)
+
+
+def _asset_dir(name):
+    """The assets directory a member belongs to, or None at the root."""
+    plain = _plain(name)
+    return plain.split("/", 1)[0] if "/" in plain else None
+
+
 def _docs(pack):
     """Yield (member-name, document) for every top-level JSON in the pack."""
     with tarfile.open(pack, "r:gz") as tar:
         for member in tar.getmembers():
-            if not member.isfile() or not member.name.endswith(".json"):
-                continue
-            if member.name.count("/") > 1:  # inside an assets directory
+            if not member.isfile() or not _is_document(member.name):
                 continue
             fh = tar.extractfile(member)
             if fh is None:
@@ -72,28 +88,28 @@ def cmd_filter(pack, kind, names_file, out):
             have = {line.rstrip("\n") for line in fh if line.strip()}
 
     keep_members, kept_names = set(), []
-    keep_prefixes = []
+    keep_dirs = set()
     for member_name, doc in _docs(pack):
         name = doc_name(doc)
         if name is None or name in have:
             continue
         keep_members.add(member_name)
         kept_names.append(name)
-        # Assets and images sit in a directory named after the document id.
-        # tarfile reports the directory member itself without its trailing
-        # slash, so match that spelling too or the directory entry is dropped.
+        # A document's files sit in a directory named after its id, and the
+        # importer looks them up there by name. Keeping the document without
+        # them is an import that fails halfway.
         did = doc.get("id")
         if did:
-            for suffix in ("-assets", "-images"):
-                keep_prefixes.append("./%s%s" % (did, suffix))
+            keep_dirs |= {did + suffix for suffix in ("-assets", "-images", "-files")}
 
     if not kept_names:
         return 1
 
     with tarfile.open(pack, "r:gz") as src, tarfile.open(out, "w:gz") as dst:
         for member in src.getmembers():
-            wanted = member.name in keep_members or any(
-                member.name.startswith(p) for p in keep_prefixes)
+            wanted = (member.name in keep_members
+                      or _asset_dir(member.name) in keep_dirs
+                      or _plain(member.name) in keep_dirs)
             if not wanted:
                 continue
             dst.addfile(member, src.extractfile(member) if member.isfile() else None)
@@ -136,7 +152,7 @@ with tarfile.open(fileobj=io.BytesIO(base64.b64decode(_PACK)), mode="r:gz") as t
     for member in tar.getmembers():
         if not member.isfile() or not member.name.endswith(".json"):
             continue
-        if member.name.count("/") > 1:
+        if "/" in (member.name[2:] if member.name.startswith("./") else member.name):
             continue
         doc = json.load(tar.extractfile(member))
 

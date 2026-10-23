@@ -52,10 +52,14 @@ _: {
 
       # Each pack is repacked from its canonicalised tree, in a fixed order
       # and with no timestamps, so the archive handed to the importer is
-      # byte-identical per rebuild.
+      # byte-identical per rebuild. The `./` prefix tar writes for `-C dir .`
+      # is transformed away: the importer looks an asset up as the exact
+      # member name `<id>-assets/<name>`, and `./<id>-assets/<name>` is not
+      # that name, so a design with assets fails to import.
       packCmd = kind: src: ''
         tar -czf $d/${kind}.tar.gz \
           --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          --transform='s|^\./||' \
           -C ${src} .
         chmod 444 $d/${kind}.tar.gz
       '';
