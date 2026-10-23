@@ -23,7 +23,21 @@
         "references": [
           "https://attack.mitre.org/techniques/T1200/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1566 — Phishing",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          }
+        ]
       }
     }
   ]

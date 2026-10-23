@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "8dd652a1-2714-56ad-9e73-828c01bcec61",
+  "tags": [
+    "red",
+    "infrastructure",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "8c34e02b-2b22-51b1-af73-d9d79c8f0fcc",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Preconditions for Ransomware Impact Are Present",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The conditions that determine ransomware impact — broad file share access from ordinary\naccounts, reachable backup infrastructure, and recoverable copies that can be deleted with\nthe same credentials — were all present.\n",
+        "description": "Ransomware outcomes are decided by the environment rather than by the malware. The\nquestions that matter are how much data a single compromised account can reach, whether\nthe recovery copies are reachable with the same credentials, and whether shadow copies and\nsnapshots can be removed by the account that encrypts.\n\nIn this environment each of those answers favoured the attacker. No deployment or\ndetonation was performed; the finding records the reachability and the control state\nobserved, which is what determines blast radius.\n\nStated this way it is also actionable without reference to any particular malware family,\nand it remains valid as those families change.\n",
+        "recommendation": "* Restrict file share access so no ordinary account can reach data across the whole estate;\n  measure the reachable volume per account.\n* Hold at least one backup copy that is immutable or offline and cannot be reached with\n  production credentials.\n* Separate backup infrastructure credentials entirely from the production domain.\n* Alert on bulk file modification rates and on deletion of shadow copies or snapshots.\n* Test restoration at realistic scale rather than testing that backups complete.\n",
+        "short_recommendation": "Hold an immutable backup copy and limit per-account reach to file shares.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1486/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1486 — Data Encrypted for Impact",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1490 — Inhibit System Recovery",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

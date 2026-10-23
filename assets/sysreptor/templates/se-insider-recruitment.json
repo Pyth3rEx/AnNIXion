@@ -23,7 +23,24 @@
         "references": [
           "https://attack.mitre.org/techniques/T1199/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0091 — Recruit Malign Actors",
+            "note": ""
+          },
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0010 — Cultivate Ignorant Agents",
+            "note": ""
+          },
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0093 — Acquire/Recruit Network",
+            "note": ""
+          }
+        ]
       }
     }
   ]

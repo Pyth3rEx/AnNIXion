@@ -23,7 +23,26 @@
         "references": [
           "https://attack.mitre.org/techniques/T1189/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1189 — Drive-by Compromise",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1195.002 — Compromise Software Supply Chain",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0123 — Control Information Environment through Offensive Cyberspace Operations",
+            "note": ""
+          }
+        ]
       }
     }
   ]

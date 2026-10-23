@@ -23,7 +23,19 @@
         "references": [
           "https://attack.mitre.org/techniques/T1558/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1558 — Steal or Forge Kerberos Tickets",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1550.003 — Pass the Ticket",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

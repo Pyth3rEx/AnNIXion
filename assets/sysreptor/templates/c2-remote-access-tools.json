@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "c5341cf3-8fe2-50b1-a956-4d4dddd59680",
+  "tags": [
+    "red",
+    "endpoint",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "c9e2bcc5-fae3-5f44-afa6-cad14e512322",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Commercial Remote Access Tools Run Without Restriction",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:H/I:H/A:H",
+        "summary": "Legitimate commercial remote access and support software could be installed and run by\nstandard users, providing interactive control of endpoints without any attacker tooling.\n",
+        "description": "Remote support tools give an operator everything a custom implant would, while being\nsigned, reputable, and frequently already permitted because some part of the business uses\nthem. Endpoint protection does not flag them, and to a defender the session looks like\nsupport activity.\n\nThis is the standard route in help-desk impersonation: the user is talked through\ninstalling the tool themselves, which means no exploitation occurs and no vulnerability is\ninvolved. It is also heavily used in ransomware intrusions for the same reasons.\n\nBlocking one product is ineffective, since dozens are equivalent and portable versions\nneed no installation. The control that works is allow-listing the specific product the\norganisation has chosen and refusing the rest by default.\n",
+        "recommendation": "* Decide which remote access product is sanctioned, allow it, and block the others by\n  default rather than individually.\n* Prevent standard users from installing software, including portable executables that\n  require no installer.\n* Alert on the execution of known remote access tooling outside the sanctioned product.\n* Include the \"install this tool so I can help you\" pattern in staff briefing, since no\n  technical control catches a user who is persuaded.\n",
+        "short_recommendation": "Allow one sanctioned remote access tool and block all others by default.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1219/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1219 — Remote Access Tools",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "6e175019-5a87-56c4-8c69-7a8cf6b68311",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d015072e-7a9d-59d5-a9e7-757eaff20801",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Narrative Amplified by a Coordinated Cluster",
+        "cvss": "n/a",
+        "summary": "A cluster of accounts amplified campaign content at a volume and rhythm inconsistent with\norganic sharing, saturating the conversation around the organisation's name.\n",
+        "description": "Flooding does not need to persuade. Filling the available space around a search term or\nhashtag displaces other material, and an audience that encounters only one account of\nevents treats it as consensus.\n\nThe distinguishing features are the amplification ratio — accounts that share far more\nthan they originate — and reciprocity, where the same accounts amplify each other across\nunrelated topics. Volume alone is not evidence; genuine outrage also produces volume.\n\nFlooding has a measurable effect on the organisation's own reach, and quantifying that\ndisplacement makes the impact concrete in a way that reach figures for the campaign do\nnot.\n",
+        "recommendation": "* Quantify the displacement of the organisation's own content, not only the campaign's\n  reach; it is the impact that matters.\n* Report the cluster as a network, with reciprocity evidence, rather than account by\n  account.\n* Maintain communication through channels the organisation controls, which cannot be\n  flooded.\n",
+        "short_recommendation": "Quantify displacement; report the cluster as a network.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0049"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0118 — Amplify Existing Narrative",
+            "note": ""
+          },
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0049 — Flood Information Space",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

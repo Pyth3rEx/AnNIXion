@@ -23,7 +23,26 @@
         "references": [
           "https://attack.mitre.org/techniques/T1200/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1684.001 — Impersonation",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          },
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0143 — Persona Legitimacy",
+            "note": ""
+          }
+        ]
       }
     }
   ]

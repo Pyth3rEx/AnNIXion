@@ -23,7 +23,19 @@
         "references": [
           "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1539 — Steal Web Session Cookie",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1550.004 — Web Session Cookie",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

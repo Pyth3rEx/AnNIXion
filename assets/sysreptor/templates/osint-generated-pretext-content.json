@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "ba87bd44-0cc6-5e15-a88b-c8db3ce64c20",
+  "tags": [
+    "osint",
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6551196a-7180-5a8b-8f25-0889f5bd241d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Generated Content Lowers the Cost of Credible Pretexts",
+        "cvss": "n/a",
+        "summary": "The public detail available about the organisation is sufficient to generate fluent,\ncontext-accurate pretext material and plausible supporting personas at negligible cost.\n",
+        "description": "The traditional indicators staff were taught to rely on — poor language, generic greetings,\nobvious inconsistency — no longer separate a real message from a fabricated one. Generated\ncontent is fluent, correctly uses internal terminology drawn from public sources, and can be\nproduced at volume.\n\nSupporting personas follow the same economics. A profile with a coherent history, plausible\nimagery and consistent activity can be assembled cheaply, which removes the verification\nvalue of a profile simply existing and looking established.\n\nThe defensive implication is that awareness training built on spotting defects is obsolete,\nand the organisation's resistance has to come from process — verification that does not\ndepend on judging whether a message feels right.\n",
+        "recommendation": "* Rewrite awareness material around verification behaviour rather than around spotting\n  language defects, which no longer distinguish anything.\n* Require out-of-band verification for consequential requests regardless of how plausible\n  the approach appears.\n* Make reporting a suspicion socially safe, since the individual judgement that training\n  previously relied on is no longer reliable.\n",
+        "short_recommendation": "Base awareness on verification behaviour, not on spotting language defects.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1683/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0042 — Resource Development",
+            "technique": "T1683.001 — Written Content",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0042 — Resource Development",
+            "technique": "T1585.001 — Social Media Accounts",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

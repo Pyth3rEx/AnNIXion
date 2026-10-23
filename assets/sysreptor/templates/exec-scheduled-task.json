@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "d0dc3f3d-855a-5c80-b34d-6daba1403417",
+  "tags": [
+    "red",
+    "windows",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3e92279b-d3eb-5ad8-ac27-9a6a549519b6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Scheduled Task Creation Unrestricted and Unmonitored",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Scheduled tasks could be created locally and remotely on hosts across the estate, providing\nexecution, persistence and privilege escalation in a single mechanism, with no alerting on\ntask creation.\n",
+        "description": "Scheduled tasks are unusually valuable to an operator because one mechanism covers three\ntactics: it executes code, it survives reboot, and a task configured to run as SYSTEM\nescalates whoever can create it.\n\nRemote creation extends this across the estate wherever administrative access is held, and\nit is a well-worn lateral movement route that requires no additional tooling.\n\nTask creation is a high-quality detection opportunity — the events are specific, and\nlegitimate creation outside deployment tooling is rare — but it is only useful if the\nevents are collected, which they frequently are not.\n",
+        "recommendation": "* Alert on scheduled task creation and modification, excluding the known deployment\n  tooling rather than excluding the event.\n* Restrict remote task creation to administrative tiers and management hosts.\n* Review existing tasks for ones that run from user-writable paths or as SYSTEM without a\n  recorded owner.\n",
+        "short_recommendation": "Alert on task creation and restrict remote creation to management hosts.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1053/005/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1053.005 — Scheduled Task",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

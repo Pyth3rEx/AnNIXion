@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "7808ade0-1849-5116-a80d-0ed17d0b0b56",
+  "tags": [
+    "red",
+    "endpoint",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d0cf4094-6181-5cb6-a1fa-0d934f05ecdd",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Binaries Masquerading as System Components Not Detected",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Executables named and located to resemble legitimate operating system components ran\nwithout detection, and were not distinguished from the genuine binaries by any control.\n",
+        "description": "Masquerading exploits the fact that both humans and rules commonly match on name and path\nrather than on identity. An executable placed where an analyst expects a system binary,\nwith the name of one, passes casual review and frequently passes allow-list rules written\nby path.\n\nThe genuine binaries are signed and present in protected locations, so the discrimination\nis available — publisher and hash both distinguish them — but only where the control is\nwritten that way. Path-based rules are easier to write and are what is usually found.\n\nIt also degrades response: during an investigation, the analyst's familiarity with system\nprocess names works against them.\n",
+        "recommendation": "* Write application control rules against publisher and hash rather than path and filename.\n* Alert on system binary names executing from paths other than their protected locations.\n* Alert on unsigned executables running from user-writable directories.\n",
+        "short_recommendation": "Base application control on publisher and hash, never on path.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1036/005/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1036.005 — Match Legitimate Resource Name or Location",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

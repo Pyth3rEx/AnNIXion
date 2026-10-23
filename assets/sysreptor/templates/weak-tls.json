@@ -23,7 +23,19 @@
         "references": [
           "https://wiki.mozilla.org/Security/Server_Side_TLS"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1040 — Network Sniffing",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1557 — Adversary-in-the-Middle",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

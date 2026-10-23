@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "9517b631-3f84-5658-8d37-e86ae6328c84",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "72b9560f-256d-5cf3-8f3c-54d730c982be",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Domain Policy Modification Unmonitored",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Group Policy objects linked to privileged scopes could be modified by accounts outside the\ntier of the systems they govern, and the modifications produced no alert.\n",
+        "description": "Group Policy is an execution and configuration channel that reaches every joined machine.\nWrite access to a GPO linked to a sensitive scope is therefore equivalent to administrative\naccess to everything in that scope, and it is routinely delegated more widely than that\nequivalence implies.\n\nDelegation accumulates. Rights granted for a specific task remain after the task, and\nnobody re-examines who can edit which policy. The result is a quiet path from an ordinary\nsupport account to domain-wide change.\n\nPolicy modification also bypasses the controls above: it can disable logging, add firewall\nrules, create scheduled tasks and install software, all through the sanctioned mechanism.\n",
+        "recommendation": "* Audit delegation on every GPO linked to a privileged scope and remove rights not required\n  by a current, named responsibility.\n* Alert on GPO modification, creation and linking, and treat changes to privileged scopes as\n  incidents until confirmed.\n* Apply administrative tiering so accounts administering workstations cannot edit policy\n  affecting servers or domain controllers.\n",
+        "short_recommendation": "Audit GPO delegation and alert on modification of privileged policies.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1484/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1484 — Domain or Tenant Policy Modification",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

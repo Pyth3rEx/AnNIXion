@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "56b5c85d-cc2a-5a62-8841-1559acdafdd3",
+  "tags": [
+    "red",
+    "windows",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "173c9b5c-da97-550c-8304-8aca98e02766",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Living-off-the-Land Binaries Unrestricted",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Signed operating system utilities capable of downloading, decoding and executing arbitrary\ncode were available to standard users and were used throughout the engagement without\ndetection.\n",
+        "description": "The operating system ships with everything an operator needs. Utilities intended for\nlegitimate administration will fetch a remote file, decode it, and execute it — all\nsigned by the vendor, all expected on disk, and all permitted by allow-lists built on\npublisher trust.\n\nThis defeats the common mental model in which attacker tooling is foreign. Nothing foreign\nis introduced, so file-based controls have nothing to inspect, and publisher-based\napplication control explicitly permits the binary.\n\nThe discriminator is argument and parent-process context: the utility is not unusual, but\nbeing invoked by a document handler with a URL argument is. That context is only available\nif command lines are logged, which is the gap this finding usually comes down to.\n",
+        "recommendation": "* Enable command-line process auditing and forward it centrally; without arguments these\n  executions are indistinguishable from legitimate ones.\n* Block the utilities with no business use on workstations through application control.\n* Alert on known abuse patterns — a document handler spawning a script host, a signed\n  utility invoked with a remote URL.\n* Apply allow-listing with rules that account for interpreter abuse rather than trusting\n  the publisher alone.\n",
+        "short_recommendation": "Log command lines and alert on signed utilities invoked with remote arguments.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1218/",
+          "https://lolbas-project.github.io/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1218.011 — Rundll32",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1127 — Trusted Developer Utilities Proxy Execution",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

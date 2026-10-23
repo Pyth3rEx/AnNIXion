@@ -1,0 +1,47 @@
+{
+  "format": "templates/v2",
+  "id": "3604d549-061b-5345-ba30-59c15da5a8c4",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d3e9f7d8-f167-5f3f-8028-10c8e1922775",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Directory Enumeration Unrestricted for Standard Users",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Any authenticated account could enumerate users, groups, computers, trusts and\naccess-control relationships across the directory, and the queries supporting that\nenumeration were not logged or alerted on.\n",
+        "description": "Directory read access is required for the environment to function, so the enumeration\nitself cannot simply be removed. What it provides to an operator, however, is the complete\nmap: every privileged group, every delegation, every trust, and every path from a\ncompromised account to a valuable one.\n\nThat map is what converts a single compromised workstation into a planned route to domain\ncompromise, and it is obtainable within minutes of the first authentication.\n\nSince prevention is largely unavailable, the controls that matter are reducing what the map\nreveals — fewer excessive rights and shorter paths — and detecting the enumeration itself,\nwhich has a distinctive high-volume query signature.\n",
+        "recommendation": "* Run the same path analysis the attacker would, and remove the shortest routes from\n  ordinary accounts to privileged ones.\n* Enable directory auditing and alert on high-volume or unusual query patterns from\n  non-administrative accounts.\n* Remove unnecessary delegation and nested privileged group membership, which is what the\n  enumeration finds.\n* Consider decoy accounts whose only purpose is to be found by enumeration and alerted on.\n",
+        "short_recommendation": "Run attacker path analysis yourself and shorten the paths it finds.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1087/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1087.002 — Domain Account",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1069.002 — Domain Groups",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1482 — Domain Trust Discovery",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

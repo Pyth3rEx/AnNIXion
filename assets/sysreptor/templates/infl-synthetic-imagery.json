@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "35377ca5-a5bc-58f6-934d-14dc4bd25591",
+  "tags": [
+    "puppet",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "31dc4cec-2ba9-50be-8091-fabf0b06b4ef",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Synthetic Imagery Used to Support the Narrative",
+        "cvss": "n/a",
+        "summary": "Generated or substantially altered images were circulated as evidence for campaign\nclaims, including depictions of premises, staff or events that did not occur.\n",
+        "description": "Image generation has removed the cost barrier that once limited fabricated visual\nevidence. The practical consequence is not that audiences are fooled by any single\nimage, but that the existence of convincing fakes lets any genuine image be dismissed as\none — the liar's dividend, which damages the organisation's ability to evidence its own\naccount.\n\nDetection claims should be stated carefully. Automated detectors are unreliable enough\nthat a confident assertion based on one will not survive challenge. Provenance evidence —\nwhere the image first appeared, what it is inconsistent with, what the original was — is\nmore defensible than any classifier output.\n\nWhere the subject is an identifiable individual, the finding concerns a person and should\nbe handled as personal data, with the individual told before the report circulates.\n",
+        "recommendation": "* Base any assessment on provenance and internal inconsistency rather than on a detector\n  score, and state the confidence explicitly.\n* Adopt content provenance signing for the organisation's own official imagery, so\n  genuine material can be positively verified instead of merely asserted.\n* Notify any identifiable individual depicted before the assessment is circulated.\n",
+        "short_recommendation": "Assess on provenance, not detectors; sign official imagery.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0086"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0086 — Develop Image-Based Content",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

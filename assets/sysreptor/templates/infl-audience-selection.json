@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "6789029d-1d26-5921-8187-848ce339a16a",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "89b987e8-56c5-5e88-b518-685045097f27",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Campaign Targets a Defined Audience Segment",
+        "cvss": "n/a",
+        "summary": "Campaign content is addressed to a specific, consistently selected audience rather than\na general public. Language, platform choice and timing all narrow onto the same segment,\nwhich indicates deliberate audience selection rather than organic spread.\n",
+        "description": "Organic controversy is untidy: it reaches whoever happens to encounter it, in whatever\nwords they use themselves. A planned operation is tidier, and that tidiness is the\nindicator. Where a narrative appears in one language register, on the platforms one\ngroup uses, at the hours that group is awake, the selection was made before the content\nwas written.\n\nIdentifying the audience matters more than identifying the author. It tells the client\nwho is being worked on, which determines where a correction would have to land to be\nseen, and it usually reveals the objective: an operation aimed at a workforce is after\nsomething different from one aimed at customers or at a regulator.\n\nRecord the evidence for the segmentation — the platform mix, the vocabulary, the timing\ndistribution — rather than asserting it. Audience selection is an inference, and it\nshould be presented with the confidence the evidence supports.\n",
+        "recommendation": "* Identify which of the client's own audiences overlaps the targeted segment, and brief\n  that audience directly rather than issuing a general statement.\n* Monitor the platforms the segment actually uses, which are frequently not the ones the\n  communications team watches.\n* Where the targeted segment is the client's own staff, route the briefing through\n  internal channels before anything is said publicly.\n",
+        "short_recommendation": "Brief the targeted segment directly, on the platforms it uses.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0073"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA01 — Plan Strategy",
+            "technique": "T0073 — Determine Target Audiences",
+            "note": ""
+          },
+          {
+            "tactic": "TA13 — Target Audience Analysis",
+            "technique": "T0072 — Segment Audiences",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

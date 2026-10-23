@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "79bc7ff5-05d6-534c-b770-2b042e3c4ae1",
+  "tags": [
+    "puppet",
+    "narrative",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "bc25376d-a695-5a50-b9a5-d355e079e4cd",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Paid Promotion Used to Microtarget Staff and Customers",
+        "cvss": "n/a",
+        "summary": "Campaign content was promoted through paid advertising narrowly targeted at the\norganisation's own staff, customers or local community, placing it in front of the\npeople whose opinion matters most while remaining invisible to everyone else.\n",
+        "description": "Paid targeting changes the economics of an influence operation. A few hundred units of\ncurrency puts a claim in front of exactly the audience that can act on it, and because\ndelivery is selective the organisation frequently learns of it only when someone\nscreenshots an advertisement it cannot otherwise see.\n\nThis invisibility is the operational problem. Monitoring that relies on public search\nwill not find targeted advertising, and the organisation cannot rebut what it cannot\nobserve. Platform advertisement libraries are the only reliable route, and their\ncoverage differs sharply by platform and jurisdiction.\n\nRecord the advertiser identity exactly as the platform presents it, including any\ndisclosed payer. That identity is often the strongest attribution evidence in the whole\ncampaign, because payment leaves a record that posting does not.\n",
+        "recommendation": "* Search the advertisement libraries of each relevant platform for the organisation's own\n  name, brands and executives, and do so on a schedule rather than on report.\n* Report targeted advertisements to the platform under its advertising policy, which is\n  usually enforced more strictly than its content policy.\n* Ask staff and customers to forward promoted content they are shown; selective delivery\n  makes them the only reliable sensors.\n",
+        "short_recommendation": "Monitor platform ad libraries and report under advertising policy.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0018"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA05 — Microtarget",
+            "technique": "T0018 — Purchase Targeted Advertisements",
+            "note": ""
+          },
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0114 — Deliver Ads",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

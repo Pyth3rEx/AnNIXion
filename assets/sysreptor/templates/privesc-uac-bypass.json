@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "6feca348-47b3-5564-bcbc-38e60aaf5f4b",
+  "tags": [
+    "red",
+    "windows",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "a4a379aa-e888-5dcd-8b69-5fdf16d7a23e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "User Account Control Bypassable",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Elevation to full administrative rights was achieved without a consent prompt, using\nauto-elevating system components, from an account that was a member of the local\nadministrators group.\n",
+        "description": "User Account Control is a convenience boundary rather than a security one, a position the\nvendor states explicitly. Where a user is already an administrator, numerous auto-elevating\ncomponents can be induced to run attacker-chosen code at full privilege without a prompt.\n\nThe practical consequence is that any treatment of UAC as a control is misplaced: the\nprotection it appears to offer does not survive an account that holds administrative\nmembership in the first place.\n\nThe real finding is therefore usually the standing administrative rights that make the\nbypass available, rather than the bypass technique itself.\n",
+        "recommendation": "* Remove standing local administrator membership from user accounts, which eliminates the\n  precondition rather than the technique.\n* Where administrative rights are required, provide them through a separate account or a\n  just-in-time elevation mechanism with its own audit trail.\n* Set UAC to always prompt as a defence in depth measure, while recognising it is not a\n  security boundary.\n",
+        "short_recommendation": "Remove standing local administrator rights; UAC is not a security boundary.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1548/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0004 — Privilege Escalation",
+            "technique": "T1548.002 — Bypass User Account Control",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

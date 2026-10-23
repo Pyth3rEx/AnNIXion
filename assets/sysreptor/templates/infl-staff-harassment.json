@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "1812354b-19ab-5f3f-893d-46e726b1931f",
+  "tags": [
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "07602fa0-d27e-59bd-884f-22385592aeac",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Coordinated Harassment of Named Staff",
+        "cvss": "n/a",
+        "summary": "Named employees were subjected to coordinated abuse, including contact through personal\nchannels and publication of personal information, as a component of the campaign.\n",
+        "description": "Harassment of individuals is the point at which an influence operation produces direct\nharm to people, and it is frequently the component the organisation is least prepared\nfor. Communications teams are equipped to handle reputational attack; they are not\nequipped to support an employee whose home address has been published.\n\nThe operational objective is usually suppression: removing an inconvenient voice by making\nparticipation personally costly. It is effective, and the resulting silence is sometimes\nmistaken internally for the problem having subsided.\n\nThis finding is about identifiable people. They should be informed before it circulates,\ntheir wishes should shape how it is written, and the duty of care sits above the\nanalytical interest in documenting it.\n",
+        "recommendation": "* Inform affected individuals before the report circulates and let their wishes shape how\n  the finding is recorded.\n* Provide practical support — personal data removal, platform escalation, security advice\n  at home — rather than communications advice.\n* Make clear that withdrawing from public channels is a supported option and not a failure.\n* Preserve evidence for law enforcement where the conduct is criminal, and support any\n  individual who wishes to report it.\n",
+        "short_recommendation": "Support the individuals first; preserve evidence for law enforcement.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0048"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0048 — Harass",
+            "note": ""
+          },
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0124 — Suppress Opposition",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

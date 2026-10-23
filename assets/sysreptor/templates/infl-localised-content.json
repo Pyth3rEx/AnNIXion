@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "674cb108-44e7-5114-9f4d-22bc433ae4fd",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "57fadbd4-0733-5144-81de-efbdcd65d9d4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Content Localised to Exploit a Regional Grievance",
+        "cvss": "n/a",
+        "summary": "Campaign content is produced in local language and idiom and keyed to a grievance\nspecific to one site or region, indicating preparation rather than translation of a\ngeneric message.\n",
+        "description": "Localisation is expensive, and its presence raises the assessed investment behind a\ncampaign. Producing content that reads as locally written — correct idiom, local\nreferences, awareness of a dispute that was never national news — requires either local\noperators or a sustained research effort.\n\nIt also makes the content far more effective. An audience that recognises its own\nsituation described accurately extends credibility to the rest of the message, including\nthe parts that are fabricated.\n\nLocalised campaigns tend to be invisible to central monitoring, which searches in the\nheadquarters language. Where one localised cluster is found, look for others before\nconcluding the campaign is confined to a single site.\n",
+        "recommendation": "* Monitor in the languages of every site, not only the head office language.\n* Engage local management in the assessment; they can identify which grievances are real\n  and which have been manufactured, and central staff usually cannot.\n* Resolve or acknowledge the genuine local issue; a campaign built on a real grievance\n  cannot be addressed by communications alone.\n",
+        "short_recommendation": "Monitor in local languages and involve local management.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0101"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA05 — Microtarget",
+            "technique": "T0101 — Create Localised Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA05 — Microtarget",
+            "technique": "T0102 — Leverage Echo Chambers/Filter Bubbles",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -22,7 +22,14 @@
         "references": [
           "https://owasp.org/www-project-mobile-top-10/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1005 — Data from Local System",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

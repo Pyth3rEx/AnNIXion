@@ -23,7 +23,14 @@
         "references": [
           "https://attack.mitre.org/techniques/T1558/004/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1558.004 — AS-REP Roasting",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

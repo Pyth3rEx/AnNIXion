@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "fe5067d9-99e5-5515-9689-5728d092c6f1",
+  "tags": [
+    "red",
+    "infrastructure",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3f581908-2be8-5a93-842c-f359bd6463a8",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Data Exfiltrated Over DNS Without Detection",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Data was encoded into DNS queries and transferred out of the environment. Resolution is\npermitted from hosts that are otherwise heavily restricted, and no analysis of query\nvolume or structure was in place.\n",
+        "description": "DNS is permitted almost everywhere, including from segments where nothing else is allowed\nout, which makes it the reliable fallback channel. Throughput is poor, but exfiltration is\nrarely time-critical and the channel is usually unmonitored.\n\nThe traffic is not subtle when anyone looks: long labels, high-entropy subdomains, and\nquery volumes to a single zone far above anything a real application produces. The problem\nis that DNS logs are often not collected at all, or are collected at the forwarder where\nper-host attribution has already been lost.\n\nWhere a host can resolve arbitrary external names directly, the internal resolver is\nbypassed entirely, and even a well-instrumented resolver sees nothing.\n",
+        "recommendation": "* Force all DNS through internal resolvers and block direct external resolution at the\n  perimeter, so queries are attributable to a host.\n* Log resolver queries centrally and alert on entropy, label length and per-zone volume.\n* Apply DNS filtering that includes newly observed and algorithmically generated domains.\n* Treat a host resolving a single external zone thousands of times as an incident, not as\n  noise.\n",
+        "short_recommendation": "Force DNS through logged internal resolvers and alert on query structure.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1048/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0010 — Exfiltration",
+            "technique": "T1048.003 — Exfiltration Over Unencrypted Non-C2 Protocol",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1071.004 — DNS",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -21,7 +21,19 @@
         "references": [
           "https://attack.mitre.org/techniques/T1592/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1592.002 — Software",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1591.004 — Identify Roles",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

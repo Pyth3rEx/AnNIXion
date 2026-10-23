@@ -23,7 +23,19 @@
         "references": [
           "https://owasp.org/Top10/A01_2021-Broken_Access_Control/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0004 — Privilege Escalation",
+            "technique": "T1068 — Exploitation for Privilege Escalation",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

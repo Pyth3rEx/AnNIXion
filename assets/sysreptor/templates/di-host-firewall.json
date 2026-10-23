@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "a7a208a1-3ccc-5806-a8cf-420a953fccb8",
+  "tags": [
+    "red",
+    "endpoint",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "5c212f48-b632-5531-901c-a4e81d767c5f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Host Firewall Modifiable Without Detection",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Host firewall rules were modified on compromised systems to permit inbound connections\nthat policy prohibits. The changes were not centrally enforced and generated no alert.\n",
+        "description": "The host firewall is frequently the only control preventing lateral movement between peer\nworkstations, since network segmentation rarely separates endpoints from each other. A\nrule change therefore opens a path that the network design assumes is closed.\n\nWhere rules are configured locally rather than enforced by policy, the change persists and\nnothing reverts it. Where they are enforced by policy but the policy refresh is infrequent,\na window of hours is available, which is ample.\n\nThe absence of alerting matters as much as the change: firewall rule modification on a\nworkstation has almost no legitimate cause outside a managed deployment process.\n",
+        "recommendation": "* Enforce host firewall rules centrally so local changes are reverted at the next policy\n  refresh, and shorten that interval.\n* Alert on firewall rule modification and on the firewall service stopping.\n* Block inbound peer-to-peer connections between workstations at the host firewall, which\n  removes the most common lateral path.\n",
+        "short_recommendation": "Enforce firewall rules centrally and alert on local modification.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1686/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1686 — Disable or Modify System Firewall",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

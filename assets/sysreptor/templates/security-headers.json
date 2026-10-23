@@ -23,7 +23,14 @@
         "references": [
           "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]

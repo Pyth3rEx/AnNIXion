@@ -22,7 +22,31 @@
         "references": [
           "https://attack.mitre.org/techniques/T1598/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1566.004 — Spearphishing Voice",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1598.004 — Spearphishing Voice",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0088 — Develop Audio-Based Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          }
+        ]
       }
     }
   ]

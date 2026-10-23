@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "5e30573f-f5af-5fb3-98ff-b0e68d7632e7",
+  "tags": [
+    "puppet",
+    "narrative",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "487ea298-68a6-5ef8-a8bc-96b06f95921d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Narrative Designed to Divide an Internal Audience",
+        "cvss": "n/a",
+        "summary": "Campaign content works an existing internal division — between sites, functions or\nstaff groups — rather than attacking the organisation as a whole. The framing invites\none group to see another as the problem.\n",
+        "description": "Dividing is cheaper than persuading. An operation that cannot change what an audience\nbelieves about the organisation can still change what parts of the organisation believe\nabout each other, and that produces real operational damage: slower decisions, withheld\ninformation, and staff who will not raise a concern because of who would receive it.\n\nThe content usually reads as sympathetic to whichever group is being addressed. That is\nwhat makes it effective and what makes it hard for the organisation to respond — a\nrebuttal addressed to everyone implicitly sides against someone.\n\nWhere the division worked on is genuine, say so. A report that treats a real grievance\npurely as an adversary's talking point will be dismissed by the staff who hold it, and\nthe recommendation that follows from it will not be implemented.\n",
+        "recommendation": "* Address the underlying grievance through normal internal channels, separately from any\n  response to the campaign; conflating the two discredits both.\n* Avoid public rebuttals that require the organisation to take one internal side.\n* Brief managers of the targeted groups directly, so that the first they hear of it is\n  not from the campaign.\n",
+        "short_recommendation": "Address the real grievance separately from the campaign response.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0079"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0079 — Divide",
+            "note": ""
+          },
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0083 — Integrate Target Audience Vulnerabilities into Narrative",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

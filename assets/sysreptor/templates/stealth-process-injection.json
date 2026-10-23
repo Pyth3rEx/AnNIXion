@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "363cdf20-aa35-53fa-9617-8bd3d2816e22",
+  "tags": [
+    "red",
+    "endpoint",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "5b96078d-042a-5b3b-bc0c-32a43ac18a54",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Process Injection Not Detected",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Code was injected into legitimate running processes and executed under their identity,\ninheriting their trust and network permissions, without detection by endpoint protection.\n",
+        "description": "Injection moves attacker code inside a process the organisation trusts. Outbound\nconnections then originate from a signed, expected binary; application control rules that\npermit that binary permit the injected code; and analysts reviewing process trees see\nnothing unusual.\n\nDetecting it depends on behavioural telemetry — cross-process memory operations, remote\nthread creation, suspicious memory protections — rather than on file inspection, since no\nmalicious file need exist. Products differ widely in whether they collect this, and in\nwhether the collection is enabled in the deployed configuration.\n\nWhere injection succeeds silently, most subsequent detections are also unlikely, because\nthe activity is attributed to the host process.\n",
+        "recommendation": "* Confirm that the endpoint product's behavioural detection for cross-process operations is\n  enabled, not merely licensed.\n* Apply exploit protection to high-value processes — browsers, mail clients, office\n  applications — to raise the cost of injection into them.\n* Hunt for signed processes making network connections inconsistent with their function.\n",
+        "short_recommendation": "Enable behavioural detection for cross-process operations and protect high-value processes.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1055/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1055 — Process Injection",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

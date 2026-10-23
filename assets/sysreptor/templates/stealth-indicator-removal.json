@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "971914c9-01e7-5ef2-aa5b-5264e6104a8e",
+  "tags": [
+    "red",
+    "detection",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e09b7b1f-c99d-542d-b25c-d90c32a7d7ee",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Attacker Artefacts Removed Without Trace",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "Files, shell history and other artefacts created during the engagement were removed from\ncompromised hosts, and nothing recorded their creation or deletion.\n",
+        "description": "Where the only record of activity lives on the host that was compromised, that record is\nwithin the attacker's control. Cleanup then removes the organisation's ability to scope an\nincident: not just whether it happened, but which systems and which data were reached.\n\nScoping is the practical cost. An organisation that detects an intrusion but cannot\nestablish its extent must assume the worst across the estate, which turns a contained\nincident into an expensive one.\n\nThe engagement's own cleanup is a reasonable proxy for an adversary's, and the finding is\nusually best expressed as what the client would have been able to reconstruct afterwards\n— in this case, very little.\n",
+        "recommendation": "* Forward process, file and authentication telemetry off-host so the record survives the\n  host.\n* Retain it for a period matched to realistic dwell time rather than to storage\n  convenience.\n* Test the ability to reconstruct a timeline from forwarded data alone, as part of incident\n  response exercises.\n",
+        "short_recommendation": "Forward telemetry off-host and test timeline reconstruction without the host.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1070/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1070 — Indicator Removal",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1070.003 — Clear Command History",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

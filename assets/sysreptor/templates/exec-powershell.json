@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "736c7e9f-f468-5be3-8aa9-e1e369a6d57a",
+  "tags": [
+    "red",
+    "windows",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "8f2ab87c-0190-5a90-a90c-4398b158ef7a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unconstrained Script Execution on Workstations",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Standard users could execute arbitrary PowerShell, including downloaded and in-memory\ncontent, with no application control, constrained language mode or script block logging\nin place.\n",
+        "description": "PowerShell is present on every Windows host, is trusted, and provides full access to the\nplatform, which makes it the default execution route after initial access. Nothing has to\nbe dropped to disk and nothing unsigned has to run.\n\nThe three controls that matter are rarely all present. Constrained language mode removes\nmost offensive tooling's ability to function; application control restricts which scripts\nmay run at all; script block logging records what was executed even when it never touched\ndisk. In this environment none was enforced, so execution was both unrestricted and\nunrecorded.\n\nExecution policy is not a security control and should not be counted as one — it is\nbypassed by a flag.\n",
+        "recommendation": "* Enforce constrained language mode for standard users through application control policy.\n* Enable script block and module logging, and forward the resulting events centrally.\n* Apply application control so only approved scripts execute, starting in audit mode to\n  establish the baseline.\n* Remove or restrict legacy script hosts, which are commonly used to sidestep PowerShell\n  controls entirely.\n",
+        "short_recommendation": "Enforce constrained language mode and enable script block logging.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1059/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1059.001 — PowerShell",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

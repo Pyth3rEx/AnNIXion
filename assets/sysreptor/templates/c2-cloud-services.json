@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "37887de7-565a-5930-8cfd-dfd55531c514",
+  "tags": [
+    "red",
+    "cloud",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "330bc486-a6fa-5560-ad6d-a943d4980806",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Trusted Cloud Services Used as a Command Channel",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Command and control was conducted through a mainstream cloud service that the\norganisation permits and relies upon, so the channel carried the service's own\nreputation and could not be blocked without business impact.\n",
+        "description": "Using a service the organisation cannot block is the strongest position an operator can\nhold. Traffic goes to a provider on every allow-list, with a valid certificate for a\ngenuine domain, and blocking the destination breaks legitimate work.\n\nThis defeats controls built on destination identity, which is most of them. What remains\nis the distinction between the organisation's own tenant and an arbitrary one, and\nbetween normal application behaviour and automation — neither of which is visible without\ntenant restriction or API-level logging.\n\nWhere the service is also used for file storage, the same channel provides exfiltration,\nso the control and data paths collapse into one permitted destination.\n",
+        "recommendation": "* Apply tenant restrictions so permitted cloud services may only be used with the\n  organisation's own tenant.\n* Where the service offers API-level audit logging, ingest it; network-level visibility\n  will not distinguish tenants.\n* Alert on automation patterns against permitted services — regular polling, machine-like\n  intervals — rather than on the destination itself.\n",
+        "short_recommendation": "Restrict permitted cloud services to the corporate tenant and ingest their audit logs.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1102/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1102.002 — Bidirectional Communication",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

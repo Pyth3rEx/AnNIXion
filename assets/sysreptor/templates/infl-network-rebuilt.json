@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "d50602c0-ba1c-5cb9-92f5-3bafe90c64d1",
+  "tags": [
+    "puppet",
+    "persona"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ac7a0976-480e-5c50-b890-11489453a72f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Account Network Rebuilt After Takedown",
+        "cvss": "n/a",
+        "summary": "Accounts suspended by platform enforcement were replaced within a short period by new\naccounts reproducing the same network structure, naming conventions and content.\n",
+        "description": "Reconstitution is the clearest available evidence that an operation is resourced and\nintentional, and it is also the most useful finding for setting the client's expectations:\ntakedown is attrition, not resolution.\n\nThe replacements usually carry forward something identifying — handle conventions,\nfollower overlap, reused imagery, the same posting rhythm — because rebuilding entirely\nfrom scratch costs more than the operator is willing to pay. Those carried-forward traits\nare what let a cluster be tracked across generations, and they are worth documenting\nspecifically.\n\nWhere reconstitution is observed, the platform relationship matters more than any single\nreport. Platforms act on evidenced recidivism in ways they do not act on individual\naccounts.\n",
+        "recommendation": "* Document the traits carried across generations so successor clusters can be identified\n  quickly.\n* Report reconstitution to the platform as evasion of enforcement, which is treated more\n  seriously than the original violation.\n* Set client expectations that takedown suppresses rather than ends the campaign.\n",
+        "short_recommendation": "Track carried-forward traits and report reconstitution as enforcement evasion.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0128"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0128 — Conceal Information Assets",
+            "note": ""
+          },
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0092 — Build Network",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

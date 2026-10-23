@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "52300cc4-7184-57f6-b417-fb3c7ab74961",
+  "tags": [
+    "osint",
+    "external",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ba861121-c4a9-5a93-8d43-3396d693a2a4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Network Topology Inferable From Public Sources",
+        "cvss": "n/a",
+        "summary": "Routing data, address allocations, reverse DNS naming and public peering records permit\nthe organisation's network structure, supplier dependencies and site locations to be\nreconstructed without any active scanning.\n",
+        "description": "Routing and allocation data is public by design and cannot be withdrawn. What it reveals\nis the shape of the estate: which ranges belong to the organisation, which transit and\ncloud providers it depends on, and — through reverse DNS naming conventions — frequently\nthe function and location of individual hosts.\n\nNaming is the controllable part. Reverse records that encode site, role and environment\nconvert an address range into an annotated map, and they are usually set that way for\noperational convenience without the external consequence being considered.\n\nSupplier dependencies derived from routing also inform supply chain targeting, which is\nwhy this exposure matters beyond reconnaissance of the organisation itself.\n",
+        "recommendation": "* Review reverse DNS naming so records do not encode site, role or environment.\n* Accept that allocation and routing data is public, and ensure the hosts it points at are\n  hardened on that assumption.\n* Include the supplier dependencies visible in routing data in supply chain risk\n  assessment.\n",
+        "short_recommendation": "Stop encoding site and role in reverse DNS; assume routing data is public.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1590/004/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1590.004 — Network Topology",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1590.003 — Network Trust Dependencies",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

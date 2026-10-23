@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "3f7c8282-68a0-543c-bdf5-f150a0899344",
+  "tags": [
+    "red",
+    "cloud",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ec0bc048-b8d7-5d5b-a640-0b98c5f6824e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Bulk Transfer to Personal Cloud Storage Unrestricted",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Large volumes of corporate data were uploaded to consumer cloud storage accounts from\nmanaged devices. The destinations are widely used legitimate services, and no control\ndistinguished corporate from personal accounts.\n",
+        "description": "Consumer storage is the most convenient exfiltration route available, because the traffic\nis to a reputable provider over a normal protocol and is indistinguishable in transit from\nsanctioned use of the same service.\n\nThe common control failure is blocking by domain. The corporate tenant and a personal\naccount of the same provider usually share hostnames, so a block removes a business\ncapability without removing the exfiltration route, and is quickly reversed. Tenant\nrestriction headers — which allow the organisation's tenant while refusing others — are\nthe control that actually distinguishes them, and they are frequently not deployed.\n\nThis route is also the one most often used by departing employees, so the control has\nvalue well beyond the red team scenario that exposed it.\n",
+        "recommendation": "* Enforce tenant restrictions at the proxy for major cloud providers, allowing the\n  corporate tenant and refusing personal accounts of the same service.\n* Alert on upload volume to cloud storage per user, which catches providers not covered by\n  tenant restriction.\n* Review which storage services have a business justification and refuse the remainder by\n  default rather than by exception.\n",
+        "short_recommendation": "Enforce tenant restrictions rather than blocking cloud storage by domain.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1567/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0010 — Exfiltration",
+            "technique": "T1567.002 — Exfiltration to Cloud Storage",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}
