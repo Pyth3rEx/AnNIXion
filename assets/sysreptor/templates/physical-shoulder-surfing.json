@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "4e3b35e9-7ac4-512f-a5f8-84503d62f8d1",
+  "tags": [
+    "red",
+    "physical",
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4c355f90-806b-54a6-8a69-9aef283d3989",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Screens and Credentials Observable in Public Areas",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Screens displaying sensitive material were readable from public areas, from outside through windows, and over the shoulder in transit, and credentials could be observed being typed.\n",
+        "description": "Observation needs no tooling. Ground-floor offices and meeting rooms with glass walls are readable from the street; a reception screen faces the waiting area; a laptop on a train is readable from the next seat.\n\nWhat is exposed is ordinary work, which is the point: client names, financial figures, incident details, and — where a password is typed slowly — credentials. A photograph taken at a distance turns a glance into a record.\n\nMeeting rooms are the sharpest case, because the material displayed is deliberately the most significant, and because visitors are often left alone in them with a screen still showing the previous meeting.\n",
+        "recommendation": "* Fit privacy filters to devices used in public and in client-facing areas, and issue them for travel.\n* Position screens away from windows and walkways; apply film to ground-floor glass where needed.\n* Clear screens and whiteboards before leaving a meeting room, and lock on leaving the desk.\n* Include sightlines in office design and in physical assessments, from outside the building as well as inside.\n",
+        "short_recommendation": "Use privacy filters and position screens away from sightlines.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1111/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

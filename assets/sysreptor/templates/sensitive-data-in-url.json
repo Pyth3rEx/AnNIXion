@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "79cc8c83-7884-5309-b699-a06ef5289c8a",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "371513f0-881e-5f18-a6dd-bd16846fc242",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Disclosure of Sensitive Data in URL Parameters",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Tokens and identifiers were passed in query strings, where they are recorded in server and proxy logs, browser history, and `Referer` headers sent to third parties. A value that appears in a URL should be treated as disclosed.\n",
+        "description": "URLs are logged everywhere by design. They appear in web server access logs, reverse proxy and CDN logs, corporate proxy records, browser history, bookmarks, and in the `Referer` header sent to any third-party resource the page loads.\n\nWhen the value in the URL is a password reset token, a session identifier, an API key or a shared document link, each of those locations becomes a place the credential can be recovered from — often by people with no access to the application itself, such as whoever reads the proxy logs.\n\nShared links compound it: users paste URLs into chat and tickets, unaware that the link is the credential.\n",
+        "recommendation": "* Send sensitive values in the request body or in headers, not in the query string.\n* Where a token must arrive by link, make it single-use and short-lived, and exchange it immediately for a session.\n* Set `Referrer-Policy` to limit what is disclosed to third parties.\n* Scrub known-sensitive parameters from logs at the point of writing.\n",
+        "short_recommendation": "Move sensitive values out of URLs into request bodies.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1552.001 — Credentials In Files",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

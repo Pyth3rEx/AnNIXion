@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "f6d654e0-4729-5271-929f-4459b74301a9",
+  "tags": [
+    "puppet",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b01dd46d-88a2-5bef-9947-852248b507a7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Manipulated Video or Audio of Organisation Representatives",
+        "cvss": "n/a",
+        "summary": "Video or audio purporting to show executives or spokespeople making statements they did\nnot make was circulated in support of the campaign.\n",
+        "description": "Synthetic audio is the more dangerous of the two in practice. It is cheaper to produce,\nfar harder to assess, and travels through channels — voicemail, meeting recordings,\nforwarded clips — where no provenance signal exists and where recipients act on it\ndirectly.\n\nThe operational risk is not only reputational. Synthetic voice of a named executive is\nthe same artefact used for payment fraud, and a campaign that has produced one has\nproduced the input for the other. Treat the discovery as relevant to the finance process\nas well as to communications.\n\nShort clips of public figures are the usual target, because training material is\nabundant. Executives who speak publicly are therefore the most exposed, which is worth\nstating plainly to them.\n",
+        "recommendation": "* Treat a synthetic voice artefact as a fraud indicator as well as an influence one, and\n  brief finance and executive assistants accordingly.\n* Require out-of-band verification for any instruction received by voice, independent of\n  how familiar the voice is.\n* Publish official recordings through a channel the organisation controls, so there is an\n  authoritative version to compare against.\n",
+        "short_recommendation": "Treat synthetic voice as a fraud indicator; verify out of band.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0087"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0087 — Develop Video-Based Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0088 — Develop Audio-Based Content",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

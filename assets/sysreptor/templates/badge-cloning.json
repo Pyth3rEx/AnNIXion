@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "5892b488-721f-5a60-85be-236eaa522cb3",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b6230482-41ea-5c6d-82ce-89c4a9125b7c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Access Badges Can Be Cloned",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Access credentials used legacy technology that transmits a static identifier with no authentication, so a badge could be read covertly at close range and copied onto a blank card that the access control system accepts as genuine.\n",
+        "description": "Low-frequency proximity cards, and early high-frequency cards with their published keys, broadcast a fixed number to any reader that asks. There is no challenge, no cryptography and no way for the system to tell an original from a copy.\n\nReading requires only brief proximity. A concealed long-range reader in a bag collects credentials in a lift, at a reception desk, or while queueing for coffee, and the owner notices nothing. The number is then written to a blank card, and the clone is indistinguishable in the logs from the genuine badge — which also means the legitimate holder appears responsible for whatever follows.\n\nCredentials are also exposed through photographs: badges worn visibly in social media posts and press images often show the card number or enough of the design to forge a convincing visual copy.\n",
+        "recommendation": "* Migrate to credentials using mutual authentication and diversified keys (such as DESFire EV2/EV3 or Seos), and disable legacy formats on readers rather than running both.\n* Where migration is phased, pair the badge with a PIN or biometric at sensitive doors.\n* Require badges to be removed from view outside the building, and ask staff not to photograph them.\n* Alert on impossible journeys and on one credential used at distant readers in quick succession.\n* Deactivate credentials promptly on departure, and audit active badges against current staff.\n",
+        "short_recommendation": "Migrate to cryptographic credentials with mutual authentication.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

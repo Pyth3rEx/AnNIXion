@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "922845c4-de79-5b44-9cec-38438e82b704",
+  "tags": [
+    "red",
+    "infrastructure",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "9f8bdfa4-576b-5c34-aadc-9fd82e2551f7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Insufficient Network Segmentation",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The internal network was substantially flat: hosts in user subnets could reach servers, management interfaces and other users' machines without restriction. A foothold anywhere therefore provided reach everywhere.\n",
+        "description": "Segmentation decides what a compromise costs. In a flat network, one phished workstation reaches domain controllers, databases, backup systems, hypervisors and every other workstation — so the first foothold is effectively the last obstacle.\n\nLateral movement in that environment is indistinguishable from normal traffic, because normal traffic goes everywhere too. There is no boundary at which a request from a workstation to a backup server looks wrong.\n\nWorkstation-to-workstation traffic deserves particular attention: it is rarely needed, and it is the path used for both lateral movement and ransomware propagation.\n",
+        "recommendation": "* Segment by function and sensitivity — users, servers, management, OT, guest — and filter between segments by default-deny.\n* Block workstation-to-workstation traffic except where a business case requires it.\n* Place management interfaces in a dedicated segment reachable only through a bastion.\n* Verify segmentation by testing from each segment rather than by reading the intended design.\n",
+        "short_recommendation": "Segment by function and filter between segments by default.",
+        "references": [
+          "https://www.cisa.gov/sites/default/files/publications/layering-network-security-segmentation_infographic_508_0.pdf"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1210 — Exploitation of Remote Services",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1021 — Remote Services",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

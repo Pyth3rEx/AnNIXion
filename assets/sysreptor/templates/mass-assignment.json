@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "6f98ad56-3810-527c-807a-15c25ab513cb",
+  "tags": [
+    "red",
+    "web",
+    "api"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "cfdc990a-e467-507a-9932-856fd620c816",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Mass Assignment",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:N",
+        "summary": "Request bodies were bound directly onto internal objects, so fields the interface never exposed could be set by adding them to the request. Where those fields govern privilege or ownership, this is privilege escalation in one request.\n",
+        "description": "Frameworks that map a request body onto a model object save a great deal of code, and will map whatever keys they are given. The form shows name and email; the model also has `is_admin`, `role`, `account_id` and `balance`, and the binder does not know the difference.\n\nThe fields worth setting are easy to guess and often confirmed by an API response that returns the full object, by the GraphQL schema, or by the client-side bundle.\n\nProfile update, registration and settings endpoints are the usual locations, because they are the ones built around \"accept this object and save it\".\n",
+        "recommendation": "* Bind to an explicit allow-list of fields per endpoint, or to a dedicated data-transfer object containing only the fields the endpoint accepts.\n* Never bind directly onto persistence models.\n* Set privilege and ownership fields server-side only, from the session.\n* Add tests that submit privileged fields and assert they are ignored.\n",
+        "short_recommendation": "Bind requests to an explicit allow-list of fields.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1098 — Account Manipulation",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

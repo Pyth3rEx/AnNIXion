@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "17799086-9f86-588d-b653-d2475f4943f6",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f01dd648-7092-509f-a1aa-192eea6944b2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Campaign Objective Assessed as Strategic Rather Than Opportunistic",
+        "cvss": "n/a",
+        "summary": "The campaign's shape — sustained duration, consistent framing, and investment in assets\nbuilt before the first post — indicates a planned objective rather than opportunistic\npiling-on after a news event.\n",
+        "description": "The distinction decides the response. An opportunistic pile-on decays on its own and is\nusually made worse by engagement. A campaign with a strategic objective does not decay,\nbecause somebody is paying to sustain it, and ignoring it concedes the field.\n\nIndicators of planning include assets created well before they were used, a narrative\nthat survives being debunked by changing its supporting claim while keeping its\nconclusion, and continued investment after the originating news cycle has closed.\n\nState the assessed objective explicitly and separately from the evidence for it. An\nobjective is the most consequential and least verifiable thing in the report, and a\nreader must be able to see which parts are observation and which are inference.\n",
+        "recommendation": "* Plan for a campaign that persists: a single rebuttal is the wrong instrument against a\n  sustained operation.\n* Agree in advance the threshold at which the client escalates — to platforms, to a\n  regulator, or to law enforcement — so the decision is not made under pressure.\n* Re-assess the objective as the campaign adapts; the first assessment is frequently\n  incomplete.\n",
+        "short_recommendation": "Plan for persistence, and set escalation thresholds in advance.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0074"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA01 — Plan Strategy",
+            "technique": "T0074 — Determine Strategic Ends",
+            "note": ""
+          },
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0135 — Undermine",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

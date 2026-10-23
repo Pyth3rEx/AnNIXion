@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "1ef2c269-1ee5-5f30-a538-8bc7a0720626",
+  "tags": [
+    "red",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "5aab92e3-8ce4-5af2-a2ec-de536fc1fde4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Command and Control Over Web Protocols Undetected",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "A command and control channel operating over HTTPS to an attacker-controlled host\npersisted for the duration of the engagement without detection or interruption.\n",
+        "description": "Web protocols are the default control channel because they are universally permitted and\nbecause the traffic is encrypted by default, so content inspection is unavailable without\ndeliberate interception.\n\nWhat remains observable is behaviour: regular beaconing intervals, consistent request\nsizes, long-lived sessions to a destination with no browsing history, and a user agent\nthat no installed browser produces. Detecting it requires that outbound web traffic be\nlogged per host and analysed, which is the step most commonly missing.\n\nDestination reputation alone is insufficient. Infrastructure registered for a single\nengagement has no reputation to be bad, and categorisation services default to permitting\nthe unknown.\n",
+        "recommendation": "* Log outbound web requests per host at the proxy, including destinations that are allowed,\n  and retain them long enough to investigate.\n* Alert on beaconing characteristics — interval regularity and request size consistency —\n  rather than relying on destination reputation.\n* Treat newly registered and uncategorised domains as higher risk by default.\n* Break and inspect TLS where lawful and proportionate, acknowledging what cannot be\n  inspected.\n",
+        "short_recommendation": "Log outbound web traffic per host and alert on beaconing behaviour.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1071/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1071.001 — Web Protocols",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

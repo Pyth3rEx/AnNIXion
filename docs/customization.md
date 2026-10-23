@@ -130,6 +130,32 @@ this only governs whether NetworkManager has a wifi backend to drive.
 
 ---
 
+## Reporting platform
+
+SysReptor runs locally and holds client findings, so it ships loopback-only and
+encrypted at rest, with the Hack The Box report designs imported on first
+start. The settings live under `annixion.sysreptor`:
+
+```nix
+annixion.sysreptor = {
+  user = "operator";            # the login created on first start
+  hashedPassword = "pbkdf2_sha256$600000$...";  # `sysreptor hash` mints one
+  designs = [ "htb" ];          # narrow it: all three packs ship by default
+  theme = "upstream";           # or keep AnNIXion's palette and logo (default)
+  # networkAccessible = true;   # publishes it on every interface, opens the port
+};
+```
+
+The login ships with the same password as the operator account, so change it —
+in the UI, or by putting a fresh `sysreptor hash` here. There is no login-less
+mode: skipping the login screen is a Professional-edition feature.
+
+`networkAccessible` is the one with teeth: it serves every engagement's
+deliverables over plain HTTP to anything that can route here. Options,
+defaults and the reverse-proxy shape: [docs/sysreptor.md](sysreptor.md).
+
+---
+
 ## Resource limits
 
 Three bounds ship as defaults, each overridable in `user/configuration.nix`:

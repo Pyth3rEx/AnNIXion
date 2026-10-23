@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "296e9f64-9a68-5887-a471-3d2e0432a9a2",
+  "tags": [
+    "red",
+    "web",
+    "cloud"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "0a3dc34b-7ad0-58a2-99ec-d944898b7b8a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Server-Side Request Forgery (SSRF)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N",
+        "summary": "The application fetched a URL supplied in the request, so an attacker could direct it at hosts of their choosing. Requests then originate from the server, inside the network boundary, reaching internal services that are not exposed externally — including, in cloud environments, the instance metadata service and the credentials it issues.\n",
+        "description": "SSRF turns the application into a proxy. Any feature that takes a URL — webhook registration, document or image import, PDF rendering, link preview, health check — will make a request the attacker chose, from a position the attacker does not have.\n\nInternal services reachable that way are typically those protected by network position alone: admin panels bound to localhost, databases and caches with no authentication, orchestration APIs. In cloud environments the highest-value target is the instance metadata endpoint at `169.254.169.254`, which returns role credentials and makes SSRF a direct route to the cloud account.\n\nBlocklists of hostnames and addresses are routinely bypassed: DNS names resolving to internal addresses, redirects to an internal target after an allowed first hop, alternative encodings of the same address, and DNS rebinding where the name resolves differently between validation and use.\n",
+        "recommendation": "* Allow-list the destinations a feature may reach — scheme, host and port — rather than attempting to block internal ranges.\n* Resolve the hostname, validate the resulting IP against the allow-list, and connect to that address, so the value cannot change between check and use.\n* Do not follow redirects automatically, or revalidate the destination at every hop.\n* Block link-local (`169.254.0.0/16`), loopback and private ranges at the egress layer, and require authenticated metadata access (IMDSv2 or equivalent).\n* Make outbound fetches from a segmented egress path that has no route to internal management interfaces.\n",
+        "short_recommendation": "Allow-list outbound destinations and block link-local addresses.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1552.005 — Cloud Instance Metadata API",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

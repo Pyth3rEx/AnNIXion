@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "bd550fbf-9fbb-58d5-b321-44b3b7879df9",
+  "tags": [
+    "osint",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "411031ad-51a2-535c-9998-a60e9a8759a0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Organisational Data Present in Paste Sites and Threat Vendor Corpora",
+        "cvss": "n/a",
+        "summary": "Data relating to the organisation — credentials, internal documents and infrastructure\ndetail — is present in paste sites, leak aggregators and commercial threat intelligence\ncorpora accessible to third parties.\n",
+        "description": "Material that reaches these corpora is effectively permanent and is indexed for retrieval\nby exactly the search terms an adversary would use. Removal is generally not available;\nwhat is available is knowing what is there.\n\nOrganisations frequently learn of such exposure only when it is used. Where the\norganisation does not search these sources itself, an adversary has a standing advantage of\nwhatever the collection interval would have been.\n\nThe same corpora are available to defenders, and monitoring them is one of the few\ncollection activities that is unambiguously lawful and low-cost.\n",
+        "recommendation": "* Monitor paste sites and leak aggregators for the organisation's domains, product names\n  and executive names on a schedule.\n* Treat anything found as compromised rather than as an item to request removal of.\n* Feed discovered credentials directly into a forced reset process rather than into a\n  report that waits for review.\n",
+        "short_recommendation": "Monitor leak corpora on a schedule and treat findings as compromised.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1597/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1597.001 — Threat Intel Vendors",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1681 — Search Threat Vendor Data",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

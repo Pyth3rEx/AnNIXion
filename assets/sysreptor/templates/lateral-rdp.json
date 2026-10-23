@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "2280fb30-3693-59f5-8737-ad1ea7e2a332",
+  "tags": [
+    "red",
+    "windows",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "dd23b917-b61f-518e-b29c-71079cf69925",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unrestricted Remote Desktop Between Workstations",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Remote Desktop connections were permitted between workstations across the estate, allowing\nmovement from one compromised endpoint directly to another without crossing a network\nboundary.\n",
+        "description": "Workstation-to-workstation connectivity is rarely required and rarely restricted. Where it\nis open, an operator moves laterally through a supported, encrypted, logged-as-normal\nprotocol, and each new host offers whatever credentials are cached on it.\n\nSegmentation projects usually separate workstations from servers and leave the workstation\nestate flat, so the control that would prevent this is assumed to exist and does not.\n\nInteractive logons also leave credential material in memory on the destination, so lateral\nmovement by this route tends to harvest further credentials as a side effect.\n",
+        "recommendation": "* Block inbound Remote Desktop between workstations at the host firewall, permitting it only\n  from designated management hosts.\n* Require administrative access to flow through jump hosts rather than directly from user\n  endpoints.\n* Alert on workstation-to-workstation Remote Desktop sessions, which should be rare enough\n  to investigate individually.\n",
+        "short_recommendation": "Block workstation-to-workstation RDP and route admin access via jump hosts.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1021/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1021.001 — Remote Desktop Protocol",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

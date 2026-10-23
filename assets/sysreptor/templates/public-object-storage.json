@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "334846a8-cc52-54c7-931f-08004d1e0ae5",
+  "tags": [
+    "red",
+    "cloud"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "555b87c1-20ef-5e44-b0ef-f38545531b22",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Publicly Accessible Cloud Storage",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+        "summary": "Cloud storage containers were readable, and in some cases writable, without authentication. Anyone who knows or guesses the name can retrieve the contents; where writable, content served to users can also be replaced.\n",
+        "description": "Object storage is designed to be shared, and the controls governing that sharing are layered — account settings, bucket policy, per-object ACL, and presigned URLs — so an object can end up public through any one of them while the others look correct.\n\nBuckets hold backups, document uploads, logs and exports, and are frequently used as a convenient place for data in transit between systems, which means sensitive content arrives there without anyone deciding it should be stored.\n\nNames are enumerable, and public buckets are catalogued by third parties, so \"nobody knows the URL\" is not a control. Write access is worse than read: content delivered to users can be modified, which includes scripts and installers.\n",
+        "recommendation": "* Enable account-level public access blocks, and require exceptions to be justified and reviewed.\n* Audit bucket policies and object ACLs continuously, not only at deployment.\n* Encrypt at rest with managed keys, and enable access logging.\n* Serve content that must be public through a CDN with its own access controls, keeping the origin private.\n* Use short-lived presigned URLs rather than permanent public objects.\n",
+        "short_recommendation": "Block public access at the account level and audit policies.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1530 — Data from Cloud Storage",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1619 — Cloud Storage Object Discovery",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

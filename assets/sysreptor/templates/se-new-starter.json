@@ -1,0 +1,49 @@
+{
+  "format": "templates/v2",
+  "id": "34b3a620-e1d9-5c83-97d7-2cfed09bd9f3",
+  "tags": [
+    "puppet",
+    "social",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "5ced9a4b-c6ef-5eb7-84f9-71227af14c37",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Onboarding and New Starters Targeted",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "New employees, identified from public announcements, were approached with onboarding pretexts and complied — they had no basis for judging what is normal, and every incentive to be helpful.\n",
+        "description": "A new starter is the ideal target: publicly announced, unfamiliar with internal processes, unable to recognise the people contacting them, and anxious to make a good impression. An instruction from \"IT\" on day three is indistinguishable from the genuine ones they have been receiving all week.\n\nThe window is reliable because onboarding is genuinely a period of unusual requests — install this, authenticate here, confirm your details — so the attacker's request does not stand out.\n\nStarters are also unlikely to challenge a senior name, and often unaware of the reporting route, so an attempt against them may go unreported even when it is noticed.\n",
+        "recommendation": "* Cover security on day one, before systems access: how IT will contact them, what will never be asked, and how to report.\n* Verify any unexpected IT instruction through the manager or a published number, and tell starters that doing so is expected.\n* Avoid publicly announcing new starters in roles with privileged access.\n* Pair starters with a named contact for their first weeks who they can ask without embarrassment.\n",
+        "short_recommendation": "Brief new starters on day one, and verify IT contact through the manager.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1598/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1566 — Phishing",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1684.001 — Impersonation",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

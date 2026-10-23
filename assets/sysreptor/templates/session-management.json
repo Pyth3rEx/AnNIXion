@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "b4961a9c-ebb3-5876-9819-81331f4d5b4e",
+  "tags": [
+    "red",
+    "web",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d2ed731a-36aa-54f6-b586-1e4bb7d015e3",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Session Management Weaknesses",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:N",
+        "summary": "Session handling did not meet current practice: identifiers were not rotated on privilege change, sessions did not expire, or logout did not invalidate the session server-side. Each allows a session to be used by someone other than the user it belongs to.\n",
+        "description": "A session identifier is a bearer credential: whoever holds it is the user. The controls around it therefore matter as much as the password that created it.\n\nWhere the identifier is not regenerated at login, an attacker who can set a victim's cookie beforehand knows the value the authenticated session will use — session fixation. Where sessions do not expire, a token captured from a log, a backup or a shared machine stays valid indefinitely. Where logout only clears the client's cookie, the identifier continues to work for anyone who recorded it.\n\nCookie attributes complete the picture: without `Secure` the identifier can travel in clear text, and without `HttpOnly` any script in the page can read it.\n",
+        "recommendation": "* Generate session identifiers with a cryptographically secure random source.\n* Regenerate the identifier on login and on any privilege change.\n* Invalidate the session server-side on logout, and expire sessions on both idle and absolute timeouts.\n* Set `Secure`, `HttpOnly` and an appropriate `SameSite` on session cookies.\n* Let users review and revoke their active sessions.\n",
+        "short_recommendation": "Rotate identifiers at login, expire sessions, invalidate on logout.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1539 — Steal Web Session Cookie",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1550.004 — Web Session Cookie",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

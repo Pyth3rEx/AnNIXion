@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "15ca7437-3ae0-5309-a240-c29496ecc014",
+  "tags": [
+    "red",
+    "windows",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "674fa968-5db6-5de8-bdcc-d771a42cff28",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unquoted Service Paths Permit Privilege Escalation",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Services were configured with unquoted executable paths containing spaces, in directories\nwritable by standard users, allowing a standard user to have their own executable run as\nSYSTEM at service start.\n",
+        "description": "When a service path contains spaces and is not quoted, Windows attempts each successive\ninterpretation of the path in turn. An executable placed at an earlier interpretation runs\ninstead of the intended one, with the service's privileges.\n\nExploitation requires both the unquoted path and write access to one of the intermediate\ndirectories. Either alone is harmless, which is why scanners that report every unquoted\npath produce noise — the finding is the intersection, and that is what should be reported.\n\nIt typically appears with older or in-house software whose installer did not quote the\npath, and it persists for years because nothing revisits service configuration.\n",
+        "recommendation": "* Quote the executable path of every affected service.\n* Correct permissions on the intermediate directories so standard users cannot write to\n  them, which removes the exploitability independently of the path.\n* Audit service paths and their directory permissions together, so remediation is scoped to\n  the services that are actually exploitable.\n",
+        "short_recommendation": "Quote service paths and remove user write access to their directories.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1574/009/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1574.009 — Path Interception by Unquoted Path",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "2461b509-e4ec-5c4d-a440-d88cfa920d55",
+  "tags": [
+    "osint",
+    "external"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "25140e35-c760-54a9-a50d-b34bc4408d25",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Public Code Repositories Disclose Internal Tooling",
+        "cvss": "n/a",
+        "summary": "Repositories belonging to the organisation and to its staff disclose internal hostnames,\nbuild pipelines, dependency inventories and operational detail, independently of whether\nany credential was committed.\n",
+        "description": "The credential in a repository is the finding everyone looks for. The more durable\nexposure is the surrounding detail: internal naming conventions, environment variables that\nname hosts, pipeline definitions that describe how deployment works, and dependency files\nthat disclose exactly which versions are running.\n\nPersonal accounts are the harder half of this. Staff publish work-adjacent code under their\nown names, often without intending it to describe an employer's environment, and the\norganisation has no administrative visibility of those accounts at all.\n\nCommit history matters as much as current content. A file corrected in a later commit is\nstill present in the history, and most review processes look only at the working tree.\n",
+        "recommendation": "* Search both organisational and staff-associated repositories, including full commit\n  history rather than current contents.\n* Define what may be published — configuration shape, hostnames, pipeline detail — and make\n  it part of engineering onboarding rather than a policy document.\n* Where internal detail is already public, treat the hostnames and versions as known and\n  prioritise hardening them rather than attempting removal alone.\n",
+        "short_recommendation": "Search staff and org repositories including history; define what may be published.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1593/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1593.003 — Code Repositories",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1592.002 — Software",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

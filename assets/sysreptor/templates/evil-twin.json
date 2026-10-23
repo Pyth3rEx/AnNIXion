@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "8adce955-757f-5265-9d09-d6e5f6bea70b",
+  "tags": [
+    "red",
+    "wireless",
+    "puppet"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "eae82e70-406d-56fd-8b67-48ab691daf0c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Wireless Clients Accept Rogue Access Points",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:N",
+        "summary": "Client devices connected to an access point advertising a known network name without validating the server certificate, allowing an attacker within radio range to capture credentials and intercept traffic.\n",
+        "description": "Wireless clients remember networks by name and reconnect automatically. An access point advertising a remembered name, with a stronger signal, is preferred — and where the client does not validate the authentication server's certificate, it will complete an enterprise handshake with the attacker's RADIUS server and disclose credential material.\n\nFor PSK networks the equivalent is simpler still: a rogue access point captures the handshake or, if the key is known, places the attacker in the middle of the traffic.\n\nThis is the clearest overlap between a technical and a human finding: it is a configuration failure, but the moment of compromise is a user accepting an unexpected certificate warning, which the warning's design makes easy.\n",
+        "recommendation": "* Enforce server certificate validation and pin the expected certificate authority and server name through managed device policy, leaving no user prompt.\n* Remove networks from clients when they are decommissioned, so no device keeps looking for them.\n* Deploy wireless intrusion detection to identify access points advertising corporate names.\n* Train staff that a certificate prompt on a familiar network means stop, not continue.\n",
+        "short_recommendation": "Enforce server certificate validation on managed clients.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1557/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1557 — Adversary-in-the-Middle",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

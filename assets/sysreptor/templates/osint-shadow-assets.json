@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "a9cc33cb-de79-5460-a18b-5238cb5b6474",
+  "tags": [
+    "osint",
+    "external",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "17562006-4fba-5e50-80ce-317f46fb440e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Forgotten and Undocumented Internet-Facing Assets",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Internet-facing systems were discovered that did not appear in any asset inventory, including development and staging environments, legacy applications and cloud resources outside the managed accounts. These systems were unpatched and unmonitored.\n",
+        "description": "The external attack surface grows without decision. Projects provision cloud resources, marketing commissions microsites, acquisitions arrive with their own estates, and test environments are exposed \"temporarily\". None are added to an inventory, so none are patched, scanned or monitored.\n\nAttackers find them easily — certificate transparency logs publish every certificate issued, passive DNS records every name ever resolved, and internet-wide scanning catalogues every open port — while defenders, working from an inventory, do not.\n\nNon-production systems are the most dangerous category: they frequently hold copies of production data, use weaker credentials, run older code, and connect back to production networks.\n\nDecommissioning is the other half. DNS records left pointing at released cloud resources permit subdomain takeover, where an attacker claims the resource and serves content from a legitimate corporate hostname.\n",
+        "recommendation": "* Run continuous external discovery from an attacker's perspective — certificate transparency, passive DNS, internet-wide scan data — rather than auditing the inventory you already have.\n* Require registration of any internet-facing asset, and give an owner to each.\n* Keep non-production environments off the internet, behind VPN, and without production data.\n* Make DNS cleanup part of decommissioning, and scan for dangling records that permit takeover.\n",
+        "short_recommendation": "Discover the external estate continuously and decommission properly.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1593/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1595.001 — Scanning IP Blocks",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1590.005 — IP Addresses",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

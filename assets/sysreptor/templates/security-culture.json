@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "acb071bb-0f73-53a5-9846-de74835d3fdc",
+  "tags": [
+    "puppet",
+    "social",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2dd49c88-66ba-5cdf-987c-2def229d2084",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Security Awareness Does Not Reach Behaviour",
+        "cvss": "n/a",
+        "summary": "Awareness training was delivered annually as computer-based modules with no reinforcement, and staff behaviour during the assessment did not reflect it. Staff could recite the rules while acting contrary to them under realistic pressure.\n",
+        "description": "Annual training measures completion, not capability. It is taken under no pressure, in a context that signals the correct answer, and it is forgotten long before the situation it describes occurs.\n\nReal attacks arrive with pressure, plausibility and time constraint, and they target roles differently: finance meets invoice fraud, the service desk meets reset requests, executives meet impersonation, and developers meet dependency and repository attacks. Generic training addresses none of these specifically.\n\nThe deeper problem is culture rather than knowledge. Where challenging a stranger feels rude, where questioning a senior request feels insubordinate, and where admitting a mistake feels dangerous, people behave accordingly whatever the training said. Those are organisational signals, and they are changed by leadership behaviour rather than by content.\n",
+        "recommendation": "* Replace annual modules with short, frequent, role-specific exercises using scenarios that role actually faces.\n* Practise the hard behaviours explicitly — challenging a stranger, refusing a senior request pending verification — with scripts that reduce the social cost.\n* Make verification a process requirement rather than a personal judgement, so compliance does not depend on courage.\n* Have leadership visibly follow the same verification steps, and visibly thank people who challenge them.\n* Measure behaviour under realistic simulation — reporting rates, verification performed — rather than completion.\n",
+        "short_recommendation": "Replace annual training with role-based practice and feedback.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1566/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

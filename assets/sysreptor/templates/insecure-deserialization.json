@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "4c5d7cad-59e9-5c30-8be0-c8fce91c771a",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d3335ae2-7559-5d0d-a01b-e875b5271a8c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Insecure Deserialization",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The application deserialised data supplied by the client using a format capable of reconstructing arbitrary object graphs. Crafted input could therefore instantiate types of the attacker's choosing and trigger their side effects, leading to code execution.\n",
+        "description": "Native serialisation formats — Java serialization, .NET `BinaryFormatter`, Python `pickle`, PHP `unserialize` — are designed to restore objects, not to parse data. Deserialising attacker-controlled bytes means allowing the attacker to choose which classes are constructed and what their lifecycle methods receive.\n\nExploitation uses gadget chains: sequences of methods already present in the application's dependencies that, when invoked during deserialisation, combine into a useful effect such as command execution. The application does not need to contain anything unusual — public gadget chains exist for common libraries and are packaged in off-the-shelf tooling.\n\nSerialized blobs appear in cookies, hidden form fields, caches, message queues and API payloads, often base64-encoded, and are frequently trusted because they were \"issued by us\".\n",
+        "recommendation": "* Do not deserialise untrusted data with a format that can reconstruct arbitrary types. Use a data-only format such as JSON with explicit schema mapping.\n* Where a native format is unavoidable, apply a strict allow-list of permitted classes at the parser level.\n* Sign serialized data that must round-trip through the client, and verify the signature before parsing.\n* Keep dependencies current: available gadget chains change with library versions.\n",
+        "short_recommendation": "Never deserialise untrusted data into arbitrary types.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1203 — Exploitation for Client Execution",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

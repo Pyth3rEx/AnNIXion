@@ -1,0 +1,46 @@
+{
+  "format": "templates/v2",
+  "id": "17e8d704-c7da-50a9-8995-dd84ab6749fc",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "20c04195-8d37-5e26-9837-55533651238e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Campaign Measures and Adapts to Its Own Reach",
+        "cvss": "n/a",
+        "summary": "The campaign demonstrably adapts to performance — abandoning content that gained no\ntraction, re-using what did, and shifting platforms as enforcement bites — indicating\nactive management rather than automated repetition.\n",
+        "description": "An operation that measures itself is being run by somebody, and that changes what the\nclient is dealing with. Automated repetition decays predictably and can be waited out.\nManaged campaigns respond to the client's actions, including its defensive ones, and a\nresponse that works once will be adapted against.\n\nThe evidence is behavioural: content that fails is dropped quickly, successful framings\nrecur with variations, and activity migrates ahead of enforcement rather than after it.\nUse of link shorteners and tracking parameters is a more direct indicator, since it shows\nthe operator instrumenting its own delivery.\n\nThis finding should shape the recommendations in the rest of the report. Measures that\nassume a static adversary will be worked around.\n",
+        "recommendation": "* Assume the campaign will adapt to any public response, and sequence the response\n  accordingly rather than revealing the full picture at once.\n* Avoid publicly describing detection methods; doing so tells a measuring operator what to\n  change.\n* Track which of the client's actions produce adaptation — it is a reliable signal of what\n  the operator cares about.\n",
+        "short_recommendation": "Assume adaptation; do not publicise detection methods.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0133"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA12 — Assess Effectiveness",
+            "technique": "T0132 — Measure Performance",
+            "note": ""
+          },
+          {
+            "tactic": "TA12 — Assess Effectiveness",
+            "technique": "T0133 — Measure Effectiveness",
+            "note": ""
+          },
+          {
+            "tactic": "TA12 — Assess Effectiveness",
+            "technique": "T0134 — Measure Effectiveness Indicators (or KPIs)",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

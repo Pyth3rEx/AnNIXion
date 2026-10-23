@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "5d4353e7-99b3-5223-b5df-8cb73c08c98d",
+  "tags": [
+    "red",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "21516954-f607-5bca-8c77-f320a8465753",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Data Exfiltrated Over the Command and Control Channel",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Data was removed from the environment over the same channel used to control the\ncompromised host. No volume, destination or content control intervened, and no alert was\nraised at any point during the transfer.\n",
+        "description": "Reusing the control channel for exfiltration is the path of least resistance: it needs no\nsecond egress route, it inherits whatever trust allowed the control channel to exist, and\nit produces no new destination for a defender to notice.\n\nThat is precisely why it tends to succeed. Data loss controls are commonly scoped to\nrecognised channels — mail, removable media, sanctioned file sharing — and an arbitrary\noutbound session to an attacker-controlled host falls outside all of them. The transfer\nis then bounded only by patience.\n\nThe finding is about detection rather than about any single misconfiguration. The relevant\nquestion for the client is what volume of data could leave over an established outbound\nsession before anything responded, and in this engagement the answer was that nothing did.\n",
+        "recommendation": "* Baseline outbound volume per host and alert on sustained transfers that deviate from it,\n  independent of destination reputation.\n* Restrict egress to a filtering proxy so that direct outbound sessions from workstations\n  and servers are the exception and are visible.\n* Apply data loss controls at the egress point rather than only on sanctioned applications.\n* Retain flow records long enough to answer \"what left, and when\" after the fact.\n",
+        "short_recommendation": "Baseline and alert on outbound volume; force egress through a filtering proxy.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1041/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0010 — Exfiltration",
+            "technique": "T1041 — Exfiltration Over C2 Channel",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

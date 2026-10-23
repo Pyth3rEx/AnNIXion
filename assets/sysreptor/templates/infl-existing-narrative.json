@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "5da45db6-4bfd-5ffe-957e-78742ecc273f",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ca8eed6e-e5c6-562c-b3a0-e863bd9f66e8",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Pre-Existing Grievance Narrative Repurposed",
+        "cvss": "n/a",
+        "summary": "The campaign attached its claims to a narrative already circulating in the target\naudience, rather than introducing a new one.\n",
+        "description": "Attaching to an existing belief is cheaper and more durable than building one. The\naudience has already accepted the premise; the operation supplies only the step that\nconnects it to the organisation.\n\nIt also makes the campaign hard to counter, because the surrounding narrative is\ngenuinely held and usually has some basis. Attacking it attacks the audience's own view\nand confirms the framing the campaign depends on.\n\nThe analysis should separate the pre-existing narrative from the attached claim and\naddress only the latter. Conflating them is the most common failure in response planning\nand reliably makes matters worse.\n",
+        "recommendation": "* Respond only to the attached claim; do not contest the surrounding narrative.\n* Identify what in the client's own conduct makes the attachment plausible, and address\n  that directly.\n* Expect the same narrative to be reused with a different attached claim, and watch for it.\n",
+        "short_recommendation": "Respond to the attached claim only, not the surrounding narrative.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0003"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0003 — Leverage Existing Narratives",
+            "note": ""
+          },
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0083 — Integrate Target Audience Vulnerabilities into Narrative",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

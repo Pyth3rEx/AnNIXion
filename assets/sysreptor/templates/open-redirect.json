@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "95586a3c-2024-5e70-b886-addaf6619eeb",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "99f5344a-c408-567e-aff9-6661e2539730",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Open Redirect",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+        "summary": "The application redirected to a destination taken from the request without validating it, so a link on the organisation's own domain could send a visitor to an attacker's site. The value of the finding is the credibility the domain lends to phishing.\n",
+        "description": "Redirect parameters exist for good reasons — returning a user to where they were after login — and become a finding when the destination is not constrained.\n\nThe impact is mostly in what the link enables. A URL beginning with the organisation's real domain, with a valid certificate, passes the inspection users are trained to perform and survives many link filters, before delivering them to a credential-harvesting page. In a red team engagement this materially raises phishing success rates.\n\nOpen redirects also weaken OAuth and SSO flows, where a redirect chain can carry a token to an unintended destination, and provide a bypass step for SSRF allow-lists that permit the first hop.\n",
+        "recommendation": "* Validate the destination against an allow-list of paths or hosts.\n* Prefer relative paths, or map an identifier to a known destination server-side.\n* Where an external destination is legitimate, show an interstitial naming the destination.\n* Register exact redirect URIs with the identity provider and refuse wildcards.\n",
+        "short_recommendation": "Allow-list redirect destinations rather than reflecting them.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1566.002 — Spearphishing Link",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

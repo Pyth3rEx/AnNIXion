@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "f74e5bf5-06ae-5760-a933-498f2de1d558",
+  "tags": [
+    "red",
+    "windows",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "eaf3c209-e1f7-527b-a1d8-aee4ecd2c2ea",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Disconnected Remote Desktop Sessions Can Be Hijacked",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Disconnected Remote Desktop sessions belonging to other users, including administrators,\ncould be resumed from a compromised host without any credential.\n",
+        "description": "A disconnected session is still a live logon. An account with SYSTEM on the host can attach\nto it and inherit the user's identity without knowing or capturing a password, which makes\nthis one of the few escalation routes that defeats credential controls completely.\n\nThe impact depends on who left a session behind. Where administrators connect to servers\nand disconnect rather than signing out, their sessions remain available to anyone who later\ncompromises that host, which inverts the usual direction of trust.\n\nSession timeout policy is the control, and it is routinely set generously or not at all\nbecause signing out is inconvenient.\n",
+        "recommendation": "* Configure disconnected session limits so sessions are signed out rather than left\n  indefinitely.\n* Require administrators to sign out rather than disconnect, and enforce it through policy.\n* Alert on session connect events where the connecting account differs from the session\n  owner.\n* Avoid administrative logons to hosts of lower trust, which is what makes the session\n  available in the first place.\n",
+        "short_recommendation": "Enforce disconnected session timeouts and alert on cross-account session connects.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1563/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1563.002 — RDP Hijacking",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

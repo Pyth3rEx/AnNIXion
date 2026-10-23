@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "2c79b6b4-31f1-5733-acae-e12fbe7b8dd3",
+  "tags": [
+    "red",
+    "physical",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "770505a3-42a7-52ab-a36e-317ea13af820",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unattended Workstations Left Unlocked",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Workstations were left logged in and unlocked in unoccupied areas, giving anyone with physical access an authenticated session with the user's full access to mail, files and internal applications.\n",
+        "description": "An unlocked workstation is the shortest path from the lobby to the network, requiring no exploitation at all. Within a short absence an attacker can read and send mail as the user, copy data, insert a persistence mechanism, or run a payload that establishes remote access.\n\nEverything done is attributed to the legitimate user, by every log that records it, which makes later investigation misleading as well as difficult.\n\nThe behaviour is a consequence of friction: long passwords, frequent timeouts and slow unlocks teach people to avoid locking. Reducing that friction changes the behaviour more reliably than instruction does.\n",
+        "recommendation": "* Enforce a screen lock after a short idle period by policy, and apply it to meeting-room and shared machines too.\n* Reduce the cost of locking and unlocking — proximity or biometric unlock, and badge-out triggered locking.\n* Disable USB mass storage and human-interface-device injection where the role does not require it, to limit what a brief access achieves.\n* Include an unlocked-workstation sweep in routine security walks, leaving a note rather than a sanction.\n",
+        "short_recommendation": "Enforce short screen locks and make locking automatic.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1078/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1078 — Valid Accounts",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

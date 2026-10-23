@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "9a613d8f-dc75-5678-9d81-d1ec3e2481ba",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "a688b773-cc29-5b3e-aba3-c8058f85d81f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Certificate Template Misconfiguration (AD CS)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Certificate templates allowed low-privileged users to enrol for certificates permitting client authentication while supplying their own subject name. Any user could therefore obtain a certificate identifying them as any other user, including a domain administrator.\n",
+        "description": "Active Directory Certificate Services issues certificates according to templates, and a template that combines three properties becomes a domain-wide escalation: it permits enrolment by ordinary users, it grants an authentication purpose, and it lets the requester specify the subject alternative name.\n\nA user enrols, names a domain administrator as the subject, and receives a valid certificate asserting that identity. Authentication with it is legitimate Kerberos — no password is involved, so password changes do not revoke it, and the certificate remains valid for its full lifetime.\n\nRelated misconfigurations include over-permissive enrolment rights on the CA itself and templates marked for manager approval that is not enforced. Templates accumulate over years and are rarely reviewed after deployment.\n",
+        "recommendation": "* Audit templates for enrollee-supplied subject names combined with authentication purposes, and remove one or the other.\n* Require manager approval for templates that must remain flexible.\n* Restrict enrolment rights to the groups that genuinely need each template.\n* Treat the CA as a tier-0 asset with the same controls as a domain controller.\n* Monitor certificate issuance, particularly requests naming privileged accounts.\n",
+        "short_recommendation": "Remove requester-supplied subject names from enrollable templates.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1649/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1649 — Steal or Forge Authentication Certificates",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

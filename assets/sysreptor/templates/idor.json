@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "3b51af98-e495-5e27-b94f-d7fe0e8a3685",
+  "tags": [
+    "red",
+    "web",
+    "authz"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "82d6c85c-64e2-5c62-8f95-3fc5e5394c0b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Insecure Direct Object Reference (IDOR)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N",
+        "summary": "Object identifiers in requests were used to retrieve records without checking that the requesting user owned them, so changing an identifier returned another user's data. Where identifiers were sequential, the whole collection could be enumerated.\n",
+        "description": "An insecure direct object reference is a specific and very common case of broken access control: the application looks a record up by the identifier it was given, and returns it, having confirmed only that the caller is logged in.\n\nSeverity scales with the identifier. Sequential integers permit enumeration of every record in the table with a loop. Random identifiers raise the cost but are not an access control — they leak through logs, referers, shared links and support tooling, and a single leaked identifier still discloses that record.\n\nExports, document downloads, invoice retrieval and support-ticket views are the usual locations, because they are built around \"fetch this object by id\" and are often added after the main authorisation model was written.\n",
+        "recommendation": "* Check ownership — or an explicit grant — on every object access, in the query itself where possible (`WHERE id = ? AND owner_id = ?`).\n* Scope collection endpoints to the caller rather than filtering client-side.\n* Prefer identifiers that are not guessable, as defence in depth, but never in place of the ownership check.\n* Return the same response for \"not found\" and \"not yours\", so the endpoint does not confirm which records exist.\n",
+        "short_recommendation": "Check ownership of every object on every request.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1213 — Data from Information Repositories",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

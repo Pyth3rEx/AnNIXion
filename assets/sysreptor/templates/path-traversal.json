@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "fe66d18e-e7c0-572f-8811-bcb49130386d",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ed8022b1-73bb-5f66-84fc-789b544ac59d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Path Traversal",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "A filename taken from the request was used to build a filesystem path without constraining it to the intended directory, so traversal sequences reached files elsewhere on the host — configuration, credentials and keys among them.\n",
+        "description": "Path traversal is a containment failure: the application means \"a file in this directory\" but implements \"this path, relative to this directory\", and `../` walks out of it.\n\nWhat that yields depends on the account the service runs as, but the usual targets are predictable: application configuration holding database credentials and API keys, `/etc/passwd` to confirm the flaw and enumerate accounts, SSH private keys, cloud credential files, and application source code, which often reveals further flaws.\n\nFiltering for `../` is not sufficient. Encoded forms, double encoding, mixed separators on Windows, and sequences reassembled after a first pass of stripping all defeat naive filters.\n",
+        "recommendation": "* Resolve the path to its canonical form and confirm it is still inside the intended base directory before opening it.\n* Prefer an indirection layer: accept an identifier, look up the real path in a map, and never use client input in the path at all.\n* Run the service as an account with no read access outside the directories it needs.\n",
+        "short_recommendation": "Resolve paths and confirm they stay inside the base directory.",
+        "references": [
+          "https://owasp.org/www-community/attacks/Path_Traversal"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1083 — File and Directory Discovery",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

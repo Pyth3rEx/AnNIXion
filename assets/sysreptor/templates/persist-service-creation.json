@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "19021776-7193-5a89-b56a-c58773d1f467",
+  "tags": [
+    "red",
+    "windows",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6ea617ff-d212-51f7-9f00-5558ddda58de",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Service Creation Not Monitored",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Windows services were created on compromised hosts to run attacker code as SYSTEM at boot.\nCreation generated no alert, and the services were not identified by any review.\n",
+        "description": "A service is durable persistence at the highest local privilege: it starts before any user\nlogs on, runs as SYSTEM, and restarts if it stops. Service creation is also a standard\nremote execution technique, so the same event frequently marks lateral movement as well.\n\nDetection is straightforward in principle. Service installation produces a specific event\nwith the binary path, legitimate creation outside deployment tooling is rare, and the\nsignal is low-volume. As with scheduled tasks, the obstacle is that the events are not\ncollected.\n\nServices pointing at user-writable paths warrant particular attention, since that\ncombination is both a persistence mechanism and a privilege escalation path.\n",
+        "recommendation": "* Alert on service installation, excluding known deployment tooling by identity rather than\n  suppressing the event.\n* Review services whose binary path is user-writable or outside protected directories.\n* Restrict remote service creation to administrative tiers and management hosts.\n",
+        "short_recommendation": "Alert on service installation and review services in writable paths.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1543/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1543.003 — Windows Service",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "8ac9172c-414a-52b3-8118-6f77ee5524e4",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4149240e-c404-574b-8c4c-9f472e0bd702",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Unrestricted File Upload",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The application accepted uploaded files without adequately restricting their type or location, allowing a file to be stored where the web server would execute it. Uploading a script and requesting it gave code execution on the host.\n",
+        "description": "Upload handling fails in two places: deciding what may be uploaded, and deciding what happens to it afterwards. The second matters more. A file that cannot be executed is a storage problem; a file written into a directory the web server will interpret is a remote code execution vulnerability.\n\nType checks are routinely bypassed. The `Content-Type` header is attacker-controlled; extension blocklists miss alternative executable extensions and parser quirks; magic-byte checks pass for polyglot files that are both a valid image and a valid script.\n\nBeyond execution, uploads provide stored XSS via HTML or SVG, denial of service via decompression bombs, path traversal via crafted filenames, and malware distribution from a trusted domain.\n",
+        "recommendation": "* Store uploads outside the web root, or in object storage, and serve them through a handler that sets `Content-Disposition: attachment` and a safe content type.\n* Ensure the storage location cannot execute anything — no interpreter mapping, no CGI handler.\n* Generate the stored filename yourself; never use the client's, and never let it influence the path.\n* Validate type by content, against an allow-list, and re-encode images where practical.\n* Enforce size limits, and scan files where the content is shared with other users.\n",
+        "short_recommendation": "Store uploads outside the web root and never execute them.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1505.003 — Web Shell",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

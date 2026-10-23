@@ -1,0 +1,40 @@
+{
+  "format": "templates/v2",
+  "id": "29fec6e8-29f8-5685-bcb8-d9114bec88c6",
+  "tags": [
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "61ec56bb-9642-5d8d-9ea3-1fcaf20a79fa",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Removed Content Remains Available in Archives",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Material taken down from the organisation's own sites remained retrievable from public archives and caches, including staff lists, documents and configuration detail that had been removed deliberately.\n",
+        "description": "Removal is not retraction. Web archives, search engine caches, repository mirrors and third-party aggregators keep copies, and their retention is measured in years.\n\nThis matters most where the removal was itself a remediation. A page taken down because it listed internal hostnames, a document withdrawn because it carried credentials, a repository made private after a leak — each of those remains available, and the act of removal tells a researcher exactly where to look.\n\nHistorical snapshots also reconstruct what the estate looked like over time, which identifies systems that still exist but are no longer linked, and naming conventions that are still in use.\n",
+        "recommendation": "* Treat anything once published as permanently public: rotate credentials and retire hostnames rather than relying on removal.\n* Check archives for material you have withdrawn, and request removal where the archive honours it — while planning as though it will not.\n* Review historical snapshots of your own sites as part of external assessment.\n",
+        "short_recommendation": "Treat anything once published as permanently public, and rotate what it exposed.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1596/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1593.002 — Search Engines",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1594 — Search Victim-Owned Websites",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

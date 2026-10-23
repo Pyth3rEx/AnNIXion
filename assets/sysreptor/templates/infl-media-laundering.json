@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "fbc1246e-3f9d-58c3-a98f-2b0ef5580ca7",
+  "tags": [
+    "puppet",
+    "narrative",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "08961035-7bac-58d7-ab35-24c0516cd6c5",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Traditional Media Used to Launder the Claim",
+        "cvss": "n/a",
+        "summary": "The campaign secured coverage in established outlets, after which the claim could be\ncited to a credible source rather than to its origin.\n",
+        "description": "Laundering through legitimate media is the highest-value move available to an operation.\nOnce an outlet has reported that a claim is circulating, the claim acquires a citable\nsource, and subsequent amplification points at the outlet rather than at the accounts\nthat manufactured it.\n\nThe usual route is a journalist acting in good faith on what appears to be genuine public\nconcern. The volume manufactured earlier in the campaign is what makes the story real:\nthe coverage is accurate — people are saying this — and accurate coverage of manufactured\nactivity still completes the laundering.\n\nFor the report, distinguish the outlet's conduct from the operation's. Treating a\njournalist as part of the campaign is both usually wrong and certain to destroy the\nclient's ability to correct the record.\n",
+        "recommendation": "* Approach the outlet with the coordination evidence rather than with a complaint about\n  the coverage; most will report the coordination if it is evidenced.\n* Prioritise correcting the laundered citation, since downstream amplification points at\n  it rather than at the original content.\n* Maintain the distinction in all communications between the outlet and the operation.\n",
+        "short_recommendation": "Take the coordination evidence to the outlet; correct the citation.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0111"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA07 — Select Channels and Affordances",
+            "technique": "T0111 — Traditional Media",
+            "note": ""
+          },
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0117 — Attract Traditional Media",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

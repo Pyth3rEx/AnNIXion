@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "f030b277-d5c2-59ba-805d-79802750df92",
+  "tags": [
+    "osint",
+    "external",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "84b12400-b03a-57c0-a51d-7057c3aab9db",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Domain Registration Exposes Named Staff and Contact Routes",
+        "cvss": "n/a",
+        "summary": "Domain registration records disclose named individuals, direct telephone numbers and\nrole-based addresses, supplying both targets for pretexting and the means to attempt\ndomain control.\n",
+        "description": "Registration records are a small but high-quality source. The named contact is usually a\nreal person with genuine authority over the domain, which makes them a precise target for\na pretext aimed at transfer or DNS change — the highest-impact outcome available from\nsocial engineering against an organisation's internet presence.\n\nHistorical records compound the problem. Privacy protection applied later does not remove\nwhat was published before, and archived records remain retrievable.\n\nInconsistent protection across a portfolio is the common pattern: the main domain is\nprotected while older or peripheral registrations are not, and those are frequently the\nones with weaker account security as well.\n",
+        "recommendation": "* Apply registrar privacy consistently across the whole domain portfolio, not only the\n  primary domains.\n* Use role-based addresses on a monitored mailbox rather than named individuals.\n* Enable registrar and registry transfer locks, and require multi-factor authentication on\n  registrar accounts.\n* Treat historical records as already disclosed and brief the named individuals accordingly.\n",
+        "short_recommendation": "Apply registrar privacy portfolio-wide and enable transfer locks.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1596/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1596.002 — WHOIS",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1589.002 — Email Addresses",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

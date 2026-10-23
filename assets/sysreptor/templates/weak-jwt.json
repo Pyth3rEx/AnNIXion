@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "8e8490c9-d9a8-578a-b96b-adaaba3beb74",
+  "tags": [
+    "red",
+    "web",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "9fe51781-78f4-5e60-bb3e-aba1be1c75de",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Weak JSON Web Token Validation",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Tokens were accepted without fully verifying their signature and claims, allowing a token to be modified or forged. Since the token carries identity and privileges, that permits authentication as any user.\n",
+        "description": "A JSON Web Token is only as good as its verification. The recurring failures are few and well known: accepting the `alg` header from the token itself and so allowing `none`; accepting `HS256` where `RS256` was intended, letting the public key be used as an HMAC secret; verifying the signature but ignoring `exp`, `aud` or `iss`; and signing with a guessable secret.\n\nAny of these allows the attacker to control the token's contents. Since applications place the user identifier and role in the token and trust them on arrival, control of the token is control of the session.\n\nTokens are also frequently stored in `localStorage`, where any XSS retrieves them, and are difficult to revoke before expiry — which makes a long token lifetime a finding in its own right.\n",
+        "recommendation": "* Pin the expected algorithm in the verifier; never read it from the token.\n* Verify the signature before reading any claim, and validate `exp`, `nbf`, `iss` and `aud`.\n* Use keys of appropriate strength — a long random secret for HMAC, a managed key pair for asymmetric signing — and rotate them.\n* Keep access-token lifetimes short and pair them with revocable refresh tokens.\n* Store tokens in `HttpOnly` cookies where the client is a browser.\n",
+        "short_recommendation": "Pin the algorithm, verify the signature, and check claims.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1550.001 — Application Access Token",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "71029e0b-c6a3-59c4-b4de-fef0baf24c9a",
+  "tags": [
+    "red",
+    "endpoint",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "538587c7-ba2a-55e0-9606-d0c0ea88ba50",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Office Macros Permitted From Internet Sources",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "summary": "Documents originating from the internet could execute macros after a single user prompt.\nMacro execution was not restricted by policy, and no distinction was made between internal\nand externally sourced files.\n",
+        "description": "Macros remain effective because the control is delegated to the user at the moment they\nare least able to exercise it — when the document appears to be the invoice, CV or\nstatement they were expecting.\n\nPlatform defaults have improved, with macros from internet-marked files blocked outright,\nbut the protection depends on the mark-of-the-web surviving. Files extracted from archive\nformats, delivered through sync clients, or passed through tools that do not preserve the\nmark arrive unmarked and are treated as local.\n\nWhere macros have a genuine internal use, the answer is signing and scoping rather than a\nblanket permission, which is usually what is found in place instead.\n",
+        "recommendation": "* Block macros in files originating from the internet by policy, not by relying on the\n  application default.\n* Verify that the mark-of-the-web survives archive extraction and sync clients, which is\n  where the control most often fails.\n* Permit only signed macros for the business cases that genuinely require them, scoped to\n  trusted locations.\n* Remove legacy document formats where they no longer have a business purpose.\n",
+        "short_recommendation": "Block internet-sourced macros by policy and verify mark-of-the-web survives.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1204/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1204.002 — Malicious File",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

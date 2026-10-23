@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "907a856c-8490-505f-b2fb-c31ab382e333",
+  "tags": [
+    "puppet",
+    "persona",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b2426240-d00d-585b-8022-ccac8ab8e0dc",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Legitimacy Borrowed From Co-Opted Trusted Voices",
+        "cvss": "n/a",
+        "summary": "Genuine individuals with established audiences — commentators, community figures, in some\ncases the organisation's own staff — were induced to carry campaign claims, lending\ncredibility the operation could not manufacture.\n",
+        "description": "Co-option is the hardest element to address because the people carrying the message are\nreal, usually sincere, and often sympathetic to the audience. They were given material\nthat appeared credible and passed it on, which is not misconduct.\n\nThe campaign benefits twice: the claim arrives from a trusted source, and any response\nfrom the organisation appears to attack a real person with their own following. That\nasymmetry is deliberate and should be stated, because the instinctive corporate response\nwalks directly into it.\n\nWhere the co-opted voice is a member of staff, this is an internal matter first. Treating\nit as a disciplinary issue rather than as a successful operation against the organisation\nusually produces a second, worse story.\n",
+        "recommendation": "* Approach co-opted individuals privately with the underlying evidence; most correct the\n  record when shown the provenance.\n* Do not respond publicly in terms that attack the individual, which is the outcome the\n  campaign is designed to produce.\n* Where staff are involved, handle it as a successful operation against the organisation\n  rather than as misconduct.\n",
+        "short_recommendation": "Approach co-opted voices privately with the provenance evidence.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0100"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0100 — Co-Opt Trusted Sources",
+            "note": ""
+          },
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0039 — Bait Influencer",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

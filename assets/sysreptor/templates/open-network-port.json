@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "141010ae-cd4b-5967-bf83-09d7dc80333f",
+  "tags": [
+    "red",
+    "physical",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "85f9801f-da20-5a04-8f8d-103c951175bc",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Live Network Ports in Unsupervised Areas",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Network sockets in meeting rooms, reception and other lightly supervised areas were live and placed devices directly on the internal network with no authentication, so anyone who reached those areas could connect an unmanaged device.\n",
+        "description": "Physical network access remains one of the most valuable footholds, because it bypasses the perimeter completely and places the attacker in a trusted segment.\n\nAn unauthenticated port accepts anything plugged into it: a laptop, or a small battery-powered device concealed behind furniture that establishes an outbound tunnel and provides persistent remote access long after the visit ends. Meeting rooms are ideal for this — visitors are expected, and nobody looks behind the display.\n\nPorts left live after a desk move, in storage areas, or in reception are the usual candidates. Printers and VoIP phones provide another route, since their ports are frequently exempted from authentication and the phone can simply be unplugged.\n",
+        "recommendation": "* Require 802.1X authentication on all access ports, with unauthenticated devices placed in a restricted quarantine VLAN.\n* Disable unused ports administratively rather than relying on them being unpatched.\n* Use MAC authentication bypass with a managed inventory for devices that cannot do 802.1X, and monitor those exemptions.\n* Alert on new MAC addresses in sensitive areas, and inspect meeting rooms physically for unknown devices.\n",
+        "short_recommendation": "Require 802.1X on every port and disable unused ones.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1200 — Hardware Additions",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

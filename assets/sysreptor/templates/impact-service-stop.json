@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "8963464b-7ded-5089-9842-997988604e4d",
+  "tags": [
+    "red",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "664046a2-a401-55e3-93f8-43b22fd38c33",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Business-Critical Services Can Be Stopped by Compromised Accounts",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "Accounts without an operational need could stop services supporting business-critical\nfunctions, and the resulting outage would not be distinguished from a fault.\n",
+        "description": "Availability attacks need no sophistication where permissions are broad. Stopping a\nservice is a supported administrative action that leaves little trace and is usually\nattributed to a fault rather than to an intrusion.\n\nThat attribution is the problem. An outage investigated as a technical failure consumes\nthe response window, and the organisation may restore service repeatedly without ever\nconsidering that something is causing it.\n\nThe underlying issue is permission scope: service control rights granted broadly because\nit was convenient, rather than to the accounts that operate the service.\n",
+        "recommendation": "* Restrict service control permissions to the accounts that operate each service.\n* Alert on unexpected service stops for business-critical services and route the alert to\n  security as well as to operations.\n* Include deliberate disruption in incident response scenarios so an outage is not assumed\n  to be a fault.\n",
+        "short_recommendation": "Scope service control rights and route unexpected stops to security.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1489/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1489 — Service Stop",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

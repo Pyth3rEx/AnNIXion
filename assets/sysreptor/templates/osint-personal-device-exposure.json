@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "c3d949a3-3dc6-5169-a280-65295fbd873d",
+  "tags": [
+    "osint",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "93d89133-c937-5305-9ec0-c39e35c83161",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Corporate Access From Exposed Personal Devices",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "Infostealer output and public exposure indicated corporate credentials and session material held on personal, unmanaged devices, placing corporate access outside every control the organisation operates.\n",
+        "description": "Work reaches personal devices through ordinary convenience: mail on a phone, a document opened at home, a password saved in a personal browser profile. The device is outside device management, has no EDR, and is shared.\n\nInfostealer malware on such a device collects browser-stored passwords and, more importantly, session cookies — which authenticate without a password and therefore without multi-factor authentication. Those logs are sold in bulk, and corporate domains in them are easy to search for.\n\nBecause the compromise happens on a device the organisation cannot see, the first sign is usually a successful login that looks entirely normal.\n",
+        "recommendation": "* Provide a managed route for the work people do on personal devices, so the workaround is unnecessary.\n* Use conditional access to require a managed, compliant device for anything sensitive.\n* Monitor infostealer sources for your domains, and revoke sessions — not only passwords — on any hit.\n* Keep session lifetimes short enough that a stolen cookie expires quickly.\n",
+        "short_recommendation": "Separate corporate access from personal devices, and revoke sessions on exposure.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1555/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1592.004 — Client Configurations",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1593.001 — Social Media",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

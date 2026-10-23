@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "026e780d-8a00-5aa9-8321-d41ebed50465",
+  "tags": [
+    "red",
+    "detection",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "145a7adf-2940-5ecc-aabc-183aed86e34e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Insufficient Logging and Detection Coverage",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:L/I:L/A:L",
+        "summary": "Activity performed during testing — credential attacks, lateral movement, privilege escalation and data access — produced no alert and in several cases no retained log at all, so the same activity by an attacker would not have been noticed.\n",
+        "description": "Detection is what bounds the damage of a compromise. Prevention fails eventually; whether that failure becomes an incident or a breach depends on whether anyone notices.\n\nThe gap is usually not the absence of logs but their fate: logs stay on the host that produced them, where an attacker with administrative access can clear them; retention is too short to investigate a compromise that began weeks earlier; or the events are collected but no rule turns them into an alert anyone sees.\n\nA test is the cheapest opportunity to measure this. The activity is known, timed and documented, so it can be compared directly against what the defenders saw — and the answer is routinely \"nothing\".\n",
+        "recommendation": "* Centralise logs off the hosts that generate them, with retention long enough to investigate — a year for authentication and administrative activity.\n* Collect the sources that matter: authentication, process creation with command lines, PowerShell, DNS, EDR telemetry, and cloud audit logs.\n* Write and test detections for the techniques this assessment used, and verify them by re-running the activity.\n* Confirm alerts reach somebody who acts, with a defined response path out of hours.\n",
+        "short_recommendation": "Centralise logs and alert on the techniques used against you.",
+        "references": [
+          "https://attack.mitre.org/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1685.002 — Disable or Modify Cloud Log",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

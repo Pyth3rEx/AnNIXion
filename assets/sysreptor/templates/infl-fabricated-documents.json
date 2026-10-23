@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "d28ddaf8-f8bd-5611-90dc-63e0adea91bf",
+  "tags": [
+    "puppet",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2fc3134c-fab3-59d7-9128-8fb0933f0bbd",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Fabricated Documents Attributed to the Organisation",
+        "cvss": "n/a",
+        "summary": "Documents presented as internal — memoranda, policies, correspondence — were circulated\nas evidence for the campaign's claims. Examination indicates fabrication or alteration.\n",
+        "description": "A document outperforms an assertion. It looks like evidence, it is shareable, and it\nshifts the burden onto the organisation to prove a negative about something it never\nwrote.\n\nFabrications are rarely perfect and the defects are worth recording precisely: wrong\ntemplate revision, a logo taken from the public website rather than the document\ntemplate, job titles that did not coexist, dates that fall on weekends, and file\nmetadata inconsistent with the claimed author. Where the document is a genuine one that\nhas been altered, the alteration is the finding and the original's provenance matters.\n\nResist the temptation to publish a full forensic refutation. It confirms the document is\nworth discussing and supplies the operator with a list of defects to correct in the next\nversion.\n",
+        "recommendation": "* Preserve the circulated artefact and its metadata before it is deleted; an unpreserved\n  observation cannot be relied on later.\n* Confirm internally whether a genuine original exists, and whether it leaked, before any\n  public statement — denying a real document is the worst available outcome.\n* Respond with a short provenance statement rather than a detailed forensic breakdown.\n* Report the artefact to platforms under their manipulated-media policies.\n",
+        "short_recommendation": "Preserve the artefact, confirm internally, respond on provenance only.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0089"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0085 — Develop Text-Based Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0089 — Obtain Private Documents",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

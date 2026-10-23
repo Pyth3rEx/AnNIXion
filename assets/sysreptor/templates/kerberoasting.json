@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "6c6a360b-a4e7-5d03-bed9-a0eecff5ca59",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "29837733-c815-5f24-970a-6f72e8dff707",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Kerberoasting of Service Accounts",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Service accounts with Service Principal Names could be targeted for offline password cracking: any domain user may request a service ticket encrypted with the account's password hash, and crack it at leisure. Weak service-account passwords are therefore domain credentials waiting to be read.\n",
+        "description": "Kerberos issues service tickets encrypted with the key of the account the service runs as. Any authenticated domain user may request a ticket for any SPN, which means every SPN-bearing account's password is exposed to offline attack by every user in the domain.\n\nNothing in this exchange is anomalous: requesting a service ticket is what Kerberos is for, and the cracking happens offline where no lockout or alert applies. The determining factor is password strength, and service accounts are typically given memorable passwords set years ago and never rotated.\n\nThe accounts involved are frequently over-privileged — SQL service accounts in Domain Admins remain common — so cracking one often ends the engagement.\n",
+        "recommendation": "* Replace service accounts with Group Managed Service Accounts, whose 240-character passwords are rotated automatically and cannot realistically be cracked.\n* Where that is not possible, set passwords of at least 25 random characters and rotate them.\n* Remove SPNs from accounts that no longer need them, and audit which accounts carry them.\n* Never place service accounts in privileged groups; grant the specific rights needed.\n* Alert on bulk service-ticket requests, especially with RC4 encryption.\n",
+        "short_recommendation": "Use managed service accounts, or long random passwords.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1558/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1558.003 — Kerberoasting",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

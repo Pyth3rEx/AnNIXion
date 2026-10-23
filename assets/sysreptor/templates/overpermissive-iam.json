@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "e679507d-55be-5c01-a253-685cb9d9ffbe",
+  "tags": [
+    "red",
+    "cloud"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3954894f-e825-5760-a2c2-5a6d787ab9b9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Over-Permissive Cloud IAM Policies",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Identity policies granted far broader permissions than the workloads required, including wildcard actions and permissions allowing a principal to grant itself further rights. Compromise of any such identity is compromise of the account.\n",
+        "description": "Cloud permissions are granted broadly because narrowing them takes effort and breaks things in ways that are hard to diagnose. A wildcard policy applied during development becomes permanent, and roles attached to compute instances inherit it.\n\nThe specific risk is privilege escalation within the account: permissions to create or modify policies, pass roles, update functions, or create access keys for other users allow a limited identity to become an administrative one through documented API calls — nothing that looks like exploitation.\n\nBecause an instance role is reachable from any code running on the instance, an application flaw such as SSRF becomes the key to whatever that role may do.\n",
+        "recommendation": "* Grant least privilege, scoped to specific actions and resources; treat wildcards as exceptions needing review.\n* Use the provider's access analyser to find unused permissions and tighten policies against real usage.\n* Separate duties so no single identity can both change policy and use the resulting access.\n* Prefer short-lived credentials and workload identity federation over long-lived keys.\n* Alert on policy modification and on privilege-escalation API patterns.\n",
+        "short_recommendation": "Grant least privilege and remove wildcard policies.",
+        "references": [
+          "https://owasp.org/www-project-cloud-native-application-security-top-10/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1078.004 — Cloud Accounts",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1098.003 — Additional Cloud Roles",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

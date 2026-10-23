@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "b00be21c-ba71-5248-8082-4ec5dc3972ed",
+  "tags": [
+    "osint",
+    "external"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6f86578d-7ffe-5ea1-859f-fd7babbfcfa7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Certificate Transparency Discloses Internal Naming",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Every certificate issued for the organisation's domains is published in public logs, disclosing hostnames that were never meant to be found — development, staging, administrative and pre-release systems among them.\n",
+        "description": "Certificate transparency exists so that mis-issued certificates can be detected, and it works by publishing every certificate to append-only public logs. The practical consequence is that issuing a certificate publishes the hostname.\n\nTeams routinely request certificates for internal names on the assumption that an unpublished DNS record keeps a host private. It does not: the name appears in the logs within minutes, and tooling watches those logs continuously.\n\nThe names themselves are informative beyond their existence. `vpn-test`, `jenkins`, `backup-admin` and `sap-dev` tell an attacker what the estate runs and which hosts are least likely to be monitored.\n",
+        "recommendation": "* Treat any name in a certificate as public, and name hosts accordingly.\n* Use a wildcard certificate for internal hosts where the risk model allows, so individual names are not published.\n* Keep genuinely internal services on an internal certificate authority that does not log publicly.\n* Monitor the logs for your own domains, both to find forgotten assets and to detect mis-issuance.\n",
+        "short_recommendation": "Use wildcards for internal names, and expect everything else to be public.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1596/003/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1596.003 — Digital Certificates",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1590.001 — Domain Properties",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "format": "templates/v2",
+  "id": "c15fa923-41c0-5cfc-9635-6420205b576d",
+  "tags": [
+    "red",
+    "web",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d70960c1-5b5a-5e5d-8a6d-b5e2387ea569",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "SQL Injection",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The application built SQL statements by concatenating user-controlled input, so input intended as data was parsed as query syntax. This allowed the contents of the database to be read and modified outside the application's own access control, and on some database platforms provides a route to command execution on the database host.\n",
+        "description": "SQL injection occurs where input crosses from data into code. The application concatenates values taken from the request into a SQL statement, and the database engine — which has no way to tell which characters the developer intended and which the user supplied — parses the whole string as one query.\n\nThe consequence is that an attacker chooses what the query does. Authentication can be bypassed by making a `WHERE` clause always true, arbitrary rows can be read from any table the application's database user can reach, and `UNION` or stacked statements can return data the application was never written to expose. Where the database account is over-privileged, injection extends past the data to the host: file reads and writes, and on some platforms direct command execution.\n\nBlind variants, where no result is reflected in the response, are not a mitigation. Boolean and time-based techniques extract the same data one bit at a time, and automated tooling makes that practical against any endpoint that responds differently to a true and a false condition.\n",
+        "recommendation": "* Use parameterised queries (prepared statements) for every database call, without exception. The query structure is then fixed before any user input is bound to it.\n* Where an ORM is in use, keep to its parameterised interfaces and treat raw-query escape hatches as code requiring review.\n* Identifiers that cannot be parameterised — table and column names, sort direction — must be validated against an allow-list of known-good values, never escaped and interpolated.\n* Give the application's database account only the privileges it uses. It rarely needs `FILE`, `xp_cmdshell`, schema modification or access to other databases on the instance.\n* Return generic error messages. Database errors in a response turn a blind injection into a trivial one.\n",
+        "short_recommendation": "Use parameterised queries for every database call.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

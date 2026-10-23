@@ -1,0 +1,49 @@
+{
+  "format": "templates/v2",
+  "id": "3e6c47e0-dbbf-53f2-bbca-efa43666fee5",
+  "tags": [
+    "puppet",
+    "physical",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "34370d6a-aa0a-53e7-9d66-a121ceaa41ab",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "On-Site Impersonation of Staff and Contractors",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+        "summary": "A pretext as a contractor, auditor or internal IT staff member was accepted without verification, obtaining escorted and then unescorted access to restricted areas and to equipment, including assistance from staff in reaching it.\n",
+        "description": "Impersonation on site combines the physical and psychological dimensions: the attacker is present, which lends credibility that no email can, and presents a role that staff are conditioned not to obstruct.\n\nMaintenance and IT pretexts are effective because they are both unremarkable and unwelcome to question — the visitor is doing something tedious on someone else's behalf, and challenging them risks delaying work. A high-visibility vest, a clipboard, a laptop and a plausible job reference are usually enough.\n\nThe most valuable outcome is assistance rather than access: staff who unlock the comms room, log the visitor into a system \"to test it\", or explain which cabinet holds what. These are helpful acts by people doing their jobs, which is why instruction alone rarely changes them.\n",
+        "recommendation": "* Verify all contractor and maintenance visits against a work order raised in advance by a named internal owner, confirmed by telephone before access.\n* Make role claims verifiable: publish the way IT identifies itself, and state clearly that IT will never ask a user to log in on their behalf or to hand over a device without a ticket.\n* Require escort for all external parties in technical areas, with the escort named and present throughout.\n* Give staff a no-blame route to check a visitor — a single number to call — so verification does not require confrontation.\n* Record and review the identity verification actually performed, not just the visit.\n",
+        "short_recommendation": "Verify contractors against a work order before granting access.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1684.001 — Impersonation",
+            "procedure": ""
+          }
+        ],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          },
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0143 — Persona Legitimacy",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

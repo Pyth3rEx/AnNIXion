@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "797f22d4-717a-5825-bb0b-c5795de5750d",
+  "tags": [
+    "red",
+    "windows",
+    "ad"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ed5e58ef-77de-58df-96e9-9c564c1014e9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Mass Account Lockout or Removal Achievable",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:N/I:H/A:H",
+        "summary": "A compromised administrative account could disable, lock out or remove user accounts in\nbulk, including the accounts required to respond to the incident.\n",
+        "description": "Removing access is the move that converts an intrusion into a crisis, because it takes away\nthe organisation's ability to respond. Where the responders' own accounts live in the same\ndirectory as everything else, the first action of a sophisticated intrusion is to remove\nthem.\n\nRecovery then depends on break-glass credentials that are outside the compromised\ndirectory, stored where they remain retrievable when normal access is gone, and tested.\nAll three conditions are frequently unmet — most often the third.\n\nThis is a planning finding as much as a technical one, and it belongs in front of the\npeople who own incident response rather than only the directory team.\n",
+        "recommendation": "* Maintain break-glass accounts outside the production directory, with credentials stored\n  so they remain retrievable during an outage.\n* Test break-glass access on a schedule; untested credentials routinely fail when needed.\n* Alert on bulk account modification and on changes to accounts belonging to the response\n  team.\n* Ensure the incident response plan does not depend on systems that authenticate against\n  the compromised directory.\n",
+        "short_recommendation": "Maintain and test break-glass accounts outside the production directory.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1531/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1531 — Account Access Removal",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

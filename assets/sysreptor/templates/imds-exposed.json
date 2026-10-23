@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "886aa3c8-cd9e-5f96-ae8b-25aac3156542",
+  "tags": [
+    "red",
+    "cloud"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "fd204503-6984-5eb3-99e4-7bf9ed878ebb",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Instance Metadata Service Reachable from Application",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "The instance metadata endpoint was reachable from application code in its unauthenticated form, so any request-forgery flaw could retrieve the instance role's credentials and act in the cloud account with its privileges.\n",
+        "description": "Every cloud instance can query a link-local address for its own metadata, including temporary credentials for the attached role. In the original request-response form, a single unauthenticated HTTP GET returns those credentials.\n\nThat makes the metadata service the standard escalation target for SSRF: a flaw that merely fetches a URL becomes cloud account access. The credentials are valid immediately and from anywhere, and their use is difficult to distinguish from the application's own activity.\n\nSession-oriented versions of the service (IMDSv2 and equivalents) require a PUT to obtain a token first and restrict the hop limit, which defeats most request-forgery paths.\n",
+        "recommendation": "* Require the session-oriented metadata service and disable the legacy form entirely.\n* Set the metadata hop limit to 1 so containers cannot reach it through the host.\n* Block outbound access to `169.254.169.254` from application workloads that do not need it.\n* Attach minimal roles to instances, so the credentials available are worth little.\n* Alert on role credentials used from outside the expected network.\n",
+        "short_recommendation": "Require IMDSv2 and block link-local access from workloads.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1552.005 — Cloud Instance Metadata API",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1190 — Exploit Public-Facing Application",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "11e3066c-91eb-5af9-aa52-f607305b686a",
+  "tags": [
+    "red",
+    "process",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f70bb860-ba6e-5a6d-ac70-755aeaa5615f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Backups Not Isolated or Not Tested",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "Backups were reachable from the production network using production credentials, and restoration had not been tested, leaving the organisation without a reliable recovery path from destructive attack.\n",
+        "description": "Ransomware operators target backups first, because an organisation that can restore does not pay. Backup infrastructure joined to the same directory, reachable from the same network and administered with the same credentials is destroyed in the same operation as the systems it protects.\n\nThe second failure is untested restoration. Backups that run successfully are assumed to work, but restoration is a different process: it may be missing a dependency, lack the encryption key, take far longer than the tolerable outage, or restore data that was already encrypted silently for weeks.\n\nRecovery time is the measure that matters. An organisation that can restore in three weeks, when it can survive three days, has backups but no recovery capability.\n",
+        "recommendation": "* Keep at least one copy offline or immutable, outside the production identity domain, so production credentials cannot alter or delete it.\n* Test full restoration on a schedule, measuring the time taken against the tolerable outage, and document the result.\n* Protect backup consoles with separate credentials and MFA, and alert on deletion or retention changes.\n* Retain history long enough to recover from corruption discovered late, not only from immediate loss.\n* Include backup infrastructure in the incident plan, assuming it may be targeted first.\n",
+        "short_recommendation": "Keep an immutable offline copy and test restoration.",
+        "references": [
+          "https://www.cisa.gov/stopransomware"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1490 — Inhibit System Recovery",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1485 — Data Destruction",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

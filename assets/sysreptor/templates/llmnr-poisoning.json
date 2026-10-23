@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "4d69673f-1aa9-5f65-a6c5-86f5a03e584a",
+  "tags": [
+    "red",
+    "infrastructure",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "094f703e-7a3b-5d63-bcbb-6a4277c69fa0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "LLMNR, NBT-NS and mDNS Name Resolution Poisoning",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:N/UI:R/S:U/C:H/I:L/A:N",
+        "summary": "Legacy broadcast name resolution was enabled, so any host on the local network could answer name lookups that DNS failed to resolve. Responding to those broadcasts captures authentication material from the hosts that asked.\n",
+        "description": "When DNS does not resolve a name, Windows falls back to asking the local network — LLMNR, NBT-NS, and on other platforms mDNS. These protocols have no authentication: the first answer wins.\n\nAn attacker on the same segment answers every query, and the client, believing it has found the host it was looking for, authenticates. The resulting NetNTLM material is either cracked offline — fast for ordinary passwords — or relayed to another service, which requires no cracking at all.\n\nThe queries happen constantly without user involvement: typos in share paths, stale shortcuts, mapped drives to decommissioned servers, and search-domain misses all produce them. A listener left running for an hour on a user subnet typically collects a usable set of hashes.\n",
+        "recommendation": "* Disable LLMNR by Group Policy and NBT-NS via DHCP option or interface configuration; disable mDNS where it is not required.\n* Fix the DNS failures that cause the fallback — stale references and missing suffixes.\n* Require SMB signing and enable Extended Protection, so captured authentication cannot simply be relayed.\n* Monitor for hosts answering broadcast name queries for names they do not own.\n",
+        "short_recommendation": "Disable LLMNR, NBT-NS and mDNS across the estate.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1557/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1557.001 — Name Resolution Poisoning and SMB Relay",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

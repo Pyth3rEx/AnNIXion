@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "a519f8d9-7955-54ec-9ccb-c303bc103ac3",
+  "tags": [
+    "red",
+    "wireless"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f1559c55-ff54-5a2b-833e-4ce52b2e45a9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Weak Wireless Pre-Shared Key",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Wireless networks were protected by a pre-shared key that could be recovered by offline cracking of a captured handshake, granting network access to anyone within radio range of the building.\n",
+        "description": "A pre-shared key is one secret shared by everyone, so its strength is the whole of the control and its distribution is uncontrolled: it is written on whiteboards, shared with visitors and contractors, and kept on the devices of former staff.\n\nCapturing a handshake requires only proximity — a car park is close enough — and can be forced by deauthenticating a client. The handshake is then cracked offline, where no lockout applies, and ordinary passphrases fall quickly.\n\nAccess to the wireless network usually means access to the internal network, which makes radio range an extension of the physical perimeter. Guest networks that bridge to internal resources, rather than isolating to the internet, carry the same consequence.\n",
+        "recommendation": "* Use enterprise authentication (WPA2/WPA3-Enterprise) with certificate-based EAP-TLS, so there is no shared secret to recover.\n* Configure clients to validate the RADIUS server certificate, which also defeats evil-twin credential capture.\n* Where a PSK is unavoidable, use a long random passphrase and rotate it on staff changes.\n* Isolate guest wireless to internet-only access, with client isolation enabled.\n* Survey for rogue access points advertising corporate network names.\n",
+        "short_recommendation": "Move to enterprise authentication with certificates.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1557/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1110.002 — Password Cracking",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

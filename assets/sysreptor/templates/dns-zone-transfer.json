@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "d8cbcbae-b889-5349-a769-2506d1c5e227",
+  "tags": [
+    "red",
+    "infrastructure",
+    "external",
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "26765dd3-b4ae-5c54-90a1-6e81fc1f35e4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "DNS Zone Transfer Permitted",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Name servers allowed zone transfers to arbitrary clients, disclosing a complete list of hostnames and addresses. This replaces guesswork with an authoritative map of the estate, including hosts that were never meant to be found.\n",
+        "description": "A zone transfer is the mechanism by which a secondary name server obtains a copy of a zone. Where it is not restricted, anyone may request it and receive every record in the zone.\n\nThe result is a precise inventory: internal naming conventions, development and staging systems, management interfaces, backup hosts and VPN endpoints. Names are descriptive — `backup-sql-01`, `vpn-test` — so the list also suggests which hosts are worth attention.\n\nThis is reconnaissance rather than compromise, but it removes the noisy enumeration that defenders are most likely to notice, and so makes everything that follows quieter.\n",
+        "recommendation": "* Restrict zone transfers to the specific addresses of authorised secondary servers, and authenticate them with TSIG.\n* Separate internal and external DNS views so internal names are never published.\n* Review public zones for records pointing at systems not meant to be externally known.\n* Monitor for transfer attempts from unexpected sources.\n",
+        "short_recommendation": "Restrict zone transfers to authorised secondary servers.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1590/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1590.002 — DNS",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1596.001 — DNS/Passive DNS",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

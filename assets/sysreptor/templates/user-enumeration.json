@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "a1f6c4af-8890-54cd-9809-77c4716d35a2",
+  "tags": [
+    "red",
+    "web",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "632a644d-c463-5194-a34d-c9e24b47aa73",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "User Enumeration",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "The application responded differently depending on whether an account existed, allowing valid usernames and email addresses to be confirmed in bulk. A confirmed list of accounts is the input to password spraying and to targeted phishing.\n",
+        "description": "Enumeration arises wherever the application is helpful about accounts: a login that distinguishes \"unknown user\" from \"wrong password\", a reset form that confirms whether an address is registered, a registration form that reports the address as taken, or a response that is simply measurably faster when no password hash is computed.\n\nOn its own the impact is limited. Its significance is as the first stage of the attacks that follow — spraying against a known-valid list, and phishing that addresses a real person at a real account.\n\nTiming differences deserve particular attention, because applications that return identical messages often still skip the password hashing step for an unknown user, leaving a difference that is easy to measure.\n",
+        "recommendation": "* Return identical responses, with identical timing, whether or not the account exists — including from password reset and registration.\n* Perform the password hashing work even for unknown accounts so the response time does not differ.\n* Send reset instructions by email in all cases, telling the recipient no account exists where that is so.\n* Rate limit the endpoints to make bulk enumeration impractical.\n",
+        "short_recommendation": "Make authentication responses identical regardless of account.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0043 — Reconnaissance",
+            "technique": "T1589.002 — Email Addresses",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1087 — Account Discovery",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

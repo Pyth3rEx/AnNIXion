@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "8ee96288-b0e4-5059-a5e4-c13fc61c2be0",
+  "tags": [
+    "red",
+    "cloud",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3e0c2140-7963-5f20-87bf-a938428e1f8e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Mailbox Contents Accessible After Token Theft",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N",
+        "summary": "A stolen session token granted full access to mailbox contents without re-authentication,\nand the access was not distinguished from legitimate use by any conditional access or\nalerting rule.\n",
+        "description": "Token theft bypasses multi-factor authentication entirely: the token is issued after\nauthentication has already succeeded, so replaying it requires no credential and no second\nfactor.\n\nMail is the highest-value target available, because it contains the material for onward\nfraud, the history of every relationship, and frequently the password reset path for other\nsystems. Automated forwarding and mailbox rules extend the access beyond the lifetime of\nthe token, and are commonly overlooked in remediation.\n\nDetection depends on noticing that an established session is being used from a different\nlocation, device or client than it was issued to — which requires continuous evaluation\nrather than a check at sign-in only.\n",
+        "recommendation": "* Enable token protection and continuous access evaluation so a session is re-evaluated\n  rather than trusted until expiry.\n* Apply conditional access requiring compliant devices for mail access.\n* Alert on new mailbox forwarding rules and on mass download from a mailbox.\n* Include token revocation in incident response, since a password reset alone does not\n  invalidate an existing session.\n",
+        "short_recommendation": "Enable continuous access evaluation and revoke tokens during response.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1114/002/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1114.002 — Remote Email Collection",
+            "procedure": ""
+          },
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1539 — Steal Web Session Cookie",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

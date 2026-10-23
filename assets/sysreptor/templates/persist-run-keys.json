@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "cc3fea48-c3dd-53d0-a11e-fa60e7caa692",
+  "tags": [
+    "red",
+    "windows",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "fa39c22f-5c55-5e91-87a2-6aa71c75a55f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Autostart Locations Not Monitored",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "Persistence was established through user-writable autostart registry keys and startup\nfolders. The entries survived reboot and logon and produced no alert.\n",
+        "description": "Autostart persistence is the first thing an operator reaches for because it needs no\nelevation: a standard user can write to their own run keys and startup folder, and the\nentry executes at every logon.\n\nIt is also one of the easiest things to detect, which is what makes its absence notable.\nThe locations are few, well known, and change rarely on a managed workstation, so\nmonitoring them produces a low-volume, high-value signal.\n\nThe same properties make them worth baselining. An estate's legitimate autostart entries\nare largely uniform, and deviation from that baseline is a strong indicator.\n",
+        "recommendation": "* Monitor autostart registry locations and startup folders, and alert on new entries that\n  do not match the deployment baseline.\n* Baseline the legitimate entries per build so deviation is meaningful.\n* Hunt for entries referencing user-writable paths, which have almost no legitimate use.\n",
+        "short_recommendation": "Baseline autostart locations per build and alert on deviation.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1547/001/"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1547.001 — Registry Run Keys / Startup Folder",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}

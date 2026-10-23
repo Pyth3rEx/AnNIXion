@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "ea0ce952-16d3-56ac-9187-259d88627f28",
+  "tags": [
+    "red",
+    "cloud",
+    "authn"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "06c530d4-be5b-522d-8df8-aa4c1693c6ed",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Multi-Factor Authentication Not Enforced for Privileged Access",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Administrative and remote access could be obtained with a password alone, so any credential that is phished, reused or guessed grants access directly. MFA is the single control that most reduces the value of stolen credentials.\n",
+        "description": "Credential theft is the dominant initial access vector, and password-only authentication makes every stolen credential immediately usable. Where MFA is absent from administrative interfaces, remote access or cloud consoles, phishing succeeds outright.\n\nPartial deployment is the common state: MFA on the VPN but not on the cloud console, on email but not on the legacy application, or with exemptions for service accounts and break-glass accounts that are then used routinely.\n\nThe factor matters as well. Push approvals are vulnerable to fatigue attacks, and SMS and voice codes to interception and SIM swapping; phishing-resistant factors bound to the origin defeat the proxy-based kits now in general use.\n",
+        "recommendation": "* Require MFA for all administrative access, remote access and cloud consoles, with no standing exemptions.\n* Prefer phishing-resistant factors — FIDO2 security keys or platform authenticators — for privileged accounts.\n* Replace push approval with number matching where keys are not yet deployed.\n* Protect break-glass accounts with hardware factors and monitor every use.\n* Enforce MFA by conditional access policy rather than per-application configuration.\n",
+        "short_recommendation": "Enforce phishing-resistant MFA on all privileged access.",
+        "references": [
+          "https://pages.nist.gov/800-63-3/sp800-63b.html"
+        ],
+        "affected_components": [],
+        "attack_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1078.004 — Cloud Accounts",
+            "procedure": ""
+          }
+        ]
+      }
+    }
+  ]
+}
