@@ -9,7 +9,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -72,7 +71,7 @@ let
       // riskColours
       // statusColours;
       variables = {
-        "header-logo-url" = "data:image/svg+xml;base64,@LOGO@";
+        "header-logo-url" = "data:image/svg+xml;base64,${toBase64 logoSvg}";
         "header-logo-height" = "26px";
       };
     };
@@ -109,17 +108,18 @@ let
   # are one drawing. 1.3 of padding holds the round caps; see
   # home/desktop/icons/default.nix, which renders the same way.
   logo = import ../catalog/logo.nix { };
-  logoSvg = pkgs.writeText "annixion-logo.svg" ''
+  logoSvg = ''
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.3 -1.3 26.6 26.6" width="24" height="24">
     <g fill="none" stroke="${red}" stroke-width="2.3275" stroke-linecap="round" stroke-linejoin="round">
     ${logo.body}  </g>
     </svg>
   '';
+  toBase64 = import ../catalog/base64.nix { inherit lib; };
 
-  themeJson = pkgs.runCommand "annixion-sysreptor-theme.json" { } ''
-    logo=$(base64 -w0 ${logoSvg})
-    sed "s|@LOGO@|$logo|" ${pkgs.writeText "theme.json" (builtins.toJSON theme)} > $out
-  '';
+  # builtins.toFile, not pkgs.writeText: the theme has to exist the moment
+  # this module is *evaluated*, not after something remembers to `nix build`
+  # it — environment.etc only ever hands out the path string below.
+  themeJson = builtins.toFile "annixion-sysreptor-theme.json" (builtins.toJSON theme);
 in
 {
   options.annixion.sysreptor = {
