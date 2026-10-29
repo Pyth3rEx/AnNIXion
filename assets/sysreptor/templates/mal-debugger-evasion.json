@@ -1,0 +1,48 @@
+{
+  "format": "templates/v2",
+  "id": "0a95589c-d3df-586e-a236-3f97037f5792",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "77196bac-1a67-5cea-bad2-43415824730e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Debugger Detection and Evasion",
+        "cvss": "n/a",
+        "summary": "The sample checks for an attached debugger and alters its behaviour — refusing to run, running down a decoy path, or crashing the debugger — rather than execute normally under observation.",
+        "description": "Checks of this kind are cheap for the author and expensive for the analyst: a call to\nIsDebuggerPresent, a read of the PEB's BeingDebugged flag, a timing check around a\nsingle-stepped instruction, or an INT 2D / INT 3 probe that behaves differently once a\ndebugger has claimed the exception. None of these require the malware to know which\ndebugger is attached, only that one is.\n\nWhere the check succeeds, the sample most commonly takes a silent exit or branches into\ndecoy logic that looks plausible to a cursory read but does nothing. Confirming this\nbehaviour as debugger evasion, rather than an unrelated crash, usually needs a second run\nwith the check patched out or bypassed at the API level.\n",
+        "recommendation": "* Patch or hook the specific check (PEB flag, API return value, exception behaviour) rather than fighting the debugger generically.\n* Re-run analysis with the check neutralised and diff the two execution paths — the branch not taken under observation is usually the interesting one.\n* Record the exact check used; it is often reused unchanged across a family's samples and is a fast identification signal.\n",
+        "short_recommendation": "Identify and neutralise the specific debugger check rather than the debugger's presence generically.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1622/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1622 — Debugger Evasion",
+            "procedure": "Behaviour differed under an attached debugger; confirmed by patching the check and re-running."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0001 — Debugger Detection",
+            "implementation": "PEB BeingDebugged flag and IsDebuggerPresent checked before unpacking proceeded."
+          },
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0002 — Debugger Evasion",
+            "implementation": "PEB BeingDebugged flag and IsDebuggerPresent checked before unpacking proceeded."
+          }
+        ]
+      }
+    }
+  ]
+}

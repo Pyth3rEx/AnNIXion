@@ -1,0 +1,45 @@
+{
+  "format": "templates/v2",
+  "id": "10f7b0e7-2c80-5b5f-8239-5eaa8e0e03c6",
+  "tags": [
+    "malware",
+    "endpoint",
+    "process",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ca1d6bbb-6bd0-56b9-b3a6-78ed664fc7c7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "DLL Injection via Remote Thread",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "The sample forces a separate running process to load its malicious DLL by writing the library's path into the target's memory and starting a remote thread that calls LoadLibrary on it.",
+        "description": "This is the oldest and most widely implemented injection technique, and correspondingly\nthe most heavily instrumented by endpoint products — a remote CreateRemoteThread or\nNtCreateThreadEx targeting LoadLibrary with an argument pointing at attacker-written memory\nis a well-understood pattern. Authors who still use it are usually trading detection risk\nfor simplicity and broad OS-version compatibility rather than attempting to evade\nbehavioural detection specifically.\n",
+        "recommendation": "* Alert on CreateRemoteThread/NtCreateThreadEx where the start address resolves to LoadLibraryA/W and the argument points into another process's writable memory.\n* Identify the injected DLL's path or in-memory copy and treat it as the operative payload, not the process it was injected into.\n* Audit which processes commonly receive this kind of injection in the environment to separate expected (EDR, some legitimate software) from anomalous targets.\n",
+        "short_recommendation": "Alert on remote threads whose start address resolves to LoadLibrary with an attacker-controlled argument.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1055/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1055.001 — Dynamic-link Library Injection",
+            "procedure": "Wrote a DLL path into a remote process's memory and created a remote thread targeting LoadLibraryW with that address as its argument."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0013 — Privilege Escalation",
+            "behavior": "E1055 — Process Injection",
+            "implementation": "Classic CreateRemoteThread plus LoadLibrary injection targeting a running Explorer process."
+          }
+        ]
+      }
+    }
+  ]
+}

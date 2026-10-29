@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "8ea0a7e9-60cf-5c6e-b8a3-f58ec92ab798",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ea9af0c3-95a3-56f4-9570-8db3e35685d9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Data Destruction",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "The sample deletes or corrupts files at the filesystem level — individually or in bulk — as its primary impact, distinct from a full disk wipe and from ransomware's reversible encryption.",
+        "description": "This sits between the two more severe techniques: narrower than a disk wipe (specific\nfiles or directories, not the whole volume) and, unlike ransomware, offering no recovery\npath at all once complete — there is no key because nothing was encrypted, only destroyed.\nSome variants target backup and shadow-copy locations specifically, as a precursor to or\nsubstitute for a separate ransomware stage.\n",
+        "recommendation": "* Identify the specific scope targeted (file types, directories, backup locations) to establish what is actually unrecoverable versus merely inaccessible.\n* Restore from offline backups not reachable by the sample's scope; prioritise recovering backup infrastructure first if it was itself a target.\n* Treat backup- or shadow-copy-targeted destruction as a strong signal that a further-reaching attack (ransomware, wiper) was planned or already underway.\n",
+        "short_recommendation": "Establish the destruction's exact scope, and check whether backup or shadow-copy locations were specifically targeted.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1485/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1485 — Data Destruction",
+            "procedure": "Recursively deleted files matching a target extension list and additionally targeted Volume Shadow Copy storage."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "E1485 — Data Destruction",
+            "implementation": "Deleted matching files directly via the filesystem API with no prior encryption or staging."
+          }
+        ]
+      }
+    }
+  ]
+}

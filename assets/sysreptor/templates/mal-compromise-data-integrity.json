@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "c28a584e-6c22-5a01-b887-3a83d2e9e219",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2a5f6efa-0119-5695-a712-4048f0101f06",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Silent Data-Integrity Compromise",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The sample silently alters stored data — database records, configuration files, application data — without encrypting or deleting it, so the change is not obvious until the data is relied upon.",
+        "description": "This is the quietest of the impact techniques: there is no ransom note, no missing file,\nno performance symptom, only a subtly wrong value sitting in a record that looks entirely\nnormal until something downstream acts on it incorrectly. It is correspondingly hard to\ndetect through monitoring aimed at availability or confidentiality, and is usually found\nonly through integrity checks (hashes, checksums, reconciliation against a separate source)\nor after a consequence of the bad data surfaces.\n",
+        "recommendation": "* Establish integrity baselines (hashes, checksums) for data stores the sample had write access to, and compare rather than assuming correctness from availability.\n* Reconcile affected records against an independent source (backups, logs, a separate system of record) to identify the specific scope of altered data.\n* Treat any confirmed alteration as cause to review all data the same access reached during the same window, not only the specific record first noticed.\n",
+        "short_recommendation": "Reconcile affected records against an independent source; availability alone does not confirm the data is correct.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1565/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1565.001 — Stored Data Manipulation",
+            "procedure": "Modified specific field values in a local application database directly via file access rather than through the application's own API."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "B0016 — Compromise Data Integrity",
+            "implementation": "Altered stored records directly on disk, bypassing the owning application's write path entirely."
+          }
+        ]
+      }
+    }
+  ]
+}

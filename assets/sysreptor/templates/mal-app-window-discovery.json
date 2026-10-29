@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "ebd7a8ef-6c2b-5213-84f3-b606b81fd220",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "41194b44-7663-57a3-9c8e-d72b7baf49c9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Application Window Discovery",
+        "cvss": "n/a",
+        "summary": "The sample enumerates open application windows and their titles to detect a specific target application running, or to time an input- or screen-capture trigger to that application gaining focus.",
+        "description": "Window enumeration is a cheap, reliable way to answer 'is the target application open\nright now' without needing process-level access: a call to enumerate top-level windows and\nmatch titles against a list (bank names, cryptocurrency exchange names) is sufficient. This\nis frequently the trigger condition feeding a focus-based screen or input capture routine\nrather than a standalone behaviour.\n",
+        "recommendation": "* Recover the window-title match list; it identifies the specific target applications the sample was built to act against.\n* Correlate this discovery step with whichever capture routine it feeds (see screen capture, input capture) to understand the complete chain.\n* Treat the match list as a strong signal of intended victim profile — consumer banking titles versus enterprise software indicate different targeting.\n",
+        "short_recommendation": "Recover the window-title match list to identify the specific applications the sample targets and feeds into capture.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1010/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1010 — Application Window Discovery",
+            "procedure": "Enumerated top-level window titles on a timer and triggered screen capture when a title matched a configured banking-portal list."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0007 — Discovery",
+            "behavior": "E1010 — Application Window Discovery",
+            "implementation": "Polled window titles against a hardcoded match list to time a focus-triggered capture."
+          }
+        ]
+      }
+    }
+  ]
+}

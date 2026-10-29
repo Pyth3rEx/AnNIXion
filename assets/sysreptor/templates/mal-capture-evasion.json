@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "b78d7c3a-0e61-568b-9462-ced2629a395b",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "59f7aac8-81f2-5ea5-927b-77fbb0e34019",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Self-Protection Against Sample Acquisition",
+        "cvss": "n/a",
+        "summary": "The sample detects attempts to acquire or submit it for analysis — a known analysis-portal hash check, a re-execution counter, or a self-destruct on being copied to removable media — and disables itself in response.",
+        "description": "This sits apart from sandbox and debugger evasion: it targets the act of acquiring the\nsample itself, not the environment it runs in. Variants include checking the local\nfilename or path against a hash of 'known submitted to a public sandbox' lists, counting\nexecutions and refusing to run past a threshold, or detecting that the binary has been\ncopied off its original host and wiping itself.\n",
+        "recommendation": "* Preserve the original filename, path and execution count state when re-running a sample that exhibits this behaviour.\n* Acquire fresh copies from the original vector where possible rather than relying on a single preserved specimen.\n* Record the specific trigger; it often indicates the author anticipated public sandbox submission and is a useful attribution signal.\n",
+        "short_recommendation": "Preserve original filename, path and execution-count state when re-acquiring the sample.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1685/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1685 — Disable or Modify Tools",
+            "procedure": "Compared its own execution count against a stored threshold and disabled further runs once exceeded."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0036 — Capture Evasion",
+            "implementation": "Hashed its own path and filename against a list consistent with public-sandbox submission paths."
+          }
+        ]
+      }
+    }
+  ]
+}

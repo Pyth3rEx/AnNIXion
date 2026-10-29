@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "f4371c71-cb21-5f72-b8d8-1359d2984a63",
+  "tags": [
+    "malware",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e028d7e0-6854-5c54-9797-05e5b6ba9866",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Supply-Chain Compromise for Propagation",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The sample propagates by riding inside a legitimate software update, package, or build pipeline output, reaching victims who trust and install that software through its normal, expected distribution channel.",
+        "description": "This inverts the usual trust relationship: rather than tricking a victim into running\nsomething suspicious, the payload arrives inside something the victim already decided to\ntrust and actively sought out — an update to software already installed, or a package\npulled deliberately from a registry. The blast radius scales with the compromised\nsoftware's install base rather than with any targeting the attacker did directly, which is\nwhat makes this class of compromise disproportionately severe relative to the initial\nfoothold required.\n",
+        "recommendation": "* Identify and isolate the compromised software, update channel, or package specifically; every installation of it is a potential victim, not only the one where symptoms were first observed.\n* Notify the vendor or package maintainer immediately — remediation at the source stops new infections, where the resources to detect every individual installation may not exist.\n* Verify build and release pipeline integrity (signing, provenance, reproducible builds) for the affected software before trusting any subsequent release from the same channel.\n",
+        "short_recommendation": "Identify and isolate the compromised distribution channel itself; every installation of it is a potential victim.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1195/002/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0001 — Initial Access",
+            "technique": "T1195 — Supply Chain Compromise",
+            "procedure": "Payload was bundled into a legitimate open-source package's published release after the maintainer's publishing credentials were compromised."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0011 — Lateral Movement",
+            "behavior": "E1195 — Supply Chain Compromise",
+            "implementation": "Rode inside a trusted software package's normal distribution channel, reaching every installer who updated through it."
+          }
+        ]
+      }
+    }
+  ]
+}
