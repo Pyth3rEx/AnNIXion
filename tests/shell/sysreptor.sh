@@ -768,7 +768,7 @@ report "$(grep -q 'BIND_PORT=0.0.0.0:9001:8000' "$conf_home/docker.log" && echo 
 
 # ── Designs import once, and only once ─────────────────────────────────────
 # importdemodata adds a fresh copy of every design in the pack each time it
-# runs, so an `up` that re-imports leaves nine HTB designs after nine starts.
+# runs, so an `up` that re-imports leaves eight HTB designs after eight starts.
 health="$TMP/web/api/public/utils/healthcheck"
 mkdir -p "$health"
 echo ok >"$health/index.html"
@@ -805,7 +805,7 @@ report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "the HTB designs are imported on the first run" \
   "importdemodata ran ${imports:-0} time(s): $first_import"
 seen=$(grep -c '^design:' "$imp/instance-names" 2>/dev/null || echo 0)
-report "$([ "${seen:-0}" -ge 9 ] && echo 0 || echo 1)" \
+report "$([ "${seen:-0}" -ge 8 ] && echo 0 || echo 1)" \
   "every design in the pack reaches the instance" "the instance holds ${seen:-0}"
 report "$(grep -q 'type=project' "$imp/docker.log" && echo 1 || echo 0)" \
   "the demo projects stay out unless asked for" "a project pack was imported anyway"

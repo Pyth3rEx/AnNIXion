@@ -81,7 +81,7 @@ _: {
         d=$out/share/sysreptor/designs
         mkdir -p $d
         ${packCmd "design-htb" (
-          designPack "htb-designs" "sha256-wik9t/8bH9jaCn/lUrd9VG+U/y30WdjIKhKX9HGQM6I="
+          designPack "htb-designs" "sha256-V9ecZolQljMehTsldojOk1fz1ZK4+1+MMiW8Kmdw3As="
         )}
         ${packCmd "design-offsec" (
           designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="
@@ -90,13 +90,13 @@ _: {
           designPack "demo-designs" "sha256-/PGNkFfiLYcUCzW+GhIi0PTwNtID/WqxZXX6B0HtcZU="
         )}
         ${packCmd "project-htb" (
-          designPack "htb-demo-projects" "sha256-HAdRmNI/F74h6rXg3c1zqyQOU9NYXjAN0Q4RIH6ONtI="
+          designPack "htb-demo-projects" "sha256-Ulw7LNwtqco1HPctwVC9MHrry7/0gnByfsc53YALreI="
         )}
         ${packCmd "project-offsec" (
-          designPack "offsec-demo-projects" "sha256-KAXCErY1xQOxwecZ6Fd8ldS6FQRaAmPlyes6wmusoD8="
+          designPack "offsec-demo-projects" "sha256-iAeVQqGxO+dzRQ/cfKduPf3vPLBAI1ZkxYb2oCkJkj4="
         )}
         ${packCmd "project-demo" (
-          designPack "demo-projects" "sha256-SA/+l92ABoKK2tN9GFGKL/v7P+ISZnNYeVSj7FBQmWw="
+          designPack "demo-projects" "sha256-t8OsZHBpj4PrriW5YFqVfprCPsmenWarJpwMC2x7/t4="
         )}
         ${packCmd "template-demo" (
           designPack "demo-templates" "sha256-C6jbvTygJVC+969d2nI7sgJ5fEPr7RzoKp1R9gRm/VA="
