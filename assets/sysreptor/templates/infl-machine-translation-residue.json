@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "72bea23f-ad97-50d2-afb0-190e7e640d0a",
+  "tags": [
+    "puppet",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d897acd2-9aec-5e42-ab50-e9d485c54dd2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Machine-Translation Residue Across Supposedly Independent Outlets",
+        "cvss": "n/a",
+        "summary": "Articles attributed to unrelated outlets or bylines share terminology choices and\nsentence-construction habits characteristic of a single machine-translation engine,\nrather than the variation independent human writing would show.\n",
+        "description": "A translation engine has a fingerprint. Faced with a proper noun, acronym or idiom it\ncannot resolve from context, it tends to make the same choice every time it is given the\nsame input — which means the same unusual rendering of a name, or the same idiom\ntranslated component-by-component into a phrase that is grammatical but that no native\nspeaker would actually write, recurring across pieces nominally produced by different,\nunrelated authors is a production-chain tell rather than a coincidence.\n\nThis is a distinct finding from language-interference errors: that one is a human habit,\ncarried over from whatever language the writer actually thinks in. This one is a tool's\nfingerprint, and it shows up even where no individual writer's interference pattern is\notherwise present — raw or lightly-edited machine output rather than a non-native\nspeaker's own composition. The two frequently co-occur in the same low-investment\nproduction chain alongside keyboard-locale punctuation tells, but keeping them as separate\nfindings is what lets the report say which part of the pipeline is responsible for what.\n\nA genuine shared relationship — one translation agency serving several outlets under a\nhouse style — can produce similar overlap legitimately. The finding is only as strong as\nthe case that independent human authorship is implausible given what overlaps.\n",
+        "recommendation": "* Compare specific terminology choices — how a proper noun, acronym or technical term is\n  rendered — across the claimed-independent pieces; the same unusual rendering recurring\n  is the strongest single tell.\n* Rule out a shared translation agency or house style before concluding common covert\n  production; corroborate with infrastructure or publication-timing evidence rather than\n  terminology alone.\n* Run the suspect passages through more than one commercial translation engine in both\n  directions; residue that reproduces under a specific engine corroborates the finding\n  without over-claiming which team used it.\n* Feed the result into the attribution section alongside any language-interference or\n  keyboard-locale tells found in the same corpus, rather than naming a production chain\n  from this alone.\n",
+        "short_recommendation": "Compare terminology choices across the claimed-independent pieces and corroborate before naming a shared production chain.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0085",
+          "https://disarmframework.herokuapp.com/T0084"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0085.008 — Machine Translated Text",
+            "note": ""
+          },
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0084.003 — Deceptively Labelled or Translated",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

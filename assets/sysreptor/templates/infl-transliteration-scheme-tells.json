@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "52859366-6e35-5f59-8f35-7537a641ad2a",
+  "tags": [
+    "puppet",
+    "persona"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "428bb79d-8771-5f3e-b3d9-4f94f14d3aca",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Transliteration Scheme Inconsistent with the Claimed Source Language",
+        "cvss": "n/a",
+        "summary": "Foreign names and places in campaign content are romanised using a scheme specific to\none source language's transliteration standard, revealing the production team's actual\nworking language even though the published output is in a different one entirely.\n",
+        "description": "Every language that writes in the Latin alphabet has its own standardised convention for\nrendering names from a non-Latin script, and the conventions disagree with each other in\nspecific, recognisable ways — a Cyrillic name rendered with \"kh\" and \"-iy\" follows\nRussian romanisation; the same name rendered with \"kh\" and \"-y\" without the glide follows\na different standard. A production team defaults to whichever convention it already\nknows, not the one the claimed output language's house style would use, and that default\nsurvives translation of everything around it.\n\nThe tell is not reliable from a single name: legitimate outlets inconsistently inherit a\ntransliteration from newswire copy, which can look similar to this pattern without being\nrelated to it at all. It becomes diagnostic when the same scheme is applied consistently,\nacross multiple names, in content that is not supposed to share a production chain with\nanything using that scheme.\n",
+        "recommendation": "* Table every transliterated proper noun across the corpus and the romanisation scheme\n  each follows; a single instance is coincidence, a consistent scheme across unrelated\n  pieces is a production-language tell.\n* Compare against the standard romanisation conventions of each candidate source language\n  before naming one; several schemes overlap for common letter combinations and a weak\n  match should stay a hypothesis.\n* Rule out wire-copy reuse — legitimate outlets inconsistently inherit a transliteration\n  from a newswire, producing a similar-looking but unrelated pattern.\n* Weigh the finding alongside the corpus's other attribution indicators rather than\n  naming a source language from transliteration alone.\n",
+        "short_recommendation": "Table the transliteration scheme used for every proper noun and rule out wire-copy reuse before naming a source language.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0084",
+          "https://disarmframework.herokuapp.com/T0143"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0084.003 — Deceptively Labelled or Translated",
+            "note": ""
+          },
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0143.003 — Impersonated Persona",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "f0692f64-8952-588b-8d69-9c6154fbfa5b",
+  "tags": [
+    "puppet",
+    "persona"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "74081906-50bc-59d8-8f6f-2723a4559e3b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Posting Cadence Clustered in a Timezone Inconsistent with the Claimed Audience",
+        "cvss": "n/a",
+        "summary": "Converted to a candidate timezone, the cluster's posting activity concentrates inside a\nsingle weekday working window rather than spreading across the hours a genuinely\ndispersed, organic set of accounts would show, and that window does not match the\ntimezone the claimed personas or audience would keep.\n",
+        "description": "A real, organic audience posts at all hours, because it is made of individuals on their\nown schedules. A cluster that is actually run by a small operations team posts on that\nteam's schedule instead — a histogram of post times, once converted to a candidate\ntimezone, shows a working-day shape: quiet overnight, a start in the morning, a dip\naround lunch, a stop in the evening, Monday-to-Friday with the weekend off. Where that\nshape appears and the local time it implies does not match the timezone the personas or\ntargeted audience actually keep, the cluster's operators are not where they claim to be.\n\nThe weekend and holiday calendar implied by the gaps is usually a cleaner tell than the\nhourly histogram: a Friday-Saturday weekend, or a dead week that lines up with a public\nholiday in one country and not the claimed one, is harder to explain away than an hour or\ntwo of ambiguity in a working-day boundary.\n\nThe method has a real failure mode worth stating plainly: a flat or random distribution\nis not evidence the cluster is organic. Shift rotas, a distributed team across several\ntimezones, or a scheduling tool posting at random offsets all defeat the histogram without\nmaking the accounts any less coordinated. Absence of the pattern proves nothing; presence\nof it is the finding.\n",
+        "recommendation": "* Build the histogram across the whole cluster rather than one account, and test more\n  than one candidate timezone before preferring one.\n* Read the weekend and holiday gaps as well as the hourly shape — a non-standard weekend\n  or a mismatched national holiday is a cleaner signal than the daily window alone.\n* Treat a flat or random distribution as inconclusive, not as evidence of organic origin;\n  shift work and scheduling tools both defeat this method deliberately or incidentally.\n* Feed the result into the attribution section as one input among others, carrying the\n  same confidence caveat as the rest of that section.\n",
+        "short_recommendation": "Histogram posting times against candidate timezones and weigh the result, don't lead with it alone.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0092",
+          "https://disarmframework.herokuapp.com/T0129"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0092 — Build Network",
+            "note": ""
+          },
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0129.010 — Misattribute Activity",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}
