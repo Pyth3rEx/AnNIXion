@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "fc724deb-fbe6-5ee4-aa0e-87a52452befe",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "df9c0e3e-de8e-515e-831e-4c3037e9858b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Coordinated Posting Across an Account Cluster",
+        "cvss": "n/a",
+        "summary": "A cluster of accounts published the same or near-identical content within a narrow time\nwindow and across multiple platforms, in a pattern inconsistent with independent\nbehaviour.\n",
+        "description": "Synchronised posting is the most commonly cited coordination indicator and the one most\noften overstated. Genuine communities also post the same thing at the same time, because\nthey read the same sources and respond to the same events. The indicator carries weight\nonly in combination: timing clustered more tightly than human behaviour explains, text\nidentical beyond what sharing would produce, and account histories that begin together.\n\nCross-posting adds strength. The same content appearing simultaneously on platforms with\ndifferent audiences is poorly explained by organic spread, since the usual route between\nplatforms is a person moving it deliberately.\n\nState the inference and its limits. Coordination is observable; who is coordinating\nusually is not, and the report should not let the first conclusion imply the second.\n",
+        "recommendation": "* Preserve the timing, text and account metadata that support the coordination assessment\n  before the content is deleted.\n* Report to platforms as coordinated inauthentic behaviour, with the cluster evidenced as\n  a whole rather than account by account.\n* Separate the assessment of coordination from any assessment of who is responsible.\n",
+        "short_recommendation": "Evidence the cluster as a whole and report as coordinated behaviour.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0115"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0115 — Post Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0119 — Cross-Posting",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

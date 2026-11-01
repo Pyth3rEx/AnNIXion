@@ -23,7 +23,14 @@
         "references": [
           "https://attack.mitre.org/techniques/T1078/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1078 — Valid Accounts",
+            "procedure": ""
+          }
+        ]
       }
     }
   ]
