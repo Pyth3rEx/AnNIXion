@@ -23,7 +23,14 @@
         "references": [
           "https://attack.mitre.org/techniques/T1200/"
         ],
-        "affected_components": []
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          }
+        ]
       }
     }
   ]

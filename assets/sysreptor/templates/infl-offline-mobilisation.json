@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "e6822363-75f9-582a-8aea-51e6eaea5782",
+  "tags": [
+    "puppet",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "12d9d729-c761-5cf1-bb68-c6032a2ae2f5",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Campaign Attempts to Drive Physical Attendance",
+        "cvss": "n/a",
+        "summary": "Campaign content encouraged attendance at the organisation's premises or at events\ninvolving its staff, moving the operation from online claims towards physical presence.\n",
+        "description": "This is the point at which an information operation becomes a physical security matter.\nWhether or not attendance materialises, the call itself changes the risk picture for\nsites and for named staff, and it must reach the people who run physical security rather\nthan staying inside communications.\n\nAssessing likely turnout is genuinely difficult and the common failure is to infer crowd\nsize from online engagement, which systematically overestimates. Weight indicators that\ncost something — logistics being arranged, travel discussed, local accounts engaging —\nabove reach figures.\n\nWhere named staff are associated with a location, treat that as a finding about those\nindividuals with its own handling requirements.\n",
+        "recommendation": "* Brief physical security and site management as soon as a call to attend is identified,\n  regardless of assessed turnout.\n* Review site access, reception procedure and staff arrival routes for the period\n  concerned.\n* Base turnout assessments on logistical indicators rather than on engagement counts, and\n  state the confidence.\n* Agree the liaison route with local law enforcement before it is needed.\n",
+        "short_recommendation": "Brief physical security immediately; assess turnout on logistics, not reach.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0126"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA10 — Drive Offline Activity",
+            "technique": "T0126 — Encourage Attendance at Events",
+            "note": ""
+          },
+          {
+            "tactic": "TA10 — Drive Offline Activity",
+            "technique": "T0057 — Organise Events",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

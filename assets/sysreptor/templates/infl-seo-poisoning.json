@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "80848cc8-51f8-51d3-8628-fcb201a7b540",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "eae67b86-efa9-5065-bbc7-4d0df6b83aa6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Search Results Shaped to Surface the Narrative",
+        "cvss": "n/a",
+        "summary": "Search results for the organisation's name, brands or executives were manipulated so that\ncampaign content ranks alongside or above authoritative sources.\n",
+        "description": "Most people meet a controversy through search rather than through the platform where it\nstarted. Shaping the result page therefore reaches an audience far larger than the\ncampaign's own following, and it reaches them at the moment they are deciding what to\nthink.\n\nThe techniques are ordinary search engine optimisation applied to hostile content:\nkeyword-matched pages, reciprocal linking between campaign properties, and content\npublished to high-authority domains that accept contributions. The campaign's own\ninfrastructure is frequently exposed by the link graph, which makes this a productive\navenue for mapping the network.\n\nResult pages differ by location and personalisation, so record the conditions of\nobservation. A screenshot without them is not reproducible evidence.\n",
+        "recommendation": "* Record search results with the query, locale and date, and repeat on a schedule to\n  evidence persistence.\n* Ensure the organisation's own authoritative pages are well structured and current, since\n  displacement is more achievable than removal.\n* Use the link graph between ranking pages to map campaign infrastructure.\n",
+        "short_recommendation": "Record ranked results with locale and date; strengthen authoritative pages.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0046"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA08 — Conduct Pump Priming",
+            "technique": "T0046 — Use Search Engine Optimisation",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

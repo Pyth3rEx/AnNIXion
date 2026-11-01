@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "4a3227c1-883e-5865-b25f-e8a61dcd639d",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "55212a3e-2bc8-502c-9526-0cc6ac42b334",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Content Trialled Before Amplification",
+        "cvss": "n/a",
+        "summary": "Variants of the campaign's central claim appeared in low-reach settings before the\nversion that was eventually amplified, indicating the message was tested and selected.\n",
+        "description": "Testing is a strong indicator of a resourced operation and a useful forecasting tool. The\nvariants that were tried and discarded show what the operator believes its audience\nresponds to, and the one selected shows what worked.\n\nThe discarded variants are frequently still recoverable — deleted posts persist in\narchives and in quote-replies — and they are among the most analytically valuable\nartefacts available, because they reveal intent more plainly than the polished version.\n\nWhere testing is observed, expect the next phase to be tested too. The organisation can\nuse the same signal as an early warning if it keeps watching the low-reach space rather\nthan only the amplified one.\n",
+        "recommendation": "* Preserve discarded variants; they evidence deliberation and are usually deleted.\n* Monitor the low-reach space where testing occurred as an early-warning channel for the\n  next phase.\n* Prepare responses to the tested variants, not only to the one currently circulating.\n",
+        "short_recommendation": "Preserve tested variants and watch the test channel for the next phase.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0020"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA08 — Conduct Pump Priming",
+            "technique": "T0020 — Trial Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA08 — Conduct Pump Priming",
+            "technique": "T0044 — Seed Distortions",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "4ba7a1a2-fda5-554c-99c1-d11a08d8f658",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "42c43132-1f80-553d-9553-a7083c35de3e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Conspiracy Framing Used to Immunise the Claim",
+        "cvss": "n/a",
+        "summary": "Campaign content is framed so that denial confirms it and evidence of innocence is\npresented as evidence of concealment, with a standard of proof set so that it cannot be\nmet.\n",
+        "description": "This framing is chosen because it removes the organisation's ability to respond. Any\ndenial is absorbed as expected behaviour, any disclosure is read as partial, and any\nunexplained gap — of which every real organisation has many — becomes confirmation.\n\nRecognising it matters because it determines that engagement is counter-productive. Each\nresponse supplies new material and demonstrates that the claim is worth the\norganisation's attention, which is itself treated as significant.\n\nThe honest recommendation is often that the client does nothing visible. That is an\nuncomfortable thing to put in a report and should be stated plainly, with the reasoning,\nrather than softened into a communications plan that will make things worse.\n",
+        "recommendation": "* Do not engage with the claim's substance; the framing converts every response into\n  further evidence.\n* Communicate to the unconvinced audience through routine channels rather than through\n  rebuttal.\n* Resist internal pressure to \"answer the allegations\" and record that advice explicitly,\n  since it will be revisited.\n",
+        "short_recommendation": "Do not engage the substance; communicate routinely to the wider audience.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0022"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0022 — Leverage Conspiracy Theory Narratives",
+            "note": ""
+          },
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0040 — Demand Insurmountable Proof",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}
