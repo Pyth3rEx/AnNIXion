@@ -35,9 +35,9 @@ _: {
 
       designs = p.runCommand "sysreptor-designs" { } ''
         d=$out/share/sysreptor/designs
-        install -Dm444 ${designPack "htb-designs" "sha256-MrtwvZ48cgzLeA+xw7opIuT4MQ69+PdrS8/lG0GZh2I="} $d/design-htb.tar.gz
-        install -Dm444 ${designPack "offsec-designs" "sha256-IAOsPcZgfOmyH2j93pU93+TidyCsSkMcmUCIQjrieUo="} $d/design-offsec.tar.gz
-        install -Dm444 ${designPack "htb-demo-projects" "sha256-qQF8YXTku/s8X7l16Rb0oQVu4Jsz+mFo6WUeLif9zO8="} $d/project-htb.tar.gz
+        install -Dm444 ${designPack "htb-designs" "sha256-V9ecZolQljMehTsldojOk1fz1ZK4+1+MMiW8Kmdw3As="} $d/design-htb.tar.gz
+        install -Dm444 ${designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="} $d/design-offsec.tar.gz
+        install -Dm444 ${designPack "htb-demo-projects" "sha256-Ulw7LNwtqco1HPctwVC9MHrry7/0gnByfsc53YALreI="} $d/project-htb.tar.gz
       '';
 
       driver = p.writeShellApplication {
