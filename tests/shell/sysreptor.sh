@@ -592,10 +592,10 @@ mkdir -p "$TMP/designs"
 tar xzf "$packs/design-annixion.tar.gz" -C "$TMP/designs" 2>/dev/null
 chmod -R u+w "$TMP/designs"
 ndesign=$(find "$TMP/designs" -maxdepth 1 -name '*.json' | wc -l)
-report "$([ "$ndesign" -eq 3 ] && echo 0 || echo 1)" \
-  "all three AnNIXion designs are packed" "found $ndesign"
+report "$([ "$ndesign" -eq 4 ] && echo 0 || echo 1)" \
+  "all four AnNIXion designs are packed" "found $ndesign"
 
-for d in engagement osint influence; do
+for d in engagement osint influence malware; do
   f="$TMP/designs/annixion-$d.json"
   report "$([ -f "$f" ] && echo 0 || echo 1)" "the $d design is present" "no annixion-$d.json"
   [ -f "$f" ] || continue
