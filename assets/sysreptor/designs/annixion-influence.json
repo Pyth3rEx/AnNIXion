@@ -617,11 +617,10 @@
             "properties": [
               {
                 "id": "date",
-                "type": "string",
+                "type": "date",
                 "label": "Date",
                 "origin": "custom",
-                "required": false,
-                "spellcheck": false
+                "required": false
               },
               {
                 "id": "event",
@@ -641,11 +640,18 @@
               },
               {
                 "id": "significance",
-                "type": "string",
+                "type": "combobox",
                 "label": "Significance",
                 "origin": "custom",
                 "required": false,
-                "spellcheck": false
+                "default": "Campaign origin",
+                "suggestions": [
+                  "Campaign origin",
+                  "Narrative shift",
+                  "Amplification spike",
+                  "Platform or media response",
+                  "De-escalation"
+                ]
               }
             ]
           }
