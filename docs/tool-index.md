@@ -170,8 +170,13 @@ the machine. Launching and proxy behaviour is in [usage](usage.md).
 | [GitHub Desktop](https://docs.github.com/en/desktop) | Git GUI | [Docs](https://docs.github.com/en/desktop) |
 | [Obsidian](https://help.obsidian.md/) | Markdown notes over a local folder — engagement notes | [Help](https://help.obsidian.md/) |
 | [OnlyOffice](https://helpcenter.onlyoffice.com/) | Documents, spreadsheets and presentations | [Help centre](https://helpcenter.onlyoffice.com/) |
+| [SysReptor](https://docs.sysreptor.com/) | Self-hosted pentest reporting — findings, templates, DOCX/PDF export. Ships with `reptor`, its API client | [Docs](https://docs.sysreptor.com/) |
 | [Glow](https://github.com/charmbracelet/glow#readme) | Renders Markdown in the terminal; the `text/markdown` handler | [README](https://github.com/charmbracelet/glow#readme) |
 | [htop](https://htop.dev/) | Interactive process viewer | [Site](https://htop.dev/) |
+
+Standing SysReptor up on AnNIXion — the `sysreptor` wrapper, where the
+encryption keys live and how to back them up — is covered in
+[sysreptor.md](sysreptor.md).
 
 ---
 
