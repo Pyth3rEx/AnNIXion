@@ -135,6 +135,15 @@ jobs:
           fi
           echo "hardware-configuration.nix is not tracked ✓"
 
+      # The closure (KDE, Firefox, Burp Suite, Volatility3, SysReptor's
+      # bundled designs/templates, ...) now outgrows the runner's default
+      # root partition. These toolchains are preinstalled but unused here.
+      - name: Free disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h /
+
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM
         run: |
