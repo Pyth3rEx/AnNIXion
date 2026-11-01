@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "596d351e-9915-53f0-88e7-afa26c305292",
+  "tags": [
+    "red",
+    "infrastructure",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "28388ac8-7097-5b21-a572-58a98293847a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "SMB Signing Not Required",
+        "cvss": "CVSS:3.1/AV:A/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:N",
+        "summary": "Hosts accepted SMB connections without requiring message signing, which permits an attacker on the same network to relay authentication from one host to another and act as the authenticating user — frequently with administrative rights.\n",
+        "description": "Without required signing, an SMB session has no integrity protection tying the authentication to the connection it was performed on. An attacker who can coerce or capture authentication — through LLMNR and NBT-NS poisoning, a UNC path in a document, or a printer bug — can relay those credentials to another host and have them accepted.\n\nNo password is cracked in this attack. The authentication is simply used somewhere else, in real time. Where the relayed account holds local administrator rights on the destination, the result is immediate code execution; this is a routine first step from unprivileged network access to domain-wide compromise.\n\nThe default is the problem: workstations and member servers do not require signing unless policy says so, even though domain controllers do.\n",
+        "recommendation": "* Require SMB signing on all workstations and servers by Group Policy, not merely \"enable if client agrees\".\n* Disable LLMNR, NBT-NS and mDNS so authentication is harder to coerce in the first place.\n* Enable Extended Protection for Authentication on services that accept NTLM, and disable NTLM where practical.\n* Restrict which accounts hold local administrator rights, and make those rights unique per host.\n",
+        "short_recommendation": "Require SMB signing on all hosts via Group Policy.",
+        "references": [
+          "https://learn.microsoft.com/en-us/windows-server/security/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

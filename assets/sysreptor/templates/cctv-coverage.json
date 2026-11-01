@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "bc142e46-c25a-57d2-b84c-4320357f5f4f",
+  "tags": [
+    "red",
+    "physical",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "bc3637ae-630f-57d5-bc45-e801bd94f853",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Camera Coverage and Retention Insufficient for Investigation",
+        "cvss": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Camera coverage left the routes used during the assessment unobserved, and retention was too short to reconstruct activity discovered later. Recorded footage was of insufficient quality to identify a person.\n",
+        "description": "Cameras serve two purposes — deterrence and reconstruction — and fail at both in predictable ways.\n\nCoverage is usually aimed at entrances rather than at the routes between them, so an intruder is recorded arriving and then disappears. Blind spots cluster where they matter: comms cupboards, rear corridors, loading bays and car park approaches.\n\nRetention is the more common failure. Physical intrusions are discovered weeks later, if at all, by which time a two-week retention period has overwritten the evidence. Image quality compounds it: footage adequate to show that someone passed is rarely adequate to say who, especially in doorway backlight.\n\nWhere the recorder itself sits on the office network with default credentials, the footage is also available to anyone who compromises the network.\n",
+        "recommendation": "* Review coverage against the routes an intruder would actually take, not only entrances, and close blind spots at technical rooms and secondary doors.\n* Verify image quality at the identification distance in realistic lighting, including backlit doorways.\n* Retain footage long enough to investigate a late discovery — ninety days is a common minimum.\n* Place recorders on a segmented management network with changed credentials and current firmware.\n* Confirm clocks are synchronised, so footage can be correlated with access and network logs.\n",
+        "short_recommendation": "Cover approach routes, verify image quality, and retain longer.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

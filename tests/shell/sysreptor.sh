@@ -208,13 +208,14 @@ report "$(grep -q '^SECRET_KEY=' "$plainenv" && echo 0 || echo 1)" \
 # The HTB set is what the install promises; it is imported from the store, so
 # a first run needs no network beyond the images.
 packs="$out/share/sysreptor/designs"
-for pack in design-htb design-offsec design-demo project-htb project-offsec project-demo template-demo; do
+for pack in design-htb design-offsec design-demo project-htb project-offsec project-demo template-demo template-annixion; do
   report "$([ -f "$packs/$pack.tar.gz" ] && echo 0 || echo 1)" \
     "the $pack pack is bundled" "no $packs/$pack.tar.gz"
 done
 
 mkdir -p "$TMP/htb"
 tar xzf "$packs/design-htb.tar.gz" -C "$TMP/htb" 2>/dev/null
+chmod -R u+w "$TMP/htb"
 names=$(cat "$TMP"/htb/*.json 2>/dev/null | grep -o '"name": "HTB [A-Z]*' | sort -u)
 report "$(grep -q 'HTB CPTS' <<<"$names" && echo 0 || echo 1)" \
   "the HTB pack carries the CPTS design" "found: $(tr '\n' ' ' <<<"$names")"
@@ -225,12 +226,50 @@ report "$([ "$(wc -l <<<"$names")" -ge 5 ] && echo 0 || echo 1)" \
 # worth knowing it is really a template library and not an empty archive.
 mkdir -p "$TMP/tpl"
 tar xzf "$packs/template-demo.tar.gz" -C "$TMP/tpl" 2>/dev/null
+chmod -R u+w "$TMP/tpl"
 titles=$(grep -ho '"title": "[^"]*"' "$TMP"/tpl/*.json 2>/dev/null | sort -u)
 report "$(grep -q 'SQL Injection' <<<"$titles" && echo 0 || echo 1)" \
   "the template pack carries written-up findings" \
   "found: $(tr '\n' ' ' <<<"$titles" | head -c 200)"
 ntpl=$(find "$TMP/tpl" -maxdepth 1 -name '*.json' | wc -l)
 report "$([ "$ntpl" -ge 10 ] && echo 0 || echo 1)" "ten of them" "found $ntpl templates"
+
+# ── This distribution's own template library ───────────────────────────────
+# Built from assets/sysreptor/templates, so a template added there has to
+# reach the pack — and the physical and social-engineering findings are the
+# half no upstream library ships.
+mkdir -p "$TMP/own"
+tar xzf "$packs/template-annixion.tar.gz" -C "$TMP/own" 2>/dev/null
+chmod -R u+w "$TMP/own"
+nown=$(find "$TMP/own" -maxdepth 1 -name '*.json' | wc -l)
+nsrc=$(find "$ROOT/assets/sysreptor/templates" -maxdepth 1 -name '*.json' | wc -l)
+report "$([ "$nown" -eq "$nsrc" ] && echo 0 || echo 1)" \
+  "every authored template reaches the pack" \
+  "$nsrc under assets/, $nown in the archive"
+report "$([ "$nown" -ge 50 ] && echo 0 || echo 1)" \
+  "the library is an extensive one" "only $nown templates"
+
+owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
+for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage"; do
+  report "$(grep -qi "$want" <<<"$owntitles" && echo 0 || echo 1)" \
+    "the library covers: $want" "no template title matches '$want'"
+done
+
+# The tri-split the browser profiles already use. A template with none of
+# these is uncategorised in a UI that filters by tag.
+untagged=0
+for f in "$TMP"/own/*.json; do
+  grep -qE '"(red|puppet|osint|process)"' "$f" || untagged=$((untagged + 1))
+done
+report "$([ "$untagged" -eq 0 ] && echo 0 || echo 1)" \
+  "every template carries a discipline tag" "$untagged are untagged"
+report "$(grep -lq '"puppet"' "$TMP"/own/*.json && echo 0 || echo 1)" \
+  "the social-engineering findings are tagged puppet" "no puppet-tagged template"
+
+# Deterministic ids: a re-import must update a template, not clone it.
+dupids=$(grep -ho '"id": "[^"]*"' "$TMP"/own/*.json | sort | uniq -d | wc -l)
+report "$([ "$dupids" -eq 0 ] && echo 0 || echo 1)" \
+  "template ids are unique" "$dupids ids appear twice"
 
 # ── What the NixOS module writes, and what the wrapper does with it ────────
 etcpath='.environment.etc."annixion/sysreptor.conf".text'
@@ -297,6 +336,47 @@ ports_net=$(nix eval --json ".#nixosConfigurations.AnNIXion-ci" \
 report "$(grep -q '8000' <<<"$ports_net" && echo 0 || echo 1)" \
   "and opens the port in the firewall" "open TCP ports: $ports_net"
 
+# ── Plugins and the theme ──────────────────────────────────────────────────
+conf_plugins=$(read_conf ANNIXION_SYSREPTOR_PLUGINS)
+missing_plugins=""
+for plugin in cyberchef checkthehash graphqlvoyager customizetheme markdownexport projectnumber; do
+  grep -q "$plugin" <<<"$conf_plugins" || missing_plugins="$missing_plugins $plugin"
+done
+report "$([ -z "$missing_plugins" ] && echo 0 || echo 1)" \
+  "every community-edition plugin is enabled by default" "not enabled:$missing_plugins"
+# Professional-only plugins would be enabled but inert, and demoplugin is a
+# demonstration of the plugin system rather than a tool.
+report "$(grep -q demoplugin <<<"$conf_plugins" && echo 1 || echo 0)" \
+  "the demo plugin stays out" "demoplugin is enabled"
+
+theme_file=$(read_conf ANNIXION_SYSREPTOR_THEME_FILE)
+report "$([ -n "$theme_file" ] && [ -f "$theme_file" ] && echo 0 || echo 1)" \
+  "the theme is built and referenced" "theme file is ${theme_file:-<unset>}"
+if [ -f "$theme_file" ]; then
+  report "$(python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$theme_file" 2>/dev/null && echo 0 || echo 1)" \
+    "the theme is valid JSON" "the plugin would reject it"
+  critical=$(python3 -c "
+import json, sys
+print(json.load(open(sys.argv[1]))['all']['colors']['risk-critical'])
+" "$theme_file" 2>/dev/null)
+  report "$([ "$critical" = "#FF0033" ] && echo 0 || echo 1)" \
+    "the risk scale is drawn in the mark system's colours" \
+    "risk-critical is ${critical:-<unset>}, not the signature red"
+  # The logo travels as a data URI, so it must decode to the real mark.
+  logo=$(python3 -c "
+import base64, json, sys
+d = json.load(open(sys.argv[1]))
+u = d['all']['variables']['header-logo-url']
+sys.stdout.write(base64.b64decode(u.split(',', 1)[1]).decode())
+" "$theme_file" 2>/dev/null)
+  report "$(grep -q '<svg' <<<"$logo" && echo 0 || echo 1)" \
+    "the header logo decodes to an SVG" "decoded: $(head -c 80 <<<"$logo")"
+  marksrc=$(grep -o 'd="[^"]*"' "$ROOT/catalog/logo.nix" | head -1)
+  report "$(grep -qF "${marksrc#d=}" <<<"$logo" && echo 0 || echo 1)" \
+    "and it is the launcher's own mark, not a copy" \
+    "catalog/logo.nix and the theme logo have diverged"
+fi
+
 # ── The wrapper reads that file ────────────────────────────────────────────
 conf_home="$TMP/h3"
 mkdir -p "$conf_home"
@@ -308,8 +388,14 @@ ANNIXION_SYSREPTOR_ALLOWED_HOSTS="localhost,127.0.0.1,reports.local"
 ANNIXION_SYSREPTOR_ENCRYPT="yes"
 ANNIXION_SYSREPTOR_DESIGNS="htb"
 ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
-ANNIXION_SYSREPTOR_FINDING_TEMPLATES="no"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
 CONF
+# Appended rather than inlined: the block above is quoted, and the theme path
+# is whatever this build produced.
+{
+  echo 'ANNIXION_SYSREPTOR_PLUGINS="cyberchef,customizetheme"'
+  [ -n "$theme_file" ] && echo "ANNIXION_SYSREPTOR_THEME_FILE=\"$theme_file\""
+} >>"$conf_home/sysreptor.conf"
 
 shown=$(drive "$conf_home" config)
 report "$(grep -q "user *scribe" <<<"$shown" && echo 0 || echo 1)" \
@@ -335,6 +421,17 @@ report "$(grep -q '^ALLOWED_HOSTS="localhost,127.0.0.1"$' "$confenv" && echo 0 |
   "app.env still has: $(grep '^ALLOWED_HOSTS=' "$confenv")"
 report "$([ "$secret_before" = "$(grep '^SECRET_KEY=' "$confenv")" ] && echo 0 || echo 1)" \
   "and the secrets are untouched by that sync" "SECRET_KEY changed"
+
+# The plugin list and the theme are configuration too, so they are synced
+# into app.env beside ALLOWED_HOSTS — and must not disturb the keys.
+report "$(grep -q '^ENABLED_PLUGINS=' "$confenv" && echo 0 || echo 1)" \
+  "the plugin list reaches app.env" "no ENABLED_PLUGINS line"
+report "$(grep -q "^PLUGIN_CUSTOMIZETHEME_CONFIG='{" "$confenv" && echo 0 || echo 1)" \
+  "the theme reaches app.env as single-quoted JSON" \
+  "line is: $(grep -o '^PLUGIN_CUSTOMIZETHEME_CONFIG=.\{0,20\}' "$confenv")"
+report "$([ "$(grep -c '^ENABLED_PLUGINS=' "$confenv")" -eq 1 ] && echo 0 || echo 1)" \
+  "and the sync does not duplicate it on a second run" \
+  "ENABLED_PLUGINS appears $(grep -c '^ENABLED_PLUGINS=' "$confenv") times"
 
 report "$(grep -q 'BIND_PORT=0.0.0.0:9001:8000' "$conf_home/docker.log" && echo 0 || echo 1)" \
   "compose publishes the configured bind and port" \
@@ -440,7 +537,7 @@ cat >"$proj/sysreptor.conf" <<CONF
 ANNIXION_SYSREPTOR_PORT="$hport"
 ANNIXION_SYSREPTOR_DESIGNS="htb demo"
 ANNIXION_SYSREPTOR_DEMO_PROJECTS="yes"
-ANNIXION_SYSREPTOR_FINDING_TEMPLATES="yes"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES="annixion"
 CONF
 run_setup "$proj" >/dev/null
 drive "$proj" designs >/dev/null
@@ -457,8 +554,8 @@ report "$([ "$(grep -c 'importdemodata --type=template' "$proj/docker.log")" -eq
   "template imports: $(grep -c 'importdemodata --type=template' "$proj/docker.log")"
 
 # Default-on, so the install that asks for nothing still gets the library.
-report "$([ "$(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)" = "yes" ] && echo 0 || echo 1)" \
-  "finding templates are on by default" \
+report "$(grep -qw annixion <<<"$(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)" && echo 0 || echo 1)" \
+  "the AnNIXion template library is on by default" \
   "config says $(read_conf ANNIXION_SYSREPTOR_FINDING_TEMPLATES)"
 
 off="$TMP/h7"
@@ -466,7 +563,7 @@ mkdir -p "$off"
 cat >"$off/sysreptor.conf" <<CONF
 ANNIXION_SYSREPTOR_PORT="$hport"
 ANNIXION_SYSREPTOR_DESIGNS="htb"
-ANNIXION_SYSREPTOR_FINDING_TEMPLATES="no"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
 CONF
 run_setup "$off" >/dev/null
 drive "$off" designs >/dev/null

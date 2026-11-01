@@ -105,7 +105,9 @@ annixion.sysreptor = {
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
   designs = [ "htb" "offsec" "demo" ];   # all the published design packs
-  findingTemplates = true;      # upstream's library of written-up findings
+  findingTemplates = [ "annixion" ];     # the finding library to import
+  plugins = [ "cyberchef" "customizetheme" ];  # default: all of them
+  theme = "annixion";           # the palette the web UI wears
   demoProjects = false;         # the filled-in example reports
 };
 ```
@@ -119,7 +121,9 @@ annixion.sysreptor = {
 | `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
 | `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
 | `designs` | `[ "htb" "offsec" "demo" ]` | Which official design packs to import |
-| `findingTemplates` | `true` | Import upstream's library of ten written-up findings |
+| `findingTemplates` | `[ "annixion" ]` | Template libraries to import — `"annixion"`, `"demo"` |
+| `plugins` | every community-edition plugin | Which plugins are enabled |
+| `theme` | `"annixion"` | `"annixion"` or `"upstream"` colours for the web UI |
 | `demoProjects` | `false` | Also import the example reports for each enabled pack |
 
 The module writes `/etc/annixion/sysreptor.conf`, which the wrapper reads at
@@ -245,19 +249,85 @@ first run needs no network beyond the container images.
 
 ### Finding templates
 
-Separately from designs, upstream publishes a **finding-template library** —
-ten written-up web findings (SQLi, stored XSS, XXE, CSRF, session management,
-security headers, insecure cookies, user enumeration, untrusted TLS
-certificates, secrets in URL parameters). This one is **on by default**,
-because a template is the difference between writing a finding and picking
-one:
+A design is the layout; a template is the finding already written. AnNIXion
+ships its own library, imported by default, in `assets/sysreptor/templates` —
+one JSON file per finding, which is also how you add to it.
+
+It is organised along the three disciplines the browser profiles already
+divide by, so the tag filter in **Templates** matches the way the rest of the
+distribution is laid out:
+
+| Tag | Covers |
+|---|---|
+| `red` | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and the **physical** intrusion findings: tailgating, badge cloning, door hardware bypass, live network ports, server-room access, covert devices, perimeter and camera coverage |
+| `puppet` | The persona side: phishing, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site impersonation, dropped media, synthetic voice, reporting culture |
+| `osint` | What an attacker finds before touching anything: breach credentials, staff exposure that supports pretexts, document metadata, forgotten internet-facing assets |
+
+Each carries a CVSS vector where one is meaningful — physical findings use
+`AV:P`, social engineering `UI:R` — and `n/a` where a severity score would be
+pretending.
 
 ```nix
-annixion.sysreptor.findingTemplates = false;   # to leave them out
+annixion.sysreptor.findingTemplates = [ "annixion" "demo" ];  # add upstream's ten
+annixion.sysreptor.findingTemplates = [ ];                    # none
 ```
 
-They land in **Templates** rather than in any project, and the wording is
-upstream's — edit them into your own voice before a client sees one.
+Upstream's `demo` library is ten web findings that overlap ours; it is there
+to compare wording against. Both are starting points — edit them into your own
+voice before a client reads them.
+
+**Adding one:** drop a JSON file into `assets/sysreptor/templates` following
+the shape of its neighbours, `rebuild`, then `sysreptor designs`. Template ids
+are fixed per file, so a re-import updates the template rather than cloning
+it — which means you can edit a template here and push the change to an
+existing instance.
+
+---
+
+## Plugins and the theme
+
+Every official plugin that does anything in the Community Edition is enabled:
+`cyberchef`, `checkthehash`, `graphqlvoyager`, `customizetheme`,
+`markdownexport`, `projectnumber`, plus upstream's own defaults
+`renderfindings` and `scanimport`.
+
+Left out: `demoplugin`, which demonstrates the plugin system rather than doing
+a job, and `webhooks`, `rendersections` and `jira`, which are
+Professional-edition features.
+
+```nix
+annixion.sysreptor.plugins = [ "cyberchef" ];   # narrow the list
+annixion.sysreptor.plugins = [ ];               # hand control back to the UI
+```
+
+Setting this writes `ENABLED_PLUGINS`, which takes precedence over the
+application's own settings page — so the plugin checkboxes there go read-only.
+An empty list leaves the UI in charge.
+
+### The AnNIXion theme
+
+`customizetheme` carries the distribution's palette into the web interface:
+the signature red on the near-black ground the desktop uses, with the risk
+scale drawn from the mark system's semantic classes —
+
+| Severity | Colour | Class it borrows |
+|---|---|---|
+| Critical | `#FF0033` | offensive — the signature red |
+| High | `#F213A0` | reverse magenta |
+| Medium | `#FFD000` | probe amber |
+| Low | `#4A90FF` | forensic blue |
+| Info | `#33E62B` | passive green |
+
+— so a severity in the UI reads in the colours the menu already taught.
+
+The header logo goes with it. The mark is rendered from `catalog/logo.nix`,
+the same drawing the launcher wears, and handed to the theme as a base64
+`data:` URI through the `header-logo-url` variable. Because it is generated
+from the catalog rather than pasted in, the two cannot drift apart.
+
+```nix
+annixion.sysreptor.theme = "upstream";   # SysReptor's own colours instead
+```
 
 ### Example reports
 

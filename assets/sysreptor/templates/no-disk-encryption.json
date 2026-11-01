@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "e438da78-5353-5a0e-81a0-90fbf960f632",
+  "tags": [
+    "red",
+    "endpoint",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "207605b2-7532-537d-9242-08eaa38120a9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Full-Disk Encryption Not Enforced",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Portable devices did not have full-disk encryption enforced, so a lost or stolen machine discloses its contents to anyone who removes the drive or boots from external media.\n",
+        "description": "Without full-disk encryption, operating system account passwords protect nothing: the drive can be removed and read, or the machine booted from external media, and every file is available.\n\nThat includes more than documents — cached credentials, browser profiles with saved passwords and session cookies, SSH and cloud keys, and locally synchronised copies of corporate data. A stolen laptop therefore becomes a route into the network rather than only a data-loss event.\n\nPartial deployment is the usual state: encryption applied to new builds but not older devices, or enabled without the keys being escrowed, which leads to it being disabled when someone is locked out.\n",
+        "recommendation": "* Enforce full-disk encryption on all portable devices through device management, and report on compliance.\n* Escrow recovery keys centrally so recovery never requires disabling encryption.\n* Require pre-boot authentication, and configure firmware passwords with boot from external media disabled.\n* Enable remote wipe, and define a reporting path for lost devices that is faster than the working day.\n",
+        "short_recommendation": "Enforce full-disk encryption with centrally escrowed keys.",
+        "references": [
+          "https://www.cisa.gov/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

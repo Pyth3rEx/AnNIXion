@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "1b5fef79-5ff8-5143-9700-9b898f9aed51",
+  "tags": [
+    "red",
+    "web",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6b757712-482c-5488-8560-70d54b7010d6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Incorrectly Configured HTTP Security Headers",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:L/A:N",
+        "summary": "Responses omitted headers that instruct the browser to enforce protections on the application's behalf. Their absence does not create a vulnerability but removes the mitigations that limit several common ones.\n",
+        "description": "Security headers are instructions to the browser, and the browser enforces them for free. Their absence is consistently found alongside more serious issues, where it widens the impact.\n\n`Content-Security-Policy` restricts where script may be loaded from and whether inline script runs, which is the most effective limit on XSS impact. `Strict-Transport-Security` requires HTTPS for subsequent visits, closing the downgrade window. `X-Content-Type-Options: nosniff` stops the browser guessing a content type and treating an upload as script. `X-Frame-Options`, or CSP `frame-ancestors`, prevents the page being framed for clickjacking. `Referrer-Policy` keeps URLs — which often contain identifiers or tokens — out of requests to third parties.\n",
+        "recommendation": "* Deploy a `Content-Security-Policy` that forbids inline script, starting in report-only mode to find breakage before enforcing.\n* Set `Strict-Transport-Security` with a long max-age, and consider preloading.\n* Set `X-Content-Type-Options: nosniff` and `frame-ancestors 'none'` (or `X-Frame-Options: DENY`) unless framing is required.\n* Set a `Referrer-Policy` such as `strict-origin-when-cross-origin`.\n* Apply the headers centrally at the edge so new endpoints inherit them.\n",
+        "short_recommendation": "Set CSP, HSTS, X-Content-Type-Options and X-Frame-Options.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

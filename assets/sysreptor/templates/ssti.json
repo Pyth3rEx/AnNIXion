@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "e7539888-7204-53bf-955d-68891fcf5bbc",
+  "tags": [
+    "red",
+    "web",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b58f764c-c179-5341-a52a-17b39c9254c4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Server-Side Template Injection",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "User input was concatenated into a server-side template before rendering, so template syntax in that input was evaluated by the engine. Most template engines expose enough of the runtime from within a template to reach command execution.\n",
+        "description": "Template injection follows from treating user input as part of the template rather than as a value passed to it. The engine then evaluates expressions the attacker wrote, with whatever access the engine grants.\n\nThat access is usually extensive. Expression languages in common engines can walk object attributes to reach the runtime, import modules and invoke methods; the path from an evaluated expression to command execution is short and well documented for each engine.\n\nFeatures that let users customise output are the usual source: email and notification templates, report and invoice layouts, white-label pages, and anything that renders a user-supplied \"format string\".\n",
+        "recommendation": "* Pass user input to templates as context data, never concatenate it into the template source.\n* Where users must supply templates, use a sandboxed, logic-less engine with no access to the host runtime, and treat the sandbox as a boundary requiring testing.\n* Render user-authored templates in an isolated process with minimal privileges.\n",
+        "short_recommendation": "Never build templates from user input; pass it as data.",
+        "references": [
+          "https://portswigger.net/web-security/server-side-template-injection"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

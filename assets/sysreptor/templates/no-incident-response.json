@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "9ec0e7eb-c1d0-591b-b094-3625261212b7",
+  "tags": [
+    "process",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "491eccc1-59cf-534f-9218-2250e5009744",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Incident Response Plan Absent or Untested",
+        "cvss": "n/a",
+        "summary": "There was no documented incident response plan, or it existed but had never been exercised, so roles, authority and communication paths would be decided during an incident rather than before one.\n",
+        "description": "The cost of an incident is largely determined in its first hours, and those hours are spent badly without a plan: deciding who leads, who may authorise disconnecting a system, when to call legal counsel, insurers or a regulator, and how to communicate when the usual mail and chat systems may themselves be compromised.\n\nAn untested plan fails in the same ways as no plan. Contact details are stale, the named responders have left, the out-of-hours path reaches a voicemail box, and the plan assumes access to documentation stored on the systems that are unavailable.\n\nRegulatory timelines make this acute: reporting obligations are measured in hours, which is not enough time to begin writing a process.\n",
+        "recommendation": "* Document the plan with named roles, explicit authority to act — including who may disconnect production — and current out-of-hours contacts.\n* Keep an offline copy, together with the contacts and credentials needed to respond when primary systems are unavailable.\n* Rehearse at least annually with a realistic scenario including leadership, and fix what the exercise exposes.\n* Agree retainer arrangements with incident response, legal and communications support in advance.\n* Define regulatory and contractual reporting obligations and their deadlines in the plan itself.\n",
+        "short_recommendation": "Write, assign and rehearse the plan before you need it.",
+        "references": [
+          "https://csrc.nist.gov/pubs/sp/800/61/r2/final"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}
