@@ -235,7 +235,7 @@ imported by default:
 
 | Pack | What it is |
 |---|---|
-| `annixion` | **This distribution's own two** — see below |
+| `annixion` | **This distribution's own four** — see below |
 | `htb` | The Hack The Box certification designs — CPTS, CWES, CDSA, CDEP, CWEE, CAPE, CJCA, CWPE, COAE |
 | `offsec` | The OffSec set, OSCP included |
 | `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones, and the usual starting point for a house design |
@@ -248,7 +248,7 @@ annixion.sysreptor.designs = [ "annixion" ];
 
 ### The AnNIXion designs
 
-Three, one per discipline, built from `assets/sysreptor/designs` and rendered
+Four, one per discipline, built from `assets/sysreptor/designs` and rendered
 with the mark substituted from `catalog/logo.nix` at build time:
 
 **Engagement Report** covers a whole engagement rather than one discipline:
@@ -276,6 +276,19 @@ story — with explicit caveats, because saying who runs an account is a claim
 about a person. Elements are scored by assessed severity and authenticity,
 each carrying its own confidence.
 
+**Malware Analysis Report** is the reverse-engineering half: sample
+identification with hashes and signing status, static analysis (packing,
+sections, notable imports and strings), dynamic analysis (sandbox
+environment, process activity, filesystem and registry changes, network
+activity), indicators of compromise with a YARA and a Sigma rule, and a
+classification and attribution section that carries the same
+competing-hypotheses discipline as the influence design — naming a threat
+actor is also a claim about who is behind the keyboard. Findings are
+capabilities rather than vulnerabilities: each carries a category (the MBC
+objective it serves), an evidence basis (static, dynamic, or both), and a
+CVSS vector only where the capability itself has a direct host or data
+consequence — a ransomware routine or a rootkit, not a sandbox check.
+
 Each opens its summary with two charts — the HTB and OffSec designs ship one,
 and for a good reason: the first page is the one that gets read, and a
 distribution is quicker to take in than a table. The first chart is severity.
@@ -288,16 +301,20 @@ Each also carries its framework mapping. A finding picks its techniques from
 the whole matrix rather than typing them, and the report ends with a mapping
 appendix that aggregates what was observed and links back to the finding it
 came from. The engagement maps to **MITRE ATT&CK Enterprise**, the influence
-analysis to **DISARM**, and the OSINT assessment to ATT&CK's two pre-intrusion
+analysis to **DISARM**, the OSINT assessment to ATT&CK's two pre-intrusion
 tactics — Reconnaissance and Resource Development — which is where open-source
-collection actually lives. Both matrices are checked in under
-`assets/sysreptor/matrices`, with their source and retrieval date, rather than
-fetched during the build: a flake build is offline, and a design should not
-change shape because an upstream page was regenerated.
+collection actually lives, and the malware report to **both ATT&CK and the
+Malware Behavior Catalog** at once: ATT&CK names what a capability does to
+the environment, MBC names the specific behaviour and implementation
+(a hollowing technique, a packer family) at a grain ATT&CK does not reach.
+All three matrices are checked in under `assets/sysreptor/matrices`, with
+their source and retrieval date, rather than fetched during the build: a
+flake build is offline, and a design should not change shape because an
+upstream page was regenerated.
 
-All three put the identity on the cover and keep the body pages white: a
+All four put the identity on the cover and keep the body pages white: a
 deliverable gets printed, forwarded and read in a meeting, and a dark report
-is a poor citizen in all three. The severity ramp is the conventional one —
+is a poor citizen in all four. The severity ramp is the conventional one —
 red, orange, amber, blue, green — because a reader knows what an orange
 *High* means, and the house palette does not get to repaint that.
 
@@ -307,11 +324,11 @@ first run needs no network beyond the container images.
 ### Finding templates
 
 A design is the layout; a template is the finding already written. AnNIXion
-ships its own library of **185 findings**, imported by default, in
+ships its own library of **245 findings**, imported by default, in
 `assets/sysreptor/templates` — one JSON file per finding, which is also how
 you add to it.
 
-It is organised along the three disciplines the browser profiles already
+It is organised along the four disciplines the browser profiles already
 divide by, so the tag filter in **Templates** matches the way the rest of the
 distribution is laid out:
 
@@ -320,12 +337,13 @@ distribution is laid out:
 | `red` | 109 | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — plus the post-exploitation half, where the finding is usually that nobody saw it: exfiltration over the control channel, over DNS, to consumer cloud storage; command and control through web protocols, trusted cloud services and commercial remote-access tools; defence impairment, execution, persistence, privilege escalation and impact. And 27 **physical** findings: tailgating, badge cloning, door and biometric bypass, key and lock management, live network ports, server rooms, covert devices, alarm response, media disposal, out-of-hours contractors, building systems on the corporate network, sightlines, wireless reaching the car park |
 | `puppet` | 63 | The persona side: phishing, QR and callback phishing, OAuth consent, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site and courier impersonation, dropped media, synthetic voice, new-starter targeting, insider recruitment, conference elicitation. And the influence-operation half: narrative development and conspiracy framing, microtargeted promotion, content testing and fabricated expertise, coordinated posting and reply brigading, amplification and algorithm manipulation, offline mobilisation, persistence through takedown, moderation abuse, harassment of named staff |
 | `osint` | 29 | What an attacker finds before touching anything: breach and infostealer credentials, staff and executive exposure, document metadata, forgotten assets and subdomain takeover, certificate transparency, look-alike domains, recruitment material, supplier mapping, social media disclosing premises and routine, archived content, code repositories, leak corpora, registration records, routing data, perimeter product fingerprints, and the reconnaissance that now leaves no trace at all |
+| `malware` | 88 | Sample capabilities, mapped to both ATT&CK and MBC: anti-debug, anti-VM, anti-disassembly and packing; process injection and hollowing, rootkits, bootkits, defense-tool tampering; keylogging, screen capture, wallet and credential theft; C2 over web protocols with domain generation; ransomware, wipers, resource hijacking and clipboard hijacking; the execution, discovery, persistence and lateral-movement mechanics that carry all of it. 28 of these are shared with `red` — a capability a red-team operator deploys and a reverse engineer finds in a sample are frequently the same technique, so process injection, a C2 channel or a persistence mechanism carries both tags rather than existing twice under different titles |
 
 Every template carries the technique it represents, so a finding dropped into a
 report arrives already mapped. Only technique ids are written by hand; the
 tactic and the technique name are resolved from the checked-in matrices, which
 means a wrong id fails the build rather than shipping a mapping that merely
-looks plausible. Between them the templates reach every tactic of both
+looks plausible. Between them the templates reach every tactic of all three
 frameworks.
 
 Fifteen carry no mapping, deliberately. An untested incident response plan and
@@ -335,7 +353,9 @@ the coverage figures lie.
 
 Each carries a CVSS vector where one is meaningful — physical findings use
 `AV:P`, social engineering `UI:R` — and `n/a` where a severity score would be
-pretending, which is most of the influence side.
+pretending, which is most of the influence side and the purely anti-analysis
+end of the malware side: a sandbox check costs an analyst time, but it has no
+confidentiality, integrity or availability impact of its own to score.
 
 ```nix
 annixion.sysreptor.findingTemplates = [ ];   # import none
@@ -460,7 +480,7 @@ Duplicate**) and edit it there — the originals stay as the reference.
 
 assets/sysreptor/designs/            # the three AnNIXion designs, one JSON each
 assets/sysreptor/templates/          # the finding library, one JSON per finding
-assets/sysreptor/matrices/           # ATT&CK and DISARM, with source and date
+assets/sysreptor/matrices/           # ATT&CK, DISARM and MBC, with source and date
 scripts/sysreptor-sync.py            # works out what an instance is missing
 
 docker volume sysreptor-db-data      # Postgres

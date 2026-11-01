@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "1221df23-ebb9-5d4b-b953-89cbca133477",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d37d4f20-376f-5539-aac1-a814724f7603",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Screen Capture Capability",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "The sample periodically captures the screen or a targeted window and saves or exfiltrates the image, typically timed around a target application gaining focus.",
+        "description": "Screen capture complements rather than replaces keylogging: it recovers content a\nkeylogger cannot, including on-screen authenticator codes, account balances, and anything\nentered via mouse or on-screen keyboard. Implementations range from a timed\nBitBlt/PrintWindow call to a trigger tied to a specific window title or process gaining\nfocus, which produces a much smaller and more targeted set of captures than periodic\npolling.\n",
+        "recommendation": "* Determine the capture trigger (timer vs. focus-change) — a focus-triggered capture indicates a specific target application and narrows what was likely exposed.\n* Locate and review captured images before they are exfiltrated or overwritten; they often show exactly what was compromised with no inference needed.\n* Treat any content visible in a recovered capture (codes, balances, credentials) as exposed and act accordingly.\n",
+        "short_recommendation": "Determine whether capture is timer- or focus-triggered; a focus trigger identifies the specific target application.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1113/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1113 — Screen Capture",
+            "procedure": "Captured the foreground window via PrintWindow whenever a banking-portal process gained focus."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0003 — Collection",
+            "behavior": "E1113 — Screen Capture",
+            "implementation": "Triggered a BitBlt screen capture on a timer and queued the resulting image for exfiltration."
+          }
+        ]
+      }
+    }
+  ]
+}

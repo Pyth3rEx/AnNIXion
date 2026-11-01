@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "a087b7af-f5ad-520f-93b5-7c122b31ba12",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "41ab2e7d-5d0f-571e-96b7-406828e38ade",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Persistence via Kernel Modules and Extensions",
+        "cvss": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The sample installs a kernel module or driver configured to load automatically at boot, giving it both persistence and kernel-level privilege from the moment the system starts.",
+        "description": "This combines two advantages in one step: the module reloads itself without further\naction on every boot, and it runs with kernel privilege from that point on, which is why\nit is frequently paired with the rootkit capability covering concealment. Signature\nenforcement for kernel code (driver signing on Windows, module signing on hardened Linux\nconfigurations) is the main control standing between a sample and this technique, which is\nwhy bypassing or abusing it is a common preceding step.\n",
+        "recommendation": "* Enumerate boot-time module and driver load configuration against a known-good baseline, including signer identity, not only module name.\n* Verify kernel module/driver signature enforcement is actually enabled and enforced, not merely configured, on affected hosts.\n* Where an unsigned or unexpectedly signed module is found configured to auto-load, treat the host as compromised at the kernel level and plan remediation accordingly — removal from a running, compromised kernel is not fully trustworthy.\n",
+        "short_recommendation": "Verify kernel module signature enforcement is actually enforced, and treat any auto-loading unsigned module as kernel-level compromise.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1547/006/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1547.006 — Kernel Modules and Extensions",
+            "procedure": "Installed a kernel module registered to auto-load at boot via the standard module-loading configuration, running with full kernel privilege from startup."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0012 — Persistence",
+            "behavior": "F0010 — Kernel Modules and Extensions",
+            "implementation": "Kernel module was configured to auto-load at boot, providing both persistence and kernel-level privilege together."
+          }
+        ]
+      }
+    }
+  ]
+}

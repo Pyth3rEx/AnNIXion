@@ -244,7 +244,7 @@ in
         a design you have is one you can copy rather than write. Narrow the
         list if an empty Designs page is worth more than the choice.
 
-        - `annixion` — this distribution's own three, one per discipline.
+        - `annixion` — this distribution's own four, one per discipline.
           **Engagement Report**
           carries a full-spectrum engagement: reconnaissance and OSINT, social
           engineering with campaign metrics, the physical assessment, the
@@ -256,6 +256,12 @@ in
           narratives, account clusters and the coordination indicators applied
           to them, the research personas used to collect, and an attribution
           section built on competing hypotheses rather than one story.
+          **Malware Analysis Report** covers a reverse-engineering
+          engagement: sample identification, static and dynamic analysis,
+          capabilities mapped to both ATT&CK and the Malware Behavior
+          Catalog, indicators of compromise with YARA/Sigma rules, and a
+          classification and attribution section with the same
+          competing-hypotheses discipline as the influence design.
         - `htb` — the Hack The Box set: CPTS, CWES, CDSA, CDEP, CWEE, CAPE,
           CJCA, CWPE and COAE.
         - `offsec` — the OffSec set, OSCP included.
@@ -289,8 +295,13 @@ in
           Directory, cloud, wireless and endpoint findings, plus the physical
           and social-engineering ones a red team actually reports: tailgating,
           badge cloning, door bypass, pretext calls, MFA fatigue, payment
-          fraud. Tagged `red`, `puppet` or `osint` after the three disciplines
-          the browser profiles already divide along.
+          fraud. Also a malware-capability library — anti-analysis, injection,
+          persistence, C2 and impact behaviours mapped to both ATT&CK and the
+          Malware Behavior Catalog. Tagged `red`, `puppet`, `osint` or
+          `malware` after the four disciplines the browser profiles already
+          divide along; a capability a red-team operator would also recognise
+          (process injection, a C2 channel, a persistence mechanism) carries
+          both `red` and `malware` so it surfaces under either filter.
         Both are starting points to edit into your own voice before a client
         reads them.
       '';
