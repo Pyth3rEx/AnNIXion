@@ -69,6 +69,7 @@ takes a while to answer after the containers start.
 | `sysreptor superuser [name]` | create another login, interactively |
 | `sysreptor hash` | mint a password hash for the config |
 | `sysreptor designs [--force]` | import the configured report designs |
+| `sysreptor templates prune <pack>` | remove the templates a pack imported |
 | `sysreptor manage <args…>` | run `manage.py` inside the app container |
 | `sysreptor backup [file.zip]` | full backup through `manage.py backup` |
 | `sysreptor restore <file.zip>` | restore one — **replaces everything in the database** |
@@ -105,7 +106,7 @@ annixion.sysreptor = {
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
   designs = [ "htb" "offsec" "demo" ];   # all the published design packs
-  findingTemplates = [ "annixion" ];     # the finding library to import
+  findingTemplates = [ "annixion" ];     # the finding library ([ ] for none)
   plugins = [ "cyberchef" "customizetheme" ];  # default: all of them
   theme = "annixion";           # the palette the web UI wears
   demoProjects = false;         # the filled-in example reports
@@ -121,7 +122,7 @@ annixion.sysreptor = {
 | `allowedHosts` | `localhost`, `127.0.0.1`, plus the hostname when network-accessible | Host names Django answers to. Anything else gets a 400 |
 | `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
 | `designs` | `[ "htb" "offsec" "demo" ]` | Which official design packs to import |
-| `findingTemplates` | `[ "annixion" ]` | Template libraries to import — `"annixion"`, `"demo"` |
+| `findingTemplates` | `[ "annixion" ]` | The template library to import; `[ ]` for none |
 | `plugins` | every community-edition plugin | Which plugins are enabled |
 | `theme` | `"annixion"` | `"annixion"` or `"upstream"` colours for the web UI |
 | `demoProjects` | `false` | Also import the example reports for each enabled pack |
@@ -275,6 +276,13 @@ story — with explicit caveats, because saying who runs an account is a claim
 about a person. Elements are scored by assessed severity and authenticity,
 each carrying its own confidence.
 
+Each opens its summary with a severity chart — the same thing the HTB and
+OffSec designs do, and for the same reason: the first page is the one that
+gets read, and a distribution is quicker to take in than a table. The
+engagement design charts the CVSS levels the renderer has already counted;
+the OSINT and influence designs count their own assessed severities, and the
+influence design adds a second chart for assessed authenticity.
+
 All three put the identity on the cover and keep the body pages white: a
 deliverable gets printed, forwarded and read in a meeting, and a dark report
 is a poor citizen in all three. The severity ramp is the conventional one —
@@ -305,13 +313,22 @@ Each carries a CVSS vector where one is meaningful — physical findings use
 pretending.
 
 ```nix
-annixion.sysreptor.findingTemplates = [ "annixion" "demo" ];  # add upstream's ten
-annixion.sysreptor.findingTemplates = [ ];                    # none
+annixion.sysreptor.findingTemplates = [ ];   # import none
 ```
 
-Upstream's `demo` library is ten web findings that overlap ours; it is there
-to compare wording against. Both are starting points — edit them into your own
-voice before a client reads them.
+**Only one library ships, deliberately.** Upstream's demo pack is ten web
+findings under the same titles as ours — SQLi, stored XSS, XXE, CSRF, session
+management, security headers, insecure cookies, user enumeration, sensitive
+data in URLs — so importing both leaves the Templates list showing nine
+findings twice. If an earlier install took the demo pack, remove it:
+
+```bash
+sysreptor templates prune demo
+```
+
+That deletes exactly the templates that pack imported, matched by id, and
+leaves anything you wrote alone. The pack stays bundled for this purpose even
+though it can no longer be imported.
 
 **Adding one:** drop a JSON file into `assets/sysreptor/templates` following
 the shape of its neighbours, `rebuild`, then `sysreptor designs`. Template ids

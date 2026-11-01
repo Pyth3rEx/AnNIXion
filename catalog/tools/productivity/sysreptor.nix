@@ -23,15 +23,42 @@ _: {
         sha256 = "sha256-GZV0QJc4gvOTnawX/YQHt5ZTjOXQ9d4Rh2v0TmqKN30=";
       };
 
-      # Official designs, as `manage.py importdemodata` takes them. Upstream
-      # publishes these at an unversioned URL and refreshes them in place, so
-      # the hash is the pin — bump it when a new certification design lands.
+      # Official designs and templates, as `manage.py importdemodata` takes
+      # them. Upstream publishes these at unversioned URLs and regenerates
+      # them on every docs deploy, minting fresh asset UUIDs each time — so a
+      # hash over the archive is not a pin, it is a time bomb that goes off
+      # within days on a change that is not a change.
+      #
+      # The fetch therefore yields canonicalised content rather than the
+      # archive: asset ids derived from the name the importer actually matches
+      # on, JSON sorted, no timestamps. The hash then moves only when upstream
+      # changes something real, such as adding a design.
+      # scripts/sysreptor-canonicalise.py explains the rest, and prints a new
+      # hash when one is needed.
       designPack =
         name: hash:
         p.fetchurl {
           url = "https://docs.sysreptor.com/assets/${name}.tar.gz";
           sha256 = hash;
+          recursiveHash = true;
+          downloadToTemp = true;
+          nativeBuildInputs = [ p.python3 ];
+          postFetch = ''
+            mkdir -p $out
+            tar xzf $downloadedFile -C $out
+            python3 ${../../../scripts/sysreptor-canonicalise.py} $out
+          '';
         };
+
+      # Each pack is repacked from its canonicalised tree, in a fixed order
+      # and with no timestamps, so the archive handed to the importer is
+      # byte-identical per rebuild.
+      packCmd = kind: src: ''
+        tar -czf $d/${kind}.tar.gz \
+          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
+          -C ${src} .
+        chmod 444 $d/${kind}.tar.gz
+      '';
 
       # The launcher's own mark, flattened to one line with single-quoted
       # attributes so it can be substituted into a JSON string. The drawing is
@@ -48,36 +75,43 @@ _: {
       # or template.
       designs = p.runCommand "sysreptor-designs" { } ''
         d=$out/share/sysreptor/designs
-        install -Dm444 ${designPack "htb-designs" "sha256-V9ecZolQljMehTsldojOk1fz1ZK4+1+MMiW8Kmdw3As="} $d/design-htb.tar.gz
-        install -Dm444 ${designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="} $d/design-offsec.tar.gz
-        install -Dm444 ${designPack "demo-designs" "sha256-/PGNkFfiLYcUCzW+GhIi0PTwNtID/WqxZXX6B0HtcZU="} $d/design-demo.tar.gz
-        install -Dm444 ${designPack "htb-demo-projects" "sha256-Ulw7LNwtqco1HPctwVC9MHrry7/0gnByfsc53YALreI="} $d/project-htb.tar.gz
-        install -Dm444 ${designPack "offsec-demo-projects" "sha256-iAeVQqGxO+dzRQ/cfKduPf3vPLBAI1ZkxYb2oCkJkj4="} $d/project-offsec.tar.gz
-        install -Dm444 ${designPack "demo-projects" "sha256-t8OsZHBpj4PrriW5YFqVfprCPsmenWarJpwMC2x7/t4="} $d/project-demo.tar.gz
-        install -Dm444 ${designPack "demo-templates" "sha256-C6jbvTygJVC+969d2nI7sgJ5fEPr7RzoKp1R9gRm/VA="} $d/template-demo.tar.gz
-
-        # Ours, from assets/sysreptor/templates — one JSON per finding. Fixed
-        # order and timestamp, so the archive is byte-identical per rebuild.
         mkdir -p $d
-        tar -czf $d/template-annixion.tar.gz \
-          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -C ${../../../assets/sysreptor/templates} .
-        chmod 444 $d/template-annixion.tar.gz
+        ${packCmd "design-htb" (
+          designPack "htb-designs" "sha256-V9ecZolQljMehTsldojOk1fz1ZK4+1+MMiW8Kmdw3As="
+        )}
+        ${packCmd "design-offsec" (
+          designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="
+        )}
+        ${packCmd "design-demo" (
+          designPack "demo-designs" "sha256-/PGNkFfiLYcUCzW+GhIi0PTwNtID/WqxZXX6B0HtcZU="
+        )}
+        ${packCmd "project-htb" (
+          designPack "htb-demo-projects" "sha256-Ulw7LNwtqco1HPctwVC9MHrry7/0gnByfsc53YALreI="
+        )}
+        ${packCmd "project-offsec" (
+          designPack "offsec-demo-projects" "sha256-iAeVQqGxO+dzRQ/cfKduPf3vPLBAI1ZkxYb2oCkJkj4="
+        )}
+        ${packCmd "project-demo" (
+          designPack "demo-projects" "sha256-t8OsZHBpj4PrriW5YFqVfprCPsmenWarJpwMC2x7/t4="
+        )}
+        ${packCmd "template-demo" (
+          designPack "demo-templates" "sha256-C6jbvTygJVC+969d2nI7sgJ5fEPr7RzoKp1R9gRm/VA="
+        )}
 
-        # The designs carry the mark inline rather than as an asset file, so
-        # it is substituted from catalog/logo.nix at build time and cannot
-        # drift from the drawing the launcher wears. Single-quoted attributes:
-        # the SVG goes inside a JSON string and must not carry a double quote.
+        # Ours, from assets/sysreptor — one JSON per finding and per design.
+        # The designs carry the mark inline rather than as an asset file, so it
+        # is substituted from catalog/logo.nix at build time and cannot drift
+        # from the drawing the launcher wears. Single-quoted attributes: the
+        # SVG goes inside a JSON string and must not carry a double quote.
+        ${packCmd "template-annixion" ../../../assets/sysreptor/templates}
+
         mkdir -p designs
         cp ${../../../assets/sysreptor/designs}/*.json designs/
         chmod u+w designs/*.json
         for f in designs/*.json; do
           sed -i "s|@LOGO_SVG@|${markSvg}|g" "$f"
         done
-        tar -czf $d/design-annixion.tar.gz \
-          --sort=name --mtime=@1 --owner=0 --group=0 --numeric-owner \
-          -C designs .
-        chmod 444 $d/design-annixion.tar.gz
+        ${packCmd "design-annixion" "designs"}
       '';
 
       driver = p.writeShellApplication {
@@ -340,6 +374,47 @@ _: {
             done
           }
 
+          # Remove a pack's templates from the instance. The ids come out of
+          # the bundled pack, so this deletes exactly what that pack imported
+          # and nothing a person wrote.
+          prune_pack() {
+            local pack="$1" ids count
+            [ -f "$packs/template-$pack.tar.gz" ] || die "no bundled pack called '$pack'."
+            ids=$(tar -xzOf "$packs/template-$pack.tar.gz" --wildcards '*.json' |
+              python3 -c '
+          import json, re, sys
+
+          # The archive concatenates one JSON document per template.
+          raw = sys.stdin.read()
+          print(" ".join(re.findall(r"\"id\": \"([0-9a-f-]{36})\"", raw)[::1]))
+          ')
+            [ -n "$ids" ] || die "found no template ids in the $pack pack."
+            count=$(wc -w <<<"$ids")
+
+            if [ -t 0 ]; then
+              read -r -p "sysreptor: delete up to $count templates imported from '$pack'? [y/N] " answer
+              case "$answer" in
+                y | Y | yes) ;;
+                *) die "cancelled." ;;
+              esac
+            fi
+
+            compose exec --no-TTY -e PRUNE_IDS="$ids" app python3 manage.py shell <<'PY'
+          import os
+          from sysreptor.pentests.models import FindingTemplate
+
+          ids = os.environ["PRUNE_IDS"].split()
+          qs = FindingTemplate.objects.filter(id__in=ids)
+          print("sysreptor: removing %d templates" % qs.count())
+          qs.delete()
+          PY
+            # Forget the record too, so the pack can be imported again later.
+            if [ -f "$imported" ]; then
+              grep -vxF "template-$pack" "$imported" >"$imported.tmp" || true
+              mv "$imported.tmp" "$imported"
+            fi
+          }
+
           usage() {
             cat <<EOF
           sysreptor — drive the dockerised SysReptor reporting platform.
@@ -354,6 +429,7 @@ _: {
             superuser [name]          create another login, interactively
             hash                      mint a password hash for the NixOS config
             designs [--force]         import the configured report designs
+            templates prune <pack>    remove the templates a pack imported
             manage <args...>          run manage.py inside the app container
             backup [file.zip]         full backup through manage.py backup
             restore <file.zip>        restore one — replaces everything in the database
@@ -404,6 +480,14 @@ _: {
             superuser)
               need_docker; ensure
               compose exec app python3 manage.py createsuperuser --username "''${1:-$user}"
+              ;;
+            templates)
+              [ "''${1:-}" = prune ] || die "usage: sysreptor templates prune <pack>"
+              [ -n "''${2:-}" ] || die "prune needs a pack name, e.g. 'sysreptor templates prune demo'"
+              need_docker; ensure
+              compose up -d
+              wait_healthy || die "no answer from $url — check 'sysreptor logs'."
+              prune_pack "$2"
               ;;
             designs)
               need_docker; ensure

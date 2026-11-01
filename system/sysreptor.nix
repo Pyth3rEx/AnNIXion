@@ -269,21 +269,20 @@ in
     };
 
     findingTemplates = lib.mkOption {
-      type = lib.types.listOf (
-        lib.types.enum [
-          "annixion"
-          "demo"
-        ]
-      );
+      type = lib.types.listOf (lib.types.enum [ "annixion" ]);
       default = [ "annixion" ];
-      example = [
-        "annixion"
-        "demo"
-      ];
+      example = [ ];
       description = ''
         Finding-template libraries imported on first start. A template is the
         difference between writing a finding and picking one, and they land in
         their own library rather than in any project.
+
+        Only one library ships, because a second would duplicate it: nine of
+        upstream's ten demo templates are the same findings under the same
+        titles, and importing both leaves the Templates list showing each of
+        them twice. The demo pack is still bundled so that
+        `sysreptor templates prune demo` can remove it from an install that
+        took it before.
 
         - `annixion` — this distribution's own library, in
           `assets/sysreptor/templates`. Application, infrastructure, Active
@@ -292,9 +291,6 @@ in
           badge cloning, door bypass, pretext calls, MFA fatigue, payment
           fraud. Tagged `red`, `puppet` or `osint` after the three disciplines
           the browser profiles already divide along.
-        - `demo` — upstream's ten web findings. Overlaps the above; useful
-          mainly to compare wording.
-
         Both are starting points to edit into your own voice before a client
         reads them.
       '';

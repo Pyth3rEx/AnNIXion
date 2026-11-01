@@ -62,7 +62,7 @@
 #     user = "operator";
 #     hashedPassword = "pbkdf2_sha256$600000$...";
 #     designs = [ "htb" ];       # all three packs ship; narrow it here
-#     # findingTemplates = [ "annixion" "demo" ];  # add upstream's ten
+#     # findingTemplates = [ ];    # [] imports no finding templates
 #     # plugins = [ ];             # [] hands plugin choice back to the UI
 #     # theme = "upstream";        # drop the AnNIXion palette and logo
 #     # demoProjects = true;       # the filled-in example reports
