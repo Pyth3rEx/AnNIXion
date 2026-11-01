@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "44acc76b-211f-57bc-aef3-e5ecf0e7207d",
+  "tags": [
+    "puppet",
+    "physical",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1248e76a-2b41-5430-87ef-6edd0b0f342a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Delivery and Courier Pretexts",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "A courier pretext obtained access past reception, and delivered items were accepted and distributed internally without inspection — including devices addressed to named individuals.\n",
+        "description": "A delivery is the one visitor nobody questions. The uniform is generic, the visit is unannounced by nature, and the social contract says you do not obstruct someone carrying a heavy box. \"Signature required, which desk is Finance?\" converts an entry into an escorted tour.\n\nThe delivered item is the second half. A branded package addressed to a named employee, containing a device presented as a promotional gift, is likely to be opened and connected. Addressing it to a real person, identified from public sources, makes it credible.\n\nDeliveries also arrive out of hours and at loading bays, which are controlled less carefully than the main entrance and often propped open during a delivery window.\n",
+        "recommendation": "* Receive all deliveries at a single controlled point; couriers do not pass reception.\n* Record deliveries against an expected list, and hold unexpected items for verification with the addressee.\n* Tell staff that unsolicited devices are never to be connected, with a route to hand them in.\n* Control the loading bay as an access point, with a named responsible person during delivery windows.\n",
+        "short_recommendation": "Receive deliveries at a controlled point, never beyond reception.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

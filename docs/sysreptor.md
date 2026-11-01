@@ -234,6 +234,7 @@ imported by default:
 
 | Pack | What it is |
 |---|---|
+| `annixion` | **This distribution's own two** — see below |
 | `htb` | The Hack The Box certification designs — CPTS, CWES, CDSA, CDEP, CWEE, CAPE, CJCA, CWPE, COAE |
 | `offsec` | The OffSec set, OSCP included |
 | `demo` | The three designs behind upstream's online demo — Margherita, Matrix, Calzone. Client-report layouts rather than certification ones, and the usual starting point for a house design |
@@ -241,27 +242,63 @@ imported by default:
 Narrow the list if you would rather not have them all:
 
 ```nix
-annixion.sysreptor.designs = [ "htb" ];
+annixion.sysreptor.designs = [ "annixion" ];
 ```
+
+### The AnNIXion designs
+
+Three, one per discipline, built from `assets/sysreptor/designs` and rendered
+with the mark substituted from `catalog/logo.nix` at build time:
+
+**Engagement Report** covers a whole engagement rather than one discipline:
+reconnaissance and OSINT, social engineering with a campaign-results table
+(targets, interactions, credentials given, **reported**, time to first
+report), the physical assessment with a per-site entry table and a narrative
+the facilities team can act on, the attack narrative from initial access to
+objective, and a detection timeline measuring what the defenders actually
+saw. Findings carry a category and one of the three discipline tags.
+
+**OSINT Report** is an intelligence product, not a pentest report. It opens
+with a bottom line and key judgements carrying explicit confidence, records
+the tasking and the legal basis for the collection, grades every source on
+the Admiralty scale (reliability A–F, credibility 1–6), and separates what
+was found from what it enables. Exposures replace findings, and severity is
+assessed rather than computed — CVSS is optional throughout.
+
+**Influence Operation Report** is the Puppet Master half: analysis of a
+disinformation or influence campaign. It carries the narratives and the
+account clusters with the coordination indicators that were actually applied,
+reach separated from impact (visibility is not persuasion), a record of the
+research personas used to collect and the OPSEC around them, and an
+attribution section built on competing hypotheses rather than a single
+story — with explicit caveats, because saying who runs an account is a claim
+about a person. Elements are scored by assessed severity and authenticity,
+each carrying its own confidence.
+
+All three put the identity on the cover and keep the body pages white: a
+deliverable gets printed, forwarded and read in a meeting, and a dark report
+is a poor citizen in all three. The severity ramp is the conventional one —
+red, orange, amber, blue, green — because a reader knows what an orange
+*High* means, and the house palette does not get to repaint that.
 
 All of them are fetched at build time and imported from the Nix store, so a
 first run needs no network beyond the container images.
 
 ### Finding templates
 
-A design is the layout; a template is the finding already written. AnNIXion
-ships its own library, imported by default, in `assets/sysreptor/templates` —
-one JSON file per finding, which is also how you add to it.
+A design is the layout; a template is the finding already written. AnNIXion ships its own library of **109 findings**, imported by default, in
+`assets/sysreptor/templates` — one JSON file per finding, which is also how
+you add to it.
 
 It is organised along the three disciplines the browser profiles already
 divide by, so the tag filter in **Templates** matches the way the rest of the
 distribution is laid out:
 
-| Tag | Covers |
-|---|---|
-| `red` | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and the **physical** intrusion findings: tailgating, badge cloning, door hardware bypass, live network ports, server-room access, covert devices, perimeter and camera coverage |
-| `puppet` | The persona side: phishing, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site impersonation, dropped media, synthetic voice, reporting culture |
-| `osint` | What an attacker finds before touching anything: breach credentials, staff exposure that supports pretexts, document metadata, forgotten internet-facing assets |
+| Tag | Count | Covers |
+|---|---|---|
+| `red` | 75 | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and 25 **physical** findings: tailgating, badge cloning, door and biometric bypass, key and lock management, live network ports, server rooms, covert devices, alarm response, media disposal, out-of-hours contractors, building systems on the corporate network, sightlines, wireless reaching the car park |
+| `puppet` | 26 | The persona side: phishing, QR and callback phishing, OAuth consent, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site and courier impersonation, dropped media, synthetic voice, new-starter targeting, insider recruitment, conference elicitation, reporting culture and the cost of challenging a colleague |
+| `osint` | 21 | What an attacker finds before touching anything: breach and infostealer credentials, staff and executive exposure, document metadata, forgotten assets and subdomain takeover, certificate transparency, look-alike domains, recruitment material, supplier mapping, social media disclosing premises and routine, archived content |
 
 Each carries a CVSS vector where one is meaningful — physical findings use
 `AV:P`, social engineering `UI:R` — and `n/a` where a severity score would be
@@ -308,17 +345,20 @@ An empty list leaves the UI in charge.
 
 `customizetheme` carries the distribution's palette into the web interface:
 the signature red on the near-black ground the desktop uses, with the risk
-scale drawn from the mark system's semantic classes —
+scale on its conventional CVSS ramp, borrowing AnNIXion's values only where
+they land on it —
 
 | Severity | Colour | Class it borrows |
 |---|---|---|
 | Critical | `#FF0033` | offensive — the signature red |
-| High | `#F213A0` | reverse magenta |
+| High | `#FF9300` | — the conventional orange |
 | Medium | `#FFD000` | probe amber |
 | Low | `#4A90FF` | forensic blue |
 | Info | `#33E62B` | passive green |
 
-— so a severity in the UI reads in the colours the menu already taught.
+Critical takes the signature red because it is already the colour of
+"stop"; High stays orange, because a reader of a CVSS score knows what orange
+means and a house colour there would read as a different severity.
 
 The header logo goes with it. The mark is rendered from `catalog/logo.nix`,
 the same drawing the launcher wears, and handed to the theme as a base64

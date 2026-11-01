@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "6ce36404-b8ca-5afa-94eb-62a97cfeb3e8",
+  "tags": [
+    "puppet",
+    "social",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "154e6c36-c5ba-57d3-9668-49838caafb74",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Staff Approachable for Insider Recruitment",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:C/C:H/I:H/A:H",
+        "summary": "Staff could be approached directly with offers of payment for access, and had no clear route to report such an approach. Recruitment is cheap for an attacker and bypasses every technical control.\n",
+        "description": "Insider recruitment is now routine for ransomware operations: direct messages offering a share of a payment in exchange for credentials or for running a file. The approaches reach staff through professional networks, personal social media and messaging apps.\n\nMost are refused. The exposure is not that someone accepts, but that nobody reports — so the organisation never learns that it is being targeted, which approach was made, or who else received it.\n\nReporting is suppressed by embarrassment and by fear of suspicion. An employee who reports an approach worries about being treated as a suspect, which is exactly the outcome the policy must prevent.\n",
+        "recommendation": "* Provide a confidential route to report an approach, and state explicitly that reporting attracts no suspicion.\n* Explain that these approaches happen and what they look like, so receiving one is not a shock.\n* Reduce what any single person can do alone for the highest-impact actions — dual authorisation on destructive or financial operations.\n* Monitor for indicators of misuse rather than relying on prevention, and treat leavers' access as urgent.\n",
+        "short_recommendation": "Give staff a route to report approaches, with no penalty for receiving one.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1199/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

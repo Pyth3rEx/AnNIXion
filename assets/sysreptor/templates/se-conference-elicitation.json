@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "09d19117-3d39-5f0c-84c1-07aa05398d67",
+  "tags": [
+    "puppet",
+    "social",
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "16a95d20-4a73-5312-a9cd-02552176ad62",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Elicitation at Conferences and Industry Events",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:L/I:N/A:N",
+        "summary": "Staff attending industry events discussed internal systems, projects and security arrangements with people whose identity they had not verified, and accepted devices and media from stands.\n",
+        "description": "Conferences reverse the usual caution. Everyone is a peer, discussing work is the purpose of being there, and a lanyard is accepted as identification. Shop talk about a migration, a security product that is not working well, or a project under pressure is normal and reveals a great deal.\n\nElicitation does not look like interrogation. It is sympathy about a shared problem, an offer of advice, a question that invites the specific answer. Speakers and stand staff are approached most, because their role is to be forthcoming.\n\nPhysical items complete the pattern: branded media handed out at stands, and chargers and cables that are not what they appear to be.\n",
+        "recommendation": "* Brief attendees — especially speakers — on what is and is not discussable, with concrete examples.\n* Review talks and demonstration material for internal detail before submission.\n* Prohibit connecting promotional media and cables to corporate devices, and issue your own charging equipment.\n* Treat event wireless as hostile, and require the VPN.\n",
+        "short_recommendation": "Brief staff who attend events on what not to discuss.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1598/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

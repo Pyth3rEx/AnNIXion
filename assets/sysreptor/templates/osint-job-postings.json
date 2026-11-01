@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "40caf75b-0264-5b43-8478-76e0988145e7",
+  "tags": [
+    "osint",
+    "puppet"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "09e29f4a-68d2-5ae6-806e-59e3ec01c89d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Recruitment Material Discloses the Internal Stack",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Job advertisements and employee profiles named the specific technologies, versions and security products in use, giving an attacker a map of the estate and of the controls to plan around.\n",
+        "description": "Recruitment material is written to attract candidates, which means being specific: the SIEM in use, the EDR product, the cloud provider, the ERP version, the ticketing system and the identity provider.\n\nFor an attacker this is free reconnaissance of the defensive stack. Knowing which EDR is deployed shapes tooling choices; knowing the identity provider shapes the phishing page; knowing the ERP version narrows the search for an applicable exploit.\n\nEmployee profiles compound it, listing migrations in progress and certifications that reveal the same stack. A merger or a platform migration announced this way also names the window in which change is normal and unusual activity attracts less attention.\n",
+        "recommendation": "* Describe the role and the skills, not the product versions; \"experience with a major cloud provider\" recruits as well as naming yours.\n* Keep security tooling out of public adverts entirely.\n* Brief staff that detailed stack descriptions on public profiles are reconnaissance.\n* Review material already published, and accept that archives persist.\n",
+        "short_recommendation": "Describe the role, not the version numbers.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1591/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

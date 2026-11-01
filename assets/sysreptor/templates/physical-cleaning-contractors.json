@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "51d54802-c0a2-58d6-bbef-5da5ea063855",
+  "tags": [
+    "red",
+    "physical",
+    "puppet"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e8201fcb-7ea8-5440-a2de-58f15224c138",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Out-of-Hours Contractor Access Unsupervised",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "Cleaning, maintenance and security contractors held unescorted access to the whole building outside working hours, with vetting and key control managed by the contractor rather than by the organisation.\n",
+        "description": "Out-of-hours contractors have the access an intruder wants: every floor, every office, no observers, for hours. The access is legitimate, so it generates no alert.\n\nControl of it is usually delegated. The organisation contracts a company, and that company decides who attends, with what vetting, and with what turnover. Individual attendees are often unknown to the client, change frequently, and are among the lowest-paid people with access to the building — which also makes them a target for recruitment or coercion.\n\nShared keys and codes compound it: a single alarm code and master key, known to everyone who has ever worked the contract.\n",
+        "recommendation": "* Vet contractor staff to the standard their access warrants, and require notification of changes.\n* Issue individual credentials rather than shared keys and codes, and revoke them when an individual leaves the contract.\n* Restrict out-of-hours access to the areas the work requires, excluding technical rooms and executive offices.\n* Log and review out-of-hours access, and consider supervision or camera coverage for sensitive areas.\n",
+        "short_recommendation": "Vet, badge and supervise out-of-hours access as you would staff.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1199/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}
