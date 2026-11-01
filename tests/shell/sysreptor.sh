@@ -244,6 +244,109 @@ for pack in design-annixion design-htb design-offsec design-demo project-htb pro
     "the $pack pack is bundled" "no $packs/$pack.tar.gz"
 done
 
+# SysReptor's importer resolves an asset by its exact member name,
+# `<document-id>-assets/<name>`, so an archive that writes `./` in front of
+# every name imports the JSON and then dies on the first logo. That traceback
+# only appears against a running instance, which is why the archives
+# themselves are read here the way the importer reads them.
+unresolved_assets() {
+  python3 - "$@" <<'ASSETS'
+import json, sys, tarfile
+from pathlib import Path
+
+for pack in sys.argv[1:]:
+    with tarfile.open(pack) as tar:
+        docs = [m.name for m in tar.getmembers()
+                if m.isfile() and Path(m.name).match('*.json')
+                and not Path(m.name).parent.parts]
+        if not docs:
+            print('%s: the importer reads no documents from it' % Path(pack).name)
+        for member in docs:
+            doc = json.load(tar.extractfile(member))
+            for key, suffix in (('assets', '-assets'), ('images', '-images'),
+                                ('files', '-files')):
+                for entry in doc.get(key) or []:
+                    name = entry.get('name_internal') or entry.get('name')
+                    if not name:
+                        continue
+                    path = '%s%s/%s' % (doc['id'], suffix, name)
+                    try:
+                        tar.getmember(path)
+                    except KeyError:
+                        print('%s: %s' % (Path(pack).name, path))
+ASSETS
+}
+
+unresolved=$(unresolved_assets "$packs"/*.tar.gz)
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "every asset a pack references resolves where the importer looks" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+# The wrapper pipes a filtered archive rather than the pack, so the filter has
+# to carry a document's assets along with it or the import fails the same way.
+: >"$TMP/have-none"
+python3 "$ROOT/scripts/sysreptor-sync.py" filter \
+  "$packs/design-htb.tar.gz" design "$TMP/have-none" "$TMP/filtered.tar.gz" \
+  2>"$TMP/filtered.names"
+unresolved=$(unresolved_assets "$TMP/filtered.tar.gz")
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "and the filtered archive carries them with the design" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+allnames=$(python3 "$ROOT/scripts/sysreptor-sync.py" names \
+  "$packs/design-htb.tar.gz" design | wc -l)
+kept=$(wc -l <"$TMP/filtered.names")
+report "$([ "$kept" -eq "$allnames" ] && [ "$kept" -gt 0 ] && echo 0 || echo 1)" \
+  "an instance holding nothing is missing the whole pack" \
+  "kept $kept of $allnames designs"
+
+# A finding template is validated against the union of the custom finding
+# fields of every design in the instance, and the first definition of an id
+# wins. So an id shared with an upstream design that shapes it differently
+# makes the whole library unimportable — HTB CDEP's `attack_techniques` is
+# rows of detection content, ours were tactic/technique/procedure, and the
+# import died on the first template.
+clash=$(python3 - "$ROOT/assets/sysreptor/designs" "$packs" <<'CLASH'
+import glob, json, os, sys, tarfile
+
+ours_dir, packs = sys.argv[1], sys.argv[2]
+
+
+def shape(f):
+    items = f.get('items') or {}
+    sub = sorted(p['id'] for p in (items.get('properties') or []) if p.get('id'))
+    return '%s%s' % (f.get('type'), sub or '')
+
+
+def fields(doc):
+    return {f['id']: shape(f) for f in doc.get('finding_fields') or []
+            if isinstance(f, dict) and f.get('id')}
+
+
+ours = {}
+for path in sorted(glob.glob(os.path.join(ours_dir, '*.json'))):
+    ours.update(fields(json.load(open(path))))
+
+for pack in sorted(glob.glob(os.path.join(packs, 'design-*.tar.gz'))):
+    if 'annixion' in os.path.basename(pack):
+        continue
+    with tarfile.open(pack) as tar:
+        for m in tar.getmembers():
+            if not (m.isfile() and m.name.endswith('.json')):
+                continue
+            if '/' in m.name.removeprefix('./'):
+                continue
+            doc = json.load(tar.extractfile(m))
+            for fid, sh in fields(doc).items():
+                if fid in ours and ours[fid] != sh:
+                    print('%s in %s: %s vs ours %s'
+                          % (fid, doc.get('name'), sh, ours[fid]))
+CLASH
+)
+report "$([ -z "$clash" ] && echo 0 || echo 1)" \
+  "no finding field id is shaped one way here and another upstream" \
+  "$(tr '\n' ' ' <<<"$clash" | head -c 300)"
+
 mkdir -p "$TMP/htb"
 tar xzf "$packs/design-htb.tar.gz" -C "$TMP/htb" 2>/dev/null
 chmod -R u+w "$TMP/htb"
@@ -311,7 +414,7 @@ bad, at_tac, di_tac, mapped = [], set(), set(), 0
 for path in glob.glob(os.path.join(tpl, "*.json")):
     data = json.load(open(path))["translations"][0]["data"]
     hit = False
-    for key, store, tactics in (("attack_techniques", AT, at_tac),
+    for key, store, tactics in (("mitre_techniques", AT, at_tac),
                                 ("disarm_techniques", DI, di_tac)):
         for m in data.get(key, []):
             hit = True
@@ -320,7 +423,7 @@ for path in glob.glob(os.path.join(tpl, "*.json")):
                 bad.append("%s: %s" % (os.path.basename(path), tid))
                 continue
             t = store[tid]
-            tactics.update(t["tactics"] if key == "attack_techniques" else [t["tactic"]])
+            tactics.update(t["tactics"] if key == "mitre_techniques" else [t["tactic"]])
     mapped += hit
 
 print("attack_tactics=%d/%d" % (len(at_tac), len(attack["tactics"])))
@@ -357,10 +460,10 @@ report "$(grep -q 'disarm_techniques' "$ROOT/assets/sysreptor/designs/annixion-i
   grep -q 'DISARM Mapping' "$ROOT/assets/sysreptor/designs/annixion-influence.json" && echo 0 || echo 1)" \
   "the influence design carries DISARM and its mapping appendix" \
   "no disarm_techniques field or no appendix"
-report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
-  "the engagement design carries ATT&CK" "no attack_techniques field"
-report "$(grep -q 'attack_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
-  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no attack_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
+  "the engagement design carries ATT&CK" "no mitre_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
+  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no mitre_techniques field"
 
 owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
 for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
@@ -665,7 +768,7 @@ report "$(grep -q 'BIND_PORT=0.0.0.0:9001:8000' "$conf_home/docker.log" && echo 
 
 # ── Designs import once, and only once ─────────────────────────────────────
 # importdemodata adds a fresh copy of every design in the pack each time it
-# runs, so an `up` that re-imports leaves nine HTB designs after nine starts.
+# runs, so an `up` that re-imports leaves eight HTB designs after eight starts.
 health="$TMP/web/api/public/utils/healthcheck"
 mkdir -p "$health"
 echo ok >"$health/index.html"
@@ -702,7 +805,7 @@ report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "the HTB designs are imported on the first run" \
   "importdemodata ran ${imports:-0} time(s): $first_import"
 seen=$(grep -c '^design:' "$imp/instance-names" 2>/dev/null || echo 0)
-report "$([ "${seen:-0}" -ge 9 ] && echo 0 || echo 1)" \
+report "$([ "${seen:-0}" -ge 8 ] && echo 0 || echo 1)" \
   "every design in the pack reaches the instance" "the instance holds ${seen:-0}"
 report "$(grep -q 'type=project' "$imp/docker.log" && echo 1 || echo 0)" \
   "the demo projects stay out unless asked for" "a project pack was imported anyway"
