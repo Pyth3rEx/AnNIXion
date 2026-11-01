@@ -68,7 +68,7 @@ takes a while to answer after the containers start.
 | `sysreptor status` | list running `sysreptor` containers |
 | `sysreptor superuser [name]` | create another login, interactively |
 | `sysreptor hash` | mint a password hash for the config |
-| `sysreptor designs [--force]` | import the configured report designs |
+| `sysreptor designs [--update]` | import designs the instance is missing; `--update` also rewrites the AnNIXion ones |
 | `sysreptor templates prune <pack>` | remove the templates a pack imported |
 | `sysreptor manage <args…>` | run `manage.py` inside the app container |
 | `sysreptor backup [file.zip]` | full backup through `manage.py backup` |
@@ -276,12 +276,24 @@ story — with explicit caveats, because saying who runs an account is a claim
 about a person. Elements are scored by assessed severity and authenticity,
 each carrying its own confidence.
 
-Each opens its summary with a severity chart — the same thing the HTB and
-OffSec designs do, and for the same reason: the first page is the one that
-gets read, and a distribution is quicker to take in than a table. The
-engagement design charts the CVSS levels the renderer has already counted;
-the OSINT and influence designs count their own assessed severities, and the
-influence design adds a second chart for assessed authenticity.
+Each opens its summary with two charts — the HTB and OffSec designs ship one,
+and for a good reason: the first page is the one that gets read, and a
+distribution is quicker to take in than a table. The first chart is severity.
+The engagement design charts the CVSS levels the renderer has already counted;
+the OSINT and influence designs count their own assessed severities. The second
+says what kind rather than how bad — findings by category, exposures by type,
+campaign elements by assessed authenticity.
+
+Each also carries its framework mapping. A finding picks its techniques from
+the whole matrix rather than typing them, and the report ends with a mapping
+appendix that aggregates what was observed and links back to the finding it
+came from. The engagement maps to **MITRE ATT&CK Enterprise**, the influence
+analysis to **DISARM**, and the OSINT assessment to ATT&CK's two pre-intrusion
+tactics — Reconnaissance and Resource Development — which is where open-source
+collection actually lives. Both matrices are checked in under
+`assets/sysreptor/matrices`, with their source and retrieval date, rather than
+fetched during the build: a flake build is offline, and a design should not
+change shape because an upstream page was regenerated.
 
 All three put the identity on the cover and keep the body pages white: a
 deliverable gets printed, forwarded and read in a meeting, and a dark report
@@ -294,7 +306,8 @@ first run needs no network beyond the container images.
 
 ### Finding templates
 
-A design is the layout; a template is the finding already written. AnNIXion ships its own library of **109 findings**, imported by default, in
+A design is the layout; a template is the finding already written. AnNIXion
+ships its own library of **185 findings**, imported by default, in
 `assets/sysreptor/templates` — one JSON file per finding, which is also how
 you add to it.
 
@@ -304,13 +317,25 @@ distribution is laid out:
 
 | Tag | Count | Covers |
 |---|---|---|
-| `red` | 75 | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — and 25 **physical** findings: tailgating, badge cloning, door and biometric bypass, key and lock management, live network ports, server rooms, covert devices, alarm response, media disposal, out-of-hours contractors, building systems on the corporate network, sightlines, wireless reaching the car park |
-| `puppet` | 26 | The persona side: phishing, QR and callback phishing, OAuth consent, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site and courier impersonation, dropped media, synthetic voice, new-starter targeting, insider recruitment, conference elicitation, reporting culture and the cost of challenging a colleague |
-| `osint` | 21 | What an attacker finds before touching anything: breach and infostealer credentials, staff and executive exposure, document metadata, forgotten assets and subdomain takeover, certificate transparency, look-alike domains, recruitment material, supplier mapping, social media disclosing premises and routine, archived content |
+| `red` | 109 | Direct action: web and API, infrastructure, Active Directory, cloud, wireless, mobile, endpoint — plus the post-exploitation half, where the finding is usually that nobody saw it: exfiltration over the control channel, over DNS, to consumer cloud storage; command and control through web protocols, trusted cloud services and commercial remote-access tools; defence impairment, execution, persistence, privilege escalation and impact. And 27 **physical** findings: tailgating, badge cloning, door and biometric bypass, key and lock management, live network ports, server rooms, covert devices, alarm response, media disposal, out-of-hours contractors, building systems on the corporate network, sightlines, wireless reaching the car park |
+| `puppet` | 63 | The persona side: phishing, QR and callback phishing, OAuth consent, pretext calls and help-desk reset bypass, MFA fatigue, payment fraud and authority impersonation, on-site and courier impersonation, dropped media, synthetic voice, new-starter targeting, insider recruitment, conference elicitation. And the influence-operation half: narrative development and conspiracy framing, microtargeted promotion, content testing and fabricated expertise, coordinated posting and reply brigading, amplification and algorithm manipulation, offline mobilisation, persistence through takedown, moderation abuse, harassment of named staff |
+| `osint` | 29 | What an attacker finds before touching anything: breach and infostealer credentials, staff and executive exposure, document metadata, forgotten assets and subdomain takeover, certificate transparency, look-alike domains, recruitment material, supplier mapping, social media disclosing premises and routine, archived content, code repositories, leak corpora, registration records, routing data, perimeter product fingerprints, and the reconnaissance that now leaves no trace at all |
+
+Every template carries the technique it represents, so a finding dropped into a
+report arrives already mapped. Only technique ids are written by hand; the
+tactic and the technique name are resolved from the checked-in matrices, which
+means a wrong id fails the build rather than shipping a mapping that merely
+looks plausible. Between them the templates reach every tactic of both
+frameworks.
+
+Fifteen carry no mapping, deliberately. An untested incident response plan and
+an unreviewed camera system are control failures rather than adversary
+behaviour, and neither matrix has a cell for them — inventing one would make
+the coverage figures lie.
 
 Each carries a CVSS vector where one is meaningful — physical findings use
 `AV:P`, social engineering `UI:R` — and `n/a` where a severity score would be
-pretending.
+pretending, which is most of the influence side.
 
 ```nix
 annixion.sysreptor.findingTemplates = [ ];   # import none
@@ -331,10 +356,16 @@ leaves anything you wrote alone. The pack stays bundled for this purpose even
 though it can no longer be imported.
 
 **Adding one:** drop a JSON file into `assets/sysreptor/templates` following
-the shape of its neighbours, `rebuild`, then `sysreptor designs`. Template ids
-are fixed per file, so a re-import updates the template rather than cloning
-it — which means you can edit a template here and push the change to an
-existing instance.
+the shape of its neighbours, `rebuild`, then `sysreptor designs`. The import
+compares by title, so a template whose title the instance does not have is
+added and the rest are left alone.
+
+**Changing one** is a different operation. The id in the file is not preserved
+on import — SysReptor mints a new one — so re-importing an edited template
+would add a second copy under the same title rather than updating the first.
+Use `sysreptor designs --update` to rewrite the AnNIXion templates and designs
+in place from the current build. That replaces any edit made to them in the UI,
+which is why it only happens when asked for.
 
 ---
 
@@ -396,15 +427,21 @@ projects beside real engagements:
 annixion.sysreptor.demoProjects = true;   # one set per enabled design pack
 ```
 
-Each pack is imported **once**, recorded in
-`~/.local/share/sysreptor/imported`, and then left alone — `importdemodata`
-adds a fresh copy of every design each time it runs, so a start that re-imported
-would leave nine HTB designs after nine starts. A design edited in the UI stays
-edited.
+`importdemodata` adds a fresh copy of every design each time it runs — it does
+not preserve the ids in the file — so a start that re-imported a pack wholesale
+would leave nine HTB designs after nine starts. Each start therefore asks the
+instance which design and template **names** it already holds, and imports only
+the ones missing. A design edited in the UI stays edited, and a design added to
+a pack later still arrives on an instance that was set up before it existed.
+
+Example reports are the exception: they are imported once and recorded in
+`~/.local/share/sysreptor/imported`, because they are meant to be read and
+deleted, and a name check would bring them back the moment you tidied up.
 
 ```bash
-sysreptor designs           # import anything configured but not yet imported
-sysreptor designs --force   # import again, duplicates and all
+sysreptor designs            # import whatever the instance is missing
+sysreptor designs --update   # also rewrite the AnNIXion designs and templates
+                             # from this build, replacing UI edits to them
 ```
 
 To write your own, copy an imported design in the UI (**Designs › ⋮ ›
@@ -418,8 +455,13 @@ Duplicate**) and edit it there — the originals stay as the reference.
 ~/.local/share/sysreptor/deploy/     # the pinned compose files, refreshed by setup
 ├── app.env                          # your secrets — generated once, never overwritten
 └── docker-compose.yml               # upstream's, materialised read-write
-~/.local/share/sysreptor/imported    # which design packs this install has taken
+~/.local/share/sysreptor/imported    # which example-report packs this install has taken
 /etc/annixion/sysreptor.conf         # the settings, generated from your NixOS config
+
+assets/sysreptor/designs/            # the three AnNIXion designs, one JSON each
+assets/sysreptor/templates/          # the finding library, one JSON per finding
+assets/sysreptor/matrices/           # ATT&CK and DISARM, with source and date
+scripts/sysreptor-sync.py            # works out what an instance is missing
 
 docker volume sysreptor-db-data      # Postgres
 docker volume sysreptor-app-data     # uploads, designs, rendered reports
