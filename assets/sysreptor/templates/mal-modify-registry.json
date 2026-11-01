@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "8b07d46b-40fb-5f26-99d5-57a6114e7303",
+  "tags": [
+    "malware",
+    "endpoint",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "a8ecc1d6-9a77-53d3-8d70-a583a8f650c0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Defense-Evasion Registry Modification",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The sample edits registry keys as a defense-evasion step distinct from persistence — disabling a security feature's configuration, hiding its own keys from the default registry editor view, or altering a policy key.",
+        "description": "This covers registry writes whose purpose is evasion rather than relaunch: flipping a\nsecurity feature's enabled flag, writing a key with an embedded null character that the\nstandard Registry Editor fails to display correctly, or modifying a Group Policy-backed\nkey that a security control reads at startup. It is distinguished from persistence-related\nregistry writes (see run keys) by what the key controls, not by the API used to write it.\n",
+        "recommendation": "* Diff registry state against a known-good baseline focused on security-feature configuration keys, not only autorun locations.\n* Check for embedded null characters or other malformed key/value names that standard tooling may fail to render.\n* Treat any write to a security-control configuration key from a non-administrative or unexpected process as high-confidence malicious.\n",
+        "short_recommendation": "Diff registry state against a baseline focused on security-feature configuration keys, not only autorun locations.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1112/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1112 — Modify Registry",
+            "procedure": "Wrote a value disabling a security feature's real-time scanning flag under its policy-backed registry key."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "E1112 — Modify Registry",
+            "implementation": "Modified a security-feature configuration key to disable a protection flag read only at service startup."
+          }
+        ]
+      }
+    }
+  ]
+}

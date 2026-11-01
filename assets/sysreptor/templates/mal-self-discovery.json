@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "14d2fa3e-d2c1-5bed-891c-dbe26eea92a2",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "88c7a4e8-151b-5353-a5ec-3a3c550d2132",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Self-Identification and Re-Infection Checks",
+        "cvss": "n/a",
+        "summary": "The sample checks for evidence of its own prior execution on the host — a mutex, a marker file, a registry value — to avoid re-infecting an already-compromised system or running multiple instances concurrently.",
+        "description": "This is a bookkeeping check rather than an anti-analysis one: a named mutex or semaphore\nthat a second launch checks for and exits on finding, or a marker file/registry value\nwritten on first run and checked on every subsequent one. Its practical value to the\nanalyst is as a reliable, family-specific identifier — the mutex name in particular is\noften reused unchanged across a family's samples and campaigns.\n",
+        "recommendation": "* Record the mutex name, marker file path, or registry value checked; it is frequently a durable, family-specific identifier reusable in future hunting.\n* Use the same marker as a cheap infection indicator across the environment — hosts with it present are confirmed infected without needing to re-run full analysis.\n* Where the check can be forced to fail, use it to trigger re-execution of initial-access logic for analysis, rather than relying on finding a clean host.\n",
+        "short_recommendation": "Record the mutex or marker checked; it is frequently a durable, family-specific infection indicator.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1057/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1057 — Process Discovery",
+            "procedure": "Checked for a named mutex on startup and exited immediately if a prior instance already held it."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0007 — Discovery",
+            "behavior": "B0038 — Self Discovery",
+            "implementation": "Created and checked a named mutex to detect and skip re-infection of an already-compromised host."
+          }
+        ]
+      }
+    }
+  ]
+}

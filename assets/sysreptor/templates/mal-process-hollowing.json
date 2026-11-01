@@ -1,0 +1,45 @@
+{
+  "format": "templates/v2",
+  "id": "dae6bb5c-b0c0-5d87-85fb-79a3738dc6f7",
+  "tags": [
+    "malware",
+    "endpoint",
+    "process",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "c9507bdf-eb2a-556f-ac30-62f98b2b8754",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Process Hollowing",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "The sample launches a legitimate process in a suspended state, unmaps its original image, and writes its own payload into the vacated memory before resuming it — running under that process's identity.",
+        "description": "Hollowing is attractive specifically because the resulting process is, by every external\nmeasure, the legitimate binary: its path, signature metadata and parent process all read\nas expected, and tools that trust a process based on its image path alone will trust the\nhollowed one too. The giveaway lives in memory layout, not on disk — the mapped image no\nlonger matches the on-disk file at that path once unmapping and remapping have occurred.\n",
+        "recommendation": "* Alert on NtUnmapViewOfSection targeting a process's own main module, immediately followed by a write into that region — this sequence has very few legitimate uses.\n* Compare a running process's mapped image against the on-disk file at its reported path; a mismatch is a strong hollowing indicator.\n* Prefer process-creation telemetry (parent/child, command line) over path-based trust alone when triaging a process this technique could have hollowed.\n",
+        "short_recommendation": "Alert on NtUnmapViewOfSection against a process's own module followed by a write into that region.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1055/012/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1055.012 — Process Hollowing",
+            "procedure": "Created a suspended svchost.exe, unmapped its main module, and wrote the payload image into the vacated region before resuming the thread."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "E1055 — Process Injection",
+            "implementation": "NtUnmapViewOfSection followed by WriteProcessMemory into a suspended child process before resuming it."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "eacc558b-e7f3-5d07-9ef3-dd7fcf6aa12b",
+  "tags": [
+    "malware",
+    "endpoint",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "c889faa1-4a17-5e5c-a3e3-0ce22be71cff",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Resource Hijacking for Cryptomining",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "The sample consumes host CPU, GPU or cloud compute resources for the operator's benefit — most commonly cryptocurrency mining — degrading legitimate workloads and, in cloud environments, generating direct billing impact.",
+        "description": "Unlike most impact techniques, the damage here is ongoing and resource-proportional\nrather than a single destructive event: a miner left running accrues cost and performance\ndegradation for as long as it is undetected, which in a cloud environment translates\ndirectly into a compute bill rather than only a performance complaint. Mining processes are\ntypically throttled to stay under a threshold that would trigger obvious user complaints\nwhile remaining profitable.\n",
+        "recommendation": "* Alert on sustained anomalous CPU/GPU utilisation attributable to an unrecognised process, rather than only on peak usage that a throttled miner may deliberately avoid.\n* In cloud environments, check for unexpected compute-instance scaling or billing anomalies as a parallel detection signal independent of host-level telemetry.\n* Terminate the mining process and check for an associated persistence mechanism — a throttled miner is usually built to survive a reboot and resume.\n",
+        "short_recommendation": "Alert on sustained anomalous CPU/GPU use even below peak, and check cloud billing for scaling anomalies.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1496/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1496 — Resource Hijacking",
+            "procedure": "Ran a throttled cryptomining routine capped at 60% CPU utilisation, re-launched via a scheduled task on reboot."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "B0018 — Resource Hijacking",
+            "implementation": "Mining workload was throttled to avoid triggering obvious performance-complaint thresholds."
+          }
+        ]
+      }
+    }
+  ]
+}

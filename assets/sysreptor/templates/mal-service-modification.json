@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "ff0b05b0-7eb4-58ec-b179-72ef00b286a0",
+  "tags": [
+    "malware",
+    "endpoint",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "bd0b6451-2c9c-5943-9266-365e204648bf",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Persistence via Existing-Service Modification",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "Rather than creating a new service, the sample reconfigures an existing one's binary path or startup parameters so the legitimate service launches the malicious payload instead of its original executable.",
+        "description": "This avoids the detection attention a brand-new, unfamiliar service name attracts: the\nservice still appears in listings under its original, familiar name, and only its\nconfigured binary path has changed. Because modifying a service's configuration typically\nrequires administrative privilege, successful use of this technique is itself evidence\nthat privilege escalation has already occurred on the host.\n",
+        "recommendation": "* Diff service configurations (binary path, startup parameters) against a known-good baseline rather than relying on service name or display name alone, which will look unchanged.\n* Treat confirmed use of this technique as proof administrative privilege was already obtained, and investigate how that occurred as a separate finding.\n* Restore the original service binary path and restart the service rather than merely stopping the malicious process, which the service will otherwise relaunch.\n",
+        "short_recommendation": "Diff service binary paths against a known-good baseline; the service name will look unchanged even when hijacked.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1543/003/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1543.003 — Windows Service",
+            "procedure": "Used the service control manager to change an existing, legitimate service's binary path to point at the malicious payload, then restarted the service."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0012 — Persistence",
+            "behavior": "F0011 — Modify Existing Service",
+            "implementation": "Reconfigured an existing service's binary path to launch the payload under its established, trusted service identity."
+          }
+        ]
+      }
+    }
+  ]
+}

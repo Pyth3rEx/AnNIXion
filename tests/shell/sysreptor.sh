@@ -364,11 +364,9 @@ report "$([ "$nown" -eq "$nsrc" ] && echo 0 || echo 1)" \
 report "$([ "$nown" -ge 100 ] && echo 0 || echo 1)" \
   "the library is an extensive one" "only $nown templates"
 
-# Each discipline present so far has to be covered in depth, not just
-# represented: an area with three templates in it is a gap wearing a tag.
-# `malware` is not one of them yet — that tag arrives with the malware
-# design, further up the stack.
-for tag in red puppet osint; do
+# Each discipline has to be covered in depth, not just represented: an area
+# with three templates in it is a gap wearing a tag.
+for tag in red puppet osint malware; do
   n=$(grep -l "\"$tag\"" "$TMP"/own/*.json | wc -l)
   report "$([ "$n" -ge 20 ] && echo 0 || echo 1)" \
     "the $tag discipline is covered in depth" "only $n templates tagged $tag"
@@ -379,9 +377,103 @@ for tag in physical social; do
     "the $tag area is covered in depth" "only $n templates tagged $tag"
 done
 
+# ── The matrices, and what the library reaches of them ─────────────────────
+# All three are checked in rather than fetched, so a build stays offline and a
+# design does not change shape because an upstream page was regenerated. The
+# mapping on a template is only worth having if every id in it resolves, and
+# the library is only comprehensive if it reaches every tactic/objective of
+# all three.
+matrixout=$(python3 - "$ROOT/assets/sysreptor/matrices" "$TMP/own" <<'MATRIX'
+import glob, json, os, sys
+
+root, tpl = sys.argv[1], sys.argv[2]
+attack = json.load(open(os.path.join(root, "mitre-attack.json")))
+disarm = json.load(open(os.path.join(root, "disarm.json")))
+mbc = json.load(open(os.path.join(root, "mbc.json")))
+AT = {t["id"]: t for t in attack["techniques"]}
+DI = {t["id"]: t for t in disarm["techniques"]}
+MB = {t["id"]: t for t in mbc["techniques"]}
+
+bad, at_tac, di_tac, mb_obj, mapped = [], set(), set(), set(), 0
+for path in glob.glob(os.path.join(tpl, "*.json")):
+    data = json.load(open(path))["translations"][0]["data"]
+    hit = False
+    for key, store, tactics, idfield in (
+        ("mitre_techniques", AT, at_tac, "technique"),
+        ("disarm_techniques", DI, di_tac, "technique"),
+        ("mbc_techniques", MB, mb_obj, "behavior"),
+    ):
+        for m in data.get(key, []):
+            hit = True
+            tid = m[idfield].split(" — ")[0]
+            if tid not in store:
+                bad.append("%s: %s" % (os.path.basename(path), tid))
+                continue
+            t = store[tid]
+            if key == "mitre_techniques":
+                tactics.update(t["tactics"])
+            elif key == "disarm_techniques":
+                tactics.add(t["tactic"])
+            else:
+                tactics.update(t["tactics"])
+    mapped += hit
+
+print("attack_tactics=%d/%d" % (len(at_tac), len(attack["tactics"])))
+print("disarm_tactics=%d/%d" % (len(di_tac), len(disarm["tactics"])))
+print("mbc_objectives=%d/%d" % (len(mb_obj), len(mbc["tactics"])))
+print("mapped=%d" % mapped)
+print("bad=%d" % len(bad))
+print("attack_missing=%s" % ",".join(
+    sorted(t["id"] for t in attack["tactics"] if t["id"] not in at_tac)))
+print("disarm_missing=%s" % ",".join(
+    sorted(t["id"] for t in disarm["tactics"] if t["id"] not in di_tac)))
+print("mbc_missing=%s" % ",".join(
+    sorted(t["id"] for t in mbc["tactics"] if t["id"] not in mb_obj)))
+MATRIX
+)
+getv() { sed -n "s/^$1=//p" <<<"$matrixout"; }
+
+report "$([ -f "$ROOT/assets/sysreptor/matrices/mitre-attack.json" ] &&
+  [ -f "$ROOT/assets/sysreptor/matrices/disarm.json" ] &&
+  [ -f "$ROOT/assets/sysreptor/matrices/mbc.json" ] && echo 0 || echo 1)" \
+  "all three matrices are checked in" "a matrix file is missing"
+report "$([ "$(getv bad)" = "0" ] && echo 0 || echo 1)" \
+  "every technique id on a template resolves in its matrix" \
+  "$(getv bad) id(s) do not resolve"
+report "$([ "$(getv attack_missing)" = "" ] && echo 0 || echo 1)" \
+  "the library reaches every ATT&CK tactic" \
+  "nothing maps to: $(getv attack_missing)"
+report "$([ "$(getv disarm_missing)" = "" ] && echo 0 || echo 1)" \
+  "the library reaches every DISARM tactic" \
+  "nothing maps to: $(getv disarm_missing)"
+report "$([ "$(getv mbc_missing)" = "" ] && echo 0 || echo 1)" \
+  "the library reaches every MBC objective" \
+  "nothing maps to: $(getv mbc_missing)"
+nmapped=$(getv mapped)
+report "$([ "${nmapped:-0}" -ge 200 ] && echo 0 || echo 1)" \
+  "most templates carry a framework mapping" "only ${nmapped:-0} are mapped"
+
+# The influence design is the one that has to carry DISARM, the engagement
+# ATT&CK, and the malware design both ATT&CK and MBC — that is what makes the
+# mapping appendix in each of them work.
+report "$(grep -q 'disarm_techniques' "$ROOT/assets/sysreptor/designs/annixion-influence.json" &&
+  grep -q 'DISARM Mapping' "$ROOT/assets/sysreptor/designs/annixion-influence.json" && echo 0 || echo 1)" \
+  "the influence design carries DISARM and its mapping appendix" \
+  "no disarm_techniques field or no appendix"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-engagement.json" && echo 0 || echo 1)" \
+  "the engagement design carries ATT&CK" "no mitre_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-osint.json" && echo 0 || echo 1)" \
+  "the OSINT design carries the pre-intrusion ATT&CK tactics" "no mitre_techniques field"
+report "$(grep -q 'mitre_techniques' "$ROOT/assets/sysreptor/designs/annixion-malware.json" &&
+  grep -q 'mbc_techniques' "$ROOT/assets/sysreptor/designs/annixion-malware.json" &&
+  grep -q 'MBC Mapping' "$ROOT/assets/sysreptor/designs/annixion-malware.json" && echo 0 || echo 1)" \
+  "the malware design carries both ATT&CK and MBC, and an MBC mapping appendix" \
+  "missing mitre_techniques, mbc_techniques, or the MBC appendix"
+
 owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
 for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
-            "Subdomain Takeover" "Look-Alike" "QR Code" "Key and Lock" "Disposal" "Insider"; do
+            "Subdomain Takeover" "Look-Alike" "QR Code" "Key and Lock" "Disposal" "Insider" \
+            "Process Hollowing" "Ransomware" "Rootkit" "Keylogging"; do
   report "$(grep -qi "$want" <<<"$owntitles" && echo 0 || echo 1)" \
     "the library covers: $want" "no template title matches '$want'"
 done
@@ -417,10 +509,10 @@ mkdir -p "$TMP/designs"
 tar xzf "$packs/design-annixion.tar.gz" -C "$TMP/designs" 2>/dev/null
 chmod -R u+w "$TMP/designs"
 ndesign=$(find "$TMP/designs" -maxdepth 1 -name '*.json' | wc -l)
-report "$([ "$ndesign" -eq 3 ] && echo 0 || echo 1)" \
-  "the three AnNIXion designs built so far are packed" "found $ndesign"
+report "$([ "$ndesign" -eq 4 ] && echo 0 || echo 1)" \
+  "all four AnNIXion designs are packed" "found $ndesign"
 
-for d in engagement osint influence; do
+for d in engagement osint influence malware; do
   f="$TMP/designs/annixion-$d.json"
   report "$([ -f "$f" ] && echo 0 || echo 1)" "the $d design is present" "no annixion-$d.json"
   [ -f "$f" ] || continue

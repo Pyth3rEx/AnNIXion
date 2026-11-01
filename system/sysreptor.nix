@@ -241,10 +241,27 @@ in
       description = ''
         Report designs imported the first time the platform starts.
 
-        - `annixion` — this distribution's own designs, built in-repo from
-          `assets/sysreptor/designs` and pinned in the catalog entry with no
-          network fetch at all. A first run needs no network beyond the
-          container images themselves.
+        - `annixion` — this distribution's own four, one per discipline,
+          built in-repo from `assets/sysreptor/designs` and pinned in the
+          catalog entry with no network fetch at all. A first run needs no
+          network beyond the container images themselves. **Engagement
+          Report** carries a full-spectrum engagement: reconnaissance and
+          OSINT, social engineering with campaign metrics, the physical
+          assessment, the attack narrative, and what the defenders saw.
+          **OSINT Report** is an intelligence product rather than a pentest
+          one — it leads with judgements and confidence, grades its sources
+          on the Admiralty scale, and records the legal basis for the
+          collection. **Influence Operation Report** analyses a
+          disinformation campaign: narratives, account clusters and the
+          coordination indicators applied to them, the research personas
+          used to collect, and an attribution section built on competing
+          hypotheses rather than one story. **Malware Analysis Report**
+          covers a reverse-engineering engagement: sample identification,
+          static and dynamic analysis, capabilities mapped to both ATT&CK
+          and the Malware Behavior Catalog, indicators of compromise with
+          YARA/Sigma rules, and a classification and attribution section
+          with the same competing-hypotheses discipline as the influence
+          design.
         - `htb` / `offsec` — the Hack The Box and OffSec certification sets.
           Not built by this repo, and not fetched by its CI: naming them
           here does nothing on its own. Populate `extraDesigns` with the
@@ -289,7 +306,17 @@ in
         their own library rather than in any project.
 
         - `annixion` — this distribution's own library, built in-repo from
-          `assets/sysreptor/templates`.
+          `assets/sysreptor/templates`. Application, infrastructure, Active
+          Directory, cloud, wireless and endpoint findings, plus the physical
+          and social-engineering ones a red team actually reports: tailgating,
+          badge cloning, door bypass, pretext calls, MFA fatigue, payment
+          fraud. Also a malware-capability library — anti-analysis, injection,
+          persistence, C2 and impact behaviours mapped to both ATT&CK and the
+          Malware Behavior Catalog. Tagged `red`, `puppet`, `osint` or
+          `malware` after the four disciplines the browser profiles already
+          divide along; a capability a red-team operator would also recognise
+          (process injection, a C2 channel, a persistence mechanism) carries
+          both `red` and `malware` so it surfaces under either filter.
 
         A starting point to edit into your own voice before a client reads
         it.

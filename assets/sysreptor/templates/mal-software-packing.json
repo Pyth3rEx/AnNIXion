@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "a091177c-bbc8-5438-b901-cd9cb8f491c5",
+  "tags": [
+    "malware",
+    "endpoint",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "be5f8d47-d6b6-557a-9068-2c73ead3aa46",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Runtime Packing / Executable Protector",
+        "cvss": "n/a",
+        "summary": "The sample's real code is stored compressed or encrypted inside an outer stub, which decompresses or decrypts it into memory at runtime — hiding the payload from static tools that inspect the file as shipped.",
+        "description": "Packing is the single biggest lever a malware author has over static detection: a packed\nfile's strings, imports and section layout describe the packer, not the payload, so\nsignature and heuristic engines tuned to the real malware family see nothing until the\nstub runs. Commodity packers (UPX, themida, custom crypters sold on criminal forums) are\ncommon enough that the packer identity alone is sometimes a useful triage signal even\nbefore the payload is recovered.\n\nEntropy is the fastest tell: a section with raw size close to its virtual size and entropy\nabove roughly 7.0 bits/byte is very likely packed or encrypted, versus the 4–6 range typical\nof ordinary compiled code.\n",
+        "recommendation": "* Unpack to the point of payload disclosure — a memory dump taken immediately post-decompression, or a known packer's dedicated unpacker — before scoring the sample on its unpacked content.\n* Fingerprint the packer itself (entry-point signature, section names, known stub hashes); it is frequently shared across unrelated payloads and is a weak attribution signal on its own.\n* Score detections on the unpacked payload's behaviour, not the packer's — two different families sharing a packer are not related.\n",
+        "short_recommendation": "Unpack to the point of payload disclosure before scoring the sample's static content.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/002/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027.002 — Software Packing",
+            "procedure": "The .text section's raw size matched its virtual size with entropy above 7.0 bits/byte, consistent with a packed payload."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "F0001 — Software Packing",
+            "implementation": "Outer stub decompressed the payload into a newly allocated memory region at runtime."
+          }
+        ]
+      }
+    }
+  ]
+}
