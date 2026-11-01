@@ -33,11 +33,18 @@ _: {
           sha256 = hash;
         };
 
+      # Named <type>-<pack>: the wrapper reads the type back off the filename
+      # and hands it to `importdemodata --type=`, which takes design, project
+      # or template.
       designs = p.runCommand "sysreptor-designs" { } ''
         d=$out/share/sysreptor/designs
         install -Dm444 ${designPack "htb-designs" "sha256-V9ecZolQljMehTsldojOk1fz1ZK4+1+MMiW8Kmdw3As="} $d/design-htb.tar.gz
         install -Dm444 ${designPack "offsec-designs" "sha256-RVNFXvv3tfWMEAGSwS5QQVtS56gmxezZ2MP7shAFhLE="} $d/design-offsec.tar.gz
+        install -Dm444 ${designPack "demo-designs" "sha256-/PGNkFfiLYcUCzW+GhIi0PTwNtID/WqxZXX6B0HtcZU="} $d/design-demo.tar.gz
         install -Dm444 ${designPack "htb-demo-projects" "sha256-Ulw7LNwtqco1HPctwVC9MHrry7/0gnByfsc53YALreI="} $d/project-htb.tar.gz
+        install -Dm444 ${designPack "offsec-demo-projects" "sha256-iAeVQqGxO+dzRQ/cfKduPf3vPLBAI1ZkxYb2oCkJkj4="} $d/project-offsec.tar.gz
+        install -Dm444 ${designPack "demo-projects" "sha256-t8OsZHBpj4PrriW5YFqVfprCPsmenWarJpwMC2x7/t4="} $d/project-demo.tar.gz
+        install -Dm444 ${designPack "demo-templates" "sha256-C6jbvTygJVC+969d2nI7sgJ5fEPr7RzoKp1R9gRm/VA="} $d/template-demo.tar.gz
       '';
 
       driver = p.writeShellApplication {
@@ -82,6 +89,7 @@ _: {
           encrypt="''${ANNIXION_SYSREPTOR_ENCRYPT:-yes}"
           want_designs="''${ANNIXION_SYSREPTOR_DESIGNS:-htb}"
           want_projects="''${ANNIXION_SYSREPTOR_DEMO_PROJECTS:-no}"
+          want_templates="''${ANNIXION_SYSREPTOR_FINDING_TEMPLATES:-yes}"
 
           url="http://127.0.0.1:$port"
           # Compose interpolates this; the shell beats the .env file.
@@ -199,13 +207,20 @@ _: {
           # Which configured packs this install has not seen yet. Importing one
           # twice creates a second copy of every design in it, so the record is
           # what keeps `up` idempotent.
+          unimported() { grep -qxF "$1" "$imported" 2>/dev/null || echo "$1"; }
+
           pending_packs() {
             local pack
             for pack in $want_designs; do
-              grep -qxF "design-$pack" "$imported" 2>/dev/null || echo "design-$pack"
+              unimported "design-$pack"
             done
             if [ "$want_projects" = yes ]; then
-              grep -qxF "project-htb" "$imported" 2>/dev/null || echo "project-htb"
+              for pack in $want_designs; do
+                unimported "project-$pack"
+              done
+            fi
+            if [ "$want_templates" = yes ]; then
+              unimported template-demo
             fi
           }
 
@@ -395,7 +410,8 @@ _: {
               echo "allowed hosts   $allowed_hosts"
               echo "encrypt at rest $encrypt"
               echo "designs         $want_designs"
-              echo "demo projects   $want_projects"
+              echo "example reports $want_projects"
+              echo "find. templates $want_templates"
               echo "settings from   $conf (annixion.sysreptor)"
               ;;
             help | -h | --help) usage ;;
