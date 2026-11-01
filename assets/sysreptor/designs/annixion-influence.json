@@ -646,10 +646,13 @@
                 "required": false,
                 "default": "Campaign origin",
                 "suggestions": [
+                  "Real-world event exploited",
                   "Campaign origin",
                   "Narrative shift",
                   "Amplification spike",
+                  "Fact-check or debunk published",
                   "Platform or media response",
+                  "Takedown or enforcement action",
                   "De-escalation"
                 ]
               }
