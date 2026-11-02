@@ -55,6 +55,30 @@
 #   # docs/customization.md.
 #   annixion.hardware.wireless = true;
 #
+#   # The reporting platform runs locally and keeps client findings, so it
+#   # binds loopback and encrypts at rest. Only this distribution's own
+#   # designs are built and imported by default — no network fetch, no CI
+#   # exposure. HTB/OffSec designs are opt-in: fetch and pin them yourself
+#   # through annixion.sysreptor.extraDesigns, see docs/sysreptor.md for a
+#   # worked example, then list them here too. Making it network-accessible
+#   # publishes every engagement's deliverables over plain HTTP — read
+#   # docs/sysreptor.md before you do.
+#   # The login is created on first start from the hash below — mint one with
+#   # `sysreptor hash`. The default is the shipped operator password, so it is
+#   # public: change it here or in the UI. There is no login-less mode; every
+#   # way to skip the login screen is Professional-edition only.
+#   annixion.sysreptor = {
+#     user = "operator";
+#     hashedPassword = "pbkdf2_sha256$600000$...";
+#     # designs = [ "annixion" ];     # the default — no network fetch
+#     # extraDesigns = [ ];           # HTB/OffSec packs you fetched and pinned
+#     # findingTemplates = [ ];       # [] imports no finding templates
+#     # plugins = [ ];                # [] hands plugin choice back to the UI
+#     # theme = "upstream";           # drop the AnNIXion palette and logo
+#     # demoProjects = true;          # the filled-in example reports
+#     # networkAccessible = true;
+#   };
+#
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;
 #

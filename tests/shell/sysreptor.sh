@@ -99,17 +99,38 @@ case "$1 $2" in
   "info ") exit 0 ;;
   "volume inspect") exit 1 ;;  # nothing exists yet, so setup must create it
   "volume create") exit 0 ;;
+  "compose -f")
+    # BIND_PORT is how the wrapper publishes the UI; record what compose saw.
+    printf 'BIND_PORT=%s\n' "${BIND_PORT:-<unset>}" >>"$log"
+    # An import, or a script piped into `manage.py shell`, reads its input on
+    # stdin; drain it so the writer on the other end of the pipe never sees a
+    # broken one (set -e on the wrapper turns that SIGPIPE into a silent,
+    # confusing abort, with nothing of this printed yet).
+    if [[ "$*" == *importdemodata* ]] || [[ "$*" == *"manage.py shell"* ]]; then
+      cat >/dev/null
+    fi
+    exit 0
+    ;;
   *) exit 0 ;;
 esac
 STUB
 chmod +x "$stub/docker"
 
-run_setup() {
+# Never the machine's own /etc/annixion/sysreptor.conf: on a box that has
+# rebuilt, that file exists and would decide what these assertions see.
+drive() {
   local home="$1"
   shift
   HOME="$home" XDG_DATA_HOME="$home/.local/share" \
     DOCKER_STUB_LOG="$home/docker.log" PATH="$stub:$PATH" \
-    "$bin" setup "$@" 2>&1
+    ANNIXION_SYSREPTOR_CONF="$home/sysreptor.conf" \
+    "$bin" "$@" 2>&1
+}
+
+run_setup() {
+  local home="$1"
+  shift
+  drive "$home" setup "$@"
 }
 
 home="$TMP/h1"
@@ -187,9 +208,195 @@ report "$(grep -q '^ENCRYPTION_KEYS=' "$plainenv" && echo 1 || echo 0)" \
 report "$(grep -q '^SECRET_KEY=' "$plainenv" && echo 0 || echo 1)" \
   "--no-encryption still writes a Django secret" "no SECRET_KEY in app.env"
 
+
+# ── What the NixOS module writes, and what the wrapper does with it ────────
+etcpath='.environment.etc."annixion/sysreptor.conf".text'
+conf_default=$(nix eval --raw "$CFG$etcpath" 2>/dev/null)
+
+# The wrapper sources this file, so the test reads it the same way. A Django
+# hash is full of `$`: written unquoted, bash would expand `$600000` to the
+# sixth positional parameter and the account would be bootstrapped with a
+# password nobody holds.
+printf '%s\n' "$conf_default" >"$TMP/conf.default"
+# shellcheck disable=SC1091 # written just above
+read_conf() { (set -u; . "$TMP/conf.default"; eval "printf '%s' \"\${$1:-}\""); }
+
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_BIND)" = "127.0.0.1" ] && echo 0 || echo 1)" \
+  "the default config binds loopback only" "bind is $(read_conf ANNIXION_SYSREPTOR_BIND)"
+# htb/offsec are opt-in through extraDesigns now — only the in-repo,
+# no-fetch annixion pack ships by default.
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_DESIGNS)" = "annixion" ] && echo 0 || echo 1)" \
+  "only the annixion design is configured by default" "designs are $(read_conf ANNIXION_SYSREPTOR_DESIGNS)"
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_EXTRA_PACKS_DIR)" = "" ] && echo 0 || echo 1)" \
+  "extraDesigns defaults to no extra packs directory" \
+  "EXTRA_PACKS_DIR is '$(read_conf ANNIXION_SYSREPTOR_EXTRA_PACKS_DIR)'"
+report "$([ "$(read_conf ANNIXION_SYSREPTOR_ENCRYPT)" = "yes" ] && echo 0 || echo 1)" \
+  "encryption at rest is the default" "encrypt is $(read_conf ANNIXION_SYSREPTOR_ENCRYPT)"
+
+hash_declared=$(nix eval --raw "$CFG.annixion.sysreptor.hashedPassword" 2>/dev/null)
+hash_read=$(read_conf ANNIXION_SYSREPTOR_HASHED_PASSWORD)
+report "$([ -n "$hash_declared" ] && [ "$hash_read" = "$hash_declared" ] && echo 0 || echo 1)" \
+  "the password hash survives being sourced by a shell" \
+  "declared '$hash_declared', read back '$hash_read'"
+report "$(grep -q '^pbkdf2_sha256\$[0-9]*\$' <<<"$hash_read" && echo 0 || echo 1)" \
+  "and it is a Django hash rather than a plaintext password" "read back: $hash_read"
+
+mode=$(nix eval --raw "$CFG"'.environment.etc."annixion/sysreptor.conf".mode' 2>/dev/null)
+report "$([ "$mode" = "0400" ] && echo 0 || echo 1)" \
+  "the file holding that hash is not world-readable" "mode is ${mode:-<unset>}"
+
+# Loopback-only must mean a closed port: an open 8000 with nothing behind it
+# is the kind of drift nobody notices.
+openports=$(nix eval --json "$CFG.networking.firewall.allowedTCPPorts" 2>/dev/null)
+report "$(grep -q '8000' <<<"$openports" && echo 1 || echo 0)" \
+  "the firewall stays shut while it is loopback-only" "open TCP ports: $openports"
+
+# The same config with networkAccessible on, so the toggle is asserted rather
+# than assumed. extendModules evaluates the variant without a second flake.
+variant='c: (c.extendModules { modules = [ { annixion.sysreptor.networkAccessible = true; } ]; }).config'
+conf_net=$(nix eval --raw ".#nixosConfigurations.AnNIXion-ci" \
+  --apply "$variant"'.environment.etc."annixion/sysreptor.conf".text' 2>/dev/null)
+printf '%s\n' "$conf_net" >"$TMP/conf.net"
+# shellcheck disable=SC1091 # written just above
+read_net() { (set -u; . "$TMP/conf.net"; eval "printf '%s' \"\${$1:-}\""); }
+report "$([ "$(read_net ANNIXION_SYSREPTOR_BIND)" = "0.0.0.0" ] && echo 0 || echo 1)" \
+  "networkAccessible publishes on every interface" "bind is $(read_net ANNIXION_SYSREPTOR_BIND)"
+hostname=$(nix eval --raw "$CFG.networking.hostName" 2>/dev/null)
+report "$(grep -q "$hostname" <<<"$(read_net ANNIXION_SYSREPTOR_ALLOWED_HOSTS)" && echo 0 || echo 1)" \
+  "and adds the hostname to ALLOWED_HOSTS" \
+  "Django would 400 every request to $hostname. Allowed: $(read_net ANNIXION_SYSREPTOR_ALLOWED_HOSTS)"
+ports_net=$(nix eval --json ".#nixosConfigurations.AnNIXion-ci" \
+  --apply "$variant"'.networking.firewall.allowedTCPPorts' 2>/dev/null)
+report "$(grep -q '8000' <<<"$ports_net" && echo 0 || echo 1)" \
+  "and opens the port in the firewall" "open TCP ports: $ports_net"
+
+
+# ── The wrapper reads that file ────────────────────────────────────────────
+# No design/template packs exist yet at this point in the build-up — the
+# fixtures below ask for none, so the wrapper's own config-sync behaviour is
+# exercised without needing a pack to resolve.
+conf_home="$TMP/h3"
+mkdir -p "$conf_home"
+cat >"$conf_home/sysreptor.conf" <<'CONF'
+ANNIXION_SYSREPTOR_USER="scribe"
+ANNIXION_SYSREPTOR_BIND="0.0.0.0"
+ANNIXION_SYSREPTOR_PORT="9001"
+ANNIXION_SYSREPTOR_ALLOWED_HOSTS="localhost,127.0.0.1,reports.local"
+ANNIXION_SYSREPTOR_ENCRYPT="yes"
+ANNIXION_SYSREPTOR_DESIGNS=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
+CONF
+
+shown=$(drive "$conf_home" config)
+report "$(grep -q "user *scribe" <<<"$shown" && echo 0 || echo 1)" \
+  "the configured login reaches the wrapper" "config said: $shown"
+report "$(grep -q "0.0.0.0:9001" <<<"$shown" && echo 0 || echo 1)" \
+  "as does the bind address and port" "config said: $shown"
+report "$(grep -q "9001" <<<"$(drive "$conf_home" url)" && echo 0 || echo 1)" \
+  "and the URL follows the configured port" "url said: $(drive "$conf_home" url)"
+
+run_setup "$conf_home" >/dev/null
+confenv="$conf_home/.local/share/sysreptor/deploy/app.env"
+report "$(grep -q '^ALLOWED_HOSTS="localhost,127.0.0.1,reports.local"' "$confenv" && echo 0 || echo 1)" \
+  "ALLOWED_HOSTS comes from the config" "app.env has: $(grep '^ALLOWED_HOSTS=' "$confenv")"
+
+# A changed setting has to reach an install that already holds its keys —
+# app.env is written once, so the config lines are synced rather than rewritten.
+secret_before=$(grep '^SECRET_KEY=' "$confenv")
+sed -i 's/,reports.local//' "$conf_home/sysreptor.conf"
+drive "$conf_home" up >/dev/null
+report "$(grep -q '^ALLOWED_HOSTS="localhost,127.0.0.1"$' "$confenv" && echo 0 || echo 1)" \
+  "a changed ALLOWED_HOSTS is synced on the next run" \
+  "app.env still has: $(grep '^ALLOWED_HOSTS=' "$confenv")"
+report "$([ "$secret_before" = "$(grep '^SECRET_KEY=' "$confenv")" ] && echo 0 || echo 1)" \
+  "and the secrets are untouched by that sync" "SECRET_KEY changed"
+
+report "$(grep -q 'BIND_PORT=0.0.0.0:9001:8000' "$conf_home/docker.log" && echo 0 || echo 1)" \
+  "compose publishes the configured bind and port" \
+  "compose saw: $(grep BIND_PORT "$conf_home/docker.log" | tail -1)"
+
+# ── The health check, so a `designs` run can get past wait_healthy ─────────
+health="$TMP/web/api/public/utils/healthcheck"
+mkdir -p "$health"
+echo ok >"$health/index.html"
+hport=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1]);s.close()')
+python3 -m http.server "$hport" --bind 127.0.0.1 -d "$TMP/web" >/dev/null 2>&1 &
+server=$!
+trap 'kill "$server" 2>/dev/null; rm -rf "$TMP"' EXIT
+if python3 - "$hport" <<'WAIT'
+import sys, time, urllib.request
+for _ in range(50):
+    try:
+        urllib.request.urlopen("http://127.0.0.1:%s/api/public/utils/healthcheck/" % sys.argv[1], timeout=0.2)
+        sys.exit(0)
+    except Exception:
+        time.sleep(0.1)
+sys.exit(1)
+WAIT
+then healthy=0; else healthy=1; fi
+report "$healthy" \
+  "the stand-in health endpoint answers" "nothing on 127.0.0.1:$hport"
+
+# ── A pack that resolves nowhere fails clearly ──────────────────────────────
+# No built-in pack and no extraDesigns means pack_path finds nothing — the
+# point of Part B/C is that this is a named error, not a silent no-op. The
+# instance answers healthy, so the failure really is pack resolution.
+nopack="$TMP/h8"
+mkdir -p "$nopack"
+cat >"$nopack/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS="htb"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+CONF
+run_setup "$nopack" >/dev/null
+said=$(drive "$nopack" designs 2>&1)
+report "$(grep -q "no bundled or extra pack called 'design-htb'" <<<"$said" && echo 0 || echo 1)" \
+  "a design with no built-in and no extraDesigns pack fails by name" "said: $said"
+report "$(grep -q "sysreptor.md" <<<"$said" && echo 0 || echo 1)" \
+  "and points at the docs for how to supply one" "said: $said"
+
+# ── The declared login is created once ──────────────────────────────────────
+# Re-applying it on every start would silently revert a password changed in
+# the UI, which is the only place it can be changed.
+# shellcheck disable=SC2016 # a hash, not an expansion — the $ must stay literal
+login_hash='pbkdf2_sha256$600000$testsalt$dGVzdGhhc2g='
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$conf_home/docker.log")
+report "$([ "${logins:-0}" -eq 0 ] && echo 0 || echo 1)" \
+  "no login is bootstrapped without a declared hash" "a shell ran anyway"
+
+acct="$TMP/h6"
+mkdir -p "$acct"
+cat >"$acct/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_USER="scribe"
+ANNIXION_SYSREPTOR_HASHED_PASSWORD='$login_hash'
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS=""
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+CONF
+
+run_setup "$acct" >/dev/null
+drive "$acct" up >/dev/null
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$acct/docker.log")
+report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "the declared login is created on the first start" "the bootstrap ran ${logins:-0} time(s)"
+report "$(grep -q 'BOOTSTRAP_USERNAME=scribe' "$acct/docker.log" && echo 0 || echo 1)" \
+  "under the configured name" "compose saw: $(grep -o 'BOOTSTRAP_USERNAME=[^ ]*' "$acct/docker.log" | head -1)"
+report "$(grep -qF "BOOTSTRAP_PASSWORD_HASH=$login_hash" "$acct/docker.log" && echo 0 || echo 1)" \
+  "with the hash intact, not a shell-mangled one" \
+  "compose saw: $(grep -o 'BOOTSTRAP_PASSWORD_HASH=[^ ]*' "$acct/docker.log" | head -1)"
+
+drive "$acct" up >/dev/null
+logins=$(grep -c 'BOOTSTRAP_USERNAME' "$acct/docker.log")
+report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "a later start never re-applies the password" \
+  "the bootstrap ran ${logins:-0} time(s) — a UI password change would have been reverted"
+
 echo
 if [ "$fails" -gt 0 ]; then
   printf 'sysreptor: %d check(s) failed\n' "$fails"
   exit 1
 fi
-echo "sysreptor: the wrapper deploys, and never rewrites the keys it deployed with"
+echo "sysreptor: deploys from the config, and never rewrites the keys it deployed with"
