@@ -75,6 +75,13 @@ noargs=$("$bin" manage 2>&1)
 report "$(grep -q "manage needs a command" <<<"$noargs" && echo 0 || echo 1)" \
   "manage without a command says so" "said: $noargs"
 
+noprune=$("$bin" templates 2>&1)
+report "$(grep -q "templates prune" <<<"$noprune" && echo 0 || echo 1)" \
+  "templates without a subcommand says what it takes" "said: $noprune"
+badpack=$("$bin" templates prune 2>&1)
+report "$(grep -q "prune needs a pack name" <<<"$badpack" && echo 0 || echo 1)" \
+  "prune without a pack says so" "said: $badpack"
+
 badopt=$("$bin" setup --wat 2>&1)
 report "$(grep -q "unknown option" <<<"$badopt" && echo 0 || echo 1)" \
   "setup rejects an unknown option" "said: $badopt"
@@ -439,6 +446,13 @@ print('fields=%d sections=%d missing=%s fmissing=%s placeholder=%s svg=%d'
     "the $d design has its logo substituted" "$out"
   report "$(grep -q 'svg=2' <<<"$out" && echo 0 || echo 1)" \
     "the $d design carries the mark on cover and header" "$out"
+  # The summary is the page that gets read; a severity chart belongs on it.
+  report "$(python3 -c "
+import json, sys
+t = json.load(open(sys.argv[1]))['report_template']
+sys.exit(0 if '<chart' in t and 'chart-figure' in t else 1)
+" "$f" 2>/dev/null && echo 0 || echo 1)" \
+    "the $d design charts its severities" "no chart in the summary"
   # The mark goes inside a JSON string; a double quote in it breaks the file.
   report "$(python3 -c "
 import json, re, sys

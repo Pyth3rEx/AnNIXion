@@ -107,6 +107,9 @@ annixion.sysreptor = {
   networkAccessible = false;    # loopback only
   encryptAtRest = true;         # AES-GCM, key in deploy/app.env
   designs = [ "annixion" ];      # the default — built in-repo, no network fetch
+  findingTemplates = [ "annixion" ];     # the finding library ([ ] for none)
+  plugins = [ "cyberchef" "customizetheme" ];  # default: all of them
+  theme = "annixion";           # the palette the web UI wears
   demoProjects = false;         # the filled-in example reports
 };
 ```
@@ -121,6 +124,9 @@ annixion.sysreptor = {
 | `encryptAtRest` | `true` | Whether `setup` generates an encryption key. Read once, when the secrets are first written |
 | `designs` | `[ "annixion" ]` | Which report designs to import — `annixion` is built in-repo; `htb`/`offsec` are opt-in, see `extraDesigns` |
 | `extraDesigns` | `[ ]` | Design/project/template packs fetched and pinned outside this repo — HTB, OffSec, or anything else. Not built by default, not touched by this repo's CI |
+| `findingTemplates` | `[ "annixion" ]` | The template library to import; `[ ]` for none |
+| `plugins` | every community-edition plugin | Which plugins are enabled |
+| `theme` | `"annixion"` | `"annixion"` or `"upstream"` colours for the web UI |
 | `demoProjects` | `false` | Also import the example reports for each enabled design pack |
 
 The module writes `/etc/annixion/sysreptor.conf`, which the wrapper reads at
@@ -263,10 +269,15 @@ attribution section built on competing hypotheses rather than a single
 story — with explicit caveats, because saying who runs an account is a claim
 about a person.
 
-Both put the identity on the cover and keep the body pages white: a
+Each opens its summary with a severity chart: the first page is the one that
+gets read, and a distribution is quicker to take in than a table. The
+engagement design charts the CVSS levels the renderer has already counted;
+the OSINT and influence designs count their own assessed severities, and the
+influence design adds a second chart for assessed authenticity.
+
+All three put the identity on the cover and keep the body pages white: a
 deliverable gets printed, forwarded and read in a meeting, and a dark report
-is a poor citizen in all of that. Each opens its summary with a severity
-chart, because the first page is the one that gets read.
+is a poor citizen in all of that.
 
 All of it is built in-repo and imported from the Nix store, so a first run
 needs no network beyond the container images.
