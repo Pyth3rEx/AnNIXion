@@ -1,0 +1,1034 @@
+{
+  "format": "projecttypes/v2",
+  "id": "132683bc-5a90-570b-a741-8f81370390ce",
+  "name": "AnNIXion Engagement Report",
+  "language": "en-US",
+  "status": "finished",
+  "tags": [
+    "annixion"
+  ],
+  "report_sections": [
+    {
+      "id": "meta",
+      "label": "Engagement Details",
+      "fields": [
+        {
+          "id": "title",
+          "type": "string",
+          "label": "Report Title",
+          "origin": "core",
+          "default": "Red Team Engagement Report",
+          "required": true,
+          "spellcheck": false
+        },
+        {
+          "id": "customer_name",
+          "type": "string",
+          "label": "Client",
+          "origin": "custom",
+          "required": true,
+          "spellcheck": false,
+          "default": "TODO Client Ltd"
+        },
+        {
+          "id": "engagement_ref",
+          "type": "string",
+          "label": "Engagement Reference",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "ANX-0000"
+        },
+        {
+          "id": "engagement_type",
+          "type": "combobox",
+          "label": "Engagement Type",
+          "origin": "custom",
+          "required": false,
+          "default": "Red Team",
+          "suggestions": [
+            "Red Team",
+            "Penetration Test",
+            "Social Engineering",
+            "Physical Assessment",
+            "Purple Team",
+            "OSINT Assessment"
+          ]
+        },
+        {
+          "id": "classification",
+          "type": "combobox",
+          "label": "Classification",
+          "origin": "custom",
+          "required": false,
+          "default": "TLP:AMBER+STRICT",
+          "suggestions": [
+            "TLP:RED",
+            "TLP:AMBER+STRICT",
+            "TLP:AMBER",
+            "TLP:GREEN",
+            "TLP:CLEAR"
+          ]
+        },
+        {
+          "id": "date_start",
+          "type": "date",
+          "label": "Execution — Start",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_end",
+          "type": "date",
+          "label": "Execution — End",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "date_report",
+          "type": "date",
+          "label": "Report Date",
+          "origin": "custom",
+          "required": false
+        },
+        {
+          "id": "report_version",
+          "type": "string",
+          "label": "Version",
+          "origin": "custom",
+          "required": false,
+          "spellcheck": false,
+          "default": "1.0"
+        },
+        {
+          "id": "team",
+          "type": "list",
+          "label": "Operators",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "operator",
+            "type": "object",
+            "label": "Operator",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Name",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "email",
+                "type": "string",
+                "label": "Email",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "client_contacts",
+          "type": "list",
+          "label": "Client Contacts",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "contact",
+            "type": "object",
+            "label": "Contact",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Name",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "role",
+                "type": "string",
+                "label": "Role",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "email",
+                "type": "string",
+                "label": "Email",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "executive",
+      "label": "Executive Summary",
+      "fields": [
+        {
+          "id": "executive_summary",
+          "type": "markdown",
+          "label": "Executive Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what was attempted, what succeeded, and what it means in business terms. No tool names, no jargon — this page is read by people who will not read page 20."
+        },
+        {
+          "id": "key_judgements",
+          "type": "markdown",
+          "label": "Key Judgements",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO The objective was achieved / not achieved, and by what route.\n* TODO The control that failed first.\n* TODO The control that worked, and should be kept."
+        },
+        {
+          "id": "business_impact",
+          "type": "markdown",
+          "label": "Business Impact",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the consequence in the client's own terms — data, money, continuity, obligation."
+        },
+        {
+          "id": "posture",
+          "type": "combobox",
+          "label": "Overall Posture",
+          "origin": "custom",
+          "required": false,
+          "default": "Developing",
+          "suggestions": [
+            "Critical",
+            "Weak",
+            "Developing",
+            "Capable",
+            "Strong"
+          ]
+        },
+        {
+          "id": "posture_rationale",
+          "type": "markdown",
+          "label": "Posture Rationale",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: why that rating and not the one above it."
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "label": "Scope & Rules of Engagement",
+      "fields": [
+        {
+          "id": "objectives",
+          "type": "markdown",
+          "label": "Objectives",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the flags the client set. Crown-jewel access, a specific data set, domain compromise, physical entry to a named site."
+        },
+        {
+          "id": "scope_in",
+          "type": "markdown",
+          "label": "In Scope",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: ranges, domains, sites, personnel groups, applications."
+        },
+        {
+          "id": "scope_out",
+          "type": "markdown",
+          "label": "Out of Scope",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what was explicitly excluded, and why it matters to the result."
+        },
+        {
+          "id": "roe",
+          "type": "markdown",
+          "label": "Rules of Engagement",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: permitted techniques, prohibited techniques, working hours, data-handling rules, stop conditions and who may invoke them."
+        },
+        {
+          "id": "deconfliction",
+          "type": "markdown",
+          "label": "Deconfliction & Escalation",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: named contacts, out-of-hours route, and the agreed proof-of-engagement process."
+        },
+        {
+          "id": "limitations",
+          "type": "markdown",
+          "label": "Limitations",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what constrained the test — time, scope, availability, a control that could not be tested safely. State these plainly; they bound the conclusions."
+        }
+      ]
+    },
+    {
+      "id": "methodology",
+      "label": "Methodology",
+      "fields": [
+        {
+          "id": "approach",
+          "type": "markdown",
+          "label": "Approach",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the phases run and why, mapped to a recognised framework (PTES, OSSTMM, MITRE ATT&CK, TIBER-EU)."
+        },
+        {
+          "id": "threat_model",
+          "type": "markdown",
+          "label": "Threat Model Emulated",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the actor whose behaviour was emulated and the reason that profile was chosen."
+        },
+        {
+          "id": "tooling",
+          "type": "markdown",
+          "label": "Tooling",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: significant tooling, and anything custom-built for this engagement."
+        }
+      ]
+    },
+    {
+      "id": "recon",
+      "label": "Reconnaissance & OSINT",
+      "fields": [
+        {
+          "id": "recon_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what an attacker can learn before touching anything, and what it enabled here."
+        },
+        {
+          "id": "attack_surface",
+          "type": "markdown",
+          "label": "External Attack Surface",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: domains, hosts and services discovered, including what was not in the client's inventory."
+        },
+        {
+          "id": "credential_exposure",
+          "type": "markdown",
+          "label": "Credential & Data Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: breach corpora, infostealer logs, repositories, document metadata."
+        },
+        {
+          "id": "personnel_exposure",
+          "type": "markdown",
+          "label": "Personnel Exposure",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the staff detail that made the pretexts credible, and where it came from."
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "label": "Social Engineering",
+      "fields": [
+        {
+          "id": "social_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: campaigns run, what they asked for, and what they got."
+        },
+        {
+          "id": "pretexts",
+          "type": "markdown",
+          "label": "Pretexts Used",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: each pretext, the channel, and why it was chosen for that audience."
+        },
+        {
+          "id": "campaigns",
+          "type": "list",
+          "label": "Campaign Results",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "campaign",
+            "type": "object",
+            "label": "Campaign",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Campaign",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "channel",
+                "type": "combobox",
+                "label": "Channel",
+                "origin": "custom",
+                "required": false,
+                "default": "Email",
+                "suggestions": [
+                  "Email",
+                  "SMS",
+                  "Voice",
+                  "In person",
+                  "Chat",
+                  "Physical media"
+                ]
+              },
+              {
+                "id": "targets",
+                "type": "string",
+                "label": "Targets",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "interacted",
+                "type": "string",
+                "label": "Interacted",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "credentials",
+                "type": "string",
+                "label": "Credentials Given",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "reported",
+                "type": "string",
+                "label": "Reported",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "time_to_first_report",
+                "type": "string",
+                "label": "Time to First Report",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "social_analysis",
+          "type": "markdown",
+          "label": "Analysis",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what the numbers mean. A click rate is not a finding; the reporting rate, the time to report and what happened after the report are."
+        }
+      ]
+    },
+    {
+      "id": "physical",
+      "label": "Physical Assessment",
+      "fields": [
+        {
+          "id": "physical_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: sites attempted, entry achieved, time inside, objectives met."
+        },
+        {
+          "id": "sites",
+          "type": "list",
+          "label": "Sites",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "site",
+            "type": "object",
+            "label": "Site",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "name",
+                "type": "string",
+                "label": "Site",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "address",
+                "type": "string",
+                "label": "Address",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "result",
+                "type": "combobox",
+                "label": "Result",
+                "origin": "custom",
+                "required": false,
+                "default": "Entry achieved",
+                "suggestions": [
+                  "Entry achieved",
+                  "Entry denied",
+                  "Partial",
+                  "Not attempted"
+                ]
+              },
+              {
+                "id": "method",
+                "type": "string",
+                "label": "Entry Method",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "dwell",
+                "type": "string",
+                "label": "Dwell Time",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "challenged",
+                "type": "string",
+                "label": "Challenged?",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "entry_narrative",
+          "type": "markdown",
+          "label": "Entry Narrative",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the route in, step by step, with timestamps and photographs. This is the section the client's facilities team will act on."
+        },
+        {
+          "id": "physical_artefacts",
+          "type": "markdown",
+          "label": "Artefacts Placed & Recovered",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: devices placed, where, what access they gave, and confirmation of recovery."
+        },
+        {
+          "id": "physical_detection",
+          "type": "markdown",
+          "label": "Detection & Response",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: who noticed, when, and what happened next — including nobody noticing."
+        }
+      ]
+    },
+    {
+      "id": "attack_path",
+      "label": "Attack Narrative",
+      "fields": [
+        {
+          "id": "attack_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the chain from first access to objective, in one paragraph."
+        },
+        {
+          "id": "initial_access",
+          "type": "markdown",
+          "label": "Initial Access",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how the first foothold was obtained, with evidence."
+        },
+        {
+          "id": "privilege_escalation",
+          "type": "markdown",
+          "label": "Privilege Escalation",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: local and domain escalation, with the flaw that allowed it."
+        },
+        {
+          "id": "lateral_movement",
+          "type": "markdown",
+          "label": "Lateral Movement",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the hosts traversed and the credentials that made it possible."
+        },
+        {
+          "id": "persistence",
+          "type": "markdown",
+          "label": "Persistence",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: mechanisms established, where, and confirmation of removal."
+        },
+        {
+          "id": "objectives_achieved",
+          "type": "markdown",
+          "label": "Objectives Achieved",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: each objective, achieved or not, with the evidence that proves it."
+        },
+        {
+          "id": "data_accessed",
+          "type": "markdown",
+          "label": "Data Accessed",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what could be reached, what was actually accessed, and how it was handled."
+        }
+      ]
+    },
+    {
+      "id": "detection",
+      "label": "Detection & Response",
+      "fields": [
+        {
+          "id": "detection_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: what the defenders saw, when, and what they did — measured against the activity log."
+        },
+        {
+          "id": "detection_events",
+          "type": "list",
+          "label": "Detection Timeline",
+          "origin": "custom",
+          "required": false,
+          "items": {
+            "id": "event",
+            "type": "object",
+            "label": "Event",
+            "origin": "custom",
+            "properties": [
+              {
+                "id": "time",
+                "type": "string",
+                "label": "Time",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "activity",
+                "type": "string",
+                "label": "Activity",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              },
+              {
+                "id": "detected",
+                "type": "combobox",
+                "label": "Detected",
+                "origin": "custom",
+                "required": false,
+                "default": "No",
+                "suggestions": [
+                  "Yes",
+                  "Partial",
+                  "No"
+                ]
+              },
+              {
+                "id": "response",
+                "type": "string",
+                "label": "Response",
+                "origin": "custom",
+                "required": false,
+                "spellcheck": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "detection_gaps",
+          "type": "markdown",
+          "label": "Gaps",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the techniques that produced no alert, and whether the telemetry existed at all."
+        },
+        {
+          "id": "detection_strengths",
+          "type": "markdown",
+          "label": "What Worked",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: name it. A report that only lists failures gets read as unfair."
+        }
+      ]
+    },
+    {
+      "id": "remediation",
+      "label": "Remediation",
+      "fields": [
+        {
+          "id": "remediation_summary",
+          "type": "markdown",
+          "label": "Summary",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: the shape of the work, not a restatement of every finding."
+        },
+        {
+          "id": "immediate",
+          "type": "markdown",
+          "label": "Immediate (0–7 days)",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO Contain what is currently exploitable."
+        },
+        {
+          "id": "short_term",
+          "type": "markdown",
+          "label": "Short Term (1–4 weeks)",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO Remove the route that was used."
+        },
+        {
+          "id": "medium_term",
+          "type": "markdown",
+          "label": "Medium Term (1–3 months)",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO Remove the class of route."
+        },
+        {
+          "id": "strategic",
+          "type": "markdown",
+          "label": "Strategic",
+          "origin": "custom",
+          "required": false,
+          "default": "* TODO The structural change that makes this engagement hard to repeat."
+        }
+      ]
+    },
+    {
+      "id": "appendix",
+      "label": "Appendices",
+      "fields": [
+        {
+          "id": "appendix_severity",
+          "type": "markdown",
+          "label": "Severity Definitions",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: how severity was assigned."
+        },
+        {
+          "id": "appendix_mitre",
+          "type": "markdown",
+          "label": "MITRE ATT&CK Mapping",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: techniques used, by phase."
+        },
+        {
+          "id": "appendix_iocs",
+          "type": "markdown",
+          "label": "Indicators & Cleanup",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: accounts, files, implants, infrastructure and C2 addresses used, with confirmation of removal. The client needs this to verify the estate is clean."
+        },
+        {
+          "id": "appendix_evidence",
+          "type": "markdown",
+          "label": "Evidence Index",
+          "origin": "custom",
+          "required": false,
+          "default": "TODO: evidence identifiers and where they are held."
+        },
+        {
+          "id": "appendix_extra",
+          "type": "markdown",
+          "label": "Additional Material",
+          "origin": "custom",
+          "required": false,
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "finding_fields": [
+    {
+      "id": "title",
+      "type": "string",
+      "label": "Title",
+      "origin": "core",
+      "default": "TODO Finding Title",
+      "required": true,
+      "spellcheck": false
+    },
+    {
+      "id": "cvss",
+      "type": "cvss",
+      "label": "CVSS",
+      "origin": "predefined",
+      "default": "n/a",
+      "required": true
+    },
+    {
+      "id": "cwe",
+      "type": "cwe",
+      "label": "CWE",
+      "origin": "predefined",
+      "required": false
+    },
+    {
+      "id": "category",
+      "type": "combobox",
+      "label": "Category",
+      "origin": "custom",
+      "required": false,
+      "default": "Infrastructure",
+      "suggestions": [
+        "Application",
+        "Infrastructure",
+        "Active Directory",
+        "Cloud",
+        "Wireless",
+        "Mobile",
+        "Endpoint",
+        "Physical",
+        "Social Engineering",
+        "OSINT",
+        "Process"
+      ]
+    },
+    {
+      "id": "discipline",
+      "type": "combobox",
+      "label": "Discipline",
+      "origin": "custom",
+      "required": false,
+      "default": "red",
+      "suggestions": [
+        "red",
+        "puppet",
+        "osint"
+      ]
+    },
+    {
+      "id": "affected",
+      "type": "string",
+      "label": "Affected Components",
+      "origin": "custom",
+      "required": false,
+      "spellcheck": false
+    },
+    {
+      "id": "summary",
+      "type": "markdown",
+      "label": "Summary",
+      "origin": "custom",
+      "required": true,
+      "default": "TODO: what the issue is, in two sentences."
+    },
+    {
+      "id": "description",
+      "type": "markdown",
+      "label": "Description",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: the issue, why it exists, and what it allows."
+    },
+    {
+      "id": "evidence",
+      "type": "markdown",
+      "label": "Evidence",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: the proof — commands, output, screenshots, timestamps."
+    },
+    {
+      "id": "impact",
+      "type": "markdown",
+      "label": "Impact",
+      "origin": "custom",
+      "required": false,
+      "default": "TODO: the consequence for this client, not in the abstract."
+    },
+    {
+      "id": "recommendation",
+      "type": "markdown",
+      "label": "Recommendation",
+      "origin": "predefined",
+      "required": true,
+      "default": "TODO: what to change, specifically enough to action."
+    },
+    {
+      "id": "effort",
+      "type": "combobox",
+      "label": "Remediation Effort",
+      "origin": "custom",
+      "required": false,
+      "default": "Medium",
+      "suggestions": [
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    {
+      "id": "references",
+      "type": "list",
+      "label": "References",
+      "origin": "predefined",
+      "required": false,
+      "items": {
+        "id": "",
+        "type": "string",
+        "label": "Reference",
+        "origin": "predefined"
+      }
+    }
+  ],
+  "finding_ordering": [
+    {
+      "field": "cvss",
+      "order": "desc"
+    },
+    {
+      "field": "title",
+      "order": "asc"
+    }
+  ],
+  "report_template": "<div id=\"header-left\" data-sysreptor-generated=\"page-header\">\n  <span id=\"header-mark\">@LOGO_SVG@</span>{{ report.customer_name }}\n</div>\n<div id=\"header-right\" data-sysreptor-generated=\"page-header\">{{ report.engagement_ref }}</div>\n\n<div id=\"footer-left\" data-sysreptor-generated=\"page-footer\">{{ report.classification }}</div>\n<div id=\"footer-center\" data-sysreptor-generated=\"page-footer\">{{ report.title }}</div>\n<div id=\"footer-right\" data-sysreptor-generated=\"page-footer\"></div>\n\n<section id=\"page-cover\" data-sysreptor-generated=\"page-cover\">\n  <div id=\"page-cover-classification\">{{ report.classification }}</div>\n  <div id=\"page-cover-mark\">@LOGO_SVG@</div>\n  <div id=\"page-cover-wordmark\">AnNIXion</div>\n  <div id=\"page-cover-rule\"></div>\n  <h1 id=\"page-cover-title\">{{ report.title }}</h1>\n  <div id=\"page-cover-subtitle\">{{ report.engagement_type }} &middot; {{ report.customer_name }}</div>\n\n  <div id=\"page-cover-meta\">\n    <table>\n      <tr><td class=\"k\">Reference</td><td>{{ report.engagement_ref }}</td></tr>\n      <tr><td class=\"k\">Execution</td><td>{{ formatDate(report.date_start, 'long') }} &mdash; {{ formatDate(report.date_end, 'long') }}</td></tr>\n      <tr><td class=\"k\">Report Date</td><td>{{ formatDate(report.date_report, 'long') }}</td></tr>\n      <tr><td class=\"k\">Version</td><td>{{ report.report_version }}</td></tr>\n      <tr><td class=\"k\">Handling</td><td>{{ report.classification }}</td></tr>\n    </table>\n  </div>\n</section>\n<pagebreak />\n\n<section>\n  <h1 id=\"confidentiality\" class=\"in-toc numbered\">Confidentiality</h1>\n  <p>\n    This report is issued to {{ report.customer_name }} under the handling marking\n    {{ report.classification }}. It records the result of authorised security testing and\n    describes, in detail, how the organisation's controls were defeated. Treat it as a\n    working attack plan against the client until the findings are closed.\n  </p>\n  <p>\n    Distribution outside the agreed recipients requires the client's written consent.\n    Where this document is shared with a supplier or an auditor, share the findings\n    rather than the narrative sections.\n  </p>\n\n  <div class=\"note\" v-if=\"report.team.length > 0\">\n    <div class=\"label\">Delivered by</div>\n    <table class=\"finding-meta\">\n      <tr v-for=\"member in report.team\"><td class=\"k\">{{ member.role }}</td><td>{{ member.name }} &middot; {{ member.email }}</td></tr>\n    </table>\n  </div>\n\n  <div class=\"note\" v-if=\"report.client_contacts.length > 0\">\n    <div class=\"label\">Client contacts</div>\n    <table class=\"finding-meta\">\n      <tr v-for=\"c in report.client_contacts\"><td class=\"k\">{{ c.role }}</td><td>{{ c.name }} &middot; {{ c.email }}</td></tr>\n    </table>\n  </div>\n  <pagebreak />\n</section>\n\n<table-of-contents id=\"toc\" v-slot=\"tocItems\">\n  <h1>Contents</h1>\n  <ul>\n    <li v-for=\"item in tocItems\" :class=\"'toc-level' + item.level\">\n      <ref :to=\"item.id\" />\n    </li>\n  </ul>\n  <pagebreak />\n</table-of-contents>\n\n<section>\n  <h1 id=\"executive\" class=\"in-toc numbered\">Executive Summary</h1>\n  <markdown :text=\"report.executive_summary\" />\n\n  <h2 id=\"key-judgements\" class=\"in-toc\">Key Judgements</h2>\n  <markdown :text=\"report.key_judgements\" />\n\n  <h2 id=\"business-impact\" class=\"in-toc\">Business Impact</h2>\n  <markdown :text=\"report.business_impact\" />\n\n  <h2 id=\"posture\" class=\"in-toc\">Overall Posture</h2>\n  <p><span class=\"risk-pill risk-bg-critical\">{{ report.posture }}</span></p>\n  <markdown :text=\"report.posture_rationale\" />\n\n  <h2 id=\"findings-overview\" class=\"in-toc\">Findings at a Glance</h2>\n  <table>\n    <thead>\n      <tr>\n        <th style=\"width:3em\" align=\"center\">#</th>\n        <th style=\"width:9em\">Severity</th>\n        <th>Finding</th>\n        <th style=\"width:7em\">Category</th>\n        <th style=\"width:3em\" align=\"center\">Page</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"finding in findings\">\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-finding-number\" /></td>\n        <td :class=\"'risk-bg-' + finding.cvss.level\">\n          <ref :to=\"finding.id\">{{ finding.cvss.score }} {{ lodash.capitalize(finding.cvss.level) }}</ref>\n        </td>\n        <td><ref :to=\"finding.id\">{{ finding.title }}</ref></td>\n        <td>{{ finding.category }}</td>\n        <td align=\"center\"><ref :to=\"finding.id\" class=\"ref-page\" /></td>\n      </tr>\n    </tbody>\n  </table>\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"scope\" class=\"in-toc numbered\">Scope &amp; Rules of Engagement</h1>\n  <h2 id=\"objectives\" class=\"in-toc\">Objectives</h2>\n  <markdown :text=\"report.objectives\" />\n  <h2 id=\"scope-in\" class=\"in-toc\">In Scope</h2>\n  <markdown :text=\"report.scope_in\" />\n  <h2 id=\"scope-out\" class=\"in-toc\">Out of Scope</h2>\n  <markdown :text=\"report.scope_out\" />\n  <h2 id=\"roe\" class=\"in-toc\">Rules of Engagement</h2>\n  <markdown :text=\"report.roe\" />\n  <h2 id=\"deconfliction\" class=\"in-toc\">Deconfliction &amp; Escalation</h2>\n  <markdown :text=\"report.deconfliction\" />\n  <h2 id=\"limitations\" class=\"in-toc\">Limitations</h2>\n  <markdown :text=\"report.limitations\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"methodology\" class=\"in-toc numbered\">Methodology</h1>\n  <markdown :text=\"report.approach\" />\n  <h2 id=\"threat-model\" class=\"in-toc\">Threat Model Emulated</h2>\n  <markdown :text=\"report.threat_model\" />\n  <h2 id=\"tooling\" class=\"in-toc\">Tooling</h2>\n  <markdown :text=\"report.tooling\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"recon\" class=\"in-toc numbered\">Reconnaissance &amp; OSINT</h1>\n  <markdown :text=\"report.recon_summary\" />\n  <h2 id=\"attack-surface\" class=\"in-toc\">External Attack Surface</h2>\n  <markdown :text=\"report.attack_surface\" />\n  <h2 id=\"credential-exposure\" class=\"in-toc\">Credential &amp; Data Exposure</h2>\n  <markdown :text=\"report.credential_exposure\" />\n  <h2 id=\"personnel-exposure\" class=\"in-toc\">Personnel Exposure</h2>\n  <markdown :text=\"report.personnel_exposure\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"social\" class=\"in-toc numbered\">Social Engineering</h1>\n  <markdown :text=\"report.social_summary\" />\n  <h2 id=\"pretexts\" class=\"in-toc\">Pretexts</h2>\n  <markdown :text=\"report.pretexts\" />\n  <h2 id=\"campaign-results\" class=\"in-toc\" v-if=\"report.campaigns.length > 0\">Campaign Results</h2>\n  <table v-if=\"report.campaigns.length > 0\">\n    <thead>\n      <tr><th>Campaign</th><th style=\"width:6em\">Channel</th><th style=\"width:5em\" align=\"center\">Targets</th>\n          <th style=\"width:5em\" align=\"center\">Interacted</th><th style=\"width:6em\" align=\"center\">Credentials</th>\n          <th style=\"width:5em\" align=\"center\">Reported</th><th style=\"width:7em\">First Report</th></tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"c in report.campaigns\">\n        <td>{{ c.name }}</td><td>{{ c.channel }}</td><td align=\"center\">{{ c.targets }}</td>\n        <td align=\"center\">{{ c.interacted }}</td><td align=\"center\">{{ c.credentials }}</td>\n        <td align=\"center\">{{ c.reported }}</td><td>{{ c.time_to_first_report }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"social-analysis\" class=\"in-toc\">Analysis</h2>\n  <markdown :text=\"report.social_analysis\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"physical\" class=\"in-toc numbered\">Physical Assessment</h1>\n  <markdown :text=\"report.physical_summary\" />\n  <table v-if=\"report.sites.length > 0\">\n    <thead>\n      <tr><th>Site</th><th style=\"width:8em\">Result</th><th>Entry Method</th>\n          <th style=\"width:6em\">Dwell</th><th style=\"width:6em\">Challenged</th></tr>\n    </thead>\n    <tbody>\n      <tr v-for=\"site in report.sites\">\n        <td>{{ site.name }}<br /><span class=\"label\">{{ site.address }}</span></td>\n        <td>{{ site.result }}</td><td>{{ site.method }}</td>\n        <td>{{ site.dwell }}</td><td>{{ site.challenged }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"entry-narrative\" class=\"in-toc\">Entry Narrative</h2>\n  <markdown :text=\"report.entry_narrative\" />\n  <h2 id=\"physical-artefacts\" class=\"in-toc\">Artefacts Placed &amp; Recovered</h2>\n  <markdown :text=\"report.physical_artefacts\" />\n  <h2 id=\"physical-detection\" class=\"in-toc\">Detection &amp; Response</h2>\n  <markdown :text=\"report.physical_detection\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"attack-path\" class=\"in-toc numbered\">Attack Narrative</h1>\n  <markdown :text=\"report.attack_summary\" />\n  <h2 id=\"initial-access\" class=\"in-toc\">Initial Access</h2>\n  <markdown :text=\"report.initial_access\" />\n  <h2 id=\"privilege-escalation\" class=\"in-toc\">Privilege Escalation</h2>\n  <markdown :text=\"report.privilege_escalation\" />\n  <h2 id=\"lateral-movement\" class=\"in-toc\">Lateral Movement</h2>\n  <markdown :text=\"report.lateral_movement\" />\n  <h2 id=\"persistence\" class=\"in-toc\">Persistence</h2>\n  <markdown :text=\"report.persistence\" />\n  <h2 id=\"objectives-achieved\" class=\"in-toc\">Objectives Achieved</h2>\n  <markdown :text=\"report.objectives_achieved\" />\n  <h2 id=\"data-accessed\" class=\"in-toc\">Data Accessed</h2>\n  <markdown :text=\"report.data_accessed\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"detection\" class=\"in-toc numbered\">Detection &amp; Response</h1>\n  <markdown :text=\"report.detection_summary\" />\n  <table v-if=\"report.detection_events.length > 0\">\n    <thead><tr><th style=\"width:9em\">Time</th><th>Activity</th><th style=\"width:6em\">Detected</th><th>Response</th></tr></thead>\n    <tbody>\n      <tr v-for=\"e in report.detection_events\">\n        <td>{{ e.time }}</td><td>{{ e.activity }}</td><td>{{ e.detected }}</td><td>{{ e.response }}</td>\n      </tr>\n    </tbody>\n  </table>\n  <h2 id=\"detection-gaps\" class=\"in-toc\">Gaps</h2>\n  <markdown :text=\"report.detection_gaps\" />\n  <h2 id=\"detection-strengths\" class=\"in-toc\">What Worked</h2>\n  <markdown :text=\"report.detection_strengths\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"findings\" class=\"in-toc numbered\">Findings</h1>\n  <div v-for=\"finding in findings\" :id=\"finding.id\">\n    <div class=\"finding-head\">\n      <h2 class=\"in-toc\">{{ finding.title }}</h2>\n    </div>\n    <table class=\"finding-meta\">\n      <tr><td class=\"k\">Severity</td><td><span :class=\"'risk-pill risk-bg-' + finding.cvss.level\">{{ finding.cvss.score }} {{ lodash.capitalize(finding.cvss.level) }}</span></td></tr>\n      <tr><td class=\"k\">Vector</td><td><code>{{ finding.cvss.vector }}</code></td></tr>\n      <tr v-if=\"finding.cwe\"><td class=\"k\">CWE</td><td>{{ finding.cwe }}</td></tr>\n      <tr><td class=\"k\">Category</td><td>{{ finding.category }} &middot; {{ finding.discipline }}</td></tr>\n      <tr v-if=\"finding.affected\"><td class=\"k\">Affected</td><td>{{ finding.affected }}</td></tr>\n      <tr><td class=\"k\">Effort</td><td>{{ finding.effort }}</td></tr>\n    </table>\n\n    <markdown :text=\"finding.summary\" />\n    <h3>Description</h3>\n    <markdown :text=\"finding.description\" />\n    <h3 v-if=\"finding.evidence\">Evidence</h3>\n    <markdown :text=\"finding.evidence\" />\n    <h3 v-if=\"finding.impact\">Impact</h3>\n    <markdown :text=\"finding.impact\" />\n    <h3>Recommendation</h3>\n    <markdown :text=\"finding.recommendation\" />\n    <div v-if=\"finding.references.length > 0\">\n      <h3>References</h3>\n      <ul><li v-for=\"r in finding.references\">{{ r }}</li></ul>\n    </div>\n    <pagebreak />\n  </div>\n</section>\n\n<section>\n  <h1 id=\"remediation\" class=\"in-toc numbered\">Remediation</h1>\n  <markdown :text=\"report.remediation_summary\" />\n  <h2 id=\"immediate\" class=\"in-toc\">Immediate (0&ndash;7 days)</h2>\n  <markdown :text=\"report.immediate\" />\n  <h2 id=\"short-term\" class=\"in-toc\">Short Term (1&ndash;4 weeks)</h2>\n  <markdown :text=\"report.short_term\" />\n  <h2 id=\"medium-term\" class=\"in-toc\">Medium Term (1&ndash;3 months)</h2>\n  <markdown :text=\"report.medium_term\" />\n  <h2 id=\"strategic\" class=\"in-toc\">Strategic</h2>\n  <markdown :text=\"report.strategic\" />\n  <pagebreak />\n</section>\n\n<section>\n  <h1 id=\"appendix\" class=\"in-toc numbered\">Appendices</h1>\n  <h2 id=\"appendix-severity\" class=\"in-toc\">Severity Definitions</h2>\n  <markdown :text=\"report.appendix_severity\" />\n  <h2 id=\"appendix-mitre\" class=\"in-toc\">MITRE ATT&amp;CK Mapping</h2>\n  <markdown :text=\"report.appendix_mitre\" />\n  <h2 id=\"appendix-iocs\" class=\"in-toc\">Indicators &amp; Cleanup</h2>\n  <markdown :text=\"report.appendix_iocs\" />\n  <h2 id=\"appendix-evidence\" class=\"in-toc\">Evidence Index</h2>\n  <markdown :text=\"report.appendix_evidence\" />\n  <markdown :text=\"report.appendix_extra\" />\n</section>\n",
+  "report_styles": "@import \"/assets/global/base.css\";\n\n:root {\n    /* The conventional CVSS ramp. A reader knows what an orange High means;\n       the house palette does not get to repaint that. */\n    --color-risk-critical: #E8002B;\n    --color-risk-high: #FF9300;\n    --color-risk-medium: #FFC400;\n    --color-risk-low: #4285F5;\n    --color-risk-info: #00AE51;\n\n    /* AnNIXion */\n    --annixion-red: #FF0033;\n    --annixion-ground: #0E0F13;\n    --annixion-surface: #14171D;\n    --annixion-rule: #2E323D;\n    --annixion-muted: #5C6474;\n    --annixion-ink: #14171D;\n}\n\n@page {\n    size: A4 portrait;\n    margin: 32mm 18mm 24mm 18mm;\n}\n\n/* The cover is a named page: full bleed, no running header or footer. The\n   page background is what paints to the edge — an element background stops\n   at the margin box. */\n@page page-cover {\n    margin: 0;\n    background-color: var(--annixion-ground);\n    @top-left-corner { content: none !important; }\n    @top-left { content: none !important; }\n    @top-center { content: none !important; }\n    @top-right { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n    @bottom-left { content: none !important; }\n    @bottom-center { content: none !important; }\n    @bottom-right { content: none !important; }\n    @bottom-right-corner { content: none !important; }\n    @top-left-corner { content: none !important; }\n    @top-right-corner { content: none !important; }\n    @bottom-left-corner { content: none !important; }\n}\n\nhtml {\n    font-family: \"Noto Sans\", sans-serif;\n    font-size: 10pt;\n    color: var(--annixion-ink);\n    -weasy-hyphens: auto;\n}\n\np { text-align: justify; text-align-last: start; }\na { color: var(--annixion-red); text-decoration: none; border-bottom: 0.5pt solid var(--annixion-red); }\n\n/* ── Headings: a red rule above the number, labels in mono ─────────────── */\nh1, h2, h3, h4, h5, h6 { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; color: var(--annixion-ink); font-weight: 700; }\nh1 {\n    font-size: 15pt;\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n    letter-spacing: -0.02em;\n}\nh2 { font-size: 12pt; margin-top: 6mm; }\nh3 { font-size: 10.5pt; color: #3A4050; margin-top: 4mm; }\nh4 { font-size: 10pt; color: var(--annixion-muted); }\n\n/* ── Page furniture ────────────────────────────────────────────────────── */\n/* Each piece is pulled out of the flow and placed in a page margin box. The\n   borders on the boxes are what draw the rules across the page. */\n#header-left { position: running(header-left); }\n#header-right { position: running(header-right); }\n#footer-left { position: running(footer-left); }\n#footer-center { position: running(footer-center); }\n#footer-right { position: running(footer-right); }\n\n@page {\n    --furniture: \"JetBrains Mono\", \"Noto Sans Mono\", monospace;\n\n    @top-left {\n        content: element(header-left);\n        white-space: nowrap;\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        text-transform: uppercase;\n        color: #5C6474;\n        vertical-align: bottom;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-right {\n        content: element(header-right);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #5C6474;\n        vertical-align: bottom;\n        text-align: right;\n        padding-bottom: 2mm;\n        border-bottom: 0.5pt solid #2E323D;\n    }\n    @top-center { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-left-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n    @top-right-corner { content: \" \"; border-bottom: 0.5pt solid #2E323D; }\n\n    @bottom-left {\n        content: element(footer-left);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.1em;\n        color: #FF0033;\n        vertical-align: top;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-center {\n        content: element(footer-center);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        letter-spacing: 0.06em;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: center;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-right {\n        content: counter(page) \" / \" counter(pages);\n        font-family: var(--furniture);\n        font-size: 7pt;\n        color: #5C6474;\n        vertical-align: top;\n        text-align: right;\n        padding-top: 2mm;\n        border-top: 0.5pt solid #2E323D;\n    }\n    @bottom-left-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n    @bottom-right-corner { content: \" \"; border-top: 0.5pt solid #2E323D; }\n}\n\n#header-mark { display: inline-block; height: 3.5mm; width: 3.5mm; margin-right: 1.5mm; }\n#header-mark svg { width: 3.5mm; height: 3.5mm; display: inline-block; vertical-align: middle; }\n\n/* ── Cover ─────────────────────────────────────────────────────────────── */\n/* This is what binds the section to the named page above; without it the\n   cover inherits the body page and keeps the header, footer and margins. */\n#page-cover { page: page-cover; }\n\n#page-cover {\n    background-color: var(--annixion-ground);\n    color: #DFE4EA;\n    height: 297mm;\n    padding: 28mm 22mm;\n    box-sizing: border-box;\n    position: relative;\n}\n#page-cover-mark { display: block; width: 24mm; height: 24mm; }\n#page-cover-mark svg { width: 24mm; height: 24mm; display: block; }\n#header-mark svg { width: 4mm; height: 4mm; display: inline-block; vertical-align: middle; }\n#page-cover-wordmark {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 13pt;\n    letter-spacing: 0.42em;\n    text-transform: uppercase;\n    margin-top: 6mm;\n    color: #DFE4EA;\n}\n#page-cover-rule { width: 32mm; border-top: 2pt solid var(--annixion-red); margin: 10mm 0; }\n#page-cover-title {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 26pt;\n    line-height: 1.15;\n    letter-spacing: -0.03em;\n    font-weight: 700;\n    color: #FFFFFF;\n    margin: 0;\n    border: none;\n    padding: 0;\n}\n#page-cover-subtitle { font-size: 12pt; color: var(--annixion-red); margin-top: 4mm; font-family: \"JetBrains Mono\", monospace; letter-spacing: 0.08em; }\n#page-cover-meta {\n    position: absolute;\n    bottom: 28mm;\n    left: 22mm;\n    right: 22mm;\n    font-size: 9pt;\n    border-top: 0.5pt solid var(--annixion-rule);\n    padding-top: 5mm;\n}\n#page-cover-meta table { width: 100%; border: none; }\n#page-cover-meta tr td, #page-cover-meta tr:nth-child(even) td {\n    border: none;\n    padding: 1mm 0;\n    color: #DFE4EA;\n    background: none;\n}\n#page-cover-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 38mm;\n}\n#page-cover-classification {\n    position: absolute;\n    top: 14mm;\n    right: 22mm;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.18em;\n    color: var(--annixion-red);\n    border: 0.75pt solid var(--annixion-red);\n    padding: 1.5mm 3mm;\n}\n\n/* ── Table of contents ─────────────────────────────────────────────────── */\n#toc li { list-style: none; margin: 1.2mm 0; }\n#toc .toc-level1 { font-weight: 700; font-family: \"JetBrains Mono\", monospace; font-size: 9.5pt; }\n#toc .toc-level2 { margin-left: 6mm; }\n#toc .toc-level3 { margin-left: 12mm; color: var(--annixion-muted); }\n#toc a { border: none; color: var(--annixion-ink); }\n#toc .ref-page::before { content: target-counter(attr(href), page); float: right; font-family: \"JetBrains Mono\", monospace; }\n\n/* ── Tables ────────────────────────────────────────────────────────────── */\ntable { width: 100%; border-collapse: collapse; font-size: 9pt; }\nth {\n    background-color: var(--annixion-surface);\n    color: #DFE4EA;\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    text-align: left;\n    padding: 2mm;\n}\ntd { border-bottom: 0.5pt solid #D8DCE3; padding: 2mm; vertical-align: top; }\ntr:nth-child(even) td { background-color: #F6F7F9; }\n\n/* ── Findings ──────────────────────────────────────────────────────────── */\n.finding-head {\n    border-top: 2pt solid var(--annixion-red);\n    padding-top: 3mm;\n    margin-top: 8mm;\n}\n.finding-meta { width: 100%; margin: 3mm 0 5mm 0; font-size: 8.5pt; }\n.finding-meta td { border: none; padding: 1mm 2mm 1mm 0; }\n.finding-meta td.k {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n    width: 30mm;\n}\n.risk-pill {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 8pt;\n    letter-spacing: 0.1em;\n    text-transform: uppercase;\n    color: #FFFFFF;\n    padding: 0.8mm 2.5mm;\n}\n.risk-bg-critical { background-color: var(--color-risk-critical); color: #FFFFFF; }\n.risk-bg-high { background-color: var(--color-risk-high); color: #14171D; }\n.risk-bg-medium { background-color: var(--color-risk-medium); color: #14171D; }\n.risk-bg-low { background-color: var(--color-risk-low); color: #FFFFFF; }\n.risk-bg-info { background-color: var(--color-risk-info); color: #FFFFFF; }\n\n/* ── Callouts ──────────────────────────────────────────────────────────── */\n#page-cover a { border: none; color: #DFE4EA; }\n\n.note {\n    border-left: 2pt solid var(--annixion-red);\n    background-color: #F6F7F9;\n    padding: 3mm 4mm;\n    margin: 4mm 0;\n}\n.label {\n    font-family: \"JetBrains Mono\", monospace;\n    font-size: 7.5pt;\n    letter-spacing: 0.12em;\n    text-transform: uppercase;\n    color: var(--annixion-muted);\n}\npre, code { font-family: \"JetBrains Mono\", \"Noto Sans Mono\", monospace; font-size: 8.5pt; }\npre { background-color: var(--annixion-surface); color: #DFE4EA; padding: 3mm; border-radius: 0; }\nblockquote { border-left: 2pt solid var(--annixion-rule); margin-left: 0; padding-left: 4mm; color: #3A4050; }\n",
+  "report_preview_data": {
+    "report": {
+      "title": "Red Team Engagement Report",
+      "customer_name": "Northwind Trading Ltd",
+      "engagement_ref": "ANX-0042",
+      "engagement_type": "Red Team",
+      "classification": "TLP:AMBER+STRICT",
+      "date_start": "2026-09-07",
+      "date_end": "2026-09-25",
+      "date_report": "2026-10-02",
+      "report_version": "1.0",
+      "posture": "Developing",
+      "team": [
+        {
+          "name": "Operator",
+          "role": "Lead",
+          "email": "lead@example.com"
+        }
+      ],
+      "client_contacts": [
+        {
+          "name": "A. Client",
+          "role": "CISO",
+          "email": "ciso@example.com"
+        }
+      ],
+      "campaigns": [
+        {
+          "name": "Invoice pretext",
+          "channel": "Email",
+          "targets": "180",
+          "interacted": "41",
+          "credentials": "17",
+          "reported": "6",
+          "time_to_first_report": "34 min"
+        }
+      ],
+      "sites": [
+        {
+          "name": "Head Office",
+          "address": "1 Example Street",
+          "result": "Entry achieved",
+          "method": "Tailgate at smoking door",
+          "dwell": "2h 10m",
+          "challenged": "No"
+        }
+      ],
+      "detection_events": [
+        {
+          "time": "2026-09-12 02:14",
+          "activity": "Kerberoasting",
+          "detected": "No",
+          "response": "None"
+        }
+      ]
+    },
+    "findings": [
+      {
+        "title": "Shared local administrator password across the estate",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "category": "Active Directory",
+        "discipline": "red",
+        "effort": "Medium",
+        "affected": "All Windows workstations",
+        "summary": "One local administrator password was shared by every workstation.",
+        "description": "Recovered from the first host and reused across the estate.",
+        "evidence": "`secretsdump.py` output withheld from this preview.",
+        "impact": "One workstation compromise became estate-wide administrative access.",
+        "recommendation": "Deploy LAPS so each host holds a unique rotated password.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1078/003/"
+        ]
+      }
+    ]
+  },
+  "assets": [],
+  "default_notes": []
+}

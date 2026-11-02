@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "9dc8c6d4-a389-563c-bb76-5070d2a59ee6",
+  "tags": [
+    "red",
+    "physical",
+    "wireless"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "67c41206-48a0-5492-a213-2aab28b3c6dd",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Wireless Coverage Extends Beyond the Premises",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "Corporate wireless was usable well beyond the building — in the car park, the street and neighbouring premises — extending the attack surface to anyone who can park nearby, without ever entering the site.\n",
+        "description": "Radio does not respect the perimeter. Access points placed for coverage rather than containment routinely reach the car park and the floor above and below in shared buildings, which means an attacker gets unlimited time, from a car, with no exposure to the physical controls.\n\nThat time is what makes the attack practical: capturing a handshake, standing up an evil twin and waiting for a client to associate, or simply retrying authentication all day, are all comfortable from a vehicle.\n\nGuest networks extend it further — frequently stronger than they need to be, sometimes bridged to internal resources, and usually not monitored at all.\n",
+        "recommendation": "* Survey from outside the building and shape coverage with placement and transmit power so it serves the premises rather than the street.\n* Use enterprise authentication with certificates, so range matters less.\n* Deploy wireless intrusion detection, and alert on rogue access points advertising your network names.\n* Isolate guest wireless to internet-only with client isolation, and review its coverage too.\n",
+        "short_recommendation": "Shape coverage to the premises and assume the car park is in range.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1557/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

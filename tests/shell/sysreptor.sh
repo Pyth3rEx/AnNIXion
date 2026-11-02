@@ -102,12 +102,30 @@ case "$1 $2" in
   "compose -f")
     # BIND_PORT is how the wrapper publishes the UI; record what compose saw.
     printf 'BIND_PORT=%s\n' "${BIND_PORT:-<unset>}" >>"$log"
-    # An import, or a script piped into `manage.py shell`, reads its input on
-    # stdin; drain it so the writer on the other end of the pipe never sees a
-    # broken one (set -e on the wrapper turns that SIGPIPE into a silent,
-    # confusing abort, with nothing of this printed yet).
-    if [[ "$*" == *importdemodata* ]] || [[ "$*" == *"manage.py shell"* ]]; then
-      cat >/dev/null
+    names="${DOCKER_STUB_NAMES:-/dev/null}"
+    if [[ "$*" == *importdemodata* ]]; then
+      # Behave like the database the wrapper is reconciling against: remember
+      # the names the pack carried, so a later query answers the way an
+      # instance that already holds them would. Without this the stub would
+      # report an empty instance for ever and every run would re-import.
+      kind=$(printf '%s' "$*" | sed -n 's/.*--type=\([a-z]*\).*/\1/p')
+      tmp=$(mktemp)
+      cat >"$tmp"
+      if [ -s "$tmp" ] && [ -n "${DOCKER_STUB_SYNC:-}" ]; then
+        python3 "$DOCKER_STUB_SYNC" names "$tmp" "$kind" 2>/dev/null |
+          sed "s/^/$kind:/" >>"$names"
+      fi
+      rm -f "$tmp"
+      exit 0
+    fi
+    if [[ "$*" == *"manage.py shell"* ]]; then
+      script=$(cat)
+      if [[ "$script" == *__ANNIXION_NAMES__* ]]; then
+        printf '__ANNIXION_NAMES_BEGIN__\n'
+        [ -f "$names" ] && cat "$names"
+        printf '__ANNIXION_NAMES_END__\n'
+      fi
+      exit 0
     fi
     exit 0
     ;;
@@ -123,6 +141,8 @@ drive() {
   shift
   HOME="$home" XDG_DATA_HOME="$home/.local/share" \
     DOCKER_STUB_LOG="$home/docker.log" PATH="$stub:$PATH" \
+    DOCKER_STUB_NAMES="$home/instance-names" \
+    DOCKER_STUB_SYNC="$ROOT/scripts/sysreptor-sync.py" \
     ANNIXION_SYSREPTOR_CONF="$home/sysreptor.conf" \
     "$bin" "$@" 2>&1
 }
@@ -209,6 +229,273 @@ report "$(grep -q '^SECRET_KEY=' "$plainenv" && echo 0 || echo 1)" \
   "--no-encryption still writes a Django secret" "no SECRET_KEY in app.env"
 
 
+
+# ── The report designs ship in the package ─────────────────────────────────
+# Only the in-repo, no-fetch AnNIXion packs ship by default now — HTB/OffSec
+# are opt-in through extraDesigns (see the fixture-based test further down).
+packs="$out/share/sysreptor/designs"
+for pack in design-annixion template-annixion; do
+  report "$([ -f "$packs/$pack.tar.gz" ] && echo 0 || echo 1)" \
+    "the $pack pack is bundled" "no $packs/$pack.tar.gz"
+done
+
+# SysReptor's importer resolves an asset by its exact member name,
+# `<document-id>-assets/<name>`, so an archive that writes `./` in front of
+# every name imports the JSON and then dies on the first logo. That traceback
+# only appears against a running instance, which is why the archives
+# themselves are read here the way the importer reads them.
+unresolved_assets() {
+  python3 - "$@" <<'ASSETS'
+import json, sys, tarfile
+from pathlib import Path
+
+for pack in sys.argv[1:]:
+    with tarfile.open(pack) as tar:
+        docs = [m.name for m in tar.getmembers()
+                if m.isfile() and Path(m.name).match('*.json')
+                and not Path(m.name).parent.parts]
+        if not docs:
+            print('%s: the importer reads no documents from it' % Path(pack).name)
+        for member in docs:
+            doc = json.load(tar.extractfile(member))
+            for key, suffix in (('assets', '-assets'), ('images', '-images'),
+                                ('files', '-files')):
+                for entry in doc.get(key) or []:
+                    name = entry.get('name_internal') or entry.get('name')
+                    if not name:
+                        continue
+                    path = '%s%s/%s' % (doc['id'], suffix, name)
+                    try:
+                        tar.getmember(path)
+                    except KeyError:
+                        print('%s: %s' % (Path(pack).name, path))
+ASSETS
+}
+
+unresolved=$(unresolved_assets "$packs"/*.tar.gz)
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "every asset a pack references resolves where the importer looks" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+# The wrapper pipes a filtered archive rather than the pack, so the filter has
+# to carry a document's assets along with it or the import fails the same way.
+: >"$TMP/have-none"
+python3 "$ROOT/scripts/sysreptor-sync.py" filter \
+  "$packs/design-annixion.tar.gz" design "$TMP/have-none" "$TMP/filtered.tar.gz" \
+  2>"$TMP/filtered.names"
+unresolved=$(unresolved_assets "$TMP/filtered.tar.gz")
+report "$([ -z "$unresolved" ] && echo 0 || echo 1)" \
+  "and the filtered archive carries them with the design" \
+  "unresolvable: $(tr '\n' ' ' <<<"$unresolved" | head -c 300)"
+
+allnames=$(python3 "$ROOT/scripts/sysreptor-sync.py" names \
+  "$packs/design-annixion.tar.gz" design | wc -l)
+kept=$(wc -l <"$TMP/filtered.names")
+report "$([ "$kept" -eq "$allnames" ] && [ "$kept" -gt 0 ] && echo 0 || echo 1)" \
+  "an instance holding nothing is missing the whole pack" \
+  "kept $kept of $allnames designs"
+
+# A finding template is validated against the union of the custom finding
+# fields of every design in the instance, and the first definition of an id
+# wins — so an id shared with another design that shapes it differently makes
+# the whole library unimportable. Nothing built-in collides today (there is
+# nothing else built-in to collide with); the fixture-based HTB test below
+# exercises extraDesigns against the same check.
+clash=$(python3 - "$ROOT/assets/sysreptor/designs" "$packs" <<'CLASH'
+import glob, json, os, sys, tarfile
+
+ours_dir, packs = sys.argv[1], sys.argv[2]
+
+
+def shape(f):
+    items = f.get('items') or {}
+    sub = sorted(p['id'] for p in (items.get('properties') or []) if p.get('id'))
+    return '%s%s' % (f.get('type'), sub or '')
+
+
+def fields(doc):
+    return {f['id']: shape(f) for f in doc.get('finding_fields') or []
+            if isinstance(f, dict) and f.get('id')}
+
+
+ours = {}
+for path in sorted(glob.glob(os.path.join(ours_dir, '*.json'))):
+    ours.update(fields(json.load(open(path))))
+
+for pack in sorted(glob.glob(os.path.join(packs, 'design-*.tar.gz'))):
+    if 'annixion' in os.path.basename(pack):
+        continue
+    with tarfile.open(pack) as tar:
+        for m in tar.getmembers():
+            if not (m.isfile() and m.name.endswith('.json')):
+                continue
+            if '/' in m.name.removeprefix('./'):
+                continue
+            doc = json.load(tar.extractfile(m))
+            for fid, sh in fields(doc).items():
+                if fid in ours and ours[fid] != sh:
+                    print('%s in %s: %s vs ours %s'
+                          % (fid, doc.get('name'), sh, ours[fid]))
+CLASH
+)
+report "$([ -z "$clash" ] && echo 0 || echo 1)" \
+  "no finding field id is shaped one way here and another upstream" \
+  "$(tr '\n' ' ' <<<"$clash" | head -c 300)"
+
+# ── This distribution's own template library ───────────────────────────────
+# Built from assets/sysreptor/templates, so a template added there has to
+# reach the pack — and the physical and social-engineering findings are the
+# half no upstream library ships.
+mkdir -p "$TMP/own"
+tar xzf "$packs/template-annixion.tar.gz" -C "$TMP/own" 2>/dev/null
+chmod -R u+w "$TMP/own"
+nown=$(find "$TMP/own" -maxdepth 1 -name '*.json' | wc -l)
+nsrc=$(find "$ROOT/assets/sysreptor/templates" -maxdepth 1 -name '*.json' | wc -l)
+report "$([ "$nown" -eq "$nsrc" ] && echo 0 || echo 1)" \
+  "every authored template reaches the pack" \
+  "$nsrc under assets/, $nown in the archive"
+report "$([ "$nown" -ge 100 ] && echo 0 || echo 1)" \
+  "the library is an extensive one" "only $nown templates"
+
+# Each discipline present so far has to be covered in depth, not just
+# represented: an area with three templates in it is a gap wearing a tag.
+# `malware` is not one of them yet — that tag arrives with the malware
+# design, further up the stack.
+for tag in red puppet osint; do
+  n=$(grep -l "\"$tag\"" "$TMP"/own/*.json | wc -l)
+  report "$([ "$n" -ge 20 ] && echo 0 || echo 1)" \
+    "the $tag discipline is covered in depth" "only $n templates tagged $tag"
+done
+for tag in physical social; do
+  n=$(grep -l "\"$tag\"" "$TMP"/own/*.json | wc -l)
+  report "$([ "$n" -ge 15 ] && echo 0 || echo 1)" \
+    "the $tag area is covered in depth" "only $n templates tagged $tag"
+done
+
+owntitles=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort -u)
+for want in "Tailgating" "Badge" "Phishing" "SQL Injection" "Kerberoast" "Cloud Storage" \
+            "Subdomain Takeover" "Look-Alike" "QR Code" "Key and Lock" "Disposal" "Insider"; do
+  report "$(grep -qi "$want" <<<"$owntitles" && echo 0 || echo 1)" \
+    "the library covers: $want" "no template title matches '$want'"
+done
+
+# The tri-split the browser profiles already use. A template with none of
+# these is uncategorised in a UI that filters by tag.
+untagged=0
+for f in "$TMP"/own/*.json; do
+  grep -qE '"(red|puppet|osint|malware|process)"' "$f" || untagged=$((untagged + 1))
+done
+report "$([ "$untagged" -eq 0 ] && echo 0 || echo 1)" \
+  "every template carries a discipline tag" "$untagged are untagged"
+report "$(grep -lq '"puppet"' "$TMP"/own/*.json && echo 0 || echo 1)" \
+  "the social-engineering findings are tagged puppet" "no puppet-tagged template"
+
+# Duplicate titles are the complaint this guards against: two templates for
+# one finding means the operator picks between them in the UI every time.
+dupes=$(grep -ho '"title": "[^"]*"' "$TMP"/own/*.json | sort | uniq -d)
+report "$([ -z "$dupes" ] && echo 0 || echo 1)" \
+  "no two templates share a title" "duplicated: $(tr '\n' ' ' <<<"$dupes")"
+
+# Deterministic ids: a re-import must update a template, not clone it.
+dupids=$(grep -ho '"id": "[^"]*"' "$TMP"/own/*.json | sort | uniq -d | wc -l)
+report "$([ "$dupids" -eq 0 ] && echo 0 || echo 1)" \
+  "template ids are unique" "$dupids ids appear twice"
+
+# ── The distribution's own report designs ──────────────────────────────────
+# A design is a field definition plus a Vue template; both fail at render
+# time, in front of a client, so what is asserted here is that the two agree
+# and that the mark really is the one catalog/logo.nix draws. The malware
+# design joins this pack further up the stack.
+mkdir -p "$TMP/designs"
+tar xzf "$packs/design-annixion.tar.gz" -C "$TMP/designs" 2>/dev/null
+chmod -R u+w "$TMP/designs"
+ndesign=$(find "$TMP/designs" -maxdepth 1 -name '*.json' | wc -l)
+report "$([ "$ndesign" -eq 3 ] && echo 0 || echo 1)" \
+  "the three AnNIXion designs built so far are packed" "found $ndesign"
+
+for d in engagement osint influence; do
+  f="$TMP/designs/annixion-$d.json"
+  report "$([ -f "$f" ] && echo 0 || echo 1)" "the $d design is present" "no annixion-$d.json"
+  [ -f "$f" ] || continue
+  out=$(python3 -c "
+import json, re, sys
+d = json.load(open(sys.argv[1]))
+t = d['report_template']
+declared = {fl['id'] for s in d['report_sections'] for fl in s['fields']}
+used = set(re.findall(r'report\.([a-z_]+)', t))
+fdeclared = {fl['id'] for fl in d['finding_fields']} | {'id'}
+fused = set(re.findall(r'finding\.([a-z_]+)', t))
+print('fields=%d sections=%d missing=%s fmissing=%s placeholder=%s svg=%d'
+      % (sum(len(s['fields']) for s in d['report_sections']), len(d['report_sections']),
+         ','.join(sorted(used - declared)) or 'none',
+         ','.join(sorted(fused - fdeclared)) or 'none',
+         '@LOGO_SVG@' in t, t.count('<svg')))
+" "$f" 2>/dev/null)
+  report "$(grep -q 'missing=none' <<<"$out" && echo 0 || echo 1)" \
+    "the $d template references only declared fields" "$out"
+  report "$(grep -q 'fmissing=none' <<<"$out" && echo 0 || echo 1)" \
+    "and only declared finding fields" "$out"
+  report "$(grep -q 'placeholder=False' <<<"$out" && echo 0 || echo 1)" \
+    "the $d design has its logo substituted" "$out"
+  report "$(grep -q 'svg=2' <<<"$out" && echo 0 || echo 1)" \
+    "the $d design carries the mark on cover and header" "$out"
+  # The mark goes inside a JSON string; a double quote in it breaks the file.
+  report "$(python3 -c "
+import json, re, sys
+t = json.load(open(sys.argv[1]))['report_template']
+sys.exit(0 if '\"' not in re.search(r'<svg.*?</svg>', t, re.S).group(0) else 1)
+" "$f" 2>/dev/null && echo 0 || echo 1)" \
+    "the $d inline mark carries no double quotes" "it would break the JSON"
+done
+
+# The engagement design is the one that has to cover a whole engagement.
+engsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$ROOT/assets/sysreptor/designs/annixion-engagement.json" 2>/dev/null)
+missing_sections=""
+for want in recon social physical attack_path detection remediation; do
+  grep -qw "$want" <<<"$engsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the engagement design covers every phase" "no section for:$missing_sections"
+
+osintsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$ROOT/assets/sysreptor/designs/annixion-osint.json" 2>/dev/null)
+missing_sections=""
+for want in tasking methodology subject footprint exposure people assessment; do
+  grep -qw "$want" <<<"$osintsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the OSINT design is an intelligence product" "no section for:$missing_sections"
+
+# The influence design makes claims about who is behind coordinated activity.
+# Competing hypotheses and the persona record are not decoration: without the
+# first it is an accusation, and without the second the collection cannot be
+# defended.
+inflsections=$(python3 -c "
+import json, sys
+print(' '.join(s['id'] for s in json.load(open(sys.argv[1]))['report_sections']))
+" "$ROOT/assets/sysreptor/designs/annixion-influence.json" 2>/dev/null)
+missing_sections=""
+for want in tasking methodology campaign network reach attribution response; do
+  grep -qw "$want" <<<"$inflsections" || missing_sections="$missing_sections $want"
+done
+report "$([ -z "$missing_sections" ] && echo 0 || echo 1)" \
+  "the influence design covers the campaign end to end" "no section for:$missing_sections"
+
+inflfields=$(python3 -c "
+import json, sys
+d = json.load(open(sys.argv[1]))
+print(' '.join(f['id'] for s in d['report_sections'] for f in s['fields']))
+" "$ROOT/assets/sysreptor/designs/annixion-influence.json" 2>/dev/null)
+for want in hypotheses alternative_explanation attribution_caveats personas persona_opsec legal_basis; do
+  report "$(grep -qw "$want" <<<"$inflfields" && echo 0 || echo 1)" \
+    "the influence design records: $want" "no field '$want'"
+done
+
 # ── What the NixOS module writes, and what the wrapper does with it ────────
 etcpath='.environment.etc."annixion/sysreptor.conf".text'
 conf_default=$(nix eval --raw "$CFG$etcpath" 2>/dev/null)
@@ -270,6 +557,52 @@ ports_net=$(nix eval --json ".#nixosConfigurations.AnNIXion-ci" \
 report "$(grep -q '8000' <<<"$ports_net" && echo 0 || echo 1)" \
   "and opens the port in the firewall" "open TCP ports: $ports_net"
 
+
+# ── Plugins and the theme ──────────────────────────────────────────────────
+conf_plugins=$(read_conf ANNIXION_SYSREPTOR_PLUGINS)
+missing_plugins=""
+for plugin in cyberchef checkthehash graphqlvoyager customizetheme markdownexport projectnumber; do
+  grep -q "$plugin" <<<"$conf_plugins" || missing_plugins="$missing_plugins $plugin"
+done
+report "$([ -z "$missing_plugins" ] && echo 0 || echo 1)" \
+  "every community-edition plugin is enabled by default" "not enabled:$missing_plugins"
+# Professional-only plugins would be enabled but inert, and demoplugin is a
+# demonstration of the plugin system rather than a tool.
+report "$(grep -q demoplugin <<<"$conf_plugins" && echo 1 || echo 0)" \
+  "the demo plugin stays out" "demoplugin is enabled"
+
+theme_file=$(read_conf ANNIXION_SYSREPTOR_THEME_FILE)
+report "$([ -n "$theme_file" ] && [ -f "$theme_file" ] && echo 0 || echo 1)" \
+  "the theme is built and referenced" "theme file is ${theme_file:-<unset>}"
+if [ -f "$theme_file" ]; then
+  report "$(python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$theme_file" 2>/dev/null && echo 0 || echo 1)" \
+    "the theme is valid JSON" "the plugin would reject it"
+  ramp=$(python3 -c "
+import json, sys
+c = json.load(open(sys.argv[1]))['all']['colors']
+print(' '.join(c['risk-' + k] for k in ('critical', 'high', 'medium', 'low', 'info')))
+" "$theme_file" 2>/dev/null)
+  report "$([ "${ramp%% *}" = "#FF0033" ] && echo 0 || echo 1)" \
+    "critical is the signature red" "ramp is ${ramp:-<unset>}"
+  # High is orange everywhere a CVSS score is read. A house colour here would
+  # be read as a different severity, which is the one thing a ramp must not do.
+  high=$(cut -d' ' -f2 <<<"$ramp")
+  report "$([ "$high" = "#FF9300" ] && echo 0 || echo 1)" \
+    "high keeps the conventional orange" "high is ${high:-<unset>}"
+  # The logo travels as a data URI, so it must decode to the real mark.
+  logo=$(python3 -c "
+import base64, json, sys
+d = json.load(open(sys.argv[1]))
+u = d['all']['variables']['header-logo-url']
+sys.stdout.write(base64.b64decode(u.split(',', 1)[1]).decode())
+" "$theme_file" 2>/dev/null)
+  report "$(grep -q '<svg' <<<"$logo" && echo 0 || echo 1)" \
+    "the header logo decodes to an SVG" "decoded: $(head -c 80 <<<"$logo")"
+  marksrc=$(grep -o 'd="[^"]*"' "$ROOT/catalog/logo.nix" | head -1)
+  report "$(grep -qF "${marksrc#d=}" <<<"$logo" && echo 0 || echo 1)" \
+    "and it is the launcher's own mark, not a copy" \
+    "catalog/logo.nix and the theme logo have diverged"
+fi
 
 # ── The wrapper reads that file ────────────────────────────────────────────
 # No design/template packs exist yet at this point in the build-up — the
@@ -393,6 +726,105 @@ logins=$(grep -c 'BOOTSTRAP_USERNAME' "$acct/docker.log")
 report "$([ "${logins:-0}" -eq 1 ] && echo 0 || echo 1)" \
   "a later start never re-applies the password" \
   "the bootstrap ran ${logins:-0} time(s) — a UI password change would have been reverted"
+
+# ── Designs import once, and only once ─────────────────────────────────────
+# importdemodata adds a fresh copy of every design in the pack each time it
+# runs, so an `up` that re-imports leaves nine copies after nine starts.
+imp="$TMP/h9"
+mkdir -p "$imp"
+cat >"$imp/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS="annixion"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="no"
+CONF
+
+run_setup "$imp" >/dev/null
+first_import=$(drive "$imp" designs)
+imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
+report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "the annixion designs are imported on the first run" \
+  "importdemodata ran ${imports:-0} time(s): $first_import"
+seen=$(grep -c '^design:' "$imp/instance-names" 2>/dev/null || echo 0)
+report "$([ "${seen:-0}" -ge 3 ] && echo 0 || echo 1)" \
+  "every design in the pack reaches the instance" "the instance holds ${seen:-0}"
+
+drive "$imp" designs >/dev/null
+imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
+report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "a second run imports nothing" "importdemodata ran ${imports:-0} time(s) in total"
+
+drive "$imp" up >/dev/null
+imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
+report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "nor does a later start" "importdemodata ran ${imports:-0} time(s) in total"
+
+# The failure this reconciliation exists for: a pack that gains a design
+# after the instance already imported it. The old gate recorded the pack as
+# done and the new design could never arrive. Drop one name from what the
+# instance reports and the next run must fetch exactly that one back.
+dropped=$(grep '^design:' "$imp/instance-names" | head -1)
+grep -vxF "$dropped" "$imp/instance-names" >"$imp/instance-names.tmp"
+mv "$imp/instance-names.tmp" "$imp/instance-names"
+drive "$imp" designs >/dev/null
+imports=$(grep -c 'importdemodata --type=design' "$imp/docker.log")
+report "$([ "${imports:-0}" -eq 2 ] && echo 0 || echo 1)" \
+  "a design missing from the instance is imported on the next run" \
+  "importdemodata ran ${imports:-0} time(s) in total"
+report "$(grep -qxF "$dropped" "$imp/instance-names" && echo 0 || echo 1)" \
+  "and it is the one that was missing" "'$dropped' did not come back"
+back=$(grep -c "^$dropped\$" "$imp/instance-names")
+report "$([ "${back:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "without duplicating the designs already there" \
+  "'$dropped' is present ${back:-0} time(s)"
+
+# ── extraDesigns: a user-supplied HTB pack, built the same way this repo
+# builds its own, fetching nothing ─────────────────────────────────────────
+# A tiny fixture under tests/fixtures/sysreptor-htb stands in for a real HTB
+# export — the point is proving extraDesigns/pack_path end to end, not
+# re-fetching real HTB content in a test. packCmd is exercised directly;
+# designPack (the network fetch) is what a real user's config would add
+# around it, and is deliberately not exercised here.
+extra_dir=$(nix build --no-link --print-out-paths --impure --expr '
+  let
+    flake = builtins.getFlake (toString ./.);
+    pkgs = flake.nixosConfigurations.AnNIXion-ci.pkgs;
+    packs = import ./catalog/sysreptor-packs.nix { inherit pkgs; };
+  in
+  pkgs.symlinkJoin {
+    name = "sysreptor-extra-packs-fixture";
+    paths = [
+      (packs.packCmd "design-htb" ./tests/fixtures/sysreptor-htb/design)
+      (packs.packCmd "project-htb" ./tests/fixtures/sysreptor-htb/project)
+    ];
+  }
+' 2>"$TMP/extra-dir-err")
+report "$([ -n "$extra_dir" ] && [ -f "$extra_dir/design-htb.tar.gz" ] && [ -f "$extra_dir/project-htb.tar.gz" ] && echo 0 || echo 1)" \
+  "the HTB fixture builds through sysreptor-packs.nix with no network" \
+  "$(tail -n 5 "$TMP/extra-dir-err")"
+
+extra="$TMP/h10"
+mkdir -p "$extra"
+cat >"$extra/sysreptor.conf" <<CONF
+ANNIXION_SYSREPTOR_PORT="$hport"
+ANNIXION_SYSREPTOR_DESIGNS="htb"
+ANNIXION_SYSREPTOR_FINDING_TEMPLATES=""
+ANNIXION_SYSREPTOR_DEMO_PROJECTS="yes"
+ANNIXION_SYSREPTOR_EXTRA_PACKS_DIR="$extra_dir"
+CONF
+run_setup "$extra" >/dev/null
+said=$(drive "$extra" designs 2>&1)
+report "$(grep -q 'importing 1 new document(s) from design-htb' <<<"$said" && echo 0 || echo 1)" \
+  "a design named in extraDesigns resolves through pack_path's fallback" "said: $said"
+imports=$(grep -c 'importdemodata --type=design' "$extra/docker.log")
+report "$([ "${imports:-0}" -eq 1 ] && echo 0 || echo 1)" \
+  "and the fixture design really is imported" "importdemodata ran ${imports:-0} time(s)"
+report "$(grep -q 'importdemodata --type=project' "$extra/docker.log" && echo 0 || echo 1)" \
+  "its example project follows, since demoProjects is on" "no project import ran"
+names=$(grep -c '^design:' "$extra/instance-names" 2>/dev/null || echo 0)
+report "$([ "${names:-0}" -ge 1 ] && echo 0 || echo 1)" \
+  "the fixture design reaches the instance under its own name" \
+  "the instance holds ${names:-0} design name(s)"
 
 echo
 if [ "$fails" -gt 0 ]; then

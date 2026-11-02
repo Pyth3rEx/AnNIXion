@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "ad8ff34d-5bc9-5337-a223-bb0ba07b3821",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "138ed8e9-f341-5ee1-b15f-afdf2cd3e647",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Covert Devices Can Be Placed and Left Undetected",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "A concealed device connected to the internal network during the assessment remained in place and reachable, providing persistent remote access from outside the building without further physical visits.\n",
+        "description": "The purpose of a physical intrusion is rarely the visit itself. A small device — a single-board computer behind a display, an implant in a wall socket, a cellular-connected bridge in a comms cupboard — converts one brief access into continuous remote access that does not depend on the perimeter.\n\nThese devices are built to be unremarkable: they look like ordinary equipment, they connect outbound over cellular or over an allowed protocol, and they generate little traffic. Nothing about them triggers the controls aimed at inbound access.\n\nDetection depends on noticing either the device or its traffic. Both require that somebody is looking, and in most environments nobody is: inventories cover managed assets, and an unmanaged device in a meeting room is not compared against anything.\n",
+        "recommendation": "* Require 802.1X so an unknown device cannot obtain network access by being plugged in.\n* Alert on unrecognised MAC addresses and on unexpected outbound tunnels, particularly long-lived connections from unmanaged endpoints.\n* Include physical inspection of meeting rooms, comms cupboards and public areas in routine security walks, with a checklist of what should be there.\n* Record and verify what equipment is in each room so an addition is detectable.\n* Treat cellular-connected devices specifically, as they bypass network monitoring entirely.\n",
+        "short_recommendation": "Inspect for unknown devices and alert on new endpoints.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

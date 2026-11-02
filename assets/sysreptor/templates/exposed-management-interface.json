@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "5a78abf4-5e45-5653-a294-9ea436d627ae",
+  "tags": [
+    "red",
+    "infrastructure",
+    "external"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "848ae8e9-807a-5e70-814c-c619308b3385",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Administrative Interface Exposed to Untrusted Networks",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "Administrative and remote-access interfaces were reachable from untrusted networks, placing authentication for high-value services directly in front of anyone who can route to them.\n",
+        "description": "Management interfaces assume a trusted network. Exposing them to the internet, or to a general user subnet, removes that assumption while keeping the design decisions that depended on it: permissive defaults, legacy authentication, and slow patch cycles.\n\nExposed RDP and SSH attract continuous credential attacks. Exposed hypervisor, backup, and VPN appliance interfaces are of particular interest because a single flaw there is a path to the whole estate, and because these products have repeatedly carried pre-authentication vulnerabilities that are exploited within days of disclosure.\n\nThe exposure is often unintentional — a firewall rule added for a migration, a cloud security group opened for troubleshooting, or an appliance that listens on all interfaces by default.\n",
+        "recommendation": "* Place management interfaces on a dedicated network reachable only through a bastion or a VPN requiring multi-factor authentication.\n* Review perimeter rules against an inventory of what is intentionally published, and remove temporary rules on a schedule.\n* Require MFA for all administrative access.\n* Monitor the external attack surface continuously rather than at audit time.\n",
+        "short_recommendation": "Restrict management interfaces to an administrative network.",
+        "references": [
+          "https://www.cisa.gov/news-events/alerts"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

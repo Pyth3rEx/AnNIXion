@@ -23,12 +23,45 @@ _: {
         sha256 = "sha256-GZV0QJc4gvOTnawX/YQHt5ZTjOXQ9d4Rh2v0TmqKN30=";
       };
 
-      # Nothing bundled yet — the AnNIXion designs and templates arrive once
-      # assets/sysreptor exists. Keeping the directory present (just empty)
-      # means the wrapper's `packs=` path always resolves to something, and
-      # `pack_path` below simply never finds a built-in pack until then.
+      packs = import ../../sysreptor-packs.nix { pkgs = p; };
+
+      # The launcher's own mark, flattened to one line with single-quoted
+      # attributes so it can be substituted into a JSON string. The drawing is
+      # catalog/logo.nix; only the colour is decided here.
+      logo = import ../../logo.nix { };
+      markSvg =
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='-1.3 -1.3 26.6 26.6'>"
+        + "<g fill='none' stroke='#FF0033' stroke-width='2.3275' stroke-linecap='round' stroke-linejoin='round'>"
+        + builtins.replaceStrings [ "\"" "\n" ] [ "'" " " ] logo.body
+        + "</g></svg>";
+
+      # Ours, from assets/sysreptor — one JSON per finding and per design. The
+      # designs carry the mark inline rather than as an asset file, so it is
+      # substituted from catalog/logo.nix at build time and cannot drift from
+      # the drawing the launcher wears. Single-quoted attributes: the SVG
+      # goes inside a JSON string and must not carry a double quote.
+      preparedDesigns = p.runCommand "sysreptor-designs-annixion-src" { } ''
+        mkdir -p $out
+        cp ${../../../assets/sysreptor/designs}/*.json $out/
+        chmod u+w $out/*.json
+        for f in $out/*.json; do
+          sed -i "s|@LOGO_SVG@|${markSvg}|g" "$f"
+        done
+      '';
+
+      designAnnixion = packs.packCmd "design-annixion" preparedDesigns;
+      templateAnnixion = packs.packCmd "template-annixion" ../../../assets/sysreptor/templates;
+
+      # Named <type>-<pack>: the wrapper reads the type back off the filename
+      # and hands it to `importdemodata --type=`, which takes design, project
+      # or template. Everything else (HTB, OffSec, ...) is opt-in through
+      # annixion.sysreptor.extraDesigns — see sysreptor-packs.nix and
+      # docs/sysreptor.md — and never built here.
       designs = p.runCommand "sysreptor-designs" { } ''
-        mkdir -p $out/share/sysreptor/designs
+        d=$out/share/sysreptor/designs
+        mkdir -p $d
+        ln -s ${designAnnixion}/design-annixion.tar.gz $d/
+        ln -s ${templateAnnixion}/template-annixion.tar.gz $d/
       '';
 
       driver = p.writeShellApplication {

@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "2df354df-8db0-5ef2-8791-580fb5a6d059",
+  "tags": [
+    "osint",
+    "puppet",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "05a11b79-b447-50a5-bb5b-98c089bc3e67",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Supplier Relationships Are Publicly Mapped",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:H/A:N",
+        "summary": "Case studies, press releases, procurement records and shared job postings identified the organisation's suppliers and the systems they support, which is the information an invoice-fraud or supply-chain pretext is built from.\n",
+        "description": "Suppliers are published for good reasons — case studies, certifications, public tenders — and the result is a map of who may legitimately contact the organisation, about what, and with what access.\n\nInvoice fraud follows directly: a message from a near-miss of the supplier's domain, referencing the real project, asking to update bank details. Nothing about it is implausible, because the relationship is real.\n\nThe same map supports access pretexts. A caller claiming to be from the named managed service provider, during an upgrade window announced in a case study, is asking for something the organisation is expecting.\n",
+        "recommendation": "* Treat the detailed supplier list as sensitive; publish case studies without naming the systems involved.\n* Require out-of-band verification for any change to payment details, through a contact of record and never a number from the request.\n* Tell suppliers how you will contact them and how to verify you, so the verification runs both ways.\n* Monitor for look-alike domains of significant suppliers, not only your own.\n",
+        "short_recommendation": "Treat the supplier list as sensitive and verify payment changes out of band.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1591/002/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

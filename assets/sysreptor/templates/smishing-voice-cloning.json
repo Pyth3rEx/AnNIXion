@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "cdcec125-755f-5483-9b18-cb6bd6dda2a7",
+  "tags": [
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "56dae209-9687-597b-9dd4-a7fabf534f15",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Susceptibility to SMS and Synthetic Voice Pretexts",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Pretexts delivered by SMS and by telephone, including synthesised voice resembling a known individual, were acted upon without verification. These channels carry no authentication and are now cheap to forge convincingly.\n",
+        "description": "Text messages and calls are trusted disproportionately, because they feel personal and arrive on a personal device, outside the corporate mail controls that staff associate with risk. Sender identifiers and caller numbers are trivially spoofed.\n\nVoice synthesis has removed the remaining assurance. A short sample of public speech — a conference talk, a podcast, a video posted by the organisation itself — is sufficient to produce a convincing imitation of a named executive, in real time. Recognising a voice is no longer evidence of identity, but people reasonably continue to treat it as such.\n\nThese channels also bypass technical controls entirely, which is why they are increasingly used for the final step of an attack prepared elsewhere: a message confirming the \"IT ticket\" raised by an earlier phishing email, or a call confirming a payment request.\n",
+        "recommendation": "* State as policy that voice and SMS are unauthenticated channels: no instruction received through them is actioned without out-of-band verification.\n* Agree a verification practice for high-value requests — a call back to the number of record, or a challenge phrase for executives and finance.\n* Include synthetic voice and SMS scenarios in awareness exercises, since staff trained only on email do not generalise.\n* Review how much executive voice and video is published, and brief those individuals on their exposure.\n",
+        "short_recommendation": "Treat voice and SMS as unauthenticated; verify out-of-band.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1598/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

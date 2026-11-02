@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "ad9b0f62-7511-5f90-97a7-8d8a8c9e1170",
+  "tags": [
+    "red",
+    "web",
+    "injection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "17895f63-b296-53ad-8234-05673428271c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "OS Command Injection",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "User input reached an operating-system command without being separated from the command syntax, allowing arbitrary commands to run under the account the application runs as. This is the shortest route from a web request to control of the host.\n",
+        "description": "Command injection arises when an application builds a command line as a string and hands it to a shell. Shell metacharacters in the input — `;`, `|`, `&&`, backticks, `$()` — are then interpreted as syntax, and the attacker's command runs alongside the intended one.\n\nFeatures that shell out are a small and predictable set: file conversion, archive handling, imaging, network diagnostics, backup and reporting jobs. Any of them with a filename or hostname from the request is a candidate.\n\nThe result is code execution as the service account, which is the start of the real compromise rather than its end: credentials in the environment and configuration files, access to internal networks, and whatever the account's privileges allow on the host.\n",
+        "recommendation": "* Avoid invoking a shell. Use APIs that take the program and its arguments as an array, so no parsing of metacharacters takes place.\n* Prefer a library that performs the task in-process over calling an external binary.\n* Where a value must reach a command, validate it against a strict allow-list — not a blocklist of dangerous characters.\n* Run the service as an unprivileged account, with the filesystem and network access it needs and no more.\n",
+        "short_recommendation": "Call binaries through argument arrays, never through a shell.",
+        "references": [
+          "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

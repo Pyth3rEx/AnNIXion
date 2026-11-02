@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "3a8dc18d-f6b7-5cf6-9c64-1755a4ec9af6",
+  "tags": [
+    "puppet",
+    "social",
+    "cloud"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "0160a0e5-f096-51a1-8c55-f90f34ef1771",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "OAuth Consent Phishing",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Users could grant third-party applications access to their corporate accounts, and did so when asked by a convincing application. No password is captured in this attack and multi-factor authentication does not impede it: the victim legitimately authorises the attacker's application.\n",
+        "description": "Consent phishing asks for authorisation rather than credentials. The user is shown the identity provider's genuine consent screen — correct domain, correct certificate, their real session — and asked to approve an application requesting access to mail, files or the directory.\n\nBecause the grant is legitimate, it survives a password change and is not affected by MFA. The resulting token continues to work until the grant is revoked, and the application's activity looks like an authorised integration.\n\nApplication names imitate expected tooling — a document viewer, a backup utility, a meeting assistant — and the request is plausible in organisations where staff are used to connecting tools themselves.\n",
+        "recommendation": "* Require administrator approval for third-party application consent, with a request workflow so legitimate needs are met.\n* Restrict consent to publisher-verified applications at minimum.\n* Review existing grants, especially those with mail or directory scopes, and revoke what is unused.\n* Alert on new consent grants and on applications requesting broad scopes.\n",
+        "short_recommendation": "Restrict third-party app consent to administrator approval.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1528/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

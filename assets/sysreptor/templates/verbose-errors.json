@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "c4d6c89f-3ffe-5440-acec-75a12990c836",
+  "tags": [
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f99b3e2e-0091-5d2f-a252-4964fac93ec8",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Information Disclosure Through Verbose Errors",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "Error responses included stack traces, query fragments, framework versions and internal paths. Individually minor, this detail shortens the attacker's reconnaissance considerably and converts blind flaws into directly exploitable ones.\n",
+        "description": "Verbose errors are a reconnaissance gift. Stack traces name the framework, its version and the internal structure of the application; database errors reveal the engine, the query and often the schema; file paths disclose the operating system, the deployment layout and sometimes usernames.\n\nThe practical effect is on the attacks around them. A blind SQL injection that returns a database error is no longer blind. A version string turns a search for applicable exploits into a lookup. Debug endpoints left enabled in production extend this to configuration and environment variables, which commonly hold credentials.\n",
+        "recommendation": "* Return a generic error page with a reference identifier, and keep the detail in server-side logs.\n* Disable debug mode and debug toolbars in production, and verify this in the deployment pipeline rather than by convention.\n* Remove or rewrite headers that advertise the server and framework version.\n* Ensure unhandled exceptions reach a default handler rather than the framework's development page.\n",
+        "short_recommendation": "Return generic errors; log the detail server-side.",
+        "references": [
+          "https://owasp.org/www-project-web-security-testing-guide/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

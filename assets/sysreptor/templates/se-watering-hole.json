@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "b280f1d9-a7b7-53d8-aa9d-bbb07c7c452e",
+  "tags": [
+    "puppet",
+    "red",
+    "web"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "7221c68d-4d73-542a-90ed-c7c23ede7e9e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Watering Hole and Trusted Third-Party Compromise",
+        "cvss": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Staff routinely visited third-party sites specific to their industry and role, which an attacker can compromise to reach this organisation's users without contacting them directly.\n",
+        "description": "A watering hole attack inverts phishing: rather than sending something to the target, the attacker compromises a site the target already visits and trusts — an industry body, a supplier portal, a specialist forum, a recruitment site.\n\nNothing suspicious arrives in the mail, and the victim's behaviour is unchanged, so awareness training offers no protection. Targeting is achieved by choosing a site whose visitors are the intended population.\n\nThe same logic applies to third-party script loaded into your own pages: a compromised analytics or payment script executes in your origin, for every visitor, with no compromise of your own systems.\n",
+        "recommendation": "* Keep browsers and plugins current, and prefer isolation for high-risk browsing.\n* Use Subresource Integrity and a strict Content-Security-Policy for third-party scripts you include, and minimise how many there are.\n* Monitor egress for unexpected destinations and for behaviour following a normal web visit.\n* Include third-party dependencies in supplier risk assessment, not only the suppliers you contract with directly.\n",
+        "short_recommendation": "Isolate browsing and verify third-party scripts with SRI.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1189/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

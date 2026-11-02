@@ -226,6 +226,200 @@ which, on a box holding client findings, trades a password for an open door.
 
 ---
 
+## Report designs
+
+A design is the template a report is rendered through: the HTML/CSS layout,
+the cover page, the finding fields.
+
+| Pack | What it is |
+|---|---|
+| `annixion` | **This distribution's own designs** — see below. Built in-repo, no network fetch |
+| `htb` | The Hack The Box certification designs. Opt-in — see "HTB (and OffSec) designs" below |
+| `offsec` | The OffSec set, OSCP included. Opt-in, same mechanism |
+
+```nix
+annixion.sysreptor.designs = [ "annixion" ];   # the default
+```
+
+### The AnNIXion designs
+
+Built from `assets/sysreptor/designs` and rendered with the mark substituted
+from `catalog/logo.nix` at build time:
+
+**Engagement Report** covers a whole engagement rather than one discipline:
+reconnaissance and OSINT, social engineering, the physical assessment, the
+attack narrative from initial access to objective, and a detection timeline
+measuring what the defenders actually saw.
+
+**OSINT Report** is an intelligence product, not a pentest report. It opens
+with a bottom line and key judgements carrying explicit confidence, records
+the tasking and the legal basis for the collection, grades every source on
+the Admiralty scale, and separates what was found from what it enables.
+
+**Influence Operation Report** is the Puppet Master half: analysis of a
+disinformation or influence campaign. It carries the narratives and account
+clusters, a record of the research personas used to collect, and an
+attribution section built on competing hypotheses rather than a single
+story — with explicit caveats, because saying who runs an account is a claim
+about a person.
+
+Both put the identity on the cover and keep the body pages white: a
+deliverable gets printed, forwarded and read in a meeting, and a dark report
+is a poor citizen in all of that. Each opens its summary with a severity
+chart, because the first page is the one that gets read.
+
+All of it is built in-repo and imported from the Nix store, so a first run
+needs no network beyond the container images.
+
+### HTB (and OffSec) designs
+
+HTB and OffSec designs are **not** built or fetched by this repo, and CI never
+builds them — they are fetched and pinned by *you*, in your own
+`user/configuration.nix`, through `annixion.sysreptor.extraDesigns` and the
+helpers in `catalog/sysreptor-packs.nix`.
+
+```nix
+# user/configuration.nix
+let
+  packs = import ./catalog/sysreptor-packs.nix { inherit pkgs; };
+in
+{
+  annixion.sysreptor = {
+    designs = [ "annixion" "htb" ];
+    extraDesigns = [
+      (packs.packCmd "design-htb" (packs.designPack "htb-designs" "sha256-..."))
+      (packs.packCmd "project-htb" (packs.designPack "htb-demo-projects" "sha256-..."))
+    ];
+  };
+}
+```
+
+To get the hash: fetch the pack, canonicalise it, and hash the result —
+`scripts/sysreptor-canonicalise.py`'s own docstring documents that workflow
+(`scripts/sysreptor-canonicalise.py <dir>` then `nix hash path --sri --type
+sha256 <dir>`). `nix build` will also print the hash it got if you deliberately
+give it a wrong one first.
+
+The OffSec set works the same way, with `offsec-designs` and
+`offsec-demo-projects` as the pack names. Each resulting package's `name`
+must be `<kind>-<pack>` (e.g. `design-htb`) — the wrapper resolves a pack by
+that name, built-in ones first, so naming a pack `design-annixion` yourself
+would never be picked up.
+
+A design named in `designs` with nothing bundled and nothing in
+`extraDesigns` to match fails the import with a named error rather than
+silently doing nothing — see [Configuration](#configuration).
+
+### Finding templates
+
+A design is the layout; a template is the finding already written. AnNIXion
+ships its own library, imported by default, in `assets/sysreptor/templates` —
+one JSON file per finding, which is also how you add to it. It is organised
+along the four disciplines the browser profiles already divide by, so the tag
+filter in **Templates** matches the way the rest of the distribution is laid
+out: `red` (direct action and the physical findings), `puppet` (the persona
+and influence-operation side), `osint` (what an attacker finds before
+touching anything), and `malware` (sample capabilities mapped to ATT&CK and
+the Malware Behavior Catalog).
+
+```nix
+annixion.sysreptor.findingTemplates = [ ];   # import none
+```
+
+**Adding one:** drop a JSON file into `assets/sysreptor/templates` following
+the shape of its neighbours, `rebuild`, then `sysreptor designs`. The import
+compares by title, so a template whose title the instance does not have is
+added and the rest are left alone.
+
+**Changing one** is a different operation. The id in the file is not preserved
+on import — SysReptor mints a new one — so re-importing an edited template
+would add a second copy under the same title rather than updating the first.
+Use `sysreptor designs --update` to rewrite the AnNIXion templates and designs
+in place from the current build. That replaces any edit made to them in the UI,
+which is why it only happens when asked for.
+
+---
+
+## Plugins and the theme
+
+Every official plugin that does anything in the Community Edition is enabled:
+`cyberchef`, `checkthehash`, `graphqlvoyager`, `customizetheme`,
+`markdownexport`, `projectnumber`, plus upstream's own defaults
+`renderfindings` and `scanimport`.
+
+Left out: `demoplugin`, which demonstrates the plugin system rather than doing
+a job, and `webhooks`, `rendersections` and `jira`, which are
+Professional-edition features.
+
+```nix
+annixion.sysreptor.plugins = [ "cyberchef" ];   # narrow the list
+annixion.sysreptor.plugins = [ ];               # hand control back to the UI
+```
+
+Setting this writes `ENABLED_PLUGINS`, which takes precedence over the
+application's own settings page — so the plugin checkboxes there go read-only.
+An empty list leaves the UI in charge.
+
+### The AnNIXion theme
+
+`customizetheme` carries the distribution's palette into the web interface:
+the signature red on the near-black ground the desktop uses, with the risk
+scale on its conventional CVSS ramp, borrowing AnNIXion's values only where
+they land on it —
+
+| Severity | Colour | Class it borrows |
+|---|---|---|
+| Critical | `#FF0033` | offensive — the signature red |
+| High | `#FF9300` | — the conventional orange |
+| Medium | `#FFD000` | probe amber |
+| Low | `#4A90FF` | forensic blue |
+| Info | `#33E62B` | passive green |
+
+Critical takes the signature red because it is already the colour of
+"stop"; High stays orange, because a reader of a CVSS score knows what orange
+means and a house colour there would read as a different severity.
+
+The header logo goes with it. The mark is rendered from `catalog/logo.nix`,
+the same drawing the launcher wears, and handed to the theme as a base64
+`data:` URI through the `header-logo-url` variable. Because it is generated
+from the catalog rather than pasted in, the two cannot drift apart.
+
+```nix
+annixion.sysreptor.theme = "upstream";   # SysReptor's own colours instead
+```
+
+### Example reports
+
+Each design pack also has filled-in example reports showing what a finished
+deliverable looks like. They are off by default, because they appear as
+projects beside real engagements:
+
+```nix
+annixion.sysreptor.demoProjects = true;   # one set per enabled design pack
+```
+
+`importdemodata` adds a fresh copy of every design each time it runs — it does
+not preserve the ids in the file — so a start that re-imported a pack wholesale
+would leave nine designs after nine starts. Each start therefore asks the
+instance which design and template **names** it already holds, and imports only
+the ones missing. A design edited in the UI stays edited, and a design added to
+a pack later still arrives on an instance that was set up before it existed.
+
+Example reports are the exception: they are imported once and recorded in
+`~/.local/share/sysreptor/imported`, because they are meant to be read and
+deleted, and a name check would bring them back the moment you tidied up.
+
+```bash
+sysreptor designs            # import whatever the instance is missing
+sysreptor designs --update   # also rewrite the AnNIXion designs and templates
+                             # from this build, replacing UI edits to them
+```
+
+To write your own, copy an imported design in the UI (**Designs › ⋮ ›
+Duplicate**) and edit it there — the originals stay as the reference.
+
+---
+
 ## Where things live
 
 ```
@@ -234,6 +428,11 @@ which, on a box holding client findings, trades a password for an open door.
 └── docker-compose.yml               # upstream's, materialised read-write
 ~/.local/share/sysreptor/imported    # which example-report packs this install has taken
 /etc/annixion/sysreptor.conf         # the settings, generated from your NixOS config
+
+assets/sysreptor/designs/            # the AnNIXion designs, one JSON each
+assets/sysreptor/templates/          # the finding library, one JSON per finding
+scripts/sysreptor-sync.py            # works out what an instance is missing
+catalog/sysreptor-packs.nix          # the fetch/pack helpers extraDesigns uses
 
 docker volume sysreptor-db-data      # Postgres
 docker volume sysreptor-app-data     # uploads, designs, rendered reports

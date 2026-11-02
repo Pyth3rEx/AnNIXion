@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "b8267dfc-a8af-5aa6-8565-3541589efdfa",
+  "tags": [
+    "osint",
+    "process",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ed95446f-662b-59ce-876a-1f9146663a45",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "No Monitoring of the Organisation's Own Exposure",
+        "cvss": "n/a",
+        "summary": "The organisation did not monitor what is publicly discoverable about it. Exposures were therefore found by this assessment rather than by the organisation, and would otherwise have been found by whoever looked next.\n",
+        "description": "Every finding in an OSINT assessment was available to anyone, at any time, for the cost of looking. The difference between an assessment and an incident is who looked first.\n\nOrganisations typically monitor inward — logs, alerts, endpoints — and not outward. Nobody watches certificate transparency for new names, new registrations resembling the brand, breach corpora for corporate addresses, or public repositories for leaked keys.\n\nExposure is also not static. It changes with every project, every new supplier, every departure and every certificate issued, which makes an annual review a poor instrument.\n",
+        "recommendation": "* Monitor continuously: certificate transparency, new domain registrations, passive DNS, breach and infostealer corpora, public repositories and paste sites.\n* Give the output an owner and a route to action, so a finding becomes a ticket rather than a notification.\n* Re-run discovery from an attacker's position periodically, rather than auditing the inventory you already hold.\n* Measure time from exposure to detection, and work on that number.\n",
+        "short_recommendation": "Watch your own attack surface continuously, from outside.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1593/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

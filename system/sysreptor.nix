@@ -24,6 +24,112 @@ let
     name = "sysreptor-extra-packs";
     paths = cfg.extraDesigns;
   };
+
+  # ── The AnNIXion theme ──────────────────────────────────────────────────
+  # Chrome and semantic classes from docs/visual-identity.md. The risk scale
+  # keeps the conventional CVSS ramp — red, orange, amber, blue, green — and
+  # only borrows AnNIXion's values where they land on it. A report is read by
+  # people who know what an orange "High" means; the house style does not get
+  # to repaint that, so the orange is a severity colour and nothing else.
+  ground = "#0E0F13"; # deepest ground
+  surface = "#14171D"; # the menu ground marks are measured against
+  raised = "#1A1D24"; # raised surface
+  divider = "#2E323D"; # segment, divider
+  text = "#DFE4EA"; # primary text
+  red = "#FF0033"; # the signature accent
+  orange = "#FF9300"; # severity ramp only — not a mark class
+  amber = "#FFD000";
+  blue = "#4A90FF";
+  green = "#33E62B";
+  grey = "#7A8494";
+
+  riskColours = {
+    "risk-critical" = red;
+    "risk-high" = orange;
+    "risk-medium" = amber;
+    "risk-low" = blue;
+    "risk-info" = green;
+  };
+
+  statusColours = {
+    "retest-open" = red;
+    "retest-new" = red;
+    "retest-changed" = red;
+    "retest-partial" = amber;
+    "retest-resolved" = green;
+    "retest-accepted" = green;
+  };
+
+  theme = {
+    all = {
+      colors = {
+        primary = red;
+        "on-primary" = ground;
+        "primary-bg" = red;
+        "on-primary-bg" = ground;
+        secondary = grey;
+        "on-secondary" = ground;
+        logo = red;
+        error = red;
+        warning = amber;
+        "on-warning" = ground;
+        info = blue;
+        success = green;
+        "search-match" = amber;
+        "on-search-match" = ground;
+      }
+      // riskColours
+      // statusColours;
+      variables = {
+        "header-logo-url" = "data:image/svg+xml;base64,${toBase64 logoSvg}";
+        "header-logo-height" = "26px";
+      };
+    };
+    dark = {
+      colors = {
+        background = ground;
+        "on-background" = text;
+        inherit surface;
+        "on-surface" = text;
+        "surface-container" = raised;
+        header = surface;
+        "on-header" = text;
+        drawer = surface;
+        "on-drawer" = text;
+        "codemirror-selection" = divider;
+      };
+      variables = {
+        "border-color" = text;
+        "theme-on-code" = text;
+      };
+    };
+    # The dark theme is the one AnNIXion means; light keeps the accent so a
+    # user who switches still lands somewhere recognisable.
+    light = {
+      colors = {
+        primary = red;
+        logo = red;
+        "on-primary" = "#FFFFFF";
+      };
+    };
+  };
+
+  # The mark as the launcher draws it, so the header logo and the menu icon
+  # are one drawing. 1.3 of padding holds the round caps; see
+  # home/desktop/icons/default.nix, which renders the same way.
+  logo = import ../catalog/logo.nix { };
+  logoSvg = ''
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.3 -1.3 26.6 26.6" width="24" height="24">
+    <g fill="none" stroke="${red}" stroke-width="2.3275" stroke-linecap="round" stroke-linejoin="round">
+    ${logo.body}  </g>
+    </svg>
+  '';
+  toBase64 = import ../catalog/base64.nix { inherit lib; };
+
+  # builtins.toFile, not pkgs.writeText: the theme has to exist the moment
+  # this module is *evaluated*, not after something remembers to `nix build`
+  # it — environment.etc only ever hands out the path string below.
+  themeJson = builtins.toFile "annixion-sysreptor-theme.json" (builtins.toJSON theme);
 in
 {
   options.annixion.sysreptor = {
@@ -157,7 +263,7 @@ in
       type = lib.types.listOf lib.types.package;
       default = [ ];
       example = lib.literalExpression ''
-        let packs = import ../catalog/tools/productivity/sysreptor-packs.nix { inherit pkgs; };
+        let packs = import ../catalog/sysreptor-packs.nix { inherit pkgs; };
         in [
           (packs.packCmd "design-htb" (packs.designPack "htb-designs" "sha256-..."))
           (packs.packCmd "project-htb" (packs.designPack "htb-demo-projects" "sha256-..."))
@@ -230,6 +336,10 @@ in
         signature red on the same near-black ground the desktop uses, with the
         risk scale drawn from the mark system's semantic classes.
 
+        The header logo goes with it: the mark is rendered from
+        `catalog/logo.nix` — the same drawing the launcher wears — and passed
+        to the theme as a data URI, so the two cannot drift apart.
+
         `upstream` leaves SysReptor's own theme alone.
       '';
     };
@@ -272,6 +382,7 @@ in
           ${set "FINDING_TEMPLATES" (lib.concatStringsSep " " cfg.findingTemplates)}
           ${set "PLUGINS" (lib.concatStringsSep "," cfg.plugins)}
           ${set "EXTRA_PACKS_DIR" (if cfg.extraDesigns == [ ] then "" else "${extraPacksDir}")}
+          ${set "THEME_FILE" (if cfg.theme == "annixion" then "${themeJson}" else "")}
         '';
     };
 

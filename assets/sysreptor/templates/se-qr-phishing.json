@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "ed24f1e7-174d-56b6-bc69-1019a544e909",
+  "tags": [
+    "puppet",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "121ea548-7e82-5359-8d95-6ddfbae1bebf",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Susceptibility to QR Code Phishing",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Staff scanned QR codes from unsolicited messages and from printed notices placed on the premises, and authenticated on the pages they led to. The code moves the attack to a personal phone, outside mail filtering and device controls.\n",
+        "description": "A QR code is an unreadable link. The protections built around links — hover preview, reputation filtering, rewriting in mail gateways — do not apply, because the destination is not visible and the mail body may contain no URL at all.\n\nScanning usually moves the victim to a personal phone, which is outside device management and often outside the organisation's controls entirely, and where a small screen makes the address bar easy to ignore.\n\nThe physical variant is stronger still: a printed notice placed in a lobby or a car park carries the authority of being physically present in the building.\n",
+        "recommendation": "* Tell staff that a QR code is a link they cannot read, and that codes arriving by message or found on site should be treated as untrusted.\n* Deploy phishing-resistant MFA, which makes the credential harvested this way useless.\n* Scan mail attachments for embedded codes where the gateway supports it.\n* Include QR pretexts, printed as well as emailed, in simulations.\n",
+        "short_recommendation": "Treat QR codes as untrusted links; verify before scanning.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1566/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

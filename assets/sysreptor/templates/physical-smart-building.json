@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "0715eb82-3516-5f69-b8d8-7f5224166df9",
+  "tags": [
+    "red",
+    "physical",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6dc678ad-f10a-5fbc-b0b9-4ca12aa22ea1",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Building Systems Reachable From the Corporate Network",
+        "cvss": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "Access control, CCTV, intercom and building management systems were reachable from the corporate network, ran unsupported software, and in places retained default credentials — so the physical controls could be defeated from a keyboard.\n",
+        "description": "Building systems are computers that nobody treats as computers. They are installed by a contractor, commissioned once, and left: unpatched, unmonitored, and frequently still carrying the vendor's default credentials.\n\nTheir function is what makes this serious. Control of the access system means unlocking doors, enrolling a credential, and editing the log that records it. Control of CCTV means viewing, and deleting, the footage of the entry. Control of building management means doors held open on a fire signal, and environmental control of a server room.\n\nThey are typically reachable from the ordinary corporate network, and often from the internet through a vendor's remote support arrangement that nobody reviews.\n",
+        "recommendation": "* Place building systems on a dedicated segment with no route from user networks and no inbound internet access.\n* Change default credentials and apply firmware updates, as a contractual requirement on the installer.\n* Review vendor remote access: named accounts, MFA, and access only during an agreed window.\n* Export access and camera logs to a system the building controller cannot alter.\n",
+        "short_recommendation": "Segment building systems and change their default credentials.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}
