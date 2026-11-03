@@ -57,10 +57,13 @@
 #
 #   # The reporting platform runs locally and keeps client findings, so it
 #   # binds loopback and encrypts at rest. Only this distribution's own
-#   # designs are built and imported by default — no network fetch, no CI
-#   # exposure. HTB/OffSec designs are opt-in: fetch and pin them yourself
-#   # through annixion.sysreptor.extraDesigns, see docs/sysreptor.md for a
-#   # worked example, then list them here too. Making it network-accessible
+#   # designs and finding library are built in-repo and imported by default —
+#   # no network fetch, nothing CI/CD has to build. HTB/OffSec/demo packs are
+#   # left out of that build for the same reason CI can't touch them: they'd
+#   # need a network fetch and licensed content this repo can't carry. They
+#   # stay available, just opt-in — fetch and pin them yourself through
+#   # annixion.sysreptor.extraDesigns, see docs/sysreptor.md for a worked
+#   # example, then list them here too. Making it network-accessible
 #   # publishes every engagement's deliverables over plain HTTP — read
 #   # docs/sysreptor.md before you do.
 #   # The login is created on first start from the hash below — mint one with
