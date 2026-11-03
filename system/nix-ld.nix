@@ -15,14 +15,14 @@
     # binary dlopens at run time: invisible to ldd, so the failure they cause
     # arrives as a missing symbol long after the loader has done its job.
     libraries = with pkgs; [
-      xorg.libX11
-      xorg.libXcursor
-      xorg.libXrandr
-      xorg.libXi
-      xorg.libXext
-      xorg.libXrender
-      xorg.libXfixes
-      xorg.libxcb
+      libx11
+      libxcursor
+      libxrandr
+      libxi
+      libxext
+      libxrender
+      libxfixes
+      libxcb
       libxkbcommon
       wayland
       libglvnd
