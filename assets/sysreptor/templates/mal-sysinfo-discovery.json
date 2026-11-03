@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "850f0c94-f04b-5be7-af02-cd5097d7b4f7",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "28bec72d-0a35-5131-98f1-7bf76ea3aa67",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "System Information Discovery",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+        "summary": "The sample queries OS version, architecture, locale, installed hotfixes and hardware details early in execution, typically to select a compatible code path or to decide whether to proceed at all.",
+        "description": "This is usually the first thing a sample does after any anti-analysis checks, because\neverything downstream — which injection technique to use, which persistence mechanism is\navailable, whether a given exploit applies — depends on it. Some families also use the\nresults defensively: a locale check that avoids certain countries, or a patch-level check\nthat withholds an exploit the target is not actually vulnerable to, to limit exposure of\nthe exploit to telemetry.\n",
+        "recommendation": "* Note which system properties were queried; a locale or geofencing check narrows the likely intended target set meaningfully.\n* Correlate discovery queries with the capability branches that follow them to understand which code paths this specific host triggered.\n* Treat this as routine rather than alarming on its own — it is near-universal — but weight it heavily when it precedes a capability selection branch.\n",
+        "short_recommendation": "Correlate discovery queries with the capability branches that follow to understand which code paths this host triggered.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1082/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1082 — System Information Discovery",
+            "procedure": "Queried OS version, system locale and installed hotfix list, and branched to a 32-bit or 64-bit payload accordingly."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0007 — Discovery",
+            "behavior": "E1082 — System Information Discovery",
+            "implementation": "Queried system locale and excluded execution for a short list of configured country codes."
+          }
+        ]
+      }
+    }
+  ]
+}

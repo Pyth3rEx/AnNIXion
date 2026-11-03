@@ -1,0 +1,37 @@
+{
+  "format": "templates/v2",
+  "id": "82d84da1-2469-5ac6-87ad-3360574d22e2",
+  "tags": [
+    "red",
+    "physical",
+    "puppet"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "79d6df90-cb4c-541e-a7a2-52c9e27438f2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Weak Visitor Management and Reception Controls",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:N",
+        "summary": "Visitors were admitted on the strength of a stated name and purpose, without verification against an expected appointment, and were issued passes granting unescorted access. A pretext alone was therefore sufficient to obtain legitimate credentials for the building.\n",
+        "description": "Reception is the control point where an attacker's story is either tested or accepted, and it is usually staffed by people whose role rewards helpfulness and who have no authority to refuse.\n\nThe common failures are consistent: no check that anyone is actually expecting the visitor, no identity document requested, a pass issued that opens doors rather than merely identifying the holder, and no escort once inside. Contractor and delivery pretexts bypass even the checks that exist, because maintenance visits are expected to be unannounced.\n\nA visitor pass obtained this way is better than tailgating: it is legitimate, it survives challenges, and it makes the holder look like someone who has already been verified.\n",
+        "recommendation": "* Verify every visitor against an appointment logged in advance by a named host, and telephone the host before admitting.\n* Check photographic identification for visitors and contractors, and record it.\n* Issue visually distinct, time-limited passes that identify the holder as a visitor and do not open doors by themselves.\n* Require escort for visitors in all non-public areas, and define who is responsible for returning them to reception.\n* Give reception explicit authority to refuse entry, with a named escalation point, so refusal is not a personal decision.\n",
+        "short_recommendation": "Verify visitors against a host-confirmed appointment, and escort.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0097 — Present Persona",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

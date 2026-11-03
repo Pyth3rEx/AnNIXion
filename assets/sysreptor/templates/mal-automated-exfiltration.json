@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "4690f940-3f8a-537b-b536-2f3fa47e99f5",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "cb8fad7e-a77d-5593-950f-bdb2edef7825",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Automated Exfiltration of Staged Data",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "The sample exfiltrates staged data automatically on a schedule or threshold, without requiring an operator to issue a manual transfer command each time.",
+        "description": "Automating exfiltration removes the operator from the critical path entirely: data leaves\non a timer or once a size threshold is reached, over whichever channel the sample's C2\nalready uses, requiring no live interaction. This is efficient for the operator but also\npredictable for defenders — a transfer that recurs on a fixed schedule or fires at a\nconsistent data-volume threshold is a more regular pattern than an operator-driven,\nirregular one.\n",
+        "recommendation": "* Profile outbound transfer timing and volume for regularity (fixed interval, consistent size threshold) as a detection signal distinct from destination-based blocking alone.\n* Block or rate-limit the exfiltration channel at the point of egress once identified, since the schedule will otherwise simply continue regardless of operator availability.\n* Recover the staged data queued for transfer, if intercepted before the scheduled send, to establish exactly what left and what did not.\n",
+        "short_recommendation": "Profile outbound transfer timing and volume for the regularity a scheduled, automated exfiltration produces.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1020/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0010 — Exfiltration",
+            "technique": "T1020 — Automated Exfiltration",
+            "procedure": "Checked a local staging directory's size on a fixed timer and triggered an upload over the existing C2 channel once a threshold was exceeded."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0010 — Exfiltration",
+            "behavior": "E1020 — Automated Exfiltration",
+            "implementation": "Triggered exfiltration automatically on a size threshold rather than waiting for an operator-issued command."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "format": "templates/v2",
+  "id": "cd75fbec-1776-5560-b9be-2b4854856db5",
+  "tags": [
+    "red",
+    "physical",
+    "detection",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b3b3cf6d-e5df-5881-b6be-07ea8341dbbf",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Physical Security Events Not Investigated",
+        "cvss": "n/a",
+        "summary": "Anomalies recorded by the physical controls — doors forced or held, badges used at impossible times, unknown devices found — were noticed but not investigated, and there was no process that would treat them as security events.\n",
+        "description": "Physical security generates signals that nobody owns. The access system logs a door held open, a badge used twice in places too far apart, or an entry by an account whose holder is on leave. Facilities see these as maintenance noise; security see them as facilities' business.\n\nThe consequence is that an intrusion leaves a record and still goes uninvestigated. During this assessment, entries and anomalies were logged and none prompted enquiry.\n\nEvidence handling compounds it. Footage is overwritten before anyone asks for it, visitor logs are discarded, and found devices are unplugged and binned rather than preserved — so even a noticed intrusion cannot be reconstructed afterwards.\n",
+        "recommendation": "* Give physical access anomalies an owner, with defined triggers: doors forced or held, out-of-hours entry, impossible journeys, use of a credential belonging to someone absent.\n* Correlate physical and logical events, so a badge-in without a corresponding logon is visible.\n* Extend retention of access logs and footage far enough to investigate a late discovery.\n* Define handling for found devices: preserve, photograph in place, and escalate rather than discard.\n",
+        "short_recommendation": "Treat physical anomalies as security events with an owner.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

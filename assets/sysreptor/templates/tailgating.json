@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "8aaddeb8-3daf-568e-bb46-ca126fafd8c3",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "185e9aa5-df3c-5fcd-9797-64b5afb382d6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Tailgating Through Controlled Entrances",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
+        "summary": "Access-controlled doors were entered by following an authorised person through, without presenting a credential. Staff held doors open and did not challenge an unrecognised follower, so the access control system recorded no entry and the building's perimeter was bypassed entirely.\n",
+        "description": "Tailgating defeats physical access control without attacking it. The reader works, the door works, and the attacker simply walks through behind someone who opened it.\n\nIt succeeds because the social cost of challenging is real and the perceived security cost is not. Holding a door is ordinary courtesy; asking a stranger for identification feels like an accusation. Carrying coffee, a laptop in both hands, a delivery, or a lanyard with any plausible card reliably removes the prompt to ask.\n\nThe consequence is that every control inside the building — network ports, unlocked workstations, printed material, server rooms — becomes reachable, and the entry is invisible to the access log, so there is no record to investigate afterwards.\n",
+        "recommendation": "* State explicitly that every person badges individually, and that holding a door is not a courtesy anyone is expected to extend.\n* Install anti-passback, so a badge that has not exited cannot re-enter, and consider turnstiles or interlocks at the main entrance.\n* Give staff a scripted, low-conflict challenge — offering to escort the person to reception — so challenging does not require improvisation.\n* Make visible credentials mandatory, and make a missing badge the trigger rather than an unfamiliar face.\n* Recognise and publicise challenges that were correct, so the behaviour is rewarded rather than quietly discouraged.\n",
+        "short_recommendation": "Enforce one badge per entry and make challenging expected.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

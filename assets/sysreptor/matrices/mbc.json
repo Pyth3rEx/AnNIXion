@@ -1,0 +1,940 @@
+{
+  "framework": "Malware Behavior Catalog",
+  "source": "https://github.com/MBCProject/mbc-markdown",
+  "version": "3.1",
+  "retrieved": "2026-10-29",
+  "tactics": [
+    {
+      "id": "OB0001",
+      "name": "Anti-Behavioral Analysis",
+      "shortname": "anti-behavioral-analysis",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/README.md"
+    },
+    {
+      "id": "OB0002",
+      "name": "Anti-Static Analysis",
+      "shortname": "anti-static-analysis",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/README.md"
+    },
+    {
+      "id": "OB0003",
+      "name": "Collection",
+      "shortname": "collection",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/README.md"
+    },
+    {
+      "id": "OB0004",
+      "name": "Command and Control",
+      "shortname": "command-and-control",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/command-and-control/README.md"
+    },
+    {
+      "id": "OB0005",
+      "name": "Credential Access",
+      "shortname": "credential-access",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/credential-access/README.md"
+    },
+    {
+      "id": "OB0006",
+      "name": "Defense Evasion",
+      "shortname": "defense-evasion",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/README.md"
+    },
+    {
+      "id": "OB0007",
+      "name": "Discovery",
+      "shortname": "discovery",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/README.md"
+    },
+    {
+      "id": "OB0009",
+      "name": "Execution",
+      "shortname": "execution",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/README.md"
+    },
+    {
+      "id": "OB0010",
+      "name": "Exfiltration",
+      "shortname": "exfiltration",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/exfiltration/README.md"
+    },
+    {
+      "id": "OB0008",
+      "name": "Impact",
+      "shortname": "impact",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/README.md"
+    },
+    {
+      "id": "OB0011",
+      "name": "Lateral Movement",
+      "shortname": "lateral-movement",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/lateral-movement/README.md"
+    },
+    {
+      "id": "OB0012",
+      "name": "Persistence",
+      "shortname": "persistence",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/README.md"
+    },
+    {
+      "id": "OB0013",
+      "name": "Privilege Escalation",
+      "shortname": "privilege-escalation",
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/privilege-escalation/README.md"
+    }
+  ],
+  "techniques": [
+    {
+      "id": "B0001",
+      "name": "Debugger Detection",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/debugger-detection.md"
+    },
+    {
+      "id": "B0002",
+      "name": "Debugger Evasion",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/debugger-evasion.md"
+    },
+    {
+      "id": "B0003",
+      "name": "Dynamic Analysis Evasion",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/dynamic-analysis-evasion.md"
+    },
+    {
+      "id": "B0004",
+      "name": "Emulator Detection",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/emulator-detection.md"
+    },
+    {
+      "id": "B0005",
+      "name": "Emulator Evasion",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/emulator-evasion.md"
+    },
+    {
+      "id": "B0006",
+      "name": "Memory Dump Evasion",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/memory-dump-evasion.md"
+    },
+    {
+      "id": "B0007",
+      "name": "Sandbox Detection",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/sandbox-detection.md"
+    },
+    {
+      "id": "B0008",
+      "name": "Executable Code Virtualization",
+      "tactics": [
+        "OB0001",
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/executable-code-virtualization.md"
+    },
+    {
+      "id": "B0009",
+      "name": "Virtual Machine Detection",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/virtual-machine-detection.md"
+    },
+    {
+      "id": "B0010",
+      "name": "Call Graph Generation Evasion",
+      "tactics": [
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/call-graph-generation-evasion.md"
+    },
+    {
+      "id": "B0011",
+      "name": "Remote Commands",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/remote-commands.md"
+    },
+    {
+      "id": "B0012",
+      "name": "Disassembler Evasion",
+      "tactics": [
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/disassembler-evasion.md"
+    },
+    {
+      "id": "B0013",
+      "name": "Analysis Tool Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/analysis-tool-discovery.md"
+    },
+    {
+      "id": "B0014",
+      "name": "SMTP Connection Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/smtp-connection-discovery.md"
+    },
+    {
+      "id": "B0016",
+      "name": "Compromise Data Integrity",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/compromise-data-integrity.md"
+    },
+    {
+      "id": "B0017",
+      "name": "Destroy Hardware",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/destroy-hardware.md"
+    },
+    {
+      "id": "B0018",
+      "name": "Resource Hijacking",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/resource-hijacking.md"
+    },
+    {
+      "id": "B0019",
+      "name": "Manipulate Network Traffic",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/manipulate-network-traffic.md"
+    },
+    {
+      "id": "B0020",
+      "name": "Send Email",
+      "tactics": [
+        "OB0009",
+        "OB0011"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/send-email.md"
+    },
+    {
+      "id": "B0021",
+      "name": "Send Poisoned Text Message",
+      "tactics": [
+        "OB0009",
+        "OB0011"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/send-poisoned-text-message.md"
+    },
+    {
+      "id": "B0022",
+      "name": "Remote Access",
+      "tactics": [
+        "OB0008",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/remote-access.md"
+    },
+    {
+      "id": "B0023",
+      "name": "Install Additional Program",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/install-additional-program.md"
+    },
+    {
+      "id": "B0024",
+      "name": "Prevent Concurrent Execution",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/prevent-concurrent-execution.md"
+    },
+    {
+      "id": "B0025",
+      "name": "Conditional Execution",
+      "tactics": [
+        "OB0001",
+        "OB0006",
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/conditional-execution.md"
+    },
+    {
+      "id": "B0026",
+      "name": "Malicious Network Driver",
+      "tactics": [
+        "OB0011",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/malicious-network-driver.md"
+    },
+    {
+      "id": "B0027",
+      "name": "Alternative Installation Location",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/alternative-installation-location.md"
+    },
+    {
+      "id": "B0028",
+      "name": "Cryptocurrency",
+      "tactics": [
+        "OB0003",
+        "OB0005"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/cryptocurrency.md"
+    },
+    {
+      "id": "B0029",
+      "name": "Polymorphic Code",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/polymorphic-code.md"
+    },
+    {
+      "id": "B0030",
+      "name": "C2 Communication",
+      "tactics": [
+        "OB0004"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/command-and-control/c2-communication.md"
+    },
+    {
+      "id": "B0031",
+      "name": "Domain Name Generation",
+      "tactics": [
+        "OB0004"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/command-and-control/domain-name-generation.md"
+    },
+    {
+      "id": "B0032",
+      "name": "Executable Code Obfuscation",
+      "tactics": [
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/executable-code-obfuscation.md"
+    },
+    {
+      "id": "B0033",
+      "name": "Denial of Service",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/denial-of-service.md"
+    },
+    {
+      "id": "B0034",
+      "name": "Executable Code Optimization",
+      "tactics": [
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/executable-code-optimization.md"
+    },
+    {
+      "id": "B0035",
+      "name": "Shutdown Event",
+      "tactics": [
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/shutdown-event.md"
+    },
+    {
+      "id": "B0036",
+      "name": "Capture Evasion",
+      "tactics": [
+        "OB0001"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-behavioral-analysis/capture-evasion.md"
+    },
+    {
+      "id": "B0037",
+      "name": "Bypass Data Execution Prevention",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/bypass-data-execution-prevention.md"
+    },
+    {
+      "id": "B0038",
+      "name": "Self Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/self-discovery.md"
+    },
+    {
+      "id": "B0039",
+      "name": "Spamming",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/spamming.md"
+    },
+    {
+      "id": "B0040",
+      "name": "Covert Location",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/covert-location.md"
+    },
+    {
+      "id": "B0042",
+      "name": "Modify Hardware",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/modify-hardware.md"
+    },
+    {
+      "id": "B0043",
+      "name": "Taskbar Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/taskbar-discovery.md"
+    },
+    {
+      "id": "B0044",
+      "name": "Execution Dependency",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/execution-dependency.md"
+    },
+    {
+      "id": "B0045",
+      "name": "Data Flow Analysis Evasion",
+      "tactics": [
+        "OB0002"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/data-flow-analysis-evasion.md"
+    },
+    {
+      "id": "B0046",
+      "name": "Code Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/code-discovery.md"
+    },
+    {
+      "id": "B0047",
+      "name": "Install Insecure or Malicious Configuration",
+      "tactics": [
+        "OB0006",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/install-insecure-or-malicious-configuration.md"
+    },
+    {
+      "id": "E1010",
+      "name": "Application Window Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/application-window-discovery.md"
+    },
+    {
+      "id": "E1014",
+      "name": "Rootkit",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/rootkit.md"
+    },
+    {
+      "id": "E1020",
+      "name": "Automated Exfiltration",
+      "tactics": [
+        "OB0010"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/exfiltration/automated-exfiltration.md"
+    },
+    {
+      "id": "E1027",
+      "name": "Obfuscated Files or Information",
+      "tactics": [
+        "OB0002",
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/obfuscated-files-or-information.md"
+    },
+    {
+      "id": "E1055",
+      "name": "Process Injection",
+      "tactics": [
+        "OB0006",
+        "OB0013"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/process-injection.md"
+    },
+    {
+      "id": "E1056",
+      "name": "Input Capture",
+      "tactics": [
+        "OB0003",
+        "OB0005"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/input-capture.md"
+    },
+    {
+      "id": "E1059",
+      "name": "Command and Scripting Interpreter",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/command-and-scripting-interpreter.md"
+    },
+    {
+      "id": "E1082",
+      "name": "System Information Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/system-information-discovery.md"
+    },
+    {
+      "id": "E1083",
+      "name": "File and Directory Discovery",
+      "tactics": [
+        "OB0007"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/discovery/file-and-directory-discovery.md"
+    },
+    {
+      "id": "E1105",
+      "name": "Ingress Tool Transfer",
+      "tactics": [
+        "OB0004",
+        "OB0011",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/command-and-control/ingress-tool-transfer.md"
+    },
+    {
+      "id": "E1112",
+      "name": "Modify Registry",
+      "tactics": [
+        "OB0006",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/modify-registry.md"
+    },
+    {
+      "id": "E1113",
+      "name": "Screen Capture",
+      "tactics": [
+        "OB0003",
+        "OB0005"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/screen-capture.md"
+    },
+    {
+      "id": "E1190",
+      "name": "Exploit Kit",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/exploit-kit.md"
+    },
+    {
+      "id": "E1195",
+      "name": "Supply Chain Compromise",
+      "tactics": [
+        "OB0011"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/lateral-movement/supply-chain-compromise.md"
+    },
+    {
+      "id": "E1203",
+      "name": "Exploitation for Client Execution",
+      "tactics": [
+        "OB0009",
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/exploitation-for-client-execution.md"
+    },
+    {
+      "id": "E1204",
+      "name": "User Execution",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/user-execution.md"
+    },
+    {
+      "id": "E1485",
+      "name": "Data Destruction",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/data-destruction.md"
+    },
+    {
+      "id": "E1486",
+      "name": "Data Encrypted for Impact",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/data-encrypted-for-impact.md"
+    },
+    {
+      "id": "E1510",
+      "name": "Clipboard Modification",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/clipboard-modification.md"
+    },
+    {
+      "id": "E1560",
+      "name": "Archive Collected Data",
+      "tactics": [
+        "OB0003"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/archive-collected-data.md"
+    },
+    {
+      "id": "E1564",
+      "name": "Hide Artifacts",
+      "tactics": [
+        "OB0006",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/hide-artifacts.md"
+    },
+    {
+      "id": "E1569",
+      "name": "System Services",
+      "tactics": [
+        "OB0009"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/execution/system-services.md"
+    },
+    {
+      "id": "E1643",
+      "name": "Generate Traffic from Victim",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/generate-traffic-from-victim.md"
+    },
+    {
+      "id": "F0001",
+      "name": "Software Packing",
+      "tactics": [
+        "OB0001",
+        "OB0002",
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/anti-static-analysis/software-packing.md"
+    },
+    {
+      "id": "F0002",
+      "name": "Keylogging",
+      "tactics": [
+        "OB0003",
+        "OB0005"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/collection/keylogging.md"
+    },
+    {
+      "id": "F0004",
+      "name": "Disable or Evade Security Tools",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/disable-or-evade-security-tools.md"
+    },
+    {
+      "id": "F0005",
+      "name": "Hidden Files and Directories",
+      "tactics": [
+        "OB0006",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/hidden-files-and-directories.md"
+    },
+    {
+      "id": "F0006",
+      "name": "Indicator Blocking",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/indicator-blocking.md"
+    },
+    {
+      "id": "F0007",
+      "name": "Self Deletion",
+      "tactics": [
+        "OB0006"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/self-deletion.md"
+    },
+    {
+      "id": "F0009",
+      "name": "Component Firmware",
+      "tactics": [
+        "OB0006",
+        "OB0008",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/component-firmware.md"
+    },
+    {
+      "id": "F0010",
+      "name": "Kernel Modules and Extensions",
+      "tactics": [
+        "OB0012",
+        "OB0013"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/kernel-modules-and-extensions.md"
+    },
+    {
+      "id": "F0011",
+      "name": "Modify Existing Service",
+      "tactics": [
+        "OB0012",
+        "OB0013"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/modify-existing-service.md"
+    },
+    {
+      "id": "F0012",
+      "name": "Registry Run Keys / Startup Folder",
+      "tactics": [
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/persistence/registry-run-keys-startup-folder.md"
+    },
+    {
+      "id": "F0013",
+      "name": "Bootkit",
+      "tactics": [
+        "OB0006",
+        "OB0012"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/bootkit.md"
+    },
+    {
+      "id": "F0014",
+      "name": "Disk Wipe",
+      "tactics": [
+        "OB0008"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/impact/disk-wipe.md"
+    },
+    {
+      "id": "F0015",
+      "name": "Hijack Execution Flow",
+      "tactics": [
+        "OB0001",
+        "OB0003",
+        "OB0005",
+        "OB0006",
+        "OB0012",
+        "OB0013"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/defense-evasion/hijack-execution-flow.md"
+    },
+    {
+      "id": "F0016",
+      "name": "Install Certificate",
+      "tactics": [
+        "OB0013"
+      ],
+      "subtechnique": false,
+      "parent": null,
+      "url": "https://github.com/MBCProject/mbc-markdown/blob/main/privilege-escalation/install-certificate.md"
+    }
+  ]
+}

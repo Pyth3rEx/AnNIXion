@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "607db846-cae5-5c30-b5bb-b6a2c964d956",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3de10e89-f2ad-5f72-927d-f2b7c4532833",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Dynamic-Analysis Evasion via Timing Checks",
+        "cvss": "n/a",
+        "summary": "The sample delays or gates its malicious behaviour behind a sleep, a scheduled trigger, or a count of elapsed user interactions long enough to outlast an automated sandbox's detonation window.",
+        "description": "Sandboxes operate on a time budget, typically minutes; a sample that sleeps for an hour,\nwaits for a specific wall-clock date, or waits for a thousand mouse movements before acting\nwill often clear automated triage as benign by simply outlasting it. Some variants use an\naccelerated-clock check — comparing wall time against CPU ticks — to detect sandboxes that\nfast-forward sleep calls, and refuse to proceed if the two disagree.\n",
+        "recommendation": "* Extend detonation time or patch sleep/delay calls directly rather than relying on sandbox time-acceleration, which this sample may itself detect.\n* Check for scheduled-task or run-once artefacts dropped during the dormant period — the sample may have already persisted before 'doing' anything observable.\n* Flag samples that call GetTickCount or QueryPerformanceCounter immediately around a Sleep as a time-acceleration check, not routine timing.\n",
+        "short_recommendation": "Patch delay calls directly and check for persistence artefacts dropped during the dormant window.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1497/003/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1497 — Virtualization/Sandbox Evasion",
+            "procedure": "Slept for an extended interval and compared tick-count delta against wall-clock delta before proceeding."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0003 — Dynamic Analysis Evasion",
+            "implementation": "Called Sleep() for an extended interval and verified elapsed ticks matched wall-clock time."
+          }
+        ]
+      }
+    }
+  ]
+}

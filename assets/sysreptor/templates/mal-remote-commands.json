@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "36caeeb9-8e32-547a-adcc-81b9032c172c",
+  "tags": [
+    "malware",
+    "endpoint",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d8f59055-dfc9-5774-9747-15632870a6b6",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Remote Command-Execution Channel",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The sample accepts and executes arbitrary commands issued by the operator over its C2 channel, giving interactive-equivalent control without a full remote-access GUI.",
+        "description": "This is the command-execution half of a C2 relationship, distinct from the transport\ncarrying it (see application-layer C2 protocol): a received command is passed to a local\ncommand interpreter and the output returned over the same channel, giving the operator\nde facto shell access scoped only by the malware's own privilege level. The command set\nexposed — a handful of fixed functions versus a full arbitrary-shell passthrough —\nindicates how much capability the sample was built to support versus how much was left to\nthe operator's own tooling once a shell is available.\n",
+        "recommendation": "* Capture the command set and any observed command traffic; it directly indicates the operator's actual objective on this host, separate from the sample's static capability list.\n* Where arbitrary shell passthrough is confirmed, treat the host as fully compromised at the privilege level the sample runs with, not merely 'infected'.\n* Hunt for a parent-child relationship between the C2 process and a command interpreter it spawned, as a detection signal independent of the specific commands sent.\n",
+        "short_recommendation": "Capture observed command traffic; it indicates the operator's actual objective on this host, beyond the sample's static capability.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1059/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1059 — Command and Scripting Interpreter",
+            "procedure": "Passed received command strings directly to cmd.exe via CreateProcess and returned the captured output over the C2 channel."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0009 — Execution",
+            "behavior": "B0011 — Remote Commands",
+            "implementation": "Forwarded received commands to a local shell interpreter and relayed its output back over the existing channel."
+          }
+        ]
+      }
+    }
+  ]
+}

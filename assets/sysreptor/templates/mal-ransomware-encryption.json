@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "7cf0cf39-aadd-50b3-b480-c7a47cb85ce0",
+  "tags": [
+    "malware",
+    "endpoint",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "9cad55ca-7f4c-56f5-b499-bf89beb1827d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "File Encryption for Ransom",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:H",
+        "summary": "The sample encrypts files matching a target extension list using a symmetric key that is itself encrypted with an operator-held asymmetric key, rendering the data unrecoverable without the operator's private key.",
+        "description": "The design deliberately makes brute-forcing the key infeasible: a unique symmetric key per\nfile or per victim is wrapped with the operator's public key, so only the matching private\nkey — held only by the operator — can unwrap it, regardless of how the file's own\nencryption algorithm is attacked. Shadow copies, backups, and System Restore points are\nfrequently deleted or disabled as a preceding or concurrent step specifically to remove the\nrecovery paths that would otherwise make the encryption irrelevant.\n",
+        "recommendation": "* Isolate affected hosts immediately to stop encryption from spreading before recovery planning begins.\n* Check for and preserve any surviving backups or shadow copies the sample did not reach or delete before further action risks losing them.\n* Recover the sample's key-wrapping scheme and any per-victim key material left in memory or on disk — some families are vulnerable to key recovery if captured before deletion.\n",
+        "short_recommendation": "Isolate affected hosts immediately and preserve any surviving backups before they can be reached or deleted.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1486/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1486 — Data Encrypted for Impact",
+            "procedure": "Generated a unique AES key per file, encrypted file contents with it, then wrapped the key with an embedded RSA public key before deleting shadow copies."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "E1486 — Data Encrypted for Impact",
+            "implementation": "Per-file symmetric keys were wrapped with an operator-held asymmetric key, leaving decryption infeasible without it."
+          }
+        ]
+      }
+    }
+  ]
+}

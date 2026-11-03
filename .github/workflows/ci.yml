@@ -86,6 +86,7 @@ jobs:
           nix develop --command bash tests/shell/etc-hosts.sh
           nix develop --command bash tests/shell/nix-ld.sh
           nix develop --command bash tests/shell/resource-housekeeping.sh
+          nix develop --command bash tests/shell/sysreptor.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
@@ -133,6 +134,15 @@ jobs:
             exit 1
           fi
           echo "hardware-configuration.nix is not tracked ✓"
+
+      # The closure (KDE, Firefox, Burp Suite, Volatility3, SysReptor's
+      # bundled designs/templates, ...) now outgrows the runner's default
+      # root partition. These toolchains are preinstalled but unused here.
+      - name: Free disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h /
 
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM

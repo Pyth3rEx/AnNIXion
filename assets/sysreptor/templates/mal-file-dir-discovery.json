@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "ad7cc124-bd23-543a-8815-1780c02db927",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "c90d0b58-f78a-5cc1-92bb-cfcb7a1accd7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "File and Directory Discovery",
+        "cvss": "n/a",
+        "summary": "The sample enumerates files and directories on the host, typically to locate specific target data (documents, wallets, browser profiles) or to identify an installation path to avoid or target.",
+        "description": "This is the reconnaissance step that precedes collection or impact: before a ransomware\nroutine can encrypt documents, or a stealer can exfiltrate them, both need a file listing.\nThe scope and filters used in the enumeration (extensions included or excluded, paths\nskipped) are a direct preview of what the sample is about to do to or with what it finds.\n",
+        "recommendation": "* Record the enumeration's filters (extensions, excluded paths) before the sample proceeds; they describe its intended target set precisely.\n* Correlate this discovery step with whatever collection or impact routine follows it to scope affected data ahead of time rather than after the fact.\n* Note any explicitly excluded paths (its own installation directory, specific system folders) as a self-preservation signal.\n",
+        "short_recommendation": "Record the enumeration's file-extension filters before the sample proceeds; they preview its intended targets.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1083/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1083 — File and Directory Discovery",
+            "procedure": "Recursively enumerated user document directories filtering for a fixed list of office-document extensions."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0007 — Discovery",
+            "behavior": "E1083 — File and Directory Discovery",
+            "implementation": "Walked user profile directories collecting paths matching a fixed set of targeted file extensions."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "1ae7c2d4-a131-5828-8a73-7f07d002b4e0",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "797b377f-5e77-52f6-99f7-40cac8bfa7d8",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Command and Scripting Interpreter Abuse",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:L",
+        "summary": "The sample's logic runs substantially as script — PowerShell, a Windows Script Host language, a shell script — rather than as compiled native code, often invoked by a small native or document-embedded loader.",
+        "description": "Running as script changes the detection surface entirely: there is no PE file to scan once\nthe interpreter itself (a legitimate, signed system binary) is doing the executing, and\nthe actual logic lives in command-line arguments, a script file, or content piped via\nstdin that standard file-based AV scanning may never see as a discrete artefact. Script-\nblock logging and command-line auditing, where enabled, are usually the only reliable\nrecord of what actually ran.\n",
+        "recommendation": "* Enable and review script-block and command-line logging for the interpreter in use; file-based scanning alone will not have seen this payload.\n* Recover the full script content, not only the invoking command line — payloads are frequently passed encoded or staged from a second location the command line only references.\n* Restrict interpreter execution policy and constrained-language modes where the environment allows, to reduce what an arbitrary script is permitted to do even if it runs.\n",
+        "short_recommendation": "Enable script-block and command-line logging for the interpreter; file-based scanning will not have seen this payload.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1059/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1059 — Command and Scripting Interpreter",
+            "procedure": "A macro launched PowerShell with an encoded command argument that decoded and executed a staged script in memory."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0009 — Execution",
+            "behavior": "E1059 — Command and Scripting Interpreter",
+            "implementation": "Core payload logic executed as an in-memory PowerShell script rather than a compiled native binary."
+          }
+        ]
+      }
+    }
+  ]
+}

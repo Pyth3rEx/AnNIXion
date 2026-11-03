@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "95304ed2-ab51-5781-a7c6-c114022a0944",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1dcf6402-e13c-5153-9141-17993a637fe4",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Secondary Payload / Additional Tool Installation",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "Beyond fetching a single second-stage payload, the sample installs one or more additional, separately-functioning programs — a different malware family, a legitimate but unwanted tool, or a persistence helper.",
+        "description": "This is distinguished from simple ingress tool transfer by intent: rather than retrieving\nits own next stage, the sample is acting as an installer or loader-for-hire, bringing in\nentirely separate software with its own independent capability and lifecycle. This pattern\nis common in pay-per-install criminal ecosystems, where an initial infection vector is\nmonetised by installing whatever a buyer has paid to have distributed.\n",
+        "recommendation": "* Inventory every additional program installed, not only the initial sample — each may be a distinct family requiring its own independent analysis and remediation.\n* Treat the installing sample as a loader-for-hire indicator; its presence does not bound the actual threat to what it alone does.\n* Check installation timestamps against the initial infection window to establish whether additional installs happened immediately or were staged for later.\n",
+        "short_recommendation": "Inventory every additional program installed independently; each may be a distinct family needing its own remediation.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1105/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1105 — Ingress Tool Transfer",
+            "procedure": "Downloaded and silently installed a separate, independently functioning program via a bundled installer after initial execution."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0009 — Execution",
+            "behavior": "B0023 — Install Additional Program",
+            "implementation": "Installed a separate program with its own independent persistence and capability, distinct from the initial payload."
+          }
+        ]
+      }
+    }
+  ]
+}
