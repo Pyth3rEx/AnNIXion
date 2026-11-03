@@ -127,6 +127,14 @@ in
       "toolkit.telemetry.unified" = false;
       "browser.ping-centre.telemetry" = false;
 
+      # ── No sponsored content ───────────────────────────────────
+      "browser.newtabpage.activity-stream.showSponsored" = false;
+      "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+      "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+      "browser.newtabpage.activity-stream.feeds.topsites" = false;
+      "browser.newtabpage.activity-stream.system.showSponsored" = false;
+      "extensions.pocket.enabled" = false;
+
       # ── Storage ───────────────────────────────────────────────
       "signon.rememberSignons" = false;
       "browser.formfill.enable" = false;
