@@ -76,7 +76,8 @@ in
       # ceremony checks against real hardware, so platform authenticators
       # and security keys fail or time out. canvasblocker (below) plus
       # trackingprotection.fingerprinting cover canvas/font fingerprinting
-      # without it — same tradeoff osint.nix and puppet.nix already make.
+      # without it — the same tradeoff puppet.nix makes too. osint.nix takes
+      # full RFP instead, since recon work doesn't need passkey logins.
       "privacy.fingerprintingProtection" = true;
 
       # ── Enhanced tracking protection — strict ──────────────────
@@ -84,6 +85,11 @@ in
       "privacy.trackingprotection.socialtracking.enabled" = true;
       "privacy.trackingprotection.fingerprinting.enabled" = true;
       "privacy.trackingprotection.cryptomining.enabled" = true;
+      "privacy.socialtracking.block_cookies.enabled" = true;
+      "privacy.query_stripping.enabled" = true;
+
+      # ── Certificate revocation — CRLite ──────────────────────────
+      "security.pki.crlite_mode" = 2;
 
       # ── Cookie isolation (Total Cookie Protection) ─────────────
       "network.cookie.cookieBehavior" = 5;
@@ -108,6 +114,23 @@ in
       "toolkit.telemetry.unified" = false;
       "browser.ping-centre.telemetry" = false;
 
+      # ── Pinned despite being Firefox defaults today ─────────────
+      # Never assume a default holds on an opsec-sensitive profile — pin it.
+      "network.http.http3.enable" = true;
+      "fission.autostart" = true;
+      "gfx.webrender.all" = true;
+
+      # ── No sponsored content ───────────────────────────────────
+      "browser.newtabpage.activity-stream.showSponsored" = false;
+      "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+      "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+      "browser.newtabpage.activity-stream.feeds.topsites" = false;
+      "browser.newtabpage.activity-stream.system.showSponsored" = false;
+      "extensions.pocket.enabled" = false;
+
+      # ── PDF ────────────────────────────────────────────────────
+      "pdfjs.enableScripting" = false;
+
       # ── Storage ───────────────────────────────────────────────
       "signon.rememberSignons" = false;
       "browser.formfill.enable" = false;
@@ -119,6 +142,7 @@ in
       # cookies, storage and cache are held in memory and dropped on exit —
       # this is what makes the profile forget, not a shutdown sanitiser.
       "browser.privatebrowsing.autostart" = true;
+      "browser.privatebrowsing.forceMediaMemoryCache" = true;
       "places.history.enabled" = false;
       "browser.cache.disk.enable" = false;
       "browser.cache.offline.enable" = false;
