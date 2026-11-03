@@ -110,6 +110,18 @@ in
       "network.trr.uri" = "https://dns10.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.10";
       "network.dns.skipTRR-when-parental-control-enabled" = false;
+      "network.trr.useGET" = true;
+
+      # ── Encrypted Client Hello ─────────────────────────────────
+      # Hides the SNI from anyone on-path. Burp still sees the real target:
+      # it reads it from the CONNECT request's Host header, not from SNI.
+      "network.dns.echconfig.enabled" = true;
+      "network.dns.http3_echconfig.enabled" = true;
+      "network.dns.use_https_rr_as_altsvc" = true;
+      "security.tls.ech.grease_http3" = true;
+
+      # ── Certificate revocation — CRLite ──────────────────────────
+      "security.pki.crlite_mode" = 2;
 
       # ── WebRTC + geolocation ───────────────────────────────────
       "media.peerconnection.enabled" = false;
@@ -121,11 +133,20 @@ in
       "network.predictor.enabled" = false;
       "network.http.speculative-parallel-limit" = 0;
 
+      # ── Privacy tweaks ───────────────────────────────────────────
+      "privacy.query_stripping.enabled" = true;
+
       # ── Telemetry ─────────────────────────────────────────────
       "datareporting.healthreport.uploadEnabled" = false;
       "datareporting.policy.dataSubmissionEnabled" = false;
       "toolkit.telemetry.unified" = false;
       "browser.ping-centre.telemetry" = false;
+
+      # ── Pinned despite being Firefox defaults today ─────────────
+      # Never assume a default holds on an opsec-sensitive profile — pin it.
+      "network.http.http3.enable" = true;
+      "fission.autostart" = true;
+      "gfx.webrender.all" = true;
 
       # ── No sponsored content ───────────────────────────────────
       "browser.newtabpage.activity-stream.showSponsored" = false;
@@ -134,6 +155,9 @@ in
       "browser.newtabpage.activity-stream.feeds.topsites" = false;
       "browser.newtabpage.activity-stream.system.showSponsored" = false;
       "extensions.pocket.enabled" = false;
+
+      # ── PDF ────────────────────────────────────────────────────
+      "pdfjs.enableScripting" = false;
 
       # ── Storage ───────────────────────────────────────────────
       "signon.rememberSignons" = false;
