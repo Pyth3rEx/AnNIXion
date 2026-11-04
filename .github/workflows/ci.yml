@@ -72,6 +72,7 @@ jobs:
       - name: "[L0] Script tests"
         run: |
           nix develop --command bash tests/repo/milestone.sh
+          nix develop --command bash tests/repo/installer.sh
           nix develop --command bash tests/shell/prompt-width.sh
           nix develop --command bash tests/shell/firefox-profiles.sh
           nix develop --command bash tests/shell/catalog.sh

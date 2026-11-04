@@ -4,10 +4,15 @@ let
   version = lib.removeSuffix "\n" (builtins.readFile ../VERSION);
   branding = import ../branding { inherit pkgs; };
 
-  # Build the installer script as an ordinary executable
-  installScript = pkgs.writeShellScriptBin "annixion-install" (
-    builtins.readFile ../scripts/annixion-install
-  );
+  # The installer script plus the wizard/validation libraries it sources —
+  # bin/ and libexec/ side by side, so scripts/annixion-install's own
+  # relative lookup finds them the same way it does from a checkout.
+  installScript = pkgs.runCommand "annixion-install" { } ''
+    mkdir -p $out/bin $out/libexec/annixion-installer
+    install -m755 ${../scripts/annixion-install} $out/bin/annixion-install
+    install -m644 ${../scripts/installer/validate.sh} $out/libexec/annixion-installer/validate.sh
+    install -m644 ${../scripts/installer/wizard.sh} $out/libexec/annixion-installer/wizard.sh
+  '';
 in
 {
   # ── ISO image metadata ──────────────────────────────────────────────────
@@ -54,7 +59,7 @@ in
   networking.hostName = lib.mkDefault "AnNIXion";
   networking.networkmanager.enable = lib.mkDefault true;
 
-  time.timeZone = lib.mkDefault "Europe/Paris";
+  time.timeZone = lib.mkDefault "UTC";
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
   # ── Live user — auto‑login to shell ────────────────────────────────────
@@ -104,6 +109,12 @@ in
     wget
     curl
     vim
+    gum # the installer wizard's TUI
+    mkpasswd # hashes the account password the wizard collects
+    jq # parses `nix eval --json` output in installer/validate.sh
+    # Mints the sysreptor login hash — hashlib/secrets/base64/string are all
+    # stdlib, so the bare interpreter is enough (installer/wizard.sh).
+    python3
   ];
 
   system.stateVersion = "26.05";

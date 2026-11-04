@@ -192,10 +192,11 @@ in
 
     hashedPassword = lib.mkOption {
       type = lib.types.str;
-      # The same password the operator account ships with, hashed the way
-      # Django stores one. Shared defaults are a known weakness and the
-      # roadmap retires both together, at the point the installer can ask.
-      default = "pbkdf2_sha256$600000$1Zx7Fw2rgHIcWI5lftgEYR$9w5SB3pd+ObVoR5XrXwmvIyIwoVRFqPe1S8qLdW6CLM=";
+      # No default: a shared one is a known weakness, and the installer
+      # retires it together with the operator account's (system/core/users.nix)
+      # — annixion-install's wizard hashes the password it collects both ways.
+      # system/hardware-stub.nix sets this to "" for CI/VM tests, which carry
+      # no real machine.
       example = "pbkdf2_sha256$600000$<salt>$<hash>";
       description = ''
         Password for the declared login, as a Django PBKDF2 hash — mint one
@@ -207,9 +208,10 @@ in
         this to `""` to create no account at all and use
         `sysreptor superuser` by hand.
 
-        The default is the same one the operator account ships with, which
-        means it is public. Change it, or at least change it in the UI after
-        the first login — the Community Edition cannot force that, as
+        Required — annixion-install's wizard sets it; an existing-NixOS
+        install sets it by hand in user/configuration.nix (see
+        docs/installation.md). Change it, or at least change it in the UI
+        after the first login — the Community Edition cannot force that, as
         `must_change_password` is a Professional-edition feature.
       '';
     };

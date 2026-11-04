@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -16,9 +17,8 @@ let
   };
 in
 {
-  programs.firefox.profiles."osint" = {
+  programs.firefox.profiles."osint" = lib.mkIf osConfig.annixion.firefox.profiles.osint.enable {
     id = 2;
-    isDefault = true;
     name = "OSINT";
     search = {
       default = "ddg";

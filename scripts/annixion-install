@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #
 # annixion-install — guided installer, bundled into the live ISO.
-# Partitions and formats a disk, clones the config to ~/.dotfiles and runs
-# nixos-install. See docs/installation.md.
+# Collects a config (wizard or --user-config), partitions and formats a
+# disk, clones the config to ~/.dotfiles and runs nixos-install. See
+# docs/installation.md.
 
 set -euo pipefail
 
@@ -15,26 +16,65 @@ success() { echo -e "${GREEN}${BOLD} ✓  $*${RESET}"; }
 warn()    { echo -e "${YELLOW}${BOLD}[!] $*${RESET}"; }
 die()     { echo -e "${RED}${BOLD}[✗] $*${RESET}" >&2; exit 1; }
 
-# ── Help ────────────────────────────────────────────────────────────────────
+# installer/validate.sh and installer/wizard.sh sit beside this script's own
+# store path (iso/default.nix), whether run from the ISO or (for --help)
+# straight out of a checkout.
+INSTALLER_LIBEXEC="$(cd "$(dirname "${BASH_SOURCE[0]}")/../libexec/annixion-installer" 2>/dev/null && pwd || true)"
+if [[ -z "$INSTALLER_LIBEXEC" ]]; then
+  INSTALLER_LIBEXEC="$(cd "$(dirname "${BASH_SOURCE[0]}")/installer" 2>/dev/null && pwd || true)"
+fi
+[[ -n "$INSTALLER_LIBEXEC" ]] || die "cannot find installer/validate.sh and installer/wizard.sh."
+# shellcheck source=scripts/installer/validate.sh disable=SC1091
+source "$INSTALLER_LIBEXEC/validate.sh"
+# shellcheck source=scripts/installer/wizard.sh disable=SC1091
+source "$INSTALLER_LIBEXEC/wizard.sh"
+
+# ── Arguments ────────────────────────────────────────────────────────────────
 # Handled before the sudo re-exec, so --help never needs root.
-case "${1:-}" in
-  -h | --help)
-    cat <<'USAGE'
-usage: annixion-install
+ORIG_ARGS=("$@")
+USER_CONFIG=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h | --help)
+      cat <<'USAGE'
+usage: annixion-install [--user-config <path|git-url>]
 
-Installs AnNIXion to disk from the live ISO: partitions, formats, mounts
-and runs nixos-install. Re-execs itself through sudo.
+Installs AnNIXion to disk from the live ISO: collects a config (wizard, or
+imported with --user-config), partitions, formats, mounts and runs
+nixos-install. Re-execs itself through sudo.
 
-  -h, --help  show this help
+  --user-config <path|git-url>  import an existing user/ folder and skip
+                                 whatever prompts it already answers
+  -h, --help                    show this help
 USAGE
-    exit 0
-    ;;
-esac
+      exit 0
+      ;;
+    --user-config)
+      [[ $# -ge 2 ]] || die "--user-config needs a path or git URL."
+      USER_CONFIG="$2"
+      shift 2
+      ;;
+    *)
+      die "unknown argument: $1 (see --help)"
+      ;;
+  esac
+done
+
+# ── Test hooks ───────────────────────────────────────────────────────────────
+# Every ANNIXION_TEST_* variable is tests/repo/installer.sh's own seam into a
+# script that otherwise assumes a real disk and a real root re-exec. None of
+# them are set, or meant to be set, outside that test.
+MNT="${ANNIXION_TEST_MNT:-/mnt}"
+
+# ── UEFI guard ───────────────────────────────────────────────────────────────
+# Checked before any disk is touched: a CSM/legacy boot succeeds all the way
+# through nixos-install and only fails at the boot loader, disk already wiped.
+[[ -d "${ANNIXION_TEST_EFI_DIR:-/sys/firmware/efi}" ]] || die "booted in legacy BIOS/CSM mode — AnNIXion is UEFI-only. See docs/installation.md."
 
 # ── Elevate to root ─────────────────────────────────────────────────────────
 # The live ISO grants operator passwordless sudo for this script.
-if [[ ${EUID} -ne 0 ]]; then
-  exec sudo "$0" "$@"
+if [[ ${EUID} -ne 0 && -z "${ANNIXION_TEST_SKIP_SUDO:-}" ]]; then
+  exec sudo "$0" "${ORIG_ARGS[@]}"
 fi
 
 # ── Banner ─────────────────────────────────────────────────────────────────
@@ -53,14 +93,77 @@ echo -e "${RESET}"
 echo -e "  This script will install ${BOLD}AnNIXion${RESET} onto your machine."
 echo -e "  ${YELLOW}All data on the chosen disk will be permanently erased.${RESET}\n"
 
+# ── Fetch AnNIXion, and resolve the config, before any disk is touched ─────
+# A scratch clone, not /mnt/home/operator/.dotfiles yet — there is no disk
+# to hold it until after partitioning. Moved into place once there is one.
+STAGE=$(mktemp -d)
+info "Fetching AnNIXion configuration"
+git clone "${ANNIXION_TEST_REPO_URL:-https://github.com/Pyth3rEx/AnNIXion}" "$STAGE"
+success "Cloned"
+
+CANDIDATE=""
+if [[ -n "$USER_CONFIG" ]]; then
+  case "$USER_CONFIG" in
+    http://* | https://* | git@* | ssh://*)
+      warn "Importing a config from a URL runs arbitrary Nix as root during install."
+      CANDIDATE=$(mktemp -d)
+      git clone --depth 1 "$USER_CONFIG" "$CANDIDATE"
+      ;;
+    *)
+      [[ -d "$USER_CONFIG" ]] || die "$USER_CONFIG is not a directory."
+      CANDIDATE="$USER_CONFIG"
+      ;;
+  esac
+fi
+
+if [[ -n "$CANDIDATE" ]]; then
+  info "Validating the provided config"
+  while true; do
+    status=$(validate_config "$CANDIDATE" "$STAGE")
+    [[ "$status" == "ok" ]] && break
+    warn "That config does not evaluate: ${status#broken: }"
+    choice=$(gum choose "Edit it" "Continue without it" "Abort")
+    case "$choice" in
+      "Edit it") "${EDITOR:-vi}" "$CANDIDATE/user/configuration.nix" ;;
+      "Continue without it")
+        CANDIDATE=""
+        break
+        ;;
+      *) die "Aborted." ;;
+    esac
+  done
+  [[ -n "$CANDIDATE" ]] && success "Config evaluates"
+fi
+
+CURRENT_VERSION=$(tr -d '[:space:]' <"$STAGE/VERSION")
+RUN_WIZARD="true"
+WIZARD_DEFAULTS=""
+if [[ -n "$CANDIDATE" ]]; then
+  read -r cand_version cand_skip <<<"$(read_config_stamp "$CANDIDATE")"
+  if [[ -n "$cand_version" ]] && version_ge "$cand_version" "$MIN_CONFIG_VERSION" && [[ "$cand_skip" == "skip" ]]; then
+    RUN_WIZARD="false"
+  else
+    WIZARD_DEFAULTS=$(extract_defaults "$STAGE")
+  fi
+fi
+
+if [[ "$RUN_WIZARD" == "true" ]]; then
+  run_wizard "$WIZARD_DEFAULTS"
+  write_user_folder "$STAGE" "$CURRENT_VERSION"
+else
+  info "Reusing the provided config — skipping the wizard"
+fi
+
 # ── Disk selection ─────────────────────────────────────────────────────────
+# Interactive in every case — it describes the machine in front of you, not
+# a stored preference.
 info "Available disks"
 lsblk -d -o NAME,SIZE,MODEL --noheadings | grep -Ev "loop|sr[0-9]"
 echo
 
 read -rp "  Disk to install on (e.g. sda, nvme0n1): " DISK_NAME
 DISK="/dev/${DISK_NAME}"
-[[ -b "$DISK" ]] || die "$DISK is not a block device."
+[[ -b "$DISK" || -n "${ANNIXION_TEST_SKIP_DISK_CHECK:-}" ]] || die "$DISK is not a block device."
 
 DISK_SIZE=$(lsblk -dno SIZE "$DISK")
 echo
@@ -98,24 +201,24 @@ success "Formatted"
 # By device node, not by-label: udev populates those symlinks asynchronously
 # after mkfs, and racing it yields "Can't lookup blockdev".
 info "Mounting"
-mount "$PART_ROOT" /mnt
-mkdir -p /mnt/boot
-mount "$PART_BOOT" /mnt/boot
-success "Mounted at /mnt"
+mount "$PART_ROOT" "$MNT"
+mkdir -p "$MNT/boot"
+mount "$PART_BOOT" "$MNT/boot"
+success "Mounted at $MNT"
 
-# ── Fetch AnNIXion config ──────────────────────────────────────────────────
+# ── Move the resolved config into place ─────────────────────────────────────
 # ~/.dotfiles is its canonical location, not /etc/nixos: the Home Manager
 # modules and shell aliases reference that path, and cloning anywhere else
-# leaves the wallpaper, icons and certs dangling.
-DOTFILES="/mnt/home/operator/.dotfiles"
-info "Cloning AnNIXion configuration"
-mkdir -p /mnt/home/operator
-git clone https://github.com/Pyth3rEx/AnNIXion "$DOTFILES"
-success "Cloned to /home/operator/.dotfiles"
+# leaves the wallpaper, icons and certs dangling. Moved rather than cloned
+# again — $STAGE already holds the config, validated above.
+DOTFILES="$MNT/home/operator/.dotfiles"
+mkdir -p "$MNT/home/operator"
+mv "$STAGE" "$DOTFILES"
+success "Configuration in place at /home/operator/.dotfiles"
 
 # ── Hardware config ────────────────────────────────────────────────────────
 info "Detecting hardware"
-nixos-generate-config --root /mnt --dir "$DOTFILES"
+nixos-generate-config --root "$MNT" --dir "$DOTFILES"
 # The flake owns system config; drop the generated configuration.nix.
 rm -f "$DOTFILES/configuration.nix"
 # Flakes ignore untracked files, and this one is gitignored. Staging is
@@ -126,13 +229,13 @@ success "hardware-configuration.nix written and staged"
 # ── Install ────────────────────────────────────────────────────────────────
 info "Installing AnNIXion — this will take a while"
 echo -e "  ${YELLOW}Tip: security tools are large. Expect 30–60 min on a slow connection.${RESET}\n"
-nixos-install --root /mnt --flake "$DOTFILES#AnNIXion" --no-root-password
+nixos-install --root "$MNT" --flake "$DOTFILES#AnNIXion" --no-root-password
 
 # ── Ownership ───────────────────────────────────────────────────────────────
 # Cloned as root. Resolve uid/gid inside the installed system so the result
 # holds whatever ids it allocated.
 info "Fixing ownership of /home/operator"
-nixos-enter --root /mnt -c 'chown -R operator:users /home/operator'
+nixos-enter --root "$MNT" -c 'chown -R operator:users /home/operator'
 success "Ownership set"
 
 # ── Done ───────────────────────────────────────────────────────────────────
@@ -141,4 +244,6 @@ success "Installation complete!"
 echo -e "\n  ${BOLD}Login:${RESET}  operator  /  (password set in your configuration)"
 echo -e "  ${BOLD}Next:${RESET}   reboot, remove the USB, and boot from disk.\n"
 read -rp "  Reboot now? [y/N] " REBOOT
-[[ "${REBOOT,,}" == "y" ]] && reboot
+if [[ "${REBOOT,,}" == "y" ]]; then
+  reboot
+fi

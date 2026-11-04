@@ -77,8 +77,9 @@ broke() {
 
 mapfile -t nix_files < <(git ls-files '*.nix')
 mapfile -t sh_files < <(git ls-files '*.sh')
-# The installer carries no extension.
+# These two carry no extension.
 [ -f scripts/annixion-install ] && sh_files+=(scripts/annixion-install)
+[ -f scripts/annixion-config-doctor ] && sh_files+=(scripts/annixion-config-doctor)
 
 section nixfmt
 # nixfmt reports unformatted paths on stderr, so that is the findings channel.
