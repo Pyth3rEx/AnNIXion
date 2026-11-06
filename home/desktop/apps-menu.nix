@@ -203,7 +203,7 @@ in
 {
   # Rebuild the KDE service cache once every file is on disk.
   home.activation.rebuildMenuCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/operator/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
+    $DRY_RUN_CMD env XDG_DATA_DIRS="/etc/profiles/per-user/${config.home.username}/share:${config.home.homeDirectory}/.nix-profile/share:''${XDG_DATA_DIRS:-/run/current-system/sw/share}" \
       ${pkgs.kdePackages.kservice}/bin/kbuildsycoca6 --noincremental 2>/dev/null || true
   '';
 

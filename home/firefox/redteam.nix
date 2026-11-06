@@ -4,6 +4,7 @@
   config,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -17,7 +18,7 @@ let
   };
 in
 {
-  programs.firefox.profiles."redteam" = {
+  programs.firefox.profiles."redteam" = lib.mkIf osConfig.annixion.firefox.profiles.redteam.enable {
     id = 1;
     name = "Red Team";
     search = {

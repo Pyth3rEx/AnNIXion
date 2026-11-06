@@ -2,10 +2,12 @@
 # Ordering in this list is the ordering on screen.
 {
   lib,
+  osConfig,
   ...
 }:
 let
   tileModel = import ./start-menu.nix { inherit lib; };
+  profileCfg = osConfig.annixion.firefox.profiles;
 in
 {
   programs.plasma = {
@@ -55,12 +57,13 @@ in
                 "applications:annixion-konsole-root.desktop"
                 # File manager
                 "applications:org.kde.dolphin.desktop"
-                # Browser profiles. Red Team also brings up Burp — see
-                # home/desktop/redteam-launch.nix.
-                "applications:firefox-red.desktop"
-                "applications:firefox-osint.desktop"
-                "applications:firefox-puppet.desktop"
-              ];
+              ]
+              # Browser profiles. Red Team also brings up Burp — see
+              # home/desktop/redteam-launch.nix. Unpinned when disabled,
+              # per annixion.firefox.profiles.*.enable.
+              ++ lib.optional profileCfg.redteam.enable "applications:firefox-red.desktop"
+              ++ lib.optional profileCfg.osint.enable "applications:firefox-osint.desktop"
+              ++ lib.optional profileCfg.puppet.enable "applications:firefox-puppet.desktop";
             };
           }
 

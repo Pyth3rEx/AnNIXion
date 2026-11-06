@@ -2,8 +2,12 @@
 # window before starting a second copy of the application.
 {
   lib,
+  osConfig,
   ...
 }:
+let
+  profileCfg = osConfig.annixion.firefox.profiles;
+in
 {
   programs.plasma = {
 
@@ -73,51 +77,57 @@
           command = ''annixion-raise "${pattern}" ${command}'';
         };
       in
-      lib.mkDefault {
-        # ── System ──────────────────────────────────────────────
-        # Not a raise: annixion-cc is a toggle dialog, not a window to focus.
-        control-center = {
-          name = "AnNIXion Control Center";
-          comment = "AnNIXion Control Center";
-          key = "Meta+Shift+C";
-          command = "annixion-cc";
-        };
+      lib.mkDefault (
+        {
+          # ── System ──────────────────────────────────────────────
+          # Not a raise: annixion-cc is a toggle dialog, not a window to focus.
+          control-center = {
+            name = "AnNIXion Control Center";
+            comment = "AnNIXion Control Center";
+            key = "Meta+Shift+C";
+            command = "annixion-cc";
+          };
 
-        # ── Heavy use ───────────────────────────────────────────
-        konsole = raise "Meta+F1" "Konsole" "konsole.konsole" "konsole";
+          # ── Heavy use ───────────────────────────────────────────
+          konsole = raise "Meta+F1" "Konsole" "konsole.konsole" "konsole";
 
-        konsole-root =
-          raise "Meta+F2" "Konsole (root)" "konsole-root"
-            "konsole -name konsole-root --profile Root -e sudo -i";
+          konsole-root =
+            raise "Meta+F2" "Konsole (root)" "konsole-root"
+              "konsole -name konsole-root --profile Root -e sudo -i";
 
-        dolphin = raise "Meta+F3" "Dolphin" "dolphin" "dolphin";
+          dolphin = raise "Meta+F3" "Dolphin" "dolphin" "dolphin";
+        }
+        # Dropped per annixion.firefox.profiles.*.enable, same as the panel pins.
+        // lib.optionalAttrs profileCfg.redteam.enable {
+          # annixion-redteam sets MOZ_APP_REMOTINGNAME, which is what gives each
+          # profile its own WM_CLASS, and starts Burp alongside the browser.
+          firefox-red = raise "Meta+F4" "Firefox — Red Team" "firefox-red" "annixion-redteam";
+        }
+        // lib.optionalAttrs profileCfg.osint.enable {
+          firefox-osint =
+            raise "Meta+F5" "Firefox — OSINT" "firefox-osint"
+              ''env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT"'';
+        }
+        // lib.optionalAttrs profileCfg.puppet.enable {
+          firefox-puppet =
+            raise "Meta+F6" "Firefox — Puppet Master" "firefox-puppet"
+              ''env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master"'';
+        }
+        // {
+          burpsuite = raise "Meta+F7" "Burp Suite" "burp*" "burpsuite";
 
-        # annixion-redteam sets MOZ_APP_REMOTINGNAME, which is what gives each
-        # profile its own WM_CLASS, and starts Burp alongside the browser.
-        firefox-red = raise "Meta+F4" "Firefox — Red Team" "firefox-red" "annixion-redteam";
+          metasploit = raise "Meta+F8" "Metasploit" "konsole-msf" "konsole -name konsole-msf -e msfconsole";
 
-        # ── Offensive ───────────────────────────────────────────
-        firefox-osint =
-          raise "Meta+F5" "Firefox — OSINT" "firefox-osint"
-            ''env MOZ_APP_REMOTINGNAME=firefox-osint annixion-vpn-browser "OSINT"'';
+          wireshark = raise "Meta+F9" "Wireshark" "wireshark" "wireshark";
 
-        firefox-puppet =
-          raise "Meta+F6" "Firefox — Puppet Master" "firefox-puppet"
-            ''env MOZ_APP_REMOTINGNAME=firefox-puppet annixion-vpn-browser "Puppet Master"'';
+          # Java sets both halves of WM_CLASS to the StartupWMClass name.
+          ghidra = raise "Meta+F10" "Ghidra" "ghidra*" "ghidra";
 
-        burpsuite = raise "Meta+F7" "Burp Suite" "burp*" "burpsuite";
+          # ── Work ────────────────────────────────────────────────
+          vscodium = raise "Meta+F11" "VSCodium" "vscodium" "codium";
 
-        metasploit = raise "Meta+F8" "Metasploit" "konsole-msf" "konsole -name konsole-msf -e msfconsole";
-
-        wireshark = raise "Meta+F9" "Wireshark" "wireshark" "wireshark";
-
-        # Java sets both halves of WM_CLASS to the StartupWMClass name.
-        ghidra = raise "Meta+F10" "Ghidra" "ghidra*" "ghidra";
-
-        # ── Work ────────────────────────────────────────────────
-        vscodium = raise "Meta+F11" "VSCodium" "vscodium" "codium";
-
-        obsidian = raise "Meta+F12" "Obsidian" "obsidian" "obsidian";
-      };
+          obsidian = raise "Meta+F12" "Obsidian" "obsidian" "obsidian";
+        }
+      );
   };
 }

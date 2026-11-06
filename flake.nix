@@ -43,12 +43,15 @@
       # and the CI stand-in so the two cannot drift apart.
       baseModules = [
         # ── Feature modules ──────────────────────────────────
+        ./system/compat.nix
         ./system/desktop.nix
+        ./system/firefox-profiles.nix
         ./system/branding.nix
         ./system/xrdp.nix
         ./system/security-tools.nix
         ./system/burp-ca.nix
         ./system/cve-report.nix
+        ./system/config-doctor.nix
         ./system/vpn
         ./system/hardening.nix
         ./system/offensive-net.nix

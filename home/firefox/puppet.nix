@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -16,7 +17,7 @@ let
   };
 in
 {
-  programs.firefox.profiles."puppet" = {
+  programs.firefox.profiles."puppet" = lib.mkIf osConfig.annixion.firefox.profiles.puppet.enable {
     id = 3;
     name = "Puppet Master";
     search = {
