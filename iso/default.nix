@@ -196,6 +196,7 @@ in
     parted
     dosfstools # mkfs.fat
     e2fsprogs # mkfs.ext4
+    cryptsetup # LUKS2 full-disk encryption
     networkmanager
     networkmanagerapplet
     pciutils

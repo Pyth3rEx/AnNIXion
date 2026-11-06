@@ -222,6 +222,32 @@ warn "ALL DATA ON $DISK ($DISK_SIZE) WILL BE ERASED."
 read -rp "  Type 'yes' to confirm: " CONFIRM
 [[ "$CONFIRM" == "yes" ]] || { echo "Aborted."; exit 0; }
 
+# ── Encryption ───────────────────────────────────────────────────────────
+# A per-disk decision, not a stored preference — same reasoning as disk
+# selection itself, so this is never skipped by --user-config and never
+# written into user/configuration.nix.
+ENCRYPT_DISK="false"
+if gum confirm --default=true "Encrypt $DISK with LUKS2? (strongly recommended)"; then
+  ENCRYPT_DISK="true"
+fi
+
+LUKS_PASSPHRASE=""
+if [[ "$ENCRYPT_DISK" == "true" ]]; then
+  while true; do
+    lp1=$(gum input --password --header "LUKS passphrase")
+    lp2=$(gum input --password --header "Again, to confirm")
+    if [[ -z "$lp1" ]]; then
+      gum style --foreground 196 "An empty passphrase is not one."
+      continue
+    fi
+    [[ "$lp1" == "$lp2" ]] && break
+    gum style --foreground 196 "Those did not match — try again."
+  done
+  LUKS_PASSPHRASE="$lp1"
+  lp1=""
+  lp2=""
+fi
+
 # Derive partition names (nvme0n1 → nvme0n1p1, sda → sda1)
 if [[ "$DISK" == *nvme* || "$DISK" == *mmcblk* ]]; then
   PART_BOOT="${DISK}p1"
@@ -243,6 +269,7 @@ info "Clearing any previous attempt on this disk"
 swapoff "$PART_ROOT" "$PART_BOOT" 2>/dev/null || true
 umount -R "$MNT" 2>/dev/null || true
 umount "$PART_ROOT" "$PART_BOOT" 2>/dev/null || true
+cryptsetup close cryptroot 2>/dev/null || true
 wipefs -af "$DISK" "$PART_BOOT" "$PART_ROOT" 2>/dev/null || true
 success "Disk is clear"
 
@@ -256,27 +283,47 @@ gum spin --show-error --title "Partitioning $DISK" -- \
 success "Partitioned"
 
 # ── Format ─────────────────────────────────────────────────────────────────
-gum spin --show-error --title "Formatting partitions" -- bash -c '
+gum spin --show-error --title "Formatting partitions" -- env \
+  ANNIXION_LUKS_PASSPHRASE="$LUKS_PASSPHRASE" bash -c '
   set -e
   mkfs.fat -F 32 -n BOOT "$1"
   # -F: format even though mke2fs thinks the partition already holds a
   # filesystem — true every retry on this same disk, and otherwise its
   # "proceed anyway?" prompt hangs invisibly under gum spin forever.
-  mkfs.ext4 -F -L nixos "$2"
+  if [[ "$2" == "true" ]]; then
+    # Cipher and KDF cost are pinned explicitly, not left to cryptsetup auto
+    # benchmarking against the install machine CPU/RAM to hit a ~2s default
+    # — the same passphrase would otherwise end up weaker on a slow VM than
+    # on a fast laptop. aes-xts-plain64/512 is the LUKS2 default cipher
+    # (AES-256-XTS); argon2id at a ~10-15s, 2 GiB ceiling is a deliberately
+    # harder target than that ~2s default. No --allow-discards: TRIM would
+    # leak block-usage patterns to the underlying SSD controller.
+    printf "%s" "$ANNIXION_LUKS_PASSPHRASE" | cryptsetup --batch-mode luksFormat --type luks2 \
+      --cipher aes-xts-plain64 --key-size 512 \
+      --pbkdf argon2id --pbkdf-memory 2097152 --pbkdf-parallel 4 --iter-time 12000 \
+      "$3" --key-file -
+    printf "%s" "$ANNIXION_LUKS_PASSPHRASE" | cryptsetup open "$3" cryptroot --key-file -
+    mkfs.ext4 -F -L nixos /dev/mapper/cryptroot
+  else
+    mkfs.ext4 -F -L nixos "$3"
+  fi
   # Let udev create the /dev/disk/by-label/* symlinks before we rely on them.
   udevadm settle
-' -- "$PART_BOOT" "$PART_ROOT"
+' -- "$PART_BOOT" "$ENCRYPT_DISK" "$PART_ROOT"
+LUKS_PASSPHRASE=""
 success "Formatted"
 
 # ── Mount ──────────────────────────────────────────────────────────────────
 # By device node, not by-label: udev populates those symlinks asynchronously
 # after mkfs, and racing it yields "Can't lookup blockdev".
+ROOT_DEV="$PART_ROOT"
+[[ "$ENCRYPT_DISK" == "true" ]] && ROOT_DEV="/dev/mapper/cryptroot"
 gum spin --show-error --title "Mounting" -- bash -c '
   set -e
   mount "$1" "$2"
   mkdir -p "$2/boot"
   mount "$3" "$2/boot"
-' -- "$PART_ROOT" "$MNT" "$PART_BOOT"
+' -- "$ROOT_DEV" "$MNT" "$PART_BOOT"
 success "Mounted at $MNT"
 
 # ── Move the resolved config into place ─────────────────────────────────────
@@ -298,6 +345,16 @@ rm -f "$DOTFILES/configuration.nix"
 # enough — Nix reads the index without needing a commit.
 git -C "$DOTFILES" add -f hardware-configuration.nix
 success "hardware-configuration.nix written and staged"
+
+# Never let an install that was supposed to be encrypted boot up silently
+# unencrypted: nixos-generate-config detects a mounted LUKS container on
+# its own and writes boot.initrd.luks.devices for it, but if that detection
+# ever fails, the install would otherwise succeed with an initrd that never
+# asks for a passphrase.
+if [[ "$ENCRYPT_DISK" == "true" ]]; then
+  grep -q 'boot.initrd.luks.devices' "$DOTFILES/hardware-configuration.nix" ||
+    die "nixos-generate-config did not detect the LUKS container — refusing to install a system whose initrd never asks for a passphrase. See docs/installation.md."
+fi
 
 # ── Install ────────────────────────────────────────────────────────────────
 # Reserves the top of the screen for a bordered banner via a terminal
