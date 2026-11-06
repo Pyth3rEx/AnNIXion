@@ -16,6 +16,36 @@ success() { echo -e "${GREEN}${BOLD} ✓  $*${RESET}"; }
 warn()    { echo -e "${YELLOW}${BOLD}[!] $*${RESET}"; }
 die()     { echo -e "${RED}${BOLD}[✗] $*${RESET}" >&2; exit 1; }
 
+# Takes over the whole terminal instead of scrolling text in the login
+# shell behind it — entered once the banner is about to print, below.
+# On a failure inside the alt screen, the error would otherwise vanish the
+# instant rmcup switches back; pause so it stays readable first.
+ALTSCREEN=0
+# Set only around the install step's banner (below) — a scroll region or
+# background animation left dangling past this script's exit, from a
+# crash or Ctrl-C rather than the normal path that already cleans both up
+# inline, would leave the next shell looking broken the same way nmtui did
+# before that got fixed. Cleaned up here unconditionally, same reasoning
+# as ALTSCREEN/rmcup above.
+SCROLL_REGION_SET=0
+ANIM_PID=""
+_leave_altscreen() {
+  local status=$?
+  [[ -n "$ANIM_PID" ]] && kill "$ANIM_PID" 2>/dev/null
+  if [[ "$SCROLL_REGION_SET" == 1 ]]; then
+    tput csr 0 "$(($(tput lines 2>/dev/null || echo 24) - 1))" 2>/dev/null || true
+  fi
+  if [[ "$ALTSCREEN" == 1 ]]; then
+    if [[ $status -ne 0 ]]; then
+      echo
+      read -rp "  Press Enter to return to the shell... " _ || true
+    fi
+    tput rmcup 2>/dev/null || true
+  fi
+  exit "$status"
+}
+trap _leave_altscreen EXIT
+
 # installer/validate.sh and installer/wizard.sh sit beside this script's own
 # store path (iso/default.nix), whether run from the ISO or (for --help)
 # straight out of a checkout.
@@ -78,9 +108,10 @@ if [[ ${EUID} -ne 0 && -z "${ANNIXION_TEST_SKIP_SUDO:-}" ]]; then
 fi
 
 # ── Banner ─────────────────────────────────────────────────────────────────
+tput smcup 2>/dev/null && ALTSCREEN=1
 clear
-echo -e "${RED}${BOLD}"
-cat << 'EOF'
+BANNER_ART=$(
+  cat <<'EOF'
  █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗
 ██╔══██╗████╗  ██║████╗ ██║██║╚██╗██╔╝██║██╔═══██╗████╗██║
 ███████║██╔██╗ ██║██╔██╗██║██║ ╚███╔╝ ██║██║   ██║██╔████║
@@ -89,16 +120,19 @@ cat << 'EOF'
 ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚══╝╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝
                                         I N S T A L L E R
 EOF
-echo -e "${RESET}"
-echo -e "  This script will install ${BOLD}AnNIXion${RESET} onto your machine."
-echo -e "  ${YELLOW}All data on the chosen disk will be permanently erased.${RESET}\n"
+)
+gum style --foreground 196 --bold --border double --padding "1 4" --align center "$BANNER_ART" "" \
+  "This will install AnNIXion onto this machine." \
+  "All data on the chosen disk will be permanently erased." "" \
+  "No network yet? Ctrl-C, run nmtui, then annixion-install again."
+echo
 
 # ── Fetch AnNIXion, and resolve the config, before any disk is touched ─────
 # A scratch clone, not /mnt/home/operator/.dotfiles yet — there is no disk
 # to hold it until after partitioning. Moved into place once there is one.
 STAGE=$(mktemp -d)
-info "Fetching AnNIXion configuration"
-git clone "${ANNIXION_TEST_REPO_URL:-https://github.com/Pyth3rEx/AnNIXion}" "$STAGE"
+gum spin --show-error --title "Fetching AnNIXion configuration" -- \
+  git clone "${ANNIXION_TEST_REPO_URL:-https://github.com/Pyth3rEx/AnNIXion}" "$STAGE"
 success "Cloned"
 
 CANDIDATE=""
@@ -158,7 +192,8 @@ fi
 # Interactive in every case — it describes the machine in front of you, not
 # a stored preference.
 info "Available disks"
-lsblk -d -o NAME,SIZE,MODEL --noheadings | grep -Ev "loop|sr[0-9]"
+gum style --foreground 15 --border rounded --padding "0 1" \
+  "$(lsblk -d -o NAME,SIZE,MODEL --noheadings | grep -Ev "loop|sr[0-9]")"
 echo
 
 read -rp "  Disk to install on (e.g. sda, nvme0n1): " DISK_NAME
@@ -171,15 +206,6 @@ warn "ALL DATA ON $DISK ($DISK_SIZE) WILL BE ERASED."
 read -rp "  Type 'yes' to confirm: " CONFIRM
 [[ "$CONFIRM" == "yes" ]] || { echo "Aborted."; exit 0; }
 
-# ── Partition ──────────────────────────────────────────────────────────────
-info "Partitioning $DISK"
-parted --script "$DISK" \
-  mklabel gpt \
-  mkpart ESP fat32 1MiB 512MiB \
-  set 1 esp on \
-  mkpart primary 512MiB 100%
-success "Partitioned"
-
 # Derive partition names (nvme0n1 → nvme0n1p1, sda → sda1)
 if [[ "$DISK" == *nvme* || "$DISK" == *mmcblk* ]]; then
   PART_BOOT="${DISK}p1"
@@ -189,21 +215,52 @@ else
   PART_ROOT="${DISK}2"
 fi
 
+# ── Clean slate ──────────────────────────────────────────────────────────
+# A previous attempt on this disk — or a reused $MNT from one earlier this
+# boot — can leave partitions mounted, swap active, or a filesystem/RAID/LVM
+# signature behind that both parted and mke2fs treat as "are you sure?"
+# territory. mke2fs's version of that prompt is invisible under gum spin's
+# hidden output and just hangs forever waiting for an answer nobody can
+# see to give. None of that should matter here: unconditionally tear it
+# all down before the disk is touched for real.
+info "Clearing any previous attempt on this disk"
+swapoff "$PART_ROOT" "$PART_BOOT" 2>/dev/null || true
+umount -R "$MNT" 2>/dev/null || true
+umount "$PART_ROOT" "$PART_BOOT" 2>/dev/null || true
+wipefs -af "$DISK" "$PART_BOOT" "$PART_ROOT" 2>/dev/null || true
+success "Disk is clear"
+
+# ── Partition ──────────────────────────────────────────────────────────────
+gum spin --show-error --title "Partitioning $DISK" -- \
+  parted --script "$DISK" \
+  mklabel gpt \
+  mkpart ESP fat32 1MiB 512MiB \
+  set 1 esp on \
+  mkpart primary 512MiB 100%
+success "Partitioned"
+
 # ── Format ─────────────────────────────────────────────────────────────────
-info "Formatting partitions"
-mkfs.fat -F 32 -n boot "$PART_BOOT"
-mkfs.ext4 -L nixos "$PART_ROOT"
-# Let udev create the /dev/disk/by-label/* symlinks before we rely on them.
-udevadm settle
+gum spin --show-error --title "Formatting partitions" -- bash -c '
+  set -e
+  mkfs.fat -F 32 -n BOOT "$1"
+  # -F: format even though mke2fs thinks the partition already holds a
+  # filesystem — true every retry on this same disk, and otherwise its
+  # "proceed anyway?" prompt hangs invisibly under gum spin forever.
+  mkfs.ext4 -F -L nixos "$2"
+  # Let udev create the /dev/disk/by-label/* symlinks before we rely on them.
+  udevadm settle
+' -- "$PART_BOOT" "$PART_ROOT"
 success "Formatted"
 
 # ── Mount ──────────────────────────────────────────────────────────────────
 # By device node, not by-label: udev populates those symlinks asynchronously
 # after mkfs, and racing it yields "Can't lookup blockdev".
-info "Mounting"
-mount "$PART_ROOT" "$MNT"
-mkdir -p "$MNT/boot"
-mount "$PART_BOOT" "$MNT/boot"
+gum spin --show-error --title "Mounting" -- bash -c '
+  set -e
+  mount "$1" "$2"
+  mkdir -p "$2/boot"
+  mount "$3" "$2/boot"
+' -- "$PART_ROOT" "$MNT" "$PART_BOOT"
 success "Mounted at $MNT"
 
 # ── Move the resolved config into place ─────────────────────────────────────
@@ -217,8 +274,8 @@ mv "$STAGE" "$DOTFILES"
 success "Configuration in place at /home/operator/.dotfiles"
 
 # ── Hardware config ────────────────────────────────────────────────────────
-info "Detecting hardware"
-nixos-generate-config --root "$MNT" --dir "$DOTFILES"
+gum spin --show-error --title "Detecting hardware" -- \
+  nixos-generate-config --root "$MNT" --dir "$DOTFILES"
 # The flake owns system config; drop the generated configuration.nix.
 rm -f "$DOTFILES/configuration.nix"
 # Flakes ignore untracked files, and this one is gitignored. Staging is
@@ -227,22 +284,86 @@ git -C "$DOTFILES" add -f hardware-configuration.nix
 success "hardware-configuration.nix written and staged"
 
 # ── Install ────────────────────────────────────────────────────────────────
-info "Installing AnNIXion — this will take a while"
-echo -e "  ${YELLOW}Tip: security tools are large. Expect 30–60 min on a slow connection.${RESET}\n"
-nixos-install --root "$MNT" --flake "$DOTFILES#AnNIXion" --no-root-password
+# Reserves the top of the screen for a bordered banner via a terminal
+# scroll region (DECSTBM) — ordinary pre-TUI terminal control, nothing
+# bubbletea-shaped to clash with. nix's own scrolling output, and whatever
+# it pins to the terminal's real last row on its own, stay confined below
+# this and behave exactly as they would on a full screen: DECSTBM only
+# changes where line-feed scrolling happens, not what any given
+# application thinks the screen size is.
+#
+# The reported freeze during an earlier version of this turned out to be
+# unrelated (a config-schema mismatch surfacing after a slow-but-genuine
+# nix evaluation, not this code) — but the three real bugs it shipped with
+# are fixed here: clear first, so this doesn't draw over whatever was
+# already on screen; a bordered box, so it doesn't run straight into the
+# log below; and no elapsed-time counter. That counter and nix's own
+# output were both writing to the same raw console, and nix's torrent of
+# it can starve an occasional writer long enough that "elapsed" catches up
+# in one visible leap — a plain spinner has no "current value" to be
+# wrong about, so staleness there just looks like a normal animation.
+warn "Security tools are large. Expect 30–60 min on a slow connection."
+clear
+TERM_LINES=$(tput lines 2>/dev/null || echo 24)
+BANNER_ROWS=10
+
+tput csr "$BANNER_ROWS" "$((TERM_LINES - 1))" 2>/dev/null && SCROLL_REGION_SET=1
+tput cup 0 0 2>/dev/null || true
+gum style --foreground 196 --bold --border double --padding "0 2" --align center "$BANNER_ART"
+tput cup "$BANNER_ROWS" 0 2>/dev/null || true
+
+(
+  frames=('|' '/' '-' '\')
+  i=0
+  while true; do
+    tput sc 2>/dev/null
+    tput cup "$((BANNER_ROWS - 1))" 0 2>/dev/null
+    tput el 2>/dev/null
+    printf '%b  %s  Installing AnNIXion — this will take a while%b' \
+      "${RED}${BOLD}" "${frames[i % 4]}" "${RESET}"
+    tput rc 2>/dev/null
+    i=$((i + 1))
+    sleep 1
+  done
+) &
+ANIM_PID=$!
+
+if nixos-install --root "$MNT" --flake "$DOTFILES#AnNIXion" --no-root-password; then
+  INSTALL_STATUS=0
+else
+  INSTALL_STATUS=$?
+fi
+
+kill "$ANIM_PID" 2>/dev/null || true
+wait "$ANIM_PID" 2>/dev/null || true
+ANIM_PID=""
+# Resetting the scroll region is needed regardless of outcome, so it
+# always runs — but clearing the actual screen content must not: nix's
+# error is sitting right there in the log area on a failure, and clearing
+# before the status check below wiped it out before the EXIT trap's own
+# "press Enter" pause (which exists for exactly this reason) ever got a
+# chance to show it.
+tput csr 0 "$((TERM_LINES - 1))" 2>/dev/null || true
+SCROLL_REGION_SET=0
+
+[[ "$INSTALL_STATUS" -eq 0 ]] || exit "$INSTALL_STATUS"
+clear
+success "Installed"
 
 # ── Ownership ───────────────────────────────────────────────────────────────
 # Cloned as root. Resolve uid/gid inside the installed system so the result
 # holds whatever ids it allocated.
-info "Fixing ownership of /home/operator"
-nixos-enter --root "$MNT" -c 'chown -R operator:users /home/operator'
+gum spin --show-error --title "Fixing ownership of /home/operator" -- \
+  nixos-enter --root "$MNT" -c 'chown -R operator:users /home/operator'
 success "Ownership set"
 
 # ── Done ───────────────────────────────────────────────────────────────────
 echo
-success "Installation complete!"
-echo -e "\n  ${BOLD}Login:${RESET}  operator  /  (password set in your configuration)"
-echo -e "  ${BOLD}Next:${RESET}   reboot, remove the USB, and boot from disk.\n"
+gum style --foreground 10 --bold --border double --padding "1 2" \
+  "Installation complete!" "" \
+  "Login:  operator  /  (password set in your configuration)" \
+  "Next:   reboot, remove the USB, and boot from disk."
+echo
 read -rp "  Reboot now? [y/N] " REBOOT
 if [[ "${REBOOT,,}" == "y" ]]; then
   reboot

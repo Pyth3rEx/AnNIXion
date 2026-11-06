@@ -125,6 +125,16 @@ BODY
 mkstub gum <<'BODY'
 case "$1" in
   style) exit 0 ;;
+  # The real gum spin hides the wrapped command behind a spinner; the stub
+  # just has to still run it, or everything after "--" (parted, mkfs, the
+  # whole install) silently never happens.
+  spin)
+    shift
+    while [ "$#" -gt 0 ] && [ "$1" != "--" ]; do shift; done
+    shift
+    "$@"
+    exit $?
+    ;;
   # filter has a real upstream pipe (timedatectl/localectl) that must be
   # drained, or it races the stub exiting and SIGPIPEs intermittently.
   # input never does — it inherits the script's own stdin, mid-prompts.

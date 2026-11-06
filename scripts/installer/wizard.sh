@@ -13,6 +13,11 @@ export GUM_CHOOSE_SELECTED_FOREGROUND="196"
 export GUM_FILTER_INDICATOR_FOREGROUND="196"
 export GUM_FILTER_MATCH_FOREGROUND="196"
 export GUM_SPIN_SPINNER_FOREGROUND="196"
+# gum's default spinner is Braille glyphs, absent from the plain console
+# font the live ISO boots with — every frame renders as nothing, so a
+# genuinely running spinner looks frozen. line's |/-\ frames are plain
+# ASCII, guaranteed to exist in any console font.
+export GUM_SPIN_SPINNER="line"
 
 # Answers land in these globals — simpler than threading a struct through
 # bash, and run_wizard and write_user_folder are always called back to back.
@@ -27,6 +32,15 @@ WIZ_PROFILE_OSINT="true"
 WIZ_PROFILE_PUPPET="true"
 WIZ_PROFILE_UNTRUSTED="true"
 WIZ_SKIP_NEXT_TIME="false"
+
+# Clears and redraws the "AnNIXion installer" banner — the caller's own
+# clear would otherwise wipe it along with everything else, so it only
+# ever showed up on the very first question instead of every one of them.
+wizard_screen() {
+  clear
+  gum style --foreground 196 --bold --border double --padding "1 2" "AnNIXion installer"
+  echo
+}
 
 # $1: JSON from installer/validate.sh's extract_defaults, to pre-fill every
 # prompt from a found-but-not-skippable config. Empty runs with the
@@ -58,10 +72,17 @@ run_wizard() {
     def_untrusted="true"
   fi
 
-  gum style --foreground 196 --bold --border double --padding "1 2" "AnNIXion installer"
+  wizard_screen
 
   WIZ_HOSTNAME=$(gum input --header "Hostname" --value "$def_hostname")
 
+  # gum has no notion of one prompt replacing the last — each one just
+  # renders and leaves its answer printed where it was, so back-to-back
+  # prompts (the two passwords below, then later the two yes/no questions)
+  # pile up underneath each other instead of each getting its own screen.
+  # wizard_screen clears and redraws the banner, rather than a bare clear,
+  # so it's still there for every question, not just the first.
+  wizard_screen
   local pw1 pw2
   while true; do
     pw1=$(gum input --password --header "Account password (operator)")
@@ -90,9 +111,11 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
   pw1=""
   pw2=""
 
+  wizard_screen
   WIZ_TIMEZONE=$(timedatectl list-timezones | gum filter --header "Timezone" --value "$def_timezone")
   WIZ_KEYMAP=$(localectl list-keymaps | gum filter --header "Keyboard layout" --value "$def_keymap")
 
+  wizard_screen
   local preselect=()
   [[ "$def_redteam" == "true" ]] && preselect+=("Red Team")
   [[ "$def_osint" == "true" ]] && preselect+=("OSINT")
@@ -102,7 +125,12 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
   local chosen=()
   while [[ ${#chosen[@]} -eq 0 ]]; do
     mapfile -t chosen < <(
+      # gum's defaults (✓ vs a plain • for both the unselected AND the
+      # cursor row, told apart only by colour) are exactly what made this
+      # unreadable. [x]/[ ] can't be confused for one another or for the
+      # separate "> " cursor marker gum already draws in front of a row.
       gum choose --no-limit --header "Firefox profiles to build (at least one)" \
+        --selected-prefix "[x] " --unselected-prefix "[ ] " --cursor-prefix "[ ] " \
         --selected "$(
           IFS=,
           echo "${preselect[*]}"
@@ -124,21 +152,27 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
     esac
   done
 
+  wizard_screen
   local comp_default="$def_compositing"
   local comp_has_render_node="false"
   if compgen -G "/dev/dri/renderD*" >/dev/null 2>&1; then
     comp_default="true"
     comp_has_render_node="true"
   fi
-  if gum confirm --default="$comp_default" \
-    "Turn on desktop compositing — blur, animations, tear-free output. Costs about three quarters of a core continuously on a guest with no render node, and this machine $(
-      [[ "$comp_has_render_node" == true ]] && echo "has one" || echo "does not"
-    )."; then
+  # gum confirm has no --width of its own, so a long prompt wraps however
+  # the terminal reports its size — unreliable on a raw console. gum style
+  # does take --width, so the explanation goes there and confirm only ever
+  # has to lay out a short question and two buttons.
+  gum style --width 70 "Enhanced graphics (desktop compositing) — blur, animations, tear-free output. Costs about three quarters of a core continuously on a guest with no render node, and this machine $(
+    [[ "$comp_has_render_node" == true ]] && echo "has one" || echo "does not"
+  )."
+  if gum confirm --default="$comp_default" "Turn it on?"; then
     WIZ_COMPOSITING="true"
   else
     WIZ_COMPOSITING="false"
   fi
 
+  wizard_screen
   if gum confirm "Reuse these answers next time without asking?"; then
     WIZ_SKIP_NEXT_TIME="true"
   else
