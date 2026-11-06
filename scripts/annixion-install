@@ -78,7 +78,7 @@ if [[ ${EUID} -ne 0 && -z "${ANNIXION_TEST_SKIP_SUDO:-}" ]]; then
 fi
 
 # ── Banner ─────────────────────────────────────────────────────────────────
-clear
+clear 2>/dev/null || true
 echo -e "${RED}${BOLD}"
 cat << 'EOF'
  █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗
