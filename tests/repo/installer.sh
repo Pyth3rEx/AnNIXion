@@ -50,6 +50,19 @@ mkstub mkfs.ext4 <<'BODY'
 exit 0
 BODY
 
+mkstub cryptsetup <<'BODY'
+# luksFormat/open are piped a passphrase over stdin for real; close takes
+# none. Draining unconditionally here would eat from the *script's* own
+# stdin instead when "close" is called directly (not through a pipe, as
+# it is in the "clean slate" step) — swallowing input meant for a later
+# read -rp prompt.
+case "$1" in
+  close) ;;
+  *) cat >/dev/null ;;
+esac
+exit 0
+BODY
+
 mkstub udevadm <<'BODY'
 exit 0
 BODY
@@ -102,7 +115,13 @@ for a in "$@"; do
   [ "$prev" = "--dir" ] && dir="$a"
   prev="$a"
 done
-[ -n "$dir" ] && : >"$dir/hardware-configuration.nix"
+if [ -n "$dir" ]; then
+  if [ "${TEST_NO_LUKS_DETECT:-}" = "1" ]; then
+    : >"$dir/hardware-configuration.nix"
+  else
+    echo 'boot.initrd.luks.devices.cryptroot.device = "/dev/disk/by-uuid/stub-uuid";' >"$dir/hardware-configuration.nix"
+  fi
+fi
 exit 0
 BODY
 
@@ -167,6 +186,11 @@ case "$1" in
     ;;
   confirm)
     for a in "$@"; do
+      case "$a" in
+        *"Encrypt "*) [ "${TEST_DECLINE_ENCRYPT:-false}" = "true" ] && exit 1 ;;
+      esac
+    done
+    for a in "$@"; do
       [ "$a" = "--default=true" ] && exit 0
       [ "$a" = "--default=false" ] && exit 1
     done
@@ -227,6 +251,8 @@ run() {
     ANNIXION_TEST_REPO_URL="$UPSTREAM" \
     TEST_CHOOSE_ANSWER="${TEST_CHOOSE_ANSWER:-}" \
     TEST_CONFIRM_SKIP="${TEST_CONFIRM_SKIP:-}" \
+    TEST_DECLINE_ENCRYPT="${TEST_DECLINE_ENCRYPT:-}" \
+    TEST_NO_LUKS_DETECT="${TEST_NO_LUKS_DETECT:-}" \
     bash "$SCRIPT" "$@"
 }
 
@@ -258,6 +284,13 @@ ext_line=$(grep -n '^mkfs\.ext4 ' "$LOG" | head -1 | cut -d: -f1)
 seq_ok=1
 [ -n "$fat_line" ] && [ -n "$ext_line" ] && [ "$fat_line" -lt "$ext_line" ] && seq_ok=0
 report "$seq_ok" "formats ESP before root" "log: $(grep '^mkfs' "$LOG")"
+luksformat_line=$(grep -n '^cryptsetup --batch-mode luksFormat' "$LOG" | head -1 | cut -d: -f1)
+luksopen_line=$(grep -n '^cryptsetup open' "$LOG" | head -1 | cut -d: -f1)
+luks_seq_ok=1
+[ -n "$luksformat_line" ] && [ -n "$luksopen_line" ] && [ -n "$ext_line" ] \
+  && [ "$luksformat_line" -lt "$luksopen_line" ] && [ "$luksopen_line" -lt "$ext_line" ] \
+  && luks_seq_ok=0
+report "$luks_seq_ok" "encrypts the root partition, on by default, before formatting it" "log: $(grep '^cryptsetup\|^mkfs' "$LOG")"
 report "$(grep -q '^nixos-install ' "$LOG" && echo 0 || echo 1)" "runs nixos-install" "log: $(cat "$LOG")"
 report "$(grep -q '^nixos-enter ' "$LOG" && echo 0 || echo 1)" "fixes ownership" "log: $(cat "$LOG")"
 report "$(grep -q '^reboot ' "$LOG" && echo 1 || echo 0)" "does not reboot when declined" "log: $(cat "$LOG")"
@@ -332,6 +365,32 @@ rc=$?
 report "$([ "$rc" -ne 0 ] && echo 0 || echo 1)" "aborting on a broken config exits nonzero" "exit $rc"
 report "$(grep -q '^parted ' "$LOG" && echo 1 || echo 0)" \
   "...before the disk is ever touched" "log: $(cat "$LOG")"
+
+# ── Encryption declined ──────────────────────────────────────────────────
+rm -rf "${TMP:?}/mnt"
+TEST_DECLINE_ENCRYPT=true
+printf 'fakedisk\nyes\nn\n' | run >"$TMP/stdout.g" 2>&1
+rc=$?
+TEST_DECLINE_ENCRYPT=""
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "declining encryption still installs" "exit $rc; $(tail -5 "$TMP/stdout.g")"
+report "$(grep -q '^cryptsetup --batch-mode luksFormat' "$LOG" && echo 1 || echo 0)" \
+  "...and never formats a LUKS container" "log: $(cat "$LOG")"
+report "$(grep -q '^mkfs\.ext4 ' "$LOG" && echo 0 || echo 1)" \
+  "...formatting the raw partition directly" "log: $(grep '^mkfs' "$LOG")"
+
+# ── LUKS guard: detection failed, install refuses to proceed ────────────────
+rm -rf "${TMP:?}/mnt"
+TEST_NO_LUKS_DETECT=1
+printf 'fakedisk\nyes\nn\n' | run >"$TMP/stdout.h" 2>&1
+rc=$?
+TEST_NO_LUKS_DETECT=""
+report "$([ "$rc" -ne 0 ] && echo 0 || echo 1)" \
+  "a missed LUKS detection aborts the install" "exit $rc"
+report "$(grep -q '^nixos-install ' "$LOG" && echo 1 || echo 0)" \
+  "...before nixos-install ever runs" "log: $(cat "$LOG")"
+report "$(grep -q '^cryptsetup --batch-mode luksFormat' "$LOG" && echo 0 || echo 1)" \
+  "...even though the disk was already encrypted and formatted" "log: $(cat "$LOG")"
 
 echo
 if [ "$fails" -eq 0 ]; then
