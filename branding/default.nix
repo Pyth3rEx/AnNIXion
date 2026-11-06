@@ -168,54 +168,52 @@ rec {
   # efiSplashImage above never actually renders there; this is what does.
   # Reskins upstream's theme.txt and tiles rather than writing a new theme
   # format from scratch: same layout and fonts, AnNIXion's colours and mark.
-  grubTheme =
-    pkgs.runCommand "annixion-grub-theme" { nativeBuildInputs = [ pkgs.imagemagick ]; }
-      ''
-        cp -r ${pkgs.nixos-grub2-theme}/. $out
-        chmod -R u+w $out
+  grubTheme = pkgs.runCommand "annixion-grub-theme" { nativeBuildInputs = [ pkgs.imagemagick ]; } ''
+    cp -r ${pkgs.nixos-grub2-theme}/. $out
+    chmod -R u+w $out
 
-        # Full-screen backdrop and the terminal ('c' key) box: flat tiles,
-        # no border to preserve — colorize in place.
-        magick $out/background.png -fill "#000000" -colorize 100 $out/background.png
-        for f in $out/terminal_*.png; do
-          magick "$f" -fill "#15151A" -colorize 100 "$f"
-        done
+    # Full-screen backdrop and the terminal ('c' key) box: flat tiles,
+    # no border to preserve — colorize in place.
+    magick $out/background.png -fill "#000000" -colorize 100 $out/background.png
+    for f in $out/terminal_*.png; do
+      magick "$f" -fill "#15151A" -colorize 100 "$f"
+    done
 
-        # Selection highlight: also a flat tile.
-        for f in $out/select_*.png; do
-          magick "$f" -fill "#FF0033" -colorize 100 "$f"
-        done
+    # Selection highlight: also a flat tile.
+    for f in $out/select_*.png; do
+      magick "$f" -fill "#FF0033" -colorize 100 "$f"
+    done
 
-        # The menu panel's tiles are two flat colours (black border, white
-        # fill, no antialiasing) — colorize would wash both into one, so
-        # remap each colour directly instead.
-        for f in $out/boot_menu_*.png; do
-          magick "$f" -fuzz 8% -fill "#15151A" -opaque white -fill "#FF0033" -opaque black "$f"
-        done
+    # The menu panel's tiles are two flat colours (black border, white
+    # fill, no antialiasing) — colorize would wash both into one, so
+    # remap each colour directly instead.
+    for f in $out/boot_menu_*.png; do
+      magick "$f" -fuzz 8% -fill "#15151A" -opaque white -fill "#FF0033" -opaque black "$f"
+    done
 
-        magick ${mark} -resize x90 -background none -gravity center -extent 319x100 "$out/logo.png"
+    magick ${mark} -resize x90 -background none -gravity center -extent 319x100 "$out/logo.png"
 
-        # GRUB's own PNG reader only understands 8-bit true colour (RGB or
-        # RGBA) — not grayscale, not palette. ImageMagick's PNG writer
-        # "optimises" a flat colour down to 1-bit grayscale or palette on
-        # its own regardless of -type/-depth (those only touch the in-memory
-        # image; re-verify with `od` on the IHDR bytes, not `identify
-        # -format %[type]`, which reports the pre-write classification and
-        # looks fine even when the file it wrote is not). Only the png:
-        # defines below reach the actual IHDR write path. GRUB then refuses
-        # anything else outright ("color type not supported" / "bit depth
-        # must be 8 or 16") — force every tile back to one it accepts,
-        # including the ones upstream already shipped as true colour.
-        find $out -name '*.png' -exec magick {} -define png:color-type=6 -define png:bit-depth=8 {} \;
+    # GRUB's own PNG reader only understands 8-bit true colour (RGB or
+    # RGBA) — not grayscale, not palette. ImageMagick's PNG writer
+    # "optimises" a flat colour down to 1-bit grayscale or palette on
+    # its own regardless of -type/-depth (those only touch the in-memory
+    # image; re-verify with `od` on the IHDR bytes, not `identify
+    # -format %[type]`, which reports the pre-write classification and
+    # looks fine even when the file it wrote is not). Only the png:
+    # defines below reach the actual IHDR write path. GRUB then refuses
+    # anything else outright ("color type not supported" / "bit depth
+    # must be 8 or 16") — force every tile back to one it accepts,
+    # including the ones upstream already shipped as true colour.
+    find $out -name '*.png' -exec magick {} -define png:color-type=6 -define png:bit-depth=8 {} \;
 
-        sed -i \
-          -e 's/^title-color: .*/title-color: "#E6E6E6"/' \
-          -e 's/^message-color: .*/message-color: "#E6E6E6"/' \
-          -e 's/^\tborder_color = .*/\tborder_color = #FF0033/' \
-          -e 's/^\tbg_color = .*/\tbg_color = #15151A/' \
-          -e 's/^\tfg_color = .*/\tfg_color = #FF0033/' \
-          -e 's/^\titem_color = .*/\titem_color = "#E6E6E6"/' \
-          -e 's/^\tselected_item_color= .*/\tselected_item_color= "#0B0B0D"/' \
-          "$out/theme.txt"
-      '';
+    sed -i \
+      -e 's/^title-color: .*/title-color: "#E6E6E6"/' \
+      -e 's/^message-color: .*/message-color: "#E6E6E6"/' \
+      -e 's/^\tborder_color = .*/\tborder_color = #FF0033/' \
+      -e 's/^\tbg_color = .*/\tbg_color = #15151A/' \
+      -e 's/^\tfg_color = .*/\tfg_color = #FF0033/' \
+      -e 's/^\titem_color = .*/\titem_color = "#E6E6E6"/' \
+      -e 's/^\tselected_item_color= .*/\tselected_item_color= "#0B0B0D"/' \
+      "$out/theme.txt"
+  '';
 }
