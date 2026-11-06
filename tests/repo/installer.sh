@@ -190,8 +190,13 @@ if [ "$1" = "eval" ]; then
   fi
   case "$*" in
     *--json*)
-      echo '{"hostname":"stub","timezone":"UTC","keymap":"us","compositing":false,"profiles":{"redteam":true,"osint":true,"puppet":true,"untrusted":true}}'
+      echo '{"hostname":"stub","timezone":"UTC","keymap":"us","compositing":false,"username":"operator","sysreptorUser":"operator","profiles":{"redteam":true,"osint":true,"puppet":true,"untrusted":true}}'
       ;;
+    # read_username's query, distinct from eval_flake's .drvPath one below —
+    # annixion-install builds /home/$INSTALL_USERNAME/... paths straight
+    # from this, so a wrong answer here breaks path assertions, not just
+    # this stub's own output.
+    *users.users.operator.name*) echo "operator" ;;
     *) echo "/nix/store/fakedrvpath" ;;
   esac
 fi
@@ -256,7 +261,7 @@ report "$seq_ok" "formats ESP before root" "log: $(grep '^mkfs' "$LOG")"
 report "$(grep -q '^nixos-install ' "$LOG" && echo 0 || echo 1)" "runs nixos-install" "log: $(cat "$LOG")"
 report "$(grep -q '^nixos-enter ' "$LOG" && echo 0 || echo 1)" "fixes ownership" "log: $(cat "$LOG")"
 report "$(grep -q '^reboot ' "$LOG" && echo 1 || echo 0)" "does not reboot when declined" "log: $(cat "$LOG")"
-report "$(grep -q '^gum input' "$LOG" && echo 0 || echo 1)" "the wizard ran with no --user-config" "log: $(cat "$LOG")"
+report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 0 || echo 1)" "the wizard ran with no --user-config" "log: $(cat "$LOG")"
 cfg="$TMP/mnt/home/operator/.dotfiles/user/configuration.nix"
 report "$([ -f "$cfg" ] && grep -q 'stub' "$cfg" && echo 0 || echo 1)" \
   "the wizard's answers reached user/configuration.nix" "$([ -f "$cfg" ] && cat "$cfg" || echo "<missing>")"
@@ -280,7 +285,7 @@ rm -rf "${TMP:?}/mnt"
 printf 'fakedisk\nyes\nn\n' | run --user-config "$FRESH" >"$TMP/stdout.c" 2>&1
 rc=$?
 report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" "a fresh, skip-flagged config installs cleanly" "exit $rc; $(tail -5 "$TMP/stdout.c")"
-report "$(grep -q '^gum input' "$LOG" && echo 1 || echo 0)" \
+report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 1 || echo 0)" \
   "...and skips the wizard entirely" "log: $(cat "$LOG")"
 cfg="$TMP/mnt/home/operator/.dotfiles/user/configuration.nix"
 report "$([ -f "$cfg" ] && grep -q FIXTURE-SKIP "$cfg" && echo 0 || echo 1)" \
@@ -298,7 +303,7 @@ rm -rf "${TMP:?}/mnt"
 printf 'fakedisk\nyes\nn\n' | run --user-config "$STALE" >"$TMP/stdout.d" 2>&1
 rc=$?
 report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" "a stale config still installs" "exit $rc; $(tail -5 "$TMP/stdout.d")"
-report "$(grep -q '^gum input' "$LOG" && echo 0 || echo 1)" \
+report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 0 || echo 1)" \
   "...but the wizard runs anyway" "log: $(cat "$LOG")"
 
 # ── --user-config: broken config, continue without it ───────────────────────
@@ -316,7 +321,7 @@ report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
   "continuing past a broken config still installs" "exit $rc; $(tail -8 "$TMP/stdout.e")"
 report "$(grep -q 'does not evaluate' "$TMP/stdout.e" && echo 0 || echo 1)" \
   "...having reported why it was rejected" "$(cat "$TMP/stdout.e")"
-report "$(grep -q '^gum input' "$LOG" && echo 0 || echo 1)" \
+report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 0 || echo 1)" \
   "...and fallen back to the wizard" "log: $(cat "$LOG")"
 
 # ── --user-config: broken config, abort ──────────────────────────────────

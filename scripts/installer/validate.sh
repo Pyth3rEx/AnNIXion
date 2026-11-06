@@ -66,6 +66,16 @@ validate_config() {
   eval_flake "$flake"
 }
 
+# Prints the configured OS account's real login name — users.users.operator
+# is always the Nix attribute key everything else keys off, but its own
+# .name can differ once the wizard sets it. annixion-install needs this
+# whether or not the wizard actually ran this time (--user-config can skip
+# it entirely), to know where on disk the config and its owner actually are.
+read_username() {
+  local flake="$1"
+  nix eval --raw "$flake#nixosConfigurations.AnNIXion-ci.config.users.users.operator.name"
+}
+
 # Reads back the handful of options the wizard pre-fills from, out of a
 # flake checkout validate_config has already staged a candidate into.
 # Prints one JSON object on stdout; wizard.sh picks it apart with jq.
@@ -77,6 +87,8 @@ extract_defaults() {
       timezone = c.time.timeZone;
       keymap = c.console.keyMap;
       compositing = c.annixion.desktop.compositing;
+      username = c.users.users.operator.name;
+      sysreptorUser = c.annixion.sysreptor.user;
       profiles = {
         redteam = c.annixion.firefox.profiles.redteam.enable;
         osint = c.annixion.firefox.profiles.osint.enable;

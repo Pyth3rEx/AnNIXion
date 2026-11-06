@@ -49,7 +49,8 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] `gum` TUI for the wizard (not whiptail — smaller closure, easier to theme red/dark)
 - [ ] Encryption passphrase prompt (see Phase 2) — stacked on top of this wizard, closes #78
 - [x] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
-- [x] Password prompt (`users.users.operator.hashedPassword`, `annixion.sysreptor.hashedPassword`) — username stays `operator`; renaming the account touches 18 files including 7 VM test fixtures and is its own future issue
+- [x] Password prompt (`users.users.operator.hashedPassword`, `annixion.sysreptor.hashedPassword`)
+- [x] Username prompt (`users.users.operator.name`) — turned out narrower than this once estimated: home-manager's own NixOS integration already derives `home.username`/`home.homeDirectory` from it dynamically, so only `scripts/annixion-install`'s own `/home/operator` paths and two option defaults (`home/desktop/apps-menu.nix`, `user/examples/hackthebox.nix`) needed fixing — the VM test fixtures don't exercise a renamed account and didn't need touching
 - [x] Timezone selection (searchable list)
 - [x] Keyboard layout selection, written as `console.keyMap` — also what the LUKS prompt will use
 - [x] Profile selection (the four Firefox profiles — redteam/osint/puppet/untrusted — multi-select; new `annixion.firefox.profiles.*.enable` toggles, since none existed before this)

@@ -23,25 +23,33 @@ Or use [Rufus](https://rufus.ie) on Windows.
 
 ### 3. Boot
 
-Boot the USB. The system auto-logs in as `operator` and drops you at a shell.
+Boot the USB. The system auto-logs in as `operator` and drops straight into
+the `annixion-install` TUI.
 
-### 4. Connect to the internet
+### 4. Connect to the internet, if needed
+
+The installer clones AnNIXion over the network, so if there's no connection
+yet it dies at that step. Ctrl-C out of it, connect, then rerun it:
 
 ```bash
-nmtui    # text UI for NetworkManager — connect to WiFi or configure ethernet
+nmtui              # text UI for NetworkManager — connect to WiFi or configure ethernet
+annixion-install   # back at the shell the TUI dropped you into on exit
 ```
 
 ### 5. Install
 
-```bash
-annixion-install
-```
-
 First, a TUI wizard collects the answers that end up in `user/configuration.nix`
-and `user/home.nix`: hostname, account password, timezone, keyboard layout,
-which of the four Firefox profiles to build, and desktop compositing. It
-refuses to run on legacy BIOS/CSM boot — check `ls /sys/firmware/efi` if it
-does — since that fails later, with the disk already wiped.
+and `user/home.nix`: hostname, account username and password (defaults to
+`operator`, but anything else works — home-manager and every module that
+needs it follow the chosen name), timezone, keyboard layout, which of the
+four Firefox profiles to build, desktop compositing, and which optional
+example configs (HTB networking helper, git identity, zsh aliases — see
+`user/README.md`) to enable; choosing the git one also asks for a name and
+email to fill into it. By default SysReptor shares the OS account's username
+and password; decline that and it asks for a separate SysReptor login
+instead. It refuses to run on legacy BIOS/CSM boot — check
+`ls /sys/firmware/efi` if it does — since that fails later, with the disk
+already wiped.
 
 Carrying a config from a previous install (on a USB stick, say)? Point the
 installer at it instead of answering from scratch:
@@ -56,20 +64,30 @@ just become the wizard's defaults, so nothing is lost by pointing it at a
 stale or hand-written one — it's validated before the disk is touched either
 way, never after.
 
+Testing a branch instead of the default? Skip the prompt for it:
+
+```bash
+annixion-install --branch dev
+```
+
 Then the script:
 
-1. Lists available disks
-2. Asks which disk to install on — always, even with `--user-config`, since
+1. Asks which branch to clone, unless `--branch` already said — blank
+   clones whatever the repo's default branch is
+2. Lists available disks
+3. Asks which disk to install on — always, even with `--user-config`, since
    that describes the machine in front of you, not a stored preference
-3. Asks for confirmation before wiping
-4. Partitions GPT: 512 MiB ESP + remaining root
-5. Formats ESP as FAT32, root as ext4
-6. Moves the config into `~/.dotfiles` (its canonical location — it
+4. Asks for confirmation before wiping
+5. Wipes anything already on the disk (mounts, swap, old signatures) —
+   a half-finished previous attempt never blocks starting over clean
+6. Partitions GPT: 512 MiB ESP + remaining root
+7. Formats ESP as FAT32, root as ext4
+8. Moves the config into `~/.dotfiles` (its canonical location — it
    references `~/.dotfiles/assets/…` for the wallpaper, icons and certs)
-7. Generates and stages `hardware-configuration.nix` for your machine
-8. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
-   the `operator` user
-9. Offers to reboot
+9. Generates and stages `hardware-configuration.nix` for your machine
+10. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
+    the `operator` user
+11. Offers to reboot
 
 > **Note:** Security tools (Metasploit, Ghidra, etc.) are large. Expect 30–60 min on a slow connection.
 

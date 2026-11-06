@@ -63,11 +63,12 @@ source "$INSTALLER_LIBEXEC/wizard.sh"
 # Handled before the sudo re-exec, so --help never needs root.
 ORIG_ARGS=("$@")
 USER_CONFIG=""
+BRANCH=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h | --help)
       cat <<'USAGE'
-usage: annixion-install [--user-config <path|git-url>]
+usage: annixion-install [--user-config <path|git-url>] [--branch <name>]
 
 Installs AnNIXion to disk from the live ISO: collects a config (wizard, or
 imported with --user-config), partitions, formats, mounts and runs
@@ -75,6 +76,7 @@ nixos-install. Re-execs itself through sudo.
 
   --user-config <path|git-url>  import an existing user/ folder and skip
                                  whatever prompts it already answers
+  --branch <name>               clone this branch instead of asking
   -h, --help                    show this help
 USAGE
       exit 0
@@ -82,6 +84,11 @@ USAGE
     --user-config)
       [[ $# -ge 2 ]] || die "--user-config needs a path or git URL."
       USER_CONFIG="$2"
+      shift 2
+      ;;
+    --branch)
+      [[ $# -ge 2 ]] || die "--branch needs a name."
+      BRANCH="$2"
       shift 2
       ;;
     *)
@@ -128,11 +135,15 @@ gum style --foreground 196 --bold --border double --padding "1 4" --align center
 echo
 
 # ── Fetch AnNIXion, and resolve the config, before any disk is touched ─────
-# A scratch clone, not /mnt/home/operator/.dotfiles yet — there is no disk
+# A scratch clone, not /mnt/home/<user>/.dotfiles yet — there is no disk
 # to hold it until after partitioning. Moved into place once there is one.
+[[ -n "$BRANCH" ]] || BRANCH=$(gum input --header "Branch to install" --placeholder "blank for the repo's default branch")
+CLONE_ARGS=()
+[[ -n "$BRANCH" ]] && CLONE_ARGS+=(--branch "$BRANCH")
+
 STAGE=$(mktemp -d)
 gum spin --show-error --title "Fetching AnNIXion configuration" -- \
-  git clone "${ANNIXION_TEST_REPO_URL:-https://github.com/Pyth3rEx/AnNIXion}" "$STAGE"
+  git clone "${CLONE_ARGS[@]}" "${ANNIXION_TEST_REPO_URL:-https://github.com/Pyth3rEx/AnNIXion}" "$STAGE"
 success "Cloned"
 
 CANDIDATE=""
@@ -184,8 +195,13 @@ fi
 if [[ "$RUN_WIZARD" == "true" ]]; then
   run_wizard "$WIZARD_DEFAULTS"
   write_user_folder "$STAGE" "$CURRENT_VERSION"
+  INSTALL_USERNAME="$WIZ_USERNAME"
 else
   info "Reusing the provided config — skipping the wizard"
+  # The wizard never ran, so there's no $WIZ_USERNAME to read — ask the
+  # staged config itself what users.users.operator.name actually resolves
+  # to, the same way its other options get read back.
+  INSTALL_USERNAME=$(read_username "$STAGE")
 fi
 
 # ── Disk selection ─────────────────────────────────────────────────────────
@@ -268,10 +284,10 @@ success "Mounted at $MNT"
 # modules and shell aliases reference that path, and cloning anywhere else
 # leaves the wallpaper, icons and certs dangling. Moved rather than cloned
 # again — $STAGE already holds the config, validated above.
-DOTFILES="$MNT/home/operator/.dotfiles"
-mkdir -p "$MNT/home/operator"
+DOTFILES="$MNT/home/$INSTALL_USERNAME/.dotfiles"
+mkdir -p "$MNT/home/$INSTALL_USERNAME"
 mv "$STAGE" "$DOTFILES"
-success "Configuration in place at /home/operator/.dotfiles"
+success "Configuration in place at /home/$INSTALL_USERNAME/.dotfiles"
 
 # ── Hardware config ────────────────────────────────────────────────────────
 gum spin --show-error --title "Detecting hardware" -- \
@@ -352,16 +368,18 @@ success "Installed"
 
 # ── Ownership ───────────────────────────────────────────────────────────────
 # Cloned as root. Resolve uid/gid inside the installed system so the result
-# holds whatever ids it allocated.
-gum spin --show-error --title "Fixing ownership of /home/operator" -- \
-  nixos-enter --root "$MNT" -c 'chown -R operator:users /home/operator'
+# holds whatever ids it allocated. isNormalUser always puts everyone in the
+# shared "users" group regardless of the account's own name, so only the
+# owner half of this needs to track $INSTALL_USERNAME.
+gum spin --show-error --title "Fixing ownership of /home/$INSTALL_USERNAME" -- \
+  nixos-enter --root "$MNT" -c "chown -R $INSTALL_USERNAME:users /home/$INSTALL_USERNAME"
 success "Ownership set"
 
 # ── Done ───────────────────────────────────────────────────────────────────
 echo
 gum style --foreground 10 --bold --border double --padding "1 2" \
   "Installation complete!" "" \
-  "Login:  operator  /  (password set in your configuration)" \
+  "Login:  $INSTALL_USERNAME  /  (password set in your configuration)" \
   "Next:   reboot, remove the USB, and boot from disk."
 echo
 read -rp "  Reboot now? [y/N] " REBOOT
