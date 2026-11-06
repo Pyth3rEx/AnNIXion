@@ -52,7 +52,7 @@ WIZ_SKIP_NEXT_TIME="false"
 # clear would otherwise wipe it along with everything else, so it only
 # ever showed up on the very first question instead of every one of them.
 wizard_screen() {
-  clear
+  clear 2>/dev/null || true
   gum style --foreground 196 --bold --border double --padding "1 2" "AnNIXion installer"
   echo
 }
