@@ -109,7 +109,7 @@ fi
 
 # ── Banner ─────────────────────────────────────────────────────────────────
 tput smcup 2>/dev/null && ALTSCREEN=1
-clear
+clear 2>/dev/null || true
 BANNER_ART=$(
   cat <<'EOF'
  █████╗ ███╗   ██╗███╗  ██╗██╗██╗  ██╗██╗ ██████╗ ███╗ ██╗
@@ -303,7 +303,7 @@ success "hardware-configuration.nix written and staged"
 # in one visible leap — a plain spinner has no "current value" to be
 # wrong about, so staleness there just looks like a normal animation.
 warn "Security tools are large. Expect 30–60 min on a slow connection."
-clear
+clear 2>/dev/null || true
 TERM_LINES=$(tput lines 2>/dev/null || echo 24)
 BANNER_ROWS=10
 
@@ -347,7 +347,7 @@ tput csr 0 "$((TERM_LINES - 1))" 2>/dev/null || true
 SCROLL_REGION_SET=0
 
 [[ "$INSTALL_STATUS" -eq 0 ]] || exit "$INSTALL_STATUS"
-clear
+clear 2>/dev/null || true
 success "Installed"
 
 # ── Ownership ───────────────────────────────────────────────────────────────
