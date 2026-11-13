@@ -13,6 +13,7 @@ day-to-day operation.
 | [Usage](usage.md) | The `annixion-*` commands, browser profiles, Burp interception, VPN enforcement, override examples |
 | [AdaptixC2](adaptixc2.md) | Building and running the dockerised teamserver + extenders and the native client on AnNIXion |
 | [SysReptor](sysreptor.md) | Standing up the local reporting platform, its secrets and backups, and the `reptor` API client |
+| [Terminal session recording](tlog.md) | `tlog-engagement`, the opt-in recorder, `--log-input` and what it risks, pushing a session into SysReptor |
 | [FAQ](faq.md) | Install, boot, browser, proxy and CI troubleshooting |
 
 ## Making it yours
