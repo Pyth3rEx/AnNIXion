@@ -21,10 +21,10 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 **Goal:** The ISO can partition a disk, set up LUKS2 encryption, and install NixOS.
 
-- [ ] LUKS2 encryption offered by `annixion-install`, on by default — `cryptsetup` on the root partition, unlocked as `cryptroot`, ESP left unencrypted
-- [ ] Passphrase read twice and passed to `cryptsetup` over stdin (`--key-file -`, no trailing newline, so the key matches what is typed at the boot prompt)
-- [ ] Installer verifies `nixos-generate-config` emitted `boot.initrd.luks.devices` and aborts before `nixos-install` if it did not — otherwise the install succeeds and produces a system whose initrd never asks for a passphrase
-- [ ] Document the keymap trap: the passphrase is typed at the boot prompt under the console keymap (US by default), not the layout used during install
+- [x] LUKS2 encryption offered by `annixion-install`, on by default — `cryptsetup` on the root partition, unlocked as `cryptroot`, ESP left unencrypted
+- [x] Passphrase read twice and passed to `cryptsetup` over stdin (`--key-file -`, no trailing newline, so the key matches what is typed at the boot prompt)
+- [x] Installer verifies `nixos-generate-config` emitted `boot.initrd.luks.devices` and aborts before `nixos-install` if it did not — otherwise the install succeeds and produces a system whose initrd never asks for a passphrase
+- [x] Document the keymap trap: the passphrase is typed at the boot prompt under the console keymap (US by default), not the layout used during install
 - [ ] Tested in a VM: full install with encryption passphrase, boots successfully, decrypts on boot
 
 > **disko is not planned.** The layout is already declared, in fifteen lines of
@@ -47,7 +47,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] Installs the config to `~/.dotfiles` (its canonical location) and hands ownership to `operator` so runtime assets (wallpaper, icons, certs) resolve
 - [x] Refuse to run on legacy BIOS: check `/sys/firmware/efi` before the sudo re-exec, so a machine booted in CSM mode is turned away before any disk is touched rather than failing at the boot loader with the disk already wiped
 - [x] `gum` TUI for the wizard (not whiptail — smaller closure, easier to theme red/dark)
-- [ ] Encryption passphrase prompt (see Phase 2) — stacked on top of this wizard, closes #78
+- [x] Encryption passphrase prompt (see Phase 2) — stacked on top of this wizard, closes #78
 - [x] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
 - [x] Password prompt (`users.users.operator.hashedPassword`, `annixion.sysreptor.hashedPassword`)
 - [x] Username prompt (`users.users.operator.name`) — turned out narrower than this once estimated: home-manager's own NixOS integration already derives `home.username`/`home.homeDirectory` from it dynamically, so only `scripts/annixion-install`'s own `/home/operator` paths and two option defaults (`home/desktop/apps-menu.nix`, `user/examples/hackthebox.nix`) needed fixing — the VM test fixtures don't exercise a renamed account and didn't need touching

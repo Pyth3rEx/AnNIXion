@@ -78,16 +78,27 @@ Then the script:
 3. Asks which disk to install on — always, even with `--user-config`, since
    that describes the machine in front of you, not a stored preference
 4. Asks for confirmation before wiping
-5. Wipes anything already on the disk (mounts, swap, old signatures) —
+5. Asks whether to encrypt the root partition with LUKS2 (on by default,
+   AES-256-XTS with a hardened Argon2id passphrase KDF — roughly a 10-15
+   second unlock at boot) and, if so, a passphrase. That passphrase is
+   typed at *every* boot, under the console's default US keymap regardless
+   of whichever keyboard layout was chosen for the installed system
+6. Wipes anything already on the disk (mounts, swap, old signatures) —
    a half-finished previous attempt never blocks starting over clean
-6. Partitions GPT: 512 MiB ESP + remaining root
-7. Formats ESP as FAT32, root as ext4
-8. Moves the config into `~/.dotfiles` (its canonical location — it
+7. Partitions GPT: 512 MiB ESP + remaining root
+8. Formats ESP as FAT32; formats root as LUKS2 (unless declined) with ext4
+   inside it. The ESP itself is never encrypted — UEFI firmware can only
+   read plain FAT32 — but it holds only the bootloader, kernel and initrd,
+   never client data
+9. Moves the config into `~/.dotfiles` (its canonical location — it
    references `~/.dotfiles/assets/…` for the wallpaper, icons and certs)
-9. Generates and stages `hardware-configuration.nix` for your machine
-10. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
+10. Generates and stages `hardware-configuration.nix` for your machine —
+    and, if encryption was chosen, refuses to continue unless that file
+    actually shows a `boot.initrd.luks.devices` entry, so an install never
+    silently ends up with no passphrase prompt at boot
+11. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
     the `operator` user
-11. Offers to reboot
+12. Offers to reboot
 
 > **Note:** Security tools (Metasploit, Ghidra, etc.) are large. Expect 30–60 min on a slow connection.
 
