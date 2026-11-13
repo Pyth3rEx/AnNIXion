@@ -52,6 +52,7 @@
         ./system/burp-ca.nix
         ./system/cve-report.nix
         ./system/config-doctor.nix
+        ./system/nixpkgs-cooldown.nix
         ./system/vpn
         ./system/hardening.nix
         ./system/offensive-net.nix

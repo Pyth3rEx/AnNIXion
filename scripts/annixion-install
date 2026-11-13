@@ -46,18 +46,20 @@ _leave_altscreen() {
 }
 trap _leave_altscreen EXIT
 
-# installer/validate.sh and installer/wizard.sh sit beside this script's own
-# store path (iso/default.nix), whether run from the ISO or (for --help)
-# straight out of a checkout.
+# installer/validate.sh, installer/wizard.sh and installer/nixpkgs-pin.sh
+# sit beside this script's own store path (iso/default.nix), whether run
+# from the ISO or (for --help) straight out of a checkout.
 INSTALLER_LIBEXEC="$(cd "$(dirname "${BASH_SOURCE[0]}")/../libexec/annixion-installer" 2>/dev/null && pwd || true)"
 if [[ -z "$INSTALLER_LIBEXEC" ]]; then
   INSTALLER_LIBEXEC="$(cd "$(dirname "${BASH_SOURCE[0]}")/installer" 2>/dev/null && pwd || true)"
 fi
-[[ -n "$INSTALLER_LIBEXEC" ]] || die "cannot find installer/validate.sh and installer/wizard.sh."
+[[ -n "$INSTALLER_LIBEXEC" ]] || die "cannot find installer/validate.sh, installer/wizard.sh and installer/nixpkgs-pin.sh."
 # shellcheck source=scripts/installer/validate.sh disable=SC1091
 source "$INSTALLER_LIBEXEC/validate.sh"
 # shellcheck source=scripts/installer/wizard.sh disable=SC1091
 source "$INSTALLER_LIBEXEC/wizard.sh"
+# shellcheck source=scripts/installer/nixpkgs-pin.sh disable=SC1091
+source "$INSTALLER_LIBEXEC/nixpkgs-pin.sh"
 
 # ── Arguments ────────────────────────────────────────────────────────────────
 # Handled before the sudo re-exec, so --help never needs root.
@@ -189,19 +191,45 @@ if [[ -n "$CANDIDATE" ]]; then
     RUN_WIZARD="false"
   else
     WIZARD_DEFAULTS=$(extract_defaults "$STAGE")
+    read -r cand_pin_mode cand_pin_value <<<"$(read_nixpkgs_pin_stamp "$CANDIDATE")"
+    WIZARD_DEFAULTS=$(jq --arg m "$cand_pin_mode" --arg v "$cand_pin_value" \
+      '. + {nixpkgsPinMode: $m, nixpkgsPinValue: $v}' <<<"$WIZARD_DEFAULTS")
   fi
 fi
 
+PIN_MODE="default"
+PIN_VALUE=""
 if [[ "$RUN_WIZARD" == "true" ]]; then
   run_wizard "$WIZARD_DEFAULTS"
   write_user_folder "$STAGE" "$CURRENT_VERSION"
   INSTALL_USERNAME="$WIZ_USERNAME"
+  PIN_MODE="$WIZ_NIXPKGS_PIN_MODE"
+  PIN_VALUE="$WIZ_NIXPKGS_PIN_VALUE"
 else
   info "Reusing the provided config — skipping the wizard"
   # The wizard never ran, so there's no $WIZ_USERNAME to read — ask the
   # staged config itself what users.users.operator.name actually resolves
   # to, the same way its other options get read back.
   INSTALL_USERNAME=$(read_username "$STAGE")
+  # validate_config only ever copied configuration.nix/home.nix into $STAGE
+  # — neither stamp travels with it on its own, so a skip-wizard install
+  # would otherwise land with no version stamp and no pin policy at all.
+  cp -f "$CANDIDATE/user/.annixion-version" "$STAGE/user/.annixion-version" 2>/dev/null || true
+  cp -f "$CANDIDATE/user/.annixion-nixpkgs-pin" "$STAGE/user/.annixion-nixpkgs-pin" 2>/dev/null || true
+  read -r PIN_MODE PIN_VALUE <<<"$(read_nixpkgs_pin_stamp "$STAGE")"
+fi
+
+# ── Nixpkgs cooldown ─────────────────────────────────────────────────────
+# Before anything disk-related, same reasoning as the LUKS passphrase below
+# — this needs the network, and a failure here must never have already
+# wiped anything.
+if [[ "$PIN_MODE" != "default" ]]; then
+  info "Resolving nixpkgs cooldown pin ($PIN_MODE)"
+  if apply_nixpkgs_pin "$STAGE" "$PIN_MODE" "$PIN_VALUE"; then
+    success "nixpkgs pinned"
+  else
+    warn "Could not resolve the nixpkgs cooldown pin (no network, or GitHub is unreachable/rate-limited) — continuing with the repo's own default pin. Your choice is saved; run annixion-nixpkgs-cooldown after installing once you have network."
+  fi
 fi
 
 # ── Disk selection ─────────────────────────────────────────────────────────

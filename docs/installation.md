@@ -42,14 +42,17 @@ First, a TUI wizard collects the answers that end up in `user/configuration.nix`
 and `user/home.nix`: hostname, account username and password (defaults to
 `operator`, but anything else works — home-manager and every module that
 needs it follow the chosen name), timezone, keyboard layout, which of the
-four Firefox profiles to build, desktop compositing, and which optional
+four Firefox profiles to build, desktop compositing, which optional
 example configs (HTB networking helper, git identity, zsh aliases — see
-`user/README.md`) to enable; choosing the git one also asks for a name and
-email to fill into it. By default SysReptor shares the OS account's username
-and password; decline that and it asks for a separate SysReptor login
-instead. It refuses to run on legacy BIOS/CSM boot — check
-`ls /sys/firmware/efi` if it does — since that fails later, with the disk
-already wiped.
+`user/README.md`) to enable, and a nixpkgs cooldown policy (pin to the
+repo's own default, the newest stable release, a specific one, N releases
+behind the newest, or a fixed number of days old — a buffer against a
+supply-chain-compromised commit that hasn't been caught yet); choosing the
+git one also asks for a name and email to fill into it. By default
+SysReptor shares the OS account's username and password; decline that and
+it asks for a separate SysReptor login instead. It refuses to run on
+legacy BIOS/CSM boot — check `ls /sys/firmware/efi` if it does — since
+that fails later, with the disk already wiped.
 
 Carrying a config from a previous install (on a USB stick, say)? Point the
 installer at it instead of answering from scratch:
@@ -74,31 +77,36 @@ Then the script:
 
 1. Asks which branch to clone, unless `--branch` already said — blank
    clones whatever the repo's default branch is
-2. Lists available disks
-3. Asks which disk to install on — always, even with `--user-config`, since
+2. Resolves the chosen nixpkgs cooldown pin against GitHub and re-locks
+   `flake.lock` to it, before anything disk-related — on no network or an
+   unreachable/rate-limited API, this degrades to the repo's own default
+   pin with a warning rather than aborting; rerun `annixion-nixpkgs-cooldown`
+   once you have network to pick it back up
+3. Lists available disks
+4. Asks which disk to install on — always, even with `--user-config`, since
    that describes the machine in front of you, not a stored preference
-4. Asks for confirmation before wiping
-5. Asks whether to encrypt the root partition with LUKS2 (on by default,
+5. Asks for confirmation before wiping
+6. Asks whether to encrypt the root partition with LUKS2 (on by default,
    AES-256-XTS with a hardened Argon2id passphrase KDF — roughly a 10-15
    second unlock at boot) and, if so, a passphrase. That passphrase is
    typed at *every* boot, under the console's default US keymap regardless
    of whichever keyboard layout was chosen for the installed system
-6. Wipes anything already on the disk (mounts, swap, old signatures) —
+7. Wipes anything already on the disk (mounts, swap, old signatures) —
    a half-finished previous attempt never blocks starting over clean
-7. Partitions GPT: 512 MiB ESP + remaining root
-8. Formats ESP as FAT32; formats root as LUKS2 (unless declined) with ext4
+8. Partitions GPT: 512 MiB ESP + remaining root
+9. Formats ESP as FAT32; formats root as LUKS2 (unless declined) with ext4
    inside it. The ESP itself is never encrypted — UEFI firmware can only
    read plain FAT32 — but it holds only the bootloader, kernel and initrd,
    never client data
-9. Moves the config into `~/.dotfiles` (its canonical location — it
-   references `~/.dotfiles/assets/…` for the wallpaper, icons and certs)
-10. Generates and stages `hardware-configuration.nix` for your machine —
+10. Moves the config into `~/.dotfiles` (its canonical location — it
+    references `~/.dotfiles/assets/…` for the wallpaper, icons and certs)
+11. Generates and stages `hardware-configuration.nix` for your machine —
     and, if encryption was chosen, refuses to continue unless that file
     actually shows a `boot.initrd.luks.devices` entry, so an install never
     silently ends up with no passphrase prompt at boot
-11. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
+12. Runs `nixos-install --flake ~/.dotfiles#AnNIXion` and hands the dotfiles to
     the `operator` user
-12. Offers to reboot
+13. Offers to reboot
 
 > **Note:** Security tools (Metasploit, Ghidra, etc.) are large. Expect 30–60 min on a slow connection.
 

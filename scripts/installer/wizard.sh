@@ -47,6 +47,10 @@ WIZ_EXAMPLE_ZSH="false"
 WIZ_GIT_NAME=""
 WIZ_GIT_EMAIL=""
 WIZ_SKIP_NEXT_TIME="false"
+# mode: default|latest|specific|offset|days — see scripts/installer/
+# nixpkgs-pin.sh. value: that mode's parameter, empty for default/latest.
+WIZ_NIXPKGS_PIN_MODE="default"
+WIZ_NIXPKGS_PIN_VALUE=""
 
 # Clears and redraws the "AnNIXion installer" banner — the caller's own
 # clear would otherwise wipe it along with everything else, so it only
@@ -65,6 +69,7 @@ run_wizard() {
   local def_hostname def_username def_timezone def_keymap def_compositing
   local def_redteam def_osint def_puppet def_untrusted
   local def_sysreptor_user def_sysreptor_shared
+  local def_pin_mode def_pin_value
 
   if [[ -n "$defaults" ]]; then
     def_hostname=$(jq -r '.hostname' <<<"$defaults")
@@ -77,6 +82,8 @@ run_wizard() {
     def_puppet=$(jq -r '.profiles.puppet' <<<"$defaults")
     def_untrusted=$(jq -r '.profiles.untrusted' <<<"$defaults")
     def_sysreptor_user=$(jq -r '.sysreptorUser' <<<"$defaults")
+    def_pin_mode=$(jq -r '.nixpkgsPinMode // "default"' <<<"$defaults")
+    def_pin_value=$(jq -r '.nixpkgsPinValue // ""' <<<"$defaults")
   else
     # || true: head closing early once it has its 7 bytes SIGPIPEs tr, and
     # that is a real failure under this script's inherited `set -o pipefail`.
@@ -90,6 +97,8 @@ run_wizard() {
     def_puppet="true"
     def_untrusted="true"
     def_sysreptor_user="operator"
+    def_pin_mode="default"
+    def_pin_value=""
   fi
   # annixion.sysreptor.user's own default already resolves to whatever the
   # OS account's name is when nothing set it explicitly, so this can't tell
@@ -282,6 +291,58 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
   fi
 
   wizard_screen
+  gum style --width 70 "Nixpkgs cooldown — a compromised commit in nixpkgs is usually caught and reverted within days of landing. Pinning to something less fresh than the repo's own default trades a slower trickle of fixes for a buffer against exactly that window. Default is fine for most installs."
+  local pin_label
+  case "$def_pin_mode" in
+    latest) pin_label="Always the newest stable release" ;;
+    specific) pin_label="A specific release" ;;
+    offset) pin_label="N releases behind the newest" ;;
+    days) pin_label="A fixed number of days old" ;;
+    *) pin_label="Default — same as the repo" ;;
+  esac
+  local pin_choice
+  pin_choice=$(gum choose --header "Nixpkgs cooldown" --selected "$pin_label" \
+    "Default — same as the repo" \
+    "Always the newest stable release" \
+    "A specific release" \
+    "N releases behind the newest" \
+    "A fixed number of days old")
+  case "$pin_choice" in
+    "Always the newest stable release")
+      WIZ_NIXPKGS_PIN_MODE="latest"
+      WIZ_NIXPKGS_PIN_VALUE=""
+      ;;
+    "A specific release")
+      WIZ_NIXPKGS_PIN_MODE="specific"
+      while true; do
+        WIZ_NIXPKGS_PIN_VALUE=$(gum input --header "Release (e.g. 25.11)" --value "$def_pin_value")
+        [[ "$WIZ_NIXPKGS_PIN_VALUE" =~ ^(nixos-)?[0-9]{2}\.[0-9]{2}$ ]] && break
+        gum style --foreground 196 "Expected a release like 25.11."
+      done
+      ;;
+    "N releases behind the newest")
+      WIZ_NIXPKGS_PIN_MODE="offset"
+      while true; do
+        WIZ_NIXPKGS_PIN_VALUE=$(gum input --header "How many releases behind the newest?" --value "$def_pin_value")
+        [[ "$WIZ_NIXPKGS_PIN_VALUE" =~ ^[0-9]+$ ]] && break
+        gum style --foreground 196 "Expected a whole number."
+      done
+      ;;
+    "A fixed number of days old")
+      WIZ_NIXPKGS_PIN_MODE="days"
+      while true; do
+        WIZ_NIXPKGS_PIN_VALUE=$(gum input --header "How many days old?" --value "$def_pin_value")
+        [[ "$WIZ_NIXPKGS_PIN_VALUE" =~ ^[0-9]+$ ]] && break
+        gum style --foreground 196 "Expected a whole number."
+      done
+      ;;
+    *)
+      WIZ_NIXPKGS_PIN_MODE="default"
+      WIZ_NIXPKGS_PIN_VALUE=""
+      ;;
+  esac
+
+  wizard_screen
   if gum confirm "Reuse these answers next time without asking?"; then
     WIZ_SKIP_NEXT_TIME="true"
   else
@@ -289,8 +350,9 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
   fi
 }
 
-# Renders the answers run_wizard collected into $1/user/configuration.nix
-# and $1/user/.annixion-version, stamped with version $2. Also touches
+# Renders the answers run_wizard collected into $1/user/configuration.nix,
+# $1/user/.annixion-version (stamped with version $2), and
+# $1/user/.annixion-nixpkgs-pin. Also touches
 # $1/user/home.nix — just to uncomment the git/zsh example imports already
 # sitting there commented out, if chosen; nothing else collected here
 # belongs there (see user/README.md).
@@ -353,4 +415,6 @@ EOF
   local skip="noskip"
   [[ "$WIZ_SKIP_NEXT_TIME" == "true" ]] && skip="skip"
   printf '%s\n%s\n' "$version" "$skip" >"$dest/user/.annixion-version"
+
+  printf '%s\n%s\n' "$WIZ_NIXPKGS_PIN_MODE" "$WIZ_NIXPKGS_PIN_VALUE" >"$dest/user/.annixion-nixpkgs-pin"
 }

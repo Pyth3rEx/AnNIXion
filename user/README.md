@@ -46,6 +46,17 @@ commit it to a fork you intend to share.
 
 ---
 
+## Nixpkgs cooldown
+
+If the wizard's nixpkgs cooldown question picked anything other than
+"same as the repo," that policy is stamped in `user/.annixion-nixpkgs-pin`
+— not a secret, just a policy. The `update`/`upgrade` aliases reapply it
+automatically after `nix flake update`, since a plain flake update has no
+memory of the override on its own; run `annixion-nixpkgs-cooldown` by hand
+if you ever call `nix flake update` some other way.
+
+---
+
 ## Getting started
 
 **Step 1 — set your git identity**

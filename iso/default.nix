@@ -4,14 +4,15 @@ let
   version = lib.removeSuffix "\n" (builtins.readFile ../VERSION);
   branding = import ../branding { inherit pkgs; };
 
-  # The installer script plus the wizard/validation libraries it sources —
-  # bin/ and libexec/ side by side, so scripts/annixion-install's own
-  # relative lookup finds them the same way it does from a checkout.
+  # The installer script plus the wizard/validation/nixpkgs-pin libraries
+  # it sources — bin/ and libexec/ side by side, so scripts/annixion-install's
+  # own relative lookup finds them the same way it does from a checkout.
   installScript = pkgs.runCommand "annixion-install" { } ''
     mkdir -p $out/bin $out/libexec/annixion-installer
     install -m755 ${../scripts/annixion-install} $out/bin/annixion-install
     install -m644 ${../scripts/installer/validate.sh} $out/libexec/annixion-installer/validate.sh
     install -m644 ${../scripts/installer/wizard.sh} $out/libexec/annixion-installer/wizard.sh
+    install -m644 ${../scripts/installer/nixpkgs-pin.sh} $out/libexec/annixion-installer/nixpkgs-pin.sh
   '';
 in
 {
@@ -74,7 +75,8 @@ in
   };
 
   # Lets the installer's libexec/ scripts (installer/validate.sh,
-  # installer/wizard.sh) land in /run/current-system/sw/libexec, beside sw/bin
+  # installer/wizard.sh, installer/nixpkgs-pin.sh) land in
+  # /run/current-system/sw/libexec, beside sw/bin
   # — otherwise systemPackages only links /bin, and the layout installScript
   # builds in bin/ + libexec/ never reaches $PATH's view of the world.
   environment.pathsToLink = [ "/libexec" ];
@@ -202,11 +204,11 @@ in
     pciutils
     usbutils
     wget
-    curl
+    curl # queries GitHub's API for installer/nixpkgs-pin.sh's cooldown resolution
     vim
     gum # the installer wizard's TUI
     mkpasswd # hashes the account password the wizard collects
-    jq # parses `nix eval --json` output in installer/validate.sh
+    jq # parses `nix eval --json`/GitHub API JSON in installer/validate.sh and installer/nixpkgs-pin.sh
     # Mints the sysreptor login hash — hashlib/secrets/base64/string are all
     # stdlib, so the bare interpreter is enough (installer/wizard.sh).
     python3
