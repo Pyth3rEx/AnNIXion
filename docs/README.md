@@ -11,6 +11,8 @@ day-to-day operation.
 |---|---|
 | [Installation](installation.md) | Fresh install from ISO, install on existing NixOS, Hyper-V Enhanced Session, repository layout |
 | [Usage](usage.md) | The `annixion-*` commands, browser profiles, Burp interception, VPN enforcement, override examples |
+| [AdaptixC2](adaptixc2.md) | Building and running the dockerised teamserver + extenders and the native client on AnNIXion |
+| [SysReptor](sysreptor.md) | Standing up the local reporting platform, its secrets and backups, and the `reptor` API client |
 | [FAQ](faq.md) | Install, boot, browser, proxy and CI troubleshooting |
 
 ## Making it yours
@@ -19,6 +21,7 @@ day-to-day operation.
 |---|---|
 | [Architecture](architecture.md) | How the tree is laid out, what the catalog is, and how to add a tool |
 | [Customization](customization.md) | The `user/` override system, adding tools, versioning |
+| [Tool index](tool-index.md) | Every tool on the system in one line each, with a link to its official manual |
 | [Visual identity](visual-identity.md) | Palette, typography, the mark system and its semantic colours, motif vocabulary |
 | [Visual identity — design board](visual-identity.pdf) | The same system as a 19-page print board for a design audience: mission, lockup, palette, specimen, the full mark set and the eight laws |
 | [Shell reference](zsh.md) | Prompt, keybindings, aliases, oh-my-zsh plugins |

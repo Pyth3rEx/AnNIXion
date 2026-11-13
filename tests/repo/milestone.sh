@@ -7,6 +7,8 @@ set -uo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 SCRIPT="$ROOT/.github/scripts/assign-milestone.sh"
 COLUMN="$ROOT/.github/scripts/board-status.sh"
+CLOSE="$ROOT/.github/scripts/close-milestone.sh"
+WORKFLOW="$ROOT/.github/workflows/project.yml"
 fails=0
 
 report() {
@@ -120,6 +122,47 @@ check_column "no milestone waits in Ready" "Ready" "" "0.4.0 - Nebula"
 # With no open milestone nothing is upcoming, so an unmilestoned issue must not
 # match one by both sides being empty.
 check_column "no open milestone waits in Ready" "Ready" "" ""
+
+# ── Closing the milestone a release shipped ──────────────────────────────
+# Nothing used to close it: the only path was a human doing it by hand, so
+# 0.4.0 - Nebula stayed open after PR #140 merged (#143).
+check_close() {
+  local got rc
+  got="$(MILESTONE="$3" "$CLOSE" --number <<<"$4")"
+  rc=$?
+  report "$1" "$2" "$got" "$rc"
+}
+
+check_close "the shipped milestone resolves to its number" "2" "0.5.0 - Abarus" '[
+  {"title":"0.4.0 - Nebula","number":1},
+  {"title":"0.5.0 - Abarus","number":2}]'
+
+# Titles are free text. A prefix match would close the wrong release here.
+check_close "a prefix does not match" "" "0.4.0" '[
+  {"title":"0.4.0 - Nebula","number":1}]'
+
+check_close "an unknown title closes nothing" "" "0.9.0 - Nowhere" '[
+  {"title":"0.4.0 - Nebula","number":1}]'
+
+check_close "no open milestones at all" "" "0.4.0 - Nebula" '[]'
+
+# ── The workflow has to call it, and in the right place ──────────────────
+# --nearest reads the open milestones to find the release being built. Run
+# after the close it returns the next release; run before it, it returns the
+# one that just shipped and scopes its own Ready work into Up next.
+close_at=$(grep -n 'close-milestone.sh' "$WORKFLOW" | head -1 | cut -d: -f1)
+nearest_at=$(grep -n 'assign-milestone.sh --nearest' "$WORKFLOW" | tail -1 | cut -d: -f1)
+
+if [ -z "$close_at" ]; then
+  printf 'FAIL project.yml never calls close-milestone.sh\n'
+  fails=$((fails + 1))
+elif [ -n "$nearest_at" ] && [ "$close_at" -lt "$nearest_at" ]; then
+  printf 'ok   the milestone is closed before the next release is read\n'
+else
+  printf 'FAIL close-milestone.sh runs at line %s, after --nearest at %s\n' \
+    "$close_at" "$nearest_at"
+  fails=$((fails + 1))
+fi
 
 echo
 if [ "$fails" -eq 0 ]; then

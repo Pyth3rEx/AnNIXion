@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "e91816a9-ec3b-5c02-b21c-74f188b0a70c",
+  "tags": [
+    "puppet",
+    "persona"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d0b8c6a5-120b-50ee-9f90-a077e7415c78",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Inauthentic Account Network Built in Advance",
+        "cvss": "n/a",
+        "summary": "Accounts used in the campaign were created and aged well before the campaign began,\nposting innocuous content to establish history before being switched to campaign\nmessaging.\n",
+        "description": "Aged accounts defeat the simplest defences. Platform heuristics and human readers alike\ntreat account age and posting history as credibility signals, and an operator who invests\nmonths in building them buys past both.\n\nThe switch is the artefact worth documenting: a dateable point at which a cluster's\ncontent changes character while its accounts do not. Where several accounts switch within\nthe same window, that shared timing is substantially stronger evidence of coordination\nthan anything in the content itself.\n\nPre-building also dates the operation's planning, which is frequently the most useful\nsingle fact in the report — it establishes that the campaign preceded whatever event it\nclaims to be responding to.\n",
+        "recommendation": "* Date the switch for each account and present the shared timing as the coordination\n  evidence.\n* Use account creation dates to establish when planning began, and state what that implies\n  about claimed spontaneity.\n* Report the cluster with its dormant history included; platforms act on the pattern rather\n  than on recent content alone.\n",
+        "short_recommendation": "Date the switch from dormant to campaign content; report the cluster together.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0092"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0092 — Build Network",
+            "note": ""
+          },
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0146 — Account Asset",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

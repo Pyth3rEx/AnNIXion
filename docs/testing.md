@@ -81,13 +81,18 @@ a path a module chose.
 | Test | What it covers |
 |---|---|
 | `tests/repo/milestone.sh` | Which milestone new work lands on, and the column that implies. Drives `assign-milestone.sh` and `board-status.sh` through `--select` and `--decide`. |
+| `tests/repo/nixpkgs-pin.sh` | That `installer/nixpkgs-pin.sh`'s cooldown resolution holds up on its own: branch existence checks, the offset math behind "N releases behind the newest" (including running out of known history), release-string normalization (bare vs `nixos-`-prefixed, and a nonexistent one), the day-count-to-commit-sha lookup, and that every mode except `specific` degrades to a clean failure — never a crash — with no network, while `specific` deliberately trusts its typed value instead since it cannot be validated offline. Stubs `curl` as a shell function; no network, no `nix`. |
 | `tests/shell/prompt-width.sh` | The prompt's responsive ladder: the top line never wraps, and a `nix-shell` stays marked, at every width. Renders the theme the repository ships. |
 | `tests/shell/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
 | `tests/shell/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
 | `tests/shell/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects, and that every un-namespaced file in that theme is an alias onto a mark that exists. A name that resolves nowhere draws a blank placeholder rather than erroring. |
 | `tests/shell/menu-exec.sh` | That a catalog tool's `Exec=` is a real binary on `PATH`, not only a `programs.zsh.shellAliases` entry — a menu launch runs non-interactively and never sources `.zshrc`, so an alias-only command fails with "command not found" from every launcher except a prompt already inside an interactive shell (#126). |
 | `tests/shell/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
+| `tests/shell/greeter-session.sh` | That the greeter runs the display server the session runs. A Wayland greeter handing off to an X11 session is never reaped, so its scope keeps a second compositor and ~680 MB for the whole uptime (#165) — asserted on the config SDDM actually reads, not only on the option upstream takes. Also that dropping the Wayland greeter did not drop the Wayland session from the list. |
+| `tests/shell/vscodium-gpu.sh` | That the editor still launches with `--disable-gpu`. With no DRM render node Chromium falls back to SwiftShader, whose eight rasterizer threads are 83% of the editor's entire CPU time (#166). Built, not read out of the expression — the flag lives in a wrapper, and the failure is a package bump that drops it. Also that every launch path (desktop entry, menu, `Meta+F11`) goes through that wrapper rather than round it. |
+| `tests/shell/kwin-compositing.sh` | The compositing gate: off by default, because llvmpipe costs about three quarters of a core on a guest with no render node (#167), and still answers to `annixion.desktop.compositing` so bare metal can have its compositor back. Read out of the kwinrc activation would write, since KWin 6 dropped the D-Bus method that allowed a live toggle. |
 | `tests/shell/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
+| `tests/shell/sysreptor.sh` | That `sysreptor setup` never rewrites the `app.env` it already wrote. SysReptor encrypts the database with those keys, so a setup that regenerates them exits zero and leaves every existing report unreadable. Also the rest of the wrapper's contract: the secrets land where `env_file: ../app.env` resolves, both external volumes get created, a restore checks its file before dropping the database, and the annixion designs are imported exactly once — `importdemodata` duplicates every design in a pack each time it runs — with an extraDesigns fixture proving the same reconciliation for a user-supplied HTB pack, built with no network through `sysreptor-packs.nix`. Plus what `annixion.sysreptor` decides, asserted on both postures: loopback-only keeps the firewall shut, `networkAccessible` opens the port and puts the hostname in `ALLOWED_HOSTS`. The generated config is read the way the wrapper reads it — by sourcing it. The login is created once and never re-applied. Also that the distribution's own finding library reaches the pack intact, and that the web theme is valid JSON whose header logo decodes to the mark `catalog/logo.nix` draws. The three report designs built so far are checked the same way: every `report.*` and `finding.*` the template references must be a field the design declares, and the inline mark must carry no double quote. Driven against the built script with a stub `docker` and a stand-in health endpoint on loopback — no daemon, no images. |
 | `tests/repo/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
 | `tests/repo/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
 | `tests/repo/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
@@ -122,13 +127,18 @@ a path a module chose.
 # L0 — fixture tests. Fast enough to run on every save.
 .github/scripts/lint.sh
 tests/repo/milestone.sh
+tests/repo/nixpkgs-pin.sh
 tests/shell/prompt-width.sh
 tests/shell/firefox-profiles.sh
 tests/shell/catalog.sh
 tests/shell/menu-icons.sh
 tests/shell/menu-exec.sh
 tests/shell/branding.sh
+tests/shell/greeter-session.sh
+tests/shell/vscodium-gpu.sh
+tests/shell/kwin-compositing.sh
 tests/shell/etc-hosts.sh
+tests/shell/sysreptor.sh
 tests/repo/workflow-injection.sh
 tests/repo/workflow-permissions.sh
 tests/repo/stale-reviews.sh

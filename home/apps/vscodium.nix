@@ -17,7 +17,12 @@ in
 {
   programs.vscodium = {
     enable = true;
-    package = pkgs.vscodium;
+    # No DRM render node on a Hyper-V guest, so Chromium falls back to
+    # SwiftShader's software GL, whose worker pool burns 150-300% of a core
+    # whenever anything renders (#166). --disable-gpu takes the CPU raster
+    # path instead.
+    package = pkgs.vscodium.override { commandLineArgs = "--disable-gpu"; };
+    mutableExtensionsDir = false;
 
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
@@ -31,9 +36,22 @@ in
         tamasfe.even-better-toml
         redhat.vscode-yaml
 
+        # ── Readability ─────────────────────────────────────────
+        aaron-bond.better-comments
+        oderwat.indent-rainbow
+
         # ── CI/CD ───────────────────────────────────────────────
         github-local-actions # needs act + Docker
+
+        # ── Shell ───────────────────────────────────────────────
+        mads-hartmann.bash-ide-vscode
         timonwong.shellcheck
+        ms-vscode.powershell # bundles PSES, PSReadLine and PSScriptAnalyzer
+
+        # ── C/C++ development ───────────────────────────────────
+        llvm-vs-code-extensions.vscode-clangd
+        vadimcn.vscode-lldb
+        ms-vscode.cmake-tools
       ];
       userSettings = {
         # ── Nix IDE ─────────────────────────────────────────────
@@ -49,6 +67,57 @@ in
           "editor.insertSpaces" = true;
         };
 
+        # ── C/C++ ───────────────────────────────────────────────
+        "clangd.path" = "${pkgs.clang-tools}/bin/clangd";
+        "clangd.arguments" = [
+          "--clang-tidy"
+          "--header-insertion=iwyu"
+        ];
+        "lldb.executable" = "${pkgs.lldb}/bin/lldb";
+        "[c]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
+        };
+        "[cpp]" = {
+          "editor.defaultFormatter" = "llvm-vs-code-extensions.vscode-clangd";
+          "editor.formatOnSave" = true;
+        };
+
+        # ── Shell ───────────────────────────────────────────────
+        # Cleared, not unset: nixpkgs patches the server's shellcheck path to
+        # the store, which would report every finding timonwong.shellcheck
+        # already reports.
+        "bashIde.shellcheckPath" = "";
+        "bashIde.shfmt.caseIndent" = true;
+        # shfmt reads its indent from the editor; repo scripts are -i 2 -ci.
+        "[shellscript]" = {
+          "editor.defaultFormatter" = "mads-hartmann.bash-ide-vscode";
+          "editor.formatOnSave" = true;
+          "editor.tabSize" = 2;
+          "editor.insertSpaces" = true;
+        };
+
+        # ── PowerShell ──────────────────────────────────────────
+        # nixpkgs leaves this extension unpatched, and it looks for pwsh on
+        # PATH, so the store path has to be named or the server never starts.
+        "powershell.powerShellAdditionalExePaths" = {
+          "PowerShell 7" = "${pkgs.powershell}/bin/pwsh";
+        };
+        "powershell.powerShellDefaultVersion" = "PowerShell 7";
+        # Checks for a newer release over the network; the flake decides it.
+        "powershell.promptToUpdatePowerShell" = false;
+        "[powershell]" = {
+          "editor.defaultFormatter" = "ms-vscode.powershell";
+          "editor.formatOnSave" = true;
+        };
+
+        # ── Files ───────────────────────────────────────────────
+        # The explorer's default exclude list hides .git and friends, which
+        # is the one place dotfiles stayed invisible after the desktop-wide
+        # switches in home/desktop/file-visibility.nix (#162). Empty, not
+        # absent: an unset value falls back to that default list.
+        "files.exclude" = { };
+
         "editor.wordWrap" = "on";
         "editor.formatOnPaste" = true;
         "files.autoSave" = "afterDelay";
@@ -57,6 +126,13 @@ in
         # ── Git ─────────────────────────────────────────────────
         "gitlens.hovers.currentLine.enabled" = true;
         "gitlens.codeLens.enabled" = true;
+
+        # ── Keyboard ────────────────────────────────────────────
+        # Dispatching on scan codes assumes the OS reports them correctly.
+        # Hyper-V Enhanced Session does not, so AltGr arrives as a bare
+        # cursor-left (#163, microsoft/vscode#24783). keyCode reads the
+        # layout instead, which AZERTY composition needs.
+        "keyboard.dispatch" = "keyCode";
 
         # ── Terminal ────────────────────────────────────────────
         "terminal.integrated.defaultProfile.linux" = "zsh";

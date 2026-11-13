@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "4852cb6d-3479-5c39-a28a-09f5f2ec8dd7",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4d6a0894-8484-523d-96ed-78f1aaaf0113",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Firmware-Level Persistence",
+        "cvss": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The sample reflashes firmware on a peripheral component — a network card, storage controller, or USB device controller — rather than the system's main UEFI/BIOS, persisting independently of the host OS and main firmware.",
+        "description": "Targeting a peripheral's own firmware, rather than the system firmware, is a narrower but\nstill highly durable form of persistence: reimaging the OS, and even reflashing the main\nsystem firmware, will not touch it, since it lives entirely on the peripheral's own\nstorage. It is a comparatively rare technique in commodity malware given the device-\nspecific engineering required, and its presence is a strong signal of a targeted,\nwell-resourced operation.\n",
+        "recommendation": "* Identify the specific peripheral and firmware version affected; remediation requires reflashing or replacing that component specifically, not reimaging the host.\n* Treat confirmed use of this technique as a strong signal of a targeted, well-resourced actor, and scope the investigation accordingly rather than treating it as commodity malware.\n* Verify firmware update mechanisms for affected peripheral classes require signed updates, where the vendor supports it, to prevent recurrence.\n",
+        "short_recommendation": "Identify the affected peripheral precisely; remediation requires reflashing or replacing that component, not reimaging the host.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1542/002/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1542.002 — Component Firmware",
+            "procedure": "Flashed a modified firmware image to a USB storage controller's onboard flash via the vendor's update protocol, surviving OS reinstallation."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0012 — Persistence",
+            "behavior": "F0009 — Component Firmware",
+            "implementation": "Rewrote a peripheral's onboard firmware directly, persisting independently of the host operating system."
+          }
+        ]
+      }
+    }
+  ]
+}

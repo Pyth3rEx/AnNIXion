@@ -2,7 +2,10 @@ name: Project
 
 # Keeps the project board in step with issues and pull requests.
 #
-#   issue opened          → Backlog, labelled for triage, milestone assigned
+#   issue opened          → Backlog, labelled for triage, milestone assigned,
+#                           Priority and Size read off the form
+#   issue edited          → Priority and Size re-read, so the form stays the
+#                           one place either is set
 #   triage label removed  → Ready, or Up next when it is on the next release
 #   milestone changed     → Up next or Ready, for work nobody has started
 #   issue assigned        → In progress
@@ -12,7 +15,8 @@ name: Project
 #   PR merged, not main   → In review, with the issues it closes — a
 #                           stacked PR's merge into the branch below it
 #                           counts here too, not only a merge into dev
-#   PR merged into main   → Done, with everything else in review
+#   PR merged into main   → Done, with everything else in review, and the
+#                           milestone it shipped is closed
 #   milestone closed      → the next release's Ready work rises to Up next
 #
 # Ready and Up next split triaged work by release: the nearest open milestone
@@ -24,7 +28,7 @@ name: Project
 
 on:
   issues:
-    types: [opened, assigned, unlabeled, milestoned, demilestoned]
+    types: [opened, edited, assigned, unlabeled, milestoned, demilestoned]
   pull_request_target:
     types:
       [opened, closed, milestoned, demilestoned, ready_for_review, converted_to_draft]
@@ -79,6 +83,37 @@ jobs:
             ${{ steps.form.outputs.priority && format('--priority {0}', steps.form.outputs.priority) }} \
             ${{ steps.form.outputs.size && format('--size {0}', steps.form.outputs.size) }} \
             --only-if-empty
+
+  # ── Form edited ───────────────────────────────────────────────────────
+  # Status is driven by seven events and two sweeps; Priority and Size were
+  # written once, at open, and never again. An issue filed without the form
+  # got neither, and changing either answer afterwards moved nothing — so the
+  # board's Status views kept up and its Priority views did not.
+  #
+  # No --only-if-empty here, unlike the open above: an edit is someone saying
+  # what the answer is now, and the form is the one place it is said.
+  issue-edited:
+    name: Issue edited
+    if: github.event_name == 'issues' && github.event.action == 'edited'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Read priority and size from the form
+        id: form
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: .github/scripts/parse-form-fields.py >> "$GITHUB_OUTPUT"
+
+      - name: Carry them to the board
+        if: steps.form.outputs.priority != '' || steps.form.outputs.size != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+        run: |
+          .github/scripts/project-sync.sh sync \
+            --content "${{ github.event.issue.node_id }}" \
+            ${{ steps.form.outputs.priority && format('--priority {0}', steps.form.outputs.priority) }} \
+            ${{ steps.form.outputs.size && format('--size {0}', steps.form.outputs.size) }}
 
   # ── Triaged ───────────────────────────────────────────────────────────
   issue-triaged:
@@ -264,6 +299,30 @@ jobs:
             .github/scripts/project-sync.sh sync --content "$issue" --status Done
           done
           .github/scripts/project-sync.sh sweep --from "In review" --to Done
+
+      # The sweep above only rescues what reached "In review". An issue whose
+      # closing link resolved after its feature PR merged never got there
+      # (#169), so it would stay "In progress" forever after shipping. Scoped
+      # to the milestone being released: unscoped, this would retire work
+      # somebody has merely started.
+      - name: Retire what shipped without ever reaching review
+        if: github.event.pull_request.milestone.title != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_PAT }}
+          MILESTONE: ${{ github.event.pull_request.milestone.title }}
+        run: |
+          .github/scripts/project-sync.sh sweep \
+            --from "In progress" --to Done --milestone "$MILESTONE"
+
+      # Before the step below, not after: --nearest reads the open milestones
+      # to find the release being built, and while the one just shipped is
+      # still open it is the one that answer lands on.
+      - name: Close the milestone this release shipped
+        if: github.event.pull_request.milestone.title != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MILESTONE: ${{ github.event.pull_request.milestone.title }}
+        run: .github/scripts/close-milestone.sh
 
       - name: Read the upcoming release
         id: upcoming

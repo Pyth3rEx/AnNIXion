@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# annixion-nixpkgs-cooldown — reapplies this machine's stored nixpkgs
+# cooldown policy (see scripts/installer/wizard.sh) to flake.lock. Run
+# after `nix flake update` (or the `update`/`upgrade` aliases, which call
+# this automatically) blows away any previous override-input pin.
+set -euo pipefail
+
+DOTFILES="${ANNIXION_DOTFILES:-$HOME/.dotfiles}"
+[[ -d "$DOTFILES" ]] || {
+  echo "annixion-nixpkgs-cooldown: $DOTFILES not found. Set ANNIXION_DOTFILES if it lives elsewhere." >&2
+  exit 1
+}
+
+# shellcheck source=scripts/installer/validate.sh disable=SC1091
+source "$DOTFILES/scripts/installer/validate.sh"
+# shellcheck source=scripts/installer/nixpkgs-pin.sh disable=SC1091
+source "$DOTFILES/scripts/installer/nixpkgs-pin.sh"
+
+read -r mode value <<<"$(read_nixpkgs_pin_stamp "$DOTFILES")"
+if [[ "$mode" == "default" ]]; then
+  echo "annixion-nixpkgs-cooldown: nothing to do (pinned to the repo's own default)."
+  exit 0
+fi
+
+if apply_nixpkgs_pin "$DOTFILES" "$mode" "$value"; then
+  echo "annixion-nixpkgs-cooldown: nixpkgs re-pinned ($mode)."
+else
+  echo "annixion-nixpkgs-cooldown: could not resolve the pin (no network, or GitHub is unreachable/rate-limited) — try again later." >&2
+  exit 1
+fi

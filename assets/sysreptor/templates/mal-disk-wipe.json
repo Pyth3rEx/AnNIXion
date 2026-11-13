@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "cdfe123b-18b4-566d-984a-2b031acae95e",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3a5ac32e-7f0d-568d-b273-c343c3738da3",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Destructive Disk Wiping",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "The sample overwrites disk structures directly — the partition table, MBR/GPT, or raw sectors across the volume — making the system unbootable and the data unrecoverable, with no ransom demand or key involved.",
+        "description": "This is destructive rather than extortive: unlike ransomware, there is no key to pay for\nbecause nothing was encrypted for later recovery, only overwritten. Variants range from\ncorrupting just enough of the boot structures to prevent startup, to overwriting the full\nvolume with random or fixed data, the latter removing any possibility of forensic recovery\nrather than only operational recovery.\n",
+        "recommendation": "* Isolate and power down affected hosts immediately — continued operation risks the wipe routine reaching more of the volume.\n* Image affected drives before any recovery attempt if forensic analysis of the wipe routine or scope is needed; the overwrite is typically irreversible.\n* Restore from offline, immutable backups; there is no decryption or key-recovery path for this technique, unlike ransomware.\n",
+        "short_recommendation": "Isolate and power down affected hosts immediately; there is no key-recovery path for a disk wipe.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1561/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1561 — Disk Wipe",
+            "procedure": "Opened a direct handle to the physical disk device and overwrote the partition table and first sectors of each volume with fixed data."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "F0014 — Disk Wipe",
+            "implementation": "Overwrote raw disk sectors via a direct device handle, bypassing the filesystem entirely."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "format": "templates/v2",
+  "id": "a4493b9e-5cbb-54d3-893d-8e009063ef9d",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "22f10238-e533-5f71-a5b6-16e565e3175f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Audience Redirected to an Unmoderated Platform",
+        "cvss": "n/a",
+        "summary": "Campaign content directed its audience to platforms with minimal moderation, where the\nnarrative continues beyond the reach of enforcement and of the organisation's monitoring.\n",
+        "description": "Migration is a response to pressure and a sign that enforcement is working, but it\nconverts a visible problem into an invisible one. The audience that moves is the most\ncommitted portion, and on the destination platform it is exposed to a more extreme version\nof the narrative with nothing to moderate it.\n\nFor the organisation, monitoring usually stops at the migration point. Judging that the\ncampaign has ended because activity on mainstream platforms has fallen is a predictable\nand costly error.\n\nCollection on these platforms raises its own questions, and the report should set out the\nbasis on which it was or was not conducted rather than leaving a silent gap.\n",
+        "recommendation": "* Continue monitoring after mainstream activity falls; a decline frequently indicates\n  migration rather than resolution.\n* Establish, with legal, what collection on destination platforms is authorised before it\n  is needed.\n* Expect the migrated audience to return around trigger events, and watch for it.\n",
+        "short_recommendation": "Keep monitoring after migration; a quiet mainstream is not resolution.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0122"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0122 — Direct Users to Alternative Platforms",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

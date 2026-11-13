@@ -72,17 +72,29 @@ jobs:
       - name: "[L0] Script tests"
         run: |
           nix develop --command bash tests/repo/milestone.sh
+          nix develop --command bash tests/repo/installer.sh
+          nix develop --command bash tests/repo/nixpkgs-pin.sh
           nix develop --command bash tests/shell/prompt-width.sh
           nix develop --command bash tests/shell/firefox-profiles.sh
           nix develop --command bash tests/shell/catalog.sh
           nix develop --command bash tests/shell/menu-icons.sh
           nix develop --command bash tests/shell/menu-exec.sh
           nix develop --command bash tests/shell/branding.sh
+          nix develop --command bash tests/shell/greeter-session.sh
+          nix develop --command bash tests/shell/vscodium-gpu.sh
+          nix develop --command bash tests/shell/vscodium-settings.sh
+          nix develop --command bash tests/shell/kwin-compositing.sh
+          nix develop --command bash tests/shell/click-behaviour.sh
           nix develop --command bash tests/shell/etc-hosts.sh
+          nix develop --command bash tests/shell/nix-ld.sh
+          nix develop --command bash tests/shell/resource-housekeeping.sh
+          nix develop --command bash tests/shell/sysreptor.sh
           nix develop --command bash tests/repo/workflow-injection.sh
           nix develop --command bash tests/repo/workflow-permissions.sh
           nix develop --command bash tests/repo/stale-reviews.sh
           nix develop --command bash tests/repo/pr-column.sh
+          nix develop --command bash tests/repo/closing-issues.sh
+          nix develop --command bash tests/repo/form-fields.sh
           nix develop --command bash tests/repo/sbom.sh
           nix develop --command bash tests/repo/supply-chain.sh
           nix develop --command bash tests/repo/package-provenance.sh
@@ -124,6 +136,15 @@ jobs:
             exit 1
           fi
           echo "hardware-configuration.nix is not tracked ✓"
+
+      # The closure (KDE, Firefox, Burp Suite, Volatility3, SysReptor's
+      # bundled designs/templates, ...) now outgrows the runner's default
+      # root partition. These toolchains are preinstalled but unused here.
+      - name: Free disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          df -h /
 
       # Required for nixosTest to run QEMU VMs at acceptable speed
       - name: Enable KVM
@@ -477,3 +498,23 @@ jobs:
             "$BUILDTIME_PATH" \
             "$PAGE_PATH" \
             "$SUMS"
+
+  # ── Security pages for the release just published ─────────────────────
+  # The weekly cron keeps these tracking newly-disclosed CVEs; this is the
+  # other moment they have to be right. Without it a release shipping
+  # mid-week linked to the previous release's findings until the following
+  # Monday, or to nothing at all before the first run (#142).
+  #
+  # needs: iso, so the tag and the release body exist before the page that
+  # describes them is regenerated. Called rather than triggered: the release
+  # is published with GITHUB_TOKEN, and GitHub starts no workflow run from
+  # an event that token creates.
+  #
+  # The push it makes lands under docs/security, which this workflow's
+  # paths-ignore excludes — so it cannot start another ISO build.
+  cve-status:
+    name: Security pages
+    needs: iso
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/cve-status.yml
+    secrets: inherit

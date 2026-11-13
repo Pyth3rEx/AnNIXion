@@ -1,0 +1,12 @@
+{
+  "id": "11111111-1111-1111-1111-111111111111",
+  "name": "HTB Fixture Design",
+  "format": "designs/v1",
+  "language": "en-US",
+  "report_sections": [],
+  "finding_fields": [],
+  "finding_field_order": [],
+  "report_template": "<div></div>",
+  "report_styles": "",
+  "report_preview_data": {}
+}

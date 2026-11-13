@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -16,7 +17,7 @@ let
   };
 in
 {
-  programs.firefox.profiles."puppet" = {
+  programs.firefox.profiles."puppet" = lib.mkIf osConfig.annixion.firefox.profiles.puppet.enable {
     id = 3;
     name = "Puppet Master";
     search = {
@@ -105,10 +106,21 @@ in
       "network.trr.uri" = "https://dns.quad9.net/dns-query";
       "network.trr.bootstrapAddr" = "9.9.9.9";
       "network.dns.skipTRR-when-parental-control-enabled" = false;
+      "network.trr.useGET" = true;
+
+      # ── Encrypted Client Hello ─────────────────────────────────
+      # Hides the SNI from anyone on-path; needs the DoH config above.
+      "network.dns.echconfig.enabled" = true;
+      "network.dns.http3_echconfig.enabled" = true;
+      "network.dns.use_https_rr_as_altsvc" = true;
+      "security.tls.ech.grease_http3" = true;
 
       # ── HTTPS only ────────────────────────────────────────────
       "dom.security.https_only_mode" = true;
       "dom.security.https_only_mode_ever_enabled" = true;
+
+      # ── Certificate revocation — CRLite ──────────────────────────
+      "security.pki.crlite_mode" = 2;
 
       # ── Fingerprinting — targeted only (RFP conflicts with UA switcher) ──
       "privacy.fingerprintingProtection" = true;
@@ -116,6 +128,8 @@ in
       "privacy.trackingprotection.socialtracking.enabled" = true;
       "privacy.trackingprotection.fingerprinting.enabled" = true;
       "privacy.trackingprotection.cryptomining.enabled" = true;
+      "privacy.socialtracking.block_cookies.enabled" = true;
+      "privacy.query_stripping.enabled" = true;
 
       # ── Cookie isolation — complements Multi-Account Containers ─
       "network.cookie.cookieBehavior" = 5;
@@ -139,6 +153,23 @@ in
       "datareporting.policy.dataSubmissionEnabled" = false;
       "toolkit.telemetry.unified" = false;
       "browser.ping-centre.telemetry" = false;
+
+      # ── Pinned despite being Firefox defaults today ─────────────
+      # Never assume a default holds on an opsec-sensitive profile — pin it.
+      "network.http.http3.enable" = true;
+      "fission.autostart" = true;
+      "gfx.webrender.all" = true;
+
+      # ── No sponsored content ───────────────────────────────────
+      "browser.newtabpage.activity-stream.showSponsored" = false;
+      "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+      "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+      "browser.newtabpage.activity-stream.feeds.topsites" = false;
+      "browser.newtabpage.activity-stream.system.showSponsored" = false;
+      "extensions.pocket.enabled" = false;
+
+      # ── PDF ────────────────────────────────────────────────────
+      "pdfjs.enableScripting" = false;
 
       # ── Storage ───────────────────────────────────────────────
       "signon.rememberSignons" = false;

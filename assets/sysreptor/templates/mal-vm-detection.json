@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "d8017d0c-dbe4-5289-995d-570ed4453c19",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e93af7ce-d0eb-52f9-9c04-c3680c56cd90",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Virtual Machine Detection",
+        "cvss": "n/a",
+        "summary": "The sample queries hardware and firmware identifiers — hypervisor CPUID bits, vendor strings in device and driver names, MAC address OUI ranges — to determine whether it is running inside a virtual machine.",
+        "description": "Virtual-machine detection is cheaper and more reliable than sandbox detection because the\nsignals come from the hypervisor itself rather than from an analyst's configuration choices:\nthe CPUID hypervisor-present bit, vendor strings such as 'VBOX' or 'VMware' surfacing in\nregistry keys, disk and NIC device names, and ACPI table contents. A sample that only needs\nto know 'virtual or not' can get a confident answer from one or two of these.\n\nThis is a weaker signal of sophistication than sandbox-specific checks: it fires in genuine\nvirtualised production estates as well as analysis environments, and a sample that treats\nthe two identically will sometimes refuse to run on a legitimate virtual desktop.\n",
+        "recommendation": "* Where infrastructure is virtualised in production, note that this sample will not detonate there either — plan analysis accordingly.\n* Mask or patch the specific hypervisor identifiers checked rather than attempting full bare-metal replication.\n* Cross-reference the exact strings checked against the family's other samples; VM-check lists are usually copied wholesale between builds.\n",
+        "short_recommendation": "Mask the specific hypervisor identifiers checked, or move analysis to bare metal.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1497/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1497 — Virtualization/Sandbox Evasion",
+            "procedure": "Read CPUID leaf 1 ECX bit 31 and queried SCSI device strings for hypervisor vendor names."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0009 — Virtual Machine Detection",
+            "implementation": "CPUID hypervisor-present bit and VirtualBox/VMware device-name strings checked."
+          }
+        ]
+      }
+    }
+  ]
+}

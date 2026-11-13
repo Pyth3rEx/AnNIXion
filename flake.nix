@@ -43,17 +43,25 @@
       # and the CI stand-in so the two cannot drift apart.
       baseModules = [
         # ── Feature modules ──────────────────────────────────
+        ./system/compat.nix
         ./system/desktop.nix
+        ./system/firefox-profiles.nix
         ./system/branding.nix
         ./system/xrdp.nix
         ./system/security-tools.nix
         ./system/burp-ca.nix
         ./system/cve-report.nix
+        ./system/config-doctor.nix
+        ./system/nixpkgs-cooldown.nix
         ./system/vpn
         ./system/hardening.nix
+        ./system/offensive-net.nix
         ./system/shell.nix
         ./system/git.nix
         ./system/docker.nix
+        ./system/sysreptor.nix
+        ./system/toolchain.nix
+        ./system/nix-ld.nix
 
         # Only the HM-wrapped Firefox carries policies.json (CA trust,
         # extensions); bare pkgs.firefox drops them silently.
@@ -101,6 +109,7 @@
         ./system/core/os-release.nix
         ./system/core/networking.nix
         ./system/core/nix.nix
+        ./system/core/resources.nix
         ./system/core/locale.nix
         ./system/core/audio.nix
         ./system/core/security.nix
@@ -127,6 +136,12 @@
         # tests/shell/branding.sh builds the greeter through here rather than from
         # <nixpkgs>, which a CI runner does not set.
         sddm-theme = (import ./branding { inherit pkgs; }).sddmTheme;
+
+        # The plasma activation step, as a file. tests/shell/kwin-compositing.sh
+        # reads the kwinrc activation would write through here: the generated
+        # data.json has no attribute of its own, and building it this way does
+        # not drag in the operator's whole closure.
+        plasma-activation = pkgs.writeText "annixion-plasma-activation" self.nixosConfigurations.AnNIXion-ci.config.home-manager.users.operator.home.activation.configure-plasma.data;
 
         # The catalog as plain data, for the same reason: tests/catalog.sh
         # reads it through here rather than importing it against <nixpkgs>.

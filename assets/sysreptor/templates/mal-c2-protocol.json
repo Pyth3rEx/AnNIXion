@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "851402a6-50dd-57fa-900c-2d7abc365158",
+  "tags": [
+    "malware",
+    "detection",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b16b3675-b731-5abd-bd10-2937923f1576",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Application-Layer C2 Protocol",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "The sample communicates with operator infrastructure over a standard application-layer protocol — most often HTTP or HTTPS — shaped to resemble ordinary traffic to that service.",
+        "description": "Blending into expected traffic is the point: a beacon shaped as a browser request to a\nplausible-looking domain, with commands and results carried in HTTP headers, cookies, or a\nJSON body, passes through most perimeter controls that merely check protocol and port.\nWhere TLS is used, payload inspection is additionally unavailable to anything without a\ndecrypting proxy in the path, leaving only metadata — destination, timing, volume — for\ndetection.\n",
+        "recommendation": "* Fingerprint the beacon's specific shape (URI pattern, header set, JA3/JA4 TLS fingerprint, beacon interval) rather than relying on the destination domain alone, which rotates.\n* Hunt for periodic connections with low jitter to a given destination — genuine browser traffic is far less regular than a scripted beacon.\n* Where TLS inspection is not feasible, prioritise metadata-based detection (timing, volume, destination reputation) over payload inspection.\n",
+        "short_recommendation": "Fingerprint the beacon's shape and timing rather than relying on the destination domain alone.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1071/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1071.001 — Web Protocols",
+            "procedure": "Beaconed over HTTPS at a fixed interval with commands and results carried in a JSON body disguised as API traffic."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0004 — Command and Control",
+            "behavior": "B0030 — C2 Communication",
+            "implementation": "Commands and results were encoded in HTTP request and response bodies shaped as ordinary API traffic."
+          }
+        ]
+      }
+    }
+  ]
+}

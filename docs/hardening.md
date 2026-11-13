@@ -77,6 +77,48 @@ the control centre killswitch goes through polkit.
 the panel launches some, the zsh aliases edit with `kate`, and the rest are how
 you read what you collect.
 
+## Offensive networking
+
+The firewall drops all inbound and `system/hardening.nix` pins the ICMP-redirect and
+source-route sysctls off. That is right for a workstation and wrong mid-engagement: a
+reverse shell is an *inbound* connection, so the target's callback to your handler is
+dropped before Metasploit sees it — the exploit "completes" with no session — and
+redirect/MITM and pivoting are blocked.
+
+`system/offensive-net.nix` is an opt-in runtime toggle for exactly that window. Enable
+it per host:
+
+```nix
+# user/configuration.nix
+annixion.offensiveNet.enable = true;
+# annixion.offensiveNet.trustedInterfaces = [ "tun0" "wg0" ];  # default [ "tun0" ]
+```
+
+Enabling only installs the machinery; the box still **boots hardened**. Arm it for the
+session:
+
+```
+annixion-offensive on       # open inbound on the VPN interface, relax redirect/MITM
+annixion-offensive status
+annixion-offensive off      # restore the hardened posture (a reboot does the same)
+```
+
+`on` inserts a terminal accept for each `trustedInterfaces` entry at the top of the
+`nixos-fw` input chain and sets the redirect/source-route sysctls to 1; `off` removes
+them. The control centre (`annixion-cc`) carries the same toggle when the module is
+enabled, and `wheel` may flip the service without a password.
+
+Scope and caveats:
+
+- Only inbound on the named interface(s) is opened — the real NICs stay closed, and
+  trusting an interface that is not up does nothing.
+- The accept lives in the live firewall ruleset, so a `systemctl restart firewall` or a
+  rebuild drops it; re-arm with `annixion-offensive on`.
+- It does **not** touch the VPN killswitch. That is egress-only and scoped to
+  `annixion-vpn.slice`; a handler in a normal shell is unaffected either way.
+- `annixion.offensiveNet.relaxRedirects = false` keeps the redirect/source-route
+  sysctls hardened while still opening inbound.
+
 ## Docker
 
 `system/docker.nix` runs the daemon **rootless** — as the desktop user, not as

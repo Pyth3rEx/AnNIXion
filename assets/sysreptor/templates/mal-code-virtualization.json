@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "d9b7b2a3-16ce-5740-8667-2b6e31db8863",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "10eb3b81-6dfb-5cab-bf49-a39c1118264b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Code Virtualization / VM-Based Obfuscation",
+        "cvss": "n/a",
+        "summary": "A portion of the sample's logic is compiled to a custom bytecode and executed by an embedded interpreter rather than running as native instructions — removing that logic from the disassembler's view entirely.",
+        "description": "This is the deepest and most expensive form of obfuscation commodity packers offer: rather\nthan hide the native code, it replaces it with bytecode for a virtual machine unique to\nthat protector, so a disassembler sees only the interpreter's dispatch loop, never the\nprotected logic's real instructions. It is typically reserved for licence checks, a single\ncritical routine, or anti-tamper logic rather than the whole binary, because of the\nperformance cost.\n",
+        "recommendation": "* Identify which specific routine is virtualised rather than attempting to reverse the VM wholesale; it is usually a small, deliberately chosen target.\n* Use dynamic tracing (instruction-level or API-level) through the interpreter rather than static disassembly, which will not recover the protected logic.\n* Check published devirtualisers for the specific commercial protector in use before building one from scratch.\n",
+        "short_recommendation": "Trace the protected routine dynamically through the interpreter rather than disassembling it statically.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027 — Obfuscated Files or Information",
+            "procedure": "A licence-check routine executed entirely inside a custom bytecode interpreter embedded in the binary."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0008 — Executable Code Virtualization",
+            "implementation": "One routine was compiled to custom bytecode and run through an embedded dispatch-loop interpreter."
+          }
+        ]
+      }
+    }
+  ]
+}

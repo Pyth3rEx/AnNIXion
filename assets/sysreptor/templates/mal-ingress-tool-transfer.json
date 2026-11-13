@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "7f314f4f-4c78-5ce7-93f2-ab0041de9755",
+  "tags": [
+    "malware",
+    "detection",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2cee51a7-7a95-59b1-9579-5e0ccaf202bb",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Second-Stage Payload Retrieval",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The initial sample is a small loader whose primary job is to fetch a larger second-stage payload from operator infrastructure and execute it, rather than carrying its full capability from the start.",
+        "description": "Staging the real payload behind a lightweight loader keeps the delivered artefact small\nand generic-looking, and lets the operator change the second stage per target or per\ncampaign without re-sending the loader. The transfer itself is usually the first point\nwhere the real payload's capability — and therefore its detection signature — becomes\nvisible, which makes intercepting it, rather than only the loader, the priority.\n",
+        "recommendation": "* Capture the second-stage payload at transfer time rather than relying on analysis of the loader alone, which is frequently near-identical across unrelated campaigns.\n* Block or sinkhole the retrieval infrastructure directly; a loader that cannot fetch its payload is functionally inert.\n* Treat the loader's capability assessment as provisional until the second stage is recovered and analysed.\n",
+        "short_recommendation": "Capture the second-stage payload at transfer time; the loader alone understates the sample's real capability.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1105/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1105 — Ingress Tool Transfer",
+            "procedure": "Downloaded a second-stage DLL over the existing C2 channel and loaded it into the running process."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0004 — Command and Control",
+            "behavior": "E1105 — Ingress Tool Transfer",
+            "implementation": "Loader fetched an encrypted second-stage payload from operator infrastructure and decrypted it in memory."
+          }
+        ]
+      }
+    }
+  ]
+}

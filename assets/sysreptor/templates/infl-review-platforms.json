@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "074577f5-96ff-5637-bd32-55afaad77bb3",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6e213878-0c89-5707-a422-f715e6c46858",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Consumer Review Platforms Used to Carry the Narrative",
+        "cvss": "n/a",
+        "summary": "Review and rating platforms were used to carry campaign claims, with clusters of\naccounts posting coordinated negative reviews referencing the campaign narrative rather\nthan any transaction.\n",
+        "description": "Review platforms are attractive because their output is durable, highly ranked in search,\nand read by people making decisions. A review persists long after a social media post has\nscrolled away, and it reaches customers at the moment of choice.\n\nCoordination is usually visible in the detail: reviews that describe no specific\ntransaction, cluster tightly in time, reuse phrasing, and arrive from accounts with no\nother review history. Several platforms expose reviewer history, which makes this one of\nthe more evidentially solid parts of such an analysis.\n\nEach platform has a manipulation policy and a specific evidence format. The quality of\nthe report submitted matters more than the fact of reporting, and a well-evidenced\nsubmission is frequently actioned where a complaint is not.\n",
+        "recommendation": "* Collect reviewer history, timing and phrasing overlap into the evidence package each\n  platform's manipulation policy requires.\n* Report through the platform's manipulation route rather than disputing reviews\n  individually.\n* Do not solicit offsetting positive reviews; it breaches the same policies and\n  undermines any later complaint.\n",
+        "short_recommendation": "Report under platform manipulation policy with a full evidence package.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0109"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA07 — Select Channels and Affordances",
+            "technique": "T0109 — Consumer Review Networks",
+            "note": ""
+          },
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0115 — Post Content",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

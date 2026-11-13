@@ -1,5 +1,10 @@
 # home/desktop/redteam-launch.nix — annixion-redteam, the assault browser and its proxy.
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  osConfig,
+  ...
+}:
 
 let
   redteam = pkgs.writeShellApplication {
@@ -42,5 +47,6 @@ let
   };
 in
 {
-  home.packages = [ redteam ];
+  # No Red Team profile to pair with Burp when the toggle is off.
+  home.packages = lib.mkIf osConfig.annixion.firefox.profiles.redteam.enable [ redteam ];
 }

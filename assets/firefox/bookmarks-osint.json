@@ -823,6 +823,10 @@
                     "url": "https://www.maritime-database.com/"
                   },
                   {
+                    "name": "ADS-B Exchange - Unfiltered Flight Tracking",
+                    "url": "https://globe.adsbexchange.com/"
+                  },
+                  {
                     "name": "AirNav RadarBox - Live Flight Tracker",
                     "url": "https://www.radarbox24.com/"
                   },

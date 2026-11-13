@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "97478de8-294c-5eff-b6dd-333c731788fd",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "13f89ab4-7ae1-58e3-8212-25950d9f3f2e",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Malicious Network Driver for Persistence",
+        "cvss": "CVSS:3.1/AV:A/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "The sample installs a kernel-level network driver or filter that gives it a persistent vantage point over network traffic — for interception, covert channel use, or onward lateral movement — independent of user-mode networking controls.",
+        "description": "A network filter driver sits below most host-based network monitoring and user-mode\nfirewall controls, which is why this technique both persists reliably and evades\ndetection tooling that only observes traffic at the socket or application layer. It is\noften used specifically to establish a covert communication channel that bypasses\nconventional egress filtering, or to pivot onward to other hosts on the same network\nsegment with reduced visibility.\n",
+        "recommendation": "* Enumerate installed network filter drivers (NDIS filters, WFP callout drivers) against a known-good baseline, since this layer is invisible to most user-mode network monitoring.\n* Capture traffic at a network tap or span port outside the host's own control, rather than relying on host-based capture the driver itself could be filtering.\n* Treat confirmed presence as evidence of both persistence and an active covert channel, and scope lateral-movement investigation to the same network segment.\n",
+        "short_recommendation": "Enumerate network filter drivers directly; this layer is invisible to most user-mode network monitoring and host-based capture.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1543/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1543 — Create or Modify System Process",
+            "procedure": "Installed a Windows Filtering Platform callout driver that redirected a subset of outbound traffic through an operator-controlled relay."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0011 — Lateral Movement",
+            "behavior": "B0026 — Malicious Network Driver",
+            "implementation": "Network filter driver provided a persistent, kernel-level vantage point for covert traffic redirection."
+          }
+        ]
+      }
+    }
+  ]
+}

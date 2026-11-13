@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "025cc73c-2f95-52bd-98af-cf0f7c7e7fe8",
+  "tags": [
+    "malware",
+    "detection",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "035cd24d-108c-55fc-aeac-90ea0fa3833c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Domain-Generation Algorithm for C2 Resilience",
+        "cvss": "n/a",
+        "summary": "Rather than hard-coding C2 domains, the sample derives a rotating set of candidate domain names from a seed (date, fixed key, or both), making takedown of any single domain ineffective.",
+        "description": "A domain-generation algorithm trades a single point of failure for a wide, predictable\nsequence: both the malware and the operator can compute the same candidate list from the\nsame seed, so the operator only needs to register whichever one they intend to use next.\nDefenders who recover the algorithm and its seed can predict future domains and pre-\nregister or block them ahead of use, which is the main lever against this technique.\n",
+        "recommendation": "* Recover the generation algorithm and seed from the sample rather than tracking domains reactively; this converts an unbounded rotating list into a finite, predictable one.\n* Pre-register or block upcoming candidate domains once the algorithm is known, ahead of the operator's registration.\n* Share the recovered algorithm and seed with threat-intel partners; DGA families are frequently reused with only the seed changed between campaigns.\n",
+        "short_recommendation": "Recover the generation algorithm and seed to predict and pre-block upcoming domains.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1568/002/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1568.002 — Domain Generation Algorithms",
+            "procedure": "Derived a daily sequence of candidate domains from a fixed seed value combined with the current date."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0004 — Command and Control",
+            "behavior": "B0031 — Domain Name Generation",
+            "implementation": "Computed a rotating sequence of candidate C2 domains from a fixed key and the current date."
+          }
+        ]
+      }
+    }
+  ]
+}

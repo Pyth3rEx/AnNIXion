@@ -36,6 +36,52 @@
 #   # docker group, which is root-equivalent. See docs/hardening.md.
 #   annixion.docker.rootless = false;
 #
+#   # Offensive work needs inbound callbacks (reverse shells, responder) on the
+#   # engagement VPN, which the base firewall drops. Opt in to install the toggle,
+#   # then arm per session: `annixion-offensive on` (off / status). Boots hardened.
+#   # Add your tunnel's interface if it isn't tun0. See docs/hardening.md.
+#   annixion.offensiveNet.enable = true;
+#   # annixion.offensiveNet.trustedInterfaces = [ "tun0" "wg0" ];
+#
+#   # KWin composites through llvmpipe on a guest with no render node, which
+#   # costs about three quarters of a core. Turn it on where there is real
+#   # acceleration — "ls /dev/dri/renderD*" finds a node. See
+#   # docs/customization.md.
+#   annixion.desktop.compositing = true;
+#
+#   # wpa_supplicant runs for the whole uptime even with no radio, because
+#   # NetworkManager turns wireless on unconditionally. Turn it back on
+#   # where there is one — "ls /sys/class/ieee80211" finds it. See
+#   # docs/customization.md.
+#   annixion.hardware.wireless = true;
+#
+#   # The reporting platform runs locally and keeps client findings, so it
+#   # binds loopback and encrypts at rest. Only this distribution's own
+#   # designs and finding library are built in-repo and imported by default —
+#   # no network fetch, nothing CI/CD has to build. HTB/OffSec/demo packs are
+#   # left out of that build for the same reason CI can't touch them: they'd
+#   # need a network fetch and licensed content this repo can't carry. They
+#   # stay available, just opt-in — fetch and pin them yourself through
+#   # annixion.sysreptor.extraDesigns, see docs/sysreptor.md for a worked
+#   # example, then list them here too. Making it network-accessible
+#   # publishes every engagement's deliverables over plain HTTP — read
+#   # docs/sysreptor.md before you do.
+#   # The login is created on first start from the hash below — mint one with
+#   # `sysreptor hash`. The default is the shipped operator password, so it is
+#   # public: change it here or in the UI. There is no login-less mode; every
+#   # way to skip the login screen is Professional-edition only.
+#   annixion.sysreptor = {
+#     user = "operator";
+#     hashedPassword = "pbkdf2_sha256$600000$...";
+#     # designs = [ "annixion" ];     # the default — no network fetch
+#     # extraDesigns = [ ];           # HTB/OffSec packs you fetched and pinned
+#     # findingTemplates = [ ];       # [] imports no finding templates
+#     # plugins = [ ];                # [] hands plugin choice back to the UI
+#     # theme = "upstream";           # drop the AnNIXion palette and logo
+#     # demoProjects = true;          # the filled-in example reports
+#     # networkAccessible = true;
+#   };
+#
 #   # Disable SSH if you don't need the fallback
 #   services.openssh.enable = false;
 #

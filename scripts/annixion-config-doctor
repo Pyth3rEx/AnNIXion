@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# annixion-config-doctor — the same evaluation and version check
+# annixion-install runs on a candidate user/ config, pointed at this
+# machine's own ~/.dotfiles instead. Run it after hand-editing
+# user/configuration.nix or user/home.nix, before `rebuild`.
+set -euo pipefail
+
+DOTFILES="${ANNIXION_DOTFILES:-$HOME/.dotfiles}"
+[[ -d "$DOTFILES" ]] || {
+  echo "annixion-config-doctor: $DOTFILES not found. Set ANNIXION_DOTFILES if it lives elsewhere." >&2
+  exit 1
+}
+
+# shellcheck source=scripts/installer/validate.sh disable=SC1091
+source "$DOTFILES/scripts/installer/validate.sh"
+
+status=$(eval_flake "$DOTFILES")
+if [[ "$status" == "ok" ]]; then
+  echo "annixion-config-doctor: user/ evaluates cleanly."
+else
+  echo "annixion-config-doctor: ${status#broken: }" >&2
+  exit 1
+fi
+
+read -r version _ <<<"$(read_config_stamp "$DOTFILES")"
+if [[ -z "$version" ]]; then
+  echo "annixion-config-doctor: no .annixion-version stamp — hand-written, or from before this existed."
+elif ! version_ge "$version" "$MIN_CONFIG_VERSION"; then
+  echo "annixion-config-doctor: stamped $version, older than this release accepts ($MIN_CONFIG_VERSION)."
+  echo "Rerun annixion-install's wizard (--user-config $DOTFILES from a live ISO) to refresh it."
+fi

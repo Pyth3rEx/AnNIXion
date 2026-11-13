@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "09d5809b-39d0-5c94-a849-ed18403768de",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b616ae7f-03bf-5ee1-a0fb-ca4a58c28082",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Closed and Gated Channels Used to Stage Content",
+        "cvss": "n/a",
+        "summary": "Campaign content appears first in closed groups, invitation-only channels or private\nmessaging communities, and reaches open platforms only after it has been established\nthere.\n",
+        "description": "Staging in closed space serves two purposes. It builds an apparent history — by the time\na claim surfaces publicly it can be presented as something \"people have been saying for\nweeks\" — and it keeps the early, clumsier versions away from scrutiny.\n\nFor the organisation this is an observability problem. Closed channels are not searchable,\nand lawful access to them is limited and slow. The first warning is usually a member of\nstaff or a customer who is also a member, which makes the reporting route for such\nobservations materially important.\n\nWhere collection does extend into closed channels, the legal and ethical basis for it\nmust be set out in the report. Membership obtained under a false identity is a decision\nwith consequences and should be an explicit, authorised one — never an analyst's\nimprovisation.\n",
+        "recommendation": "* Provide a simple, low-friction route for staff and customers to forward content they see\n  in closed spaces, and make clear they are not being asked to join anything.\n* Treat the appearance of a mature claim with no public history as an indicator of\n  staging, and date the claim from its first public appearance only with that caveat.\n* Agree in advance, with legal, what collection in closed channels is authorised.\n",
+        "short_recommendation": "Give staff a route to forward closed-channel content; authorise collection in advance.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0155"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA07 — Select Channels and Affordances",
+            "technique": "T0155 — Gated Asset",
+            "note": ""
+          },
+          {
+            "tactic": "TA07 — Select Channels and Affordances",
+            "technique": "T0151 — Digital Community Hosting Asset",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

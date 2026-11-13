@@ -44,6 +44,115 @@ ZSH configuration lives in `home/shell/` — `default.nix` for the shell,
 
 ---
 
+## Desktop compositing
+
+The compositor is off by default. The deployment target is a Hyper-V guest,
+where `hyperv_drm` gives a KMS display device and no render node, so KWin would
+composite every frame through Mesa's llvmpipe software rasterizer — about three
+quarters of a core, continuously, on a machine meant to be running security
+tooling.
+
+Check whether this machine has acceleration:
+
+```bash
+ls /dev/dri/renderD*     # a node here means the GPU can do the work
+```
+
+If one exists, turn the compositor on in `user/configuration.nix`:
+
+```nix
+annixion.desktop.compositing = true;
+```
+
+| | Compositing off (default) | Compositing on |
+|---|---|---|
+| Blur and transparency | None — the panel renders opaque | As themed |
+| Desktop animations | None | At `AnimationSpeed = 3` |
+| Screen tearing | Visible | Absent |
+| Cost with no render node | None | ~75% of a core, continuously |
+
+Krohnkite tiling, virtual desktops, the panel and every keyboard shortcut work
+the same either way. Over an Enhanced Session the visual loss is small — the
+RDP client is already re-encoding the framebuffer.
+
+KWin 6 has no cheaper middle ground: the X11 XRender compositor was removed, so
+it is OpenGL-through-llvmpipe or nothing. It also dropped the D-Bus method that
+used to suspend compositing live, so this setting only takes effect on
+`rebuild` and a fresh session.
+
+---
+
+## Offensive networking
+
+The base firewall drops all inbound traffic, which also drops the callback from a
+reverse shell — the exploit completes but no session lands. `annixion.offensiveNet`
+is an opt-in runtime toggle that opens inbound on the engagement VPN interface and
+relaxes the redirect/MITM sysctls, armed per session and gone on reboot.
+
+```nix
+annixion.offensiveNet.enable = true;
+# annixion.offensiveNet.trustedInterfaces = [ "tun0" "wg0" ];  # default [ "tun0" ]
+```
+
+Enabling installs the toggle but leaves the box hardened at boot. Arm and disarm it
+for the session:
+
+```
+annixion-offensive on | off | status
+```
+
+The same toggle appears in the control centre (`annixion-cc`) when the module is
+enabled. Full behaviour, scope and caveats: [docs/hardening.md](hardening.md).
+
+---
+
+## Wireless
+
+`wpa_supplicant` is off by default. NetworkManager's wifi backend defaults to
+it and turns `networking.wireless` on unconditionally, so on a Hyper-V guest —
+which has no radio at all — the daemon runs for the whole uptime with nothing
+to manage.
+
+Check whether this machine has one:
+
+```bash
+ls /sys/class/ieee80211    # a directory here means there is a radio
+```
+
+If it exists, turn wireless on in `user/configuration.nix`:
+
+```nix
+annixion.hardware.wireless = true;
+```
+
+Ethernet, the OpenVPN plugin and the VPN killswitch are unaffected either way —
+this only governs whether NetworkManager has a wifi backend to drive.
+
+---
+
+## Resource limits
+
+Three bounds ship as defaults, each overridable in `user/configuration.nix`:
+
+| | Default | Why |
+|---|---|---|
+| `services.journald.extraConfig` | `SystemMaxUse=512M` | With no cap journald takes 10% of the filesystem — a ~19 GB ceiling on a 195 GB root |
+| `zramSwap.enable` | `true` | No swap at all means a heavy scan or parallel build meets the OOM killer instead of degrading |
+| `nix.optimise.automatic` | `true` | Hardlinks identical files in the store; a toolchain-heavy closure carries a lot of them |
+
+The journal stays `Storage=persistent`: boot and killswitch behaviour is
+exactly what it gets read for, and those are the logs a volatile journal would
+lose. Raise the cap if an engagement needs longer history:
+
+```nix
+services.journald.extraConfig = "SystemMaxUse=2G";
+```
+
+Store optimisation is a space/time trade with no semantic effect — unlike a
+shorter GC window, which reclaims space by discarding rollback targets.
+
+---
+
 ## Desktop panel
 
 The top bar is declared in `home/desktop/plasma/` under `programs.plasma.panels`, and
@@ -200,6 +309,78 @@ VSCodium ships as part of the base user environment (`home/apps/vscodium.nix`) w
 - **direnv:** Automatic environment loading via `nix-direnv`
 
 No manual activation needed — it is included by default. Open VSCodium after the first `rebuild`.
+
+Two reading aids ride along, both purely visual: `better-comments` colours a
+comment by its marker — `!` for a warning, `?` for a query, `TODO` for work
+left — and `indent-rainbow` tints each indent level, which is what makes a
+deeply nested Nix attribute set or a long `if` in a shell script readable at a
+glance.
+
+### C/C++ toolchain
+
+VSCodium also ships `clangd` (language server, formatter), `codelldb` and
+`cmake-tools` for C/C++ (`home/apps/vscodium.nix`). `codelldb` is pointed at
+the system `lldb` rather than its own bundled copy, so the editor's debugger
+and everything below agree on one build. The tools behind them are installed
+system-wide from `catalog/support/`: `clang`, `clang-tools`, `gnumake`,
+`cmake`, `ninja`, `bear` (generates `compile_commands.json` for Makefile
+projects — clangd needs a build system to produce one for), `gdb`, `lldb`,
+and `llvm` (`llvm-objdump`, `llvm-nm`, `llvm-readobj`, `llvm-mca` — binary
+inspection for RE work). `shellcheck` is there too, system-wide rather than
+left to the VSCodium extension, because the extension's bundled binary
+doesn't run on NixOS.
+
+`gdb` and `lldb` being on `PATH` also means **Ghidra's Debugger plugin finds
+them automatically** — both its GDB and LLDB launch modes default to the
+bare binary name, resolved via `PATH`, with nothing to configure. Ghidra's
+decompiler is unaffected either way: it works from the binary alone and has
+no notion of which compiler produced it.
+
+### Shell scripting
+
+`bash-ide-vscode` runs the bash language server over every `.sh` in the tree
+(`home/apps/vscodium.nix`) — completion, hover documentation from the local man
+pages, go-to-definition across sourced files, and `shfmt` formatting on save.
+It is wired for a machine with no network: nothing it does reaches out, and
+`bashIde.explainshellEndpoint` is deliberately left unset, since pointing it at
+explainshell.com would post the command line under your cursor to a third
+party.
+
+nixpkgs patches the extension to the store `shellcheck` and `shfmt` rather than
+the binaries it bundles, so neither needs a path setting. The server's own
+shellcheck is then switched off — `bashIde.shellcheckPath` is set to the empty
+string — because `timonwong.shellcheck` already reports those findings, and
+leaving both on shows every warning twice.
+
+`shfmt` takes its indent width from the editor rather than from a setting of
+its own, so the `[shellscript]` block sets `editor.tabSize` to 2 and
+`editor.insertSpaces`, and `bashIde.shfmt.caseIndent` supplies the `-ci`. That
+is `shfmt -i 2 -ci`, which is how every script in this repository is already
+written — without it, the first save reformats the file entirely.
+
+### PowerShell
+
+`pwsh` is installed system-wide from `catalog/tools/dev/powershell.nix` and has
+a menu entry under Development, so there is a console to work a script through
+rather than only run it. The editor side is `ms-vscode.powershell`, which
+brings PowerShell Editor Services, PSReadLine and PSScriptAnalyzer — all three
+bundled in the extension as portable assemblies loaded by `pwsh`, so
+completion, diagnostics and formatting work with no network and no companion
+package.
+
+nixpkgs does not patch this extension the way it patches the bash one: it
+looks for `pwsh` on `PATH` and keeps its own list of discovered installs, so
+`powershell.powerShellAdditionalExePaths` names the store path explicitly and
+`powershell.powerShellDefaultVersion` selects it. Without both, the language
+server either never starts or starts against something else.
+`powershell.promptToUpdatePowerShell` is off — the version is the flake's to
+decide, and the check goes over the network.
+
+`CC` and `CXX` default to `clang`/`clang++` system-wide (`system/toolchain.nix`)
+— sharper diagnostics and working sanitizers, and it matches the
+clangd/lldb pair above. This only steers build systems that respect
+`CC`/`CXX` (make, cmake, autotools); nixpkgs still builds its own packages
+with gcc, so nothing here forces a rebuild of the closure.
 
 ---
 

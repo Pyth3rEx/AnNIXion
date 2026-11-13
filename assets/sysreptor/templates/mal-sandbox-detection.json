@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "1090df9e-2427-5bf7-ab92-97c8ea8da1fa",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "8cca6654-4d8a-5e95-920f-edc69e6afc42",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Sandbox and Analysis-Environment Detection",
+        "cvss": "n/a",
+        "summary": "The sample probes its environment for artefacts that only exist in automated sandboxes — specific driver names, MAC address ranges, low resource counts — and withholds its real behaviour where it finds them.",
+        "description": "Sandbox detection is a numbers game for the sample, not a certainty: it checks a handful\nof cheap signals (hostname patterns, known analysis-tool process names, disk size, core\ncount, uptime) and acts on the balance of evidence rather than a single conclusive\nartefact. This is why the same sample can detonate cleanly in one sandbox configuration\nand do nothing in another.\n\nWhere detection succeeds, dynamic analysis records a sample that installed, touched a few\nbenign files and exited — a result that is easy to mistake for a benign or broken binary\nrather than one that recognised the environment.\n",
+        "recommendation": "* Re-run detonation with the specific artefacts the sample checks for removed or spoofed, not with a generic 'more realistic' VM.\n* Compare process, hardware and timing fingerprints against the sandbox's own baseline to find what gave it away.\n* Treat a sample that does nothing as inconclusive, not benign, until the checks are identified.\n",
+        "short_recommendation": "Identify the specific sandbox artefacts checked and re-detonate with them removed.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1497/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1497 — Virtualization/Sandbox Evasion",
+            "procedure": "Enumerated running processes and hardware identifiers consistent with a known sandbox vendor before proceeding."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0007 — Sandbox Detection",
+            "implementation": "Checked for analysis-tool process names and a known low core/RAM profile."
+          }
+        ]
+      }
+    }
+  ]
+}
