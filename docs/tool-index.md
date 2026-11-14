@@ -289,6 +289,7 @@ them. Full descriptions and worked examples are in [usage](usage.md).
 | `annixion-raise` | Focuses a running window by `WM_CLASS`, or launches the app |
 | `annixion-cve-report` | Regenerates the weekly CVE pipeline against your own checkout |
 | `seclists` | Opens the wordlist tree in the file manager |
+| `tlog-engagement` | Opt-in terminal session recording, per engagement; pushes into SysReptor through `reptor`. See [tlog.md](tlog.md) |
 
 Importing the Hack The Box example from `user/examples/` adds
 `annixion-htb-hosts` and `annixion-htb-vpn`.
