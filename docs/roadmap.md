@@ -55,6 +55,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] Keyboard layout selection, written as `console.keyMap` — also what the LUKS prompt will use
 - [x] Profile selection (the four Firefox profiles — redteam/osint/puppet/untrusted — multi-select; new `annixion.firefox.profiles.*.enable` toggles, since none existed before this)
 - [x] Desktop compositing, defaulted from the hardware rather than asked blind: `annixion.desktop.compositing` is off by default because a Hyper-V guest has no render node and KWin would rasterize every frame through llvmpipe (#167), but that is a property of the machine being installed to, not a preference — probe `/dev/dri/renderD*` and pre-select on, with the cost named, where one exists. Off costs Konsole transparency and panel blur, which reads as a theming bug rather than a performance setting, so the prompt has to say what it turns off
+- [x] Nixpkgs cooldown pin — default (the repo's own), latest stable release, a specific one, N releases behind the newest, or a fixed number of days old, as a buffer against a supply-chain-compromised nixpkgs commit that hasn't been caught yet. Resolved against GitHub's API and baked into `flake.lock` via `nix flake lock --override-input`, since `nixpkgs` is a flake input resolved before any `annixion.*` option exists to hold this. Persisted in `user/.annixion-nixpkgs-pin`; a plain `nix flake update` has no memory of the override, so `annixion-nixpkgs-cooldown` (and the `update`/`upgrade` aliases, automatically) reapply it afterward. Never aborts the install on a network/API failure — degrades to the repo's own pin with a warning. Closes #39
 - [ ] Secure Boot: offer key creation and enrolment (see Phase 10)
 - [ ] Error handling: graceful rollback on failed partitioning or install
 - [x] Fix: the script ends on `[[ ... ]] && reboot`, so declining the reboot makes a successful install exit 1
@@ -93,7 +94,8 @@ can be detected but not rewritten.
 
 ### Testing
 
-- [x] `tests/repo/installer.sh` — run the installer with every destructive command stubbed (and `nix` itself stubbed, same as `tests/repo/cve-report.sh`) and assert the device sequence, the `--user-config` branches, the EFI guard and the reboot exit-code fix; wired into CI's "[L0] Script tests" step alongside the other `tests/repo/*.sh`. No disk, no VM, no network. The encryption branches and the LUKS guard land with #78
+- [x] `tests/repo/installer.sh` — run the installer with every destructive command stubbed (and `nix` itself stubbed, same as `tests/repo/cve-report.sh`) and assert the device sequence, the `--user-config` branches, the EFI guard and the reboot exit-code fix; wired into CI's "[L0] Script tests" step alongside the other `tests/repo/*.sh`. No disk, no VM, no network. The encryption branches and the LUKS guard land with #78. The nixpkgs cooldown pin (#39) lands here too — a `curl` stub backs the GitHub API calls, with assertions for every mode, the no-network degrade path, and the stamp surviving a skip-wizard `--user-config` install
+- [x] `tests/repo/nixpkgs-pin.sh` — unit-level coverage of `installer/nixpkgs-pin.sh`'s resolution logic in isolation (branch offset math, release-string normalization, day-count-to-sha lookup, the no-network degrade path for every mode), stubbing only `curl`
 - [ ] Manual VM install before each release — the stub test proves the right commands are issued, not that the result boots
 
 ---

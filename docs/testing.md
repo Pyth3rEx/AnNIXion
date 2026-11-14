@@ -81,6 +81,7 @@ a path a module chose.
 | Test | What it covers |
 |---|---|
 | `tests/repo/milestone.sh` | Which milestone new work lands on, and the column that implies. Drives `assign-milestone.sh` and `board-status.sh` through `--select` and `--decide`. |
+| `tests/repo/nixpkgs-pin.sh` | That `installer/nixpkgs-pin.sh`'s cooldown resolution holds up on its own: branch existence checks, the offset math behind "N releases behind the newest" (including running out of known history), release-string normalization (bare vs `nixos-`-prefixed, and a nonexistent one), the day-count-to-commit-sha lookup, and that every mode except `specific` degrades to a clean failure — never a crash — with no network, while `specific` deliberately trusts its typed value instead since it cannot be validated offline. Stubs `curl` as a shell function; no network, no `nix`. |
 | `tests/shell/prompt-width.sh` | The prompt's responsive ladder: the top line never wraps, and a `nix-shell` stays marked, at every width. Renders the theme the repository ships. |
 | `tests/shell/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
 | `tests/shell/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
@@ -126,6 +127,7 @@ a path a module chose.
 # L0 — fixture tests. Fast enough to run on every save.
 .github/scripts/lint.sh
 tests/repo/milestone.sh
+tests/repo/nixpkgs-pin.sh
 tests/shell/prompt-width.sh
 tests/shell/firefox-profiles.sh
 tests/shell/catalog.sh

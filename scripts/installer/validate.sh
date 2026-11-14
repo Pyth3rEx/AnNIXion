@@ -26,6 +26,22 @@ read_config_stamp() {
   fi
 }
 
+# Prints the nixpkgs cooldown policy a user/ folder was stamped with, as
+# "<mode> <value>" — mode one of default|latest|specific|offset|days,
+# value empty for default/latest. No stamp at all (hand-written, or from
+# before this existed) reads the same as an explicit "default".
+read_nixpkgs_pin_stamp() {
+  local dir="$1"
+  if [[ -f "$dir/user/.annixion-nixpkgs-pin" ]]; then
+    local mode value
+    mode=$(sed -n '1p' "$dir/user/.annixion-nixpkgs-pin" | tr -d '[:space:]')
+    value=$(sed -n '2p' "$dir/user/.annixion-nixpkgs-pin" | tr -d '[:space:]')
+    printf '%s %s\n' "${mode:-default}" "$value"
+  else
+    printf 'default \n'
+  fi
+}
+
 # 0 (true) if $1 >= $2, as dotted version numbers.
 version_ge() {
   local a="$1" b="$2"

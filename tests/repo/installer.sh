@@ -199,6 +199,34 @@ case "$1" in
 esac
 BODY
 
+# curl: backs installer/nixpkgs-pin.sh's GitHub API calls. Every
+# well-formed "nixos-XX.YY" branch "exists" (200) unless named in
+# $TEST_CURL_404 (space-separated) — lets a test exercise "ran out of
+# history" without depending on which branches actually exist on GitHub
+# right now. $TEST_CURL_FAIL simulates no network/API access at all.
+mkstub curl <<'BODY'
+if [ "${TEST_CURL_FAIL:-}" = "1" ]; then
+  exit 28
+fi
+last=""
+for a in "$@"; do last="$a"; done
+case "$last" in
+  *commits\?sha=*)
+    echo '[{"sha":"deadbeefcafe"}]'
+    ;;
+  */branches/nixos-[0-9][0-9].[0-9][0-9])
+    branch="${last##*/branches/}"
+    for missing in ${TEST_CURL_404:-}; do
+      [ "$branch" = "$missing" ] && { printf '404'; exit 0; }
+    done
+    printf '200'
+    ;;
+  *)
+    printf '404'
+    ;;
+esac
+BODY
+
 # nix: a log-and-answer stub, not the evaluator — this test is about
 # annixion-install's control flow, not nix's own correctness (that is
 # tests/shell/firefox-profiles.sh's and tests/shell/sysreptor.sh's job).
@@ -253,6 +281,8 @@ run() {
     TEST_CONFIRM_SKIP="${TEST_CONFIRM_SKIP:-}" \
     TEST_DECLINE_ENCRYPT="${TEST_DECLINE_ENCRYPT:-}" \
     TEST_NO_LUKS_DETECT="${TEST_NO_LUKS_DETECT:-}" \
+    TEST_CURL_FAIL="${TEST_CURL_FAIL:-}" \
+    TEST_CURL_404="${TEST_CURL_404:-}" \
     bash "$SCRIPT" "$@"
 }
 
@@ -298,6 +328,11 @@ report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 0 || echo 1)" "t
 cfg="$TMP/mnt/home/operator/.dotfiles/user/configuration.nix"
 report "$([ -f "$cfg" ] && grep -q 'stub' "$cfg" && echo 0 || echo 1)" \
   "the wizard's answers reached user/configuration.nix" "$([ -f "$cfg" ] && cat "$cfg" || echo "<missing>")"
+report "$(grep -q '^nix flake lock' "$LOG" && echo 1 || echo 0)" \
+  "...and defaults to the repo's own nixpkgs pin, never relocking it" "log: $(cat "$LOG")"
+pin="$TMP/mnt/home/operator/.dotfiles/user/.annixion-nixpkgs-pin"
+report "$([ -f "$pin" ] && head -1 "$pin" | grep -q '^default$' && echo 0 || echo 1)" \
+  "...stamping that choice as the default pin policy" "$([ -f "$pin" ] && cat "$pin" || echo "<missing>")"
 
 # ── Reboot accepted ─────────────────────────────────────────────────────────
 rm -rf "${TMP:?}/mnt"
@@ -338,6 +373,107 @@ rc=$?
 report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" "a stale config still installs" "exit $rc; $(tail -5 "$TMP/stdout.d")"
 report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 0 || echo 1)" \
   "...but the wizard runs anyway" "log: $(cat "$LOG")"
+
+# ── --user-config: a "latest" cooldown pin round-trips and gets relocked ───
+PINNED_LATEST="$TMP/pinned-latest"
+mkdir -p "$PINNED_LATEST/user"
+printf '0.5.0\nnoskip\n' >"$PINNED_LATEST/user/.annixion-version"
+printf 'latest\n\n' >"$PINNED_LATEST/user/.annixion-nixpkgs-pin"
+cat >"$PINNED_LATEST/user/configuration.nix" <<'NIX'
+{ lib, ... }:
+{ networking.hostName = "FIXTURE-PIN-LATEST"; }
+NIX
+rm -rf "${TMP:?}/mnt"
+printf 'fakedisk\nyes\nn\n' | run --user-config "$PINNED_LATEST" >"$TMP/stdout.i" 2>&1
+rc=$?
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "a stored 'latest' cooldown pin still installs" "exit $rc; $(tail -5 "$TMP/stdout.i")"
+report "$(grep -q '^gum choose --header Nixpkgs cooldown --selected Always the newest stable release' "$LOG" && echo 0 || echo 1)" \
+  "...pre-selecting it in the wizard" "log: $(grep '^gum choose' "$LOG")"
+report "$(grep -q '^nix flake lock --override-input nixpkgs github:NixOS/nixpkgs/nixos-' "$LOG" && echo 0 || echo 1)" \
+  "...and relocking nixpkgs to it" "log: $(cat "$LOG")"
+relock_line=$(grep -n '^nix flake lock' "$LOG" | head -1 | cut -d: -f1)
+parted_line=$(grep -n '^parted ' "$LOG" | head -1 | cut -d: -f1)
+report "$([ -n "$relock_line" ] && [ -n "$parted_line" ] && [ "$relock_line" -lt "$parted_line" ] && echo 0 || echo 1)" \
+  "...before the disk is ever touched" "log: $(cat "$LOG")"
+
+# ── --user-config: an "offset" cooldown pin carries its value through ──────
+PINNED_OFFSET="$TMP/pinned-offset"
+mkdir -p "$PINNED_OFFSET/user"
+printf '0.5.0\nnoskip\n' >"$PINNED_OFFSET/user/.annixion-version"
+printf 'offset\n2\n' >"$PINNED_OFFSET/user/.annixion-nixpkgs-pin"
+cat >"$PINNED_OFFSET/user/configuration.nix" <<'NIX'
+{ lib, ... }:
+{ networking.hostName = "FIXTURE-PIN-OFFSET"; }
+NIX
+rm -rf "${TMP:?}/mnt"
+printf 'fakedisk\nyes\nn\n' | run --user-config "$PINNED_OFFSET" >"$TMP/stdout.j" 2>&1
+rc=$?
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "a stored 'offset' cooldown pin still installs" "exit $rc; $(tail -5 "$TMP/stdout.j")"
+report "$(grep -q '^gum input --header How many releases behind the newest? --value 2' "$LOG" && echo 0 || echo 1)" \
+  "...pre-filling its offset in the wizard" "log: $(grep '^gum input' "$LOG")"
+report "$(grep -q '^nix flake lock --override-input nixpkgs github:NixOS/nixpkgs/nixos-' "$LOG" && echo 0 || echo 1)" \
+  "...and relocking nixpkgs to it" "log: $(cat "$LOG")"
+
+# ── Cooldown resolution degrades gracefully with no network ────────────────
+rm -rf "${TMP:?}/mnt"
+TEST_CURL_FAIL=1
+printf 'fakedisk\nyes\nn\n' | run --user-config "$PINNED_LATEST" >"$TMP/stdout.k" 2>&1
+rc=$?
+TEST_CURL_FAIL=""
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "an unreachable GitHub never aborts the install" "exit $rc; $(tail -8 "$TMP/stdout.k")"
+report "$(grep -q '^nix flake lock' "$LOG" && echo 1 || echo 0)" \
+  "...never relocking nixpkgs on that failure" "log: $(cat "$LOG")"
+report "$(grep -q 'Could not resolve the nixpkgs cooldown pin' "$TMP/stdout.k" && echo 0 || echo 1)" \
+  "...having warned about it" "$(cat "$TMP/stdout.k")"
+report "$(grep -q '^nixos-install ' "$LOG" && echo 0 || echo 1)" \
+  "...and still completing the install with the repo's own pin" "log: $(cat "$LOG")"
+
+# ── --user-config: skip-wizard still carries the pin stamp through ─────────
+FRESH_PIN="$TMP/fresh-pin"
+mkdir -p "$FRESH_PIN/user"
+printf '0.5.0\nskip\n' >"$FRESH_PIN/user/.annixion-version"
+printf 'offset\n1\n' >"$FRESH_PIN/user/.annixion-nixpkgs-pin"
+cat >"$FRESH_PIN/user/configuration.nix" <<'NIX'
+{ lib, ... }:
+{ networking.hostName = "FIXTURE-SKIP-PIN"; }
+NIX
+rm -rf "${TMP:?}/mnt"
+printf 'fakedisk\nyes\nn\n' | run --user-config "$FRESH_PIN" >"$TMP/stdout.l" 2>&1
+rc=$?
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "a skip-wizard config with a stored pin still installs" "exit $rc; $(tail -5 "$TMP/stdout.l")"
+report "$(grep -q '^gum input --header Hostname' "$LOG" && echo 1 || echo 0)" \
+  "...and skips the wizard entirely" "log: $(cat "$LOG")"
+report "$(grep -q '^nix flake lock --override-input nixpkgs github:NixOS/nixpkgs/nixos-' "$LOG" && echo 0 || echo 1)" \
+  "...still relocking nixpkgs per the carried-over stamp" "log: $(cat "$LOG")"
+pin="$TMP/mnt/home/operator/.dotfiles/user/.annixion-nixpkgs-pin"
+report "$([ -f "$pin" ] && grep -q '^offset$' "$pin" && echo 0 || echo 1)" \
+  "...and the stamp itself reaching the installed config" "$([ -f "$pin" ] && cat "$pin" || echo "<missing>")"
+ver="$TMP/mnt/home/operator/.dotfiles/user/.annixion-version"
+report "$([ -f "$ver" ] && echo 0 || echo 1)" \
+  "...alongside the version stamp (previously dropped on this path)" "$([ -f "$ver" ] && cat "$ver" || echo "<missing>")"
+
+# ── --user-config: a bogus specific release fails to resolve, never relocks ─
+PINNED_BOGUS="$TMP/pinned-bogus"
+mkdir -p "$PINNED_BOGUS/user"
+printf '0.5.0\nnoskip\n' >"$PINNED_BOGUS/user/.annixion-version"
+printf 'specific\n99.99\n' >"$PINNED_BOGUS/user/.annixion-nixpkgs-pin"
+cat >"$PINNED_BOGUS/user/configuration.nix" <<'NIX'
+{ lib, ... }:
+{ networking.hostName = "FIXTURE-PIN-BOGUS"; }
+NIX
+rm -rf "${TMP:?}/mnt"
+TEST_CURL_404="nixos-99.99"
+printf 'fakedisk\nyes\nn\n' | run --user-config "$PINNED_BOGUS" >"$TMP/stdout.m" 2>&1
+rc=$?
+TEST_CURL_404=""
+report "$([ "$rc" -eq 0 ] && echo 0 || echo 1)" \
+  "a release that doesn't exist still installs, unpinned" "exit $rc; $(tail -8 "$TMP/stdout.m")"
+report "$(grep -q '^nix flake lock' "$LOG" && echo 1 || echo 0)" \
+  "...never relocking nixpkgs to it" "log: $(cat "$LOG")"
 
 # ── --user-config: broken config, continue without it ───────────────────────
 BROKEN="$TMP/broken"

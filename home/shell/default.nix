@@ -61,9 +61,14 @@
       b = "clear && annixion-banner";
 
       # ── NixOS rebuild ──────────────────────────────────────
+      # `nix flake update` silently discards any nixpkgs cooldown pin
+      # (flake.lock's override-input has no memory of itself once a plain
+      # update runs) — annixion-nixpkgs-cooldown reapplies whatever policy
+      # the wizard stored, "|| true" so a transient network hiccup there
+      # doesn't also abort the rebuild that follows.
       rebuild = "sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
-      upgrade = "nix flake update --flake ~/.dotfiles && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
-      update = "nix flake update --flake ~/.dotfiles";
+      upgrade = "nix flake update --flake ~/.dotfiles && (annixion-nixpkgs-cooldown || true) && sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure && kbuildsycoca6";
+      update = "nix flake update --flake ~/.dotfiles && (annixion-nixpkgs-cooldown || true)";
 
       # ── Git ────────────────────────────────────────────────
       gs = "git status";
