@@ -35,9 +35,9 @@ Customize your `./user/` folder and rebuild your system from your own configurat
 
 ---
 
-## Demo
+## Your new workstation
 
-<TBD>
+![alt text](assets/branding/screenshots/0-4-3_Neofetch.png)
 
 ---
 
