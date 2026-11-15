@@ -17,7 +17,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 ---
 
-## Phase 2 — Disk Layout and Full Disk Encryption
+## Phase 2 — Disk Layout and Full Disk Encryption ✓
 
 **Goal:** The ISO can partition a disk, set up LUKS2 encryption, and install NixOS.
 
@@ -25,7 +25,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] Passphrase read twice and passed to `cryptsetup` over stdin (`--key-file -`, no trailing newline, so the key matches what is typed at the boot prompt)
 - [x] Installer verifies `nixos-generate-config` emitted `boot.initrd.luks.devices` and aborts before `nixos-install` if it did not — otherwise the install succeeds and produces a system whose initrd never asks for a passphrase
 - [x] Document the keymap trap: the passphrase is typed at the boot prompt under the console keymap (US by default), not the layout used during install
-- [ ] Tested in a VM: full install with encryption passphrase, boots successfully, decrypts on boot
+- [x] Tested in a VM: full install with encryption passphrase, boots successfully, decrypts on boot
 
 > **disko is not planned.** The layout is already declared, in fifteen lines of
 > `parted`. disko's payoff is btrfs subvolumes and impermanence, neither of
@@ -60,7 +60,7 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [ ] Error handling: graceful rollback on failed partitioning or install
 - [x] Fix: the script ends on `[[ ... ]] && reboot`, so declining the reboot makes a successful install exit 1
 
-### `user/` as the install profile
+### `user/` as the install profile ✓
 
 The installer generates the user config on a first install and consumes it on
 later ones, so an install is reproducible from a folder the operator already
@@ -314,7 +314,7 @@ Everything below is what remains; the next pass gets its own branch.
 
 **Goal:** Someone who has never used NixOS can follow the README and get a working install.
 
-- [ ] ISO tested on real hardware (at least one machine type)
+- [x] ISO tested on real hardware (at least one machine type)
 - [x] Install instructions cover both ISO and existing-NixOS paths
 - [x] `CONTRIBUTING.md` for people who want to add tools or profiles
 - [x] `SECURITY.md` documenting hardening decisions and what is not hardened
