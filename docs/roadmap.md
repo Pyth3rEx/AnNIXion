@@ -117,13 +117,16 @@ can be detected but not rewritten.
 
 ---
 
-## Phase 5 — Desktop Environment ✓
+## Phase 5 — Desktop Environment ✓ (superseded, see Phase 5b)
 
 **Goal:** A functional desktop accessible to both technical and non-technical operators.
 
-**Decision: KDE Plasma 6 on X11**
+**Superseded decision: KDE Plasma 6 on X11**
 
-Rationale:
+> Reversed — see Phase 5b. Kept below for the historical record; this work
+> isn't being redone, it's being gutted.
+
+Rationale (at the time):
 - Broadest audience compatibility — familiar paradigm for operators coming from Windows
 - Full keyboard-driven workflow available via KRunner and Krohnkite tiling
 - Stable X11 session required for reliable xrdp/Enhanced Session support
@@ -141,9 +144,37 @@ Rationale:
 
 ---
 
-## Phase 5a — Hyper-V Enhanced Session Support ✓
+## Phase 5b — Hyprland Migration
+
+**Goal:** Gut KDE/Plasma and X11, bring in Hyprland as the main DE.
+
+**Decision: Hyprland (Wayland)**
+
+Rationale:
+- Tiling-native workflow — no bolted-on tiling script needed, unlike Krohnkite on Plasma
+- Lighter runtime footprint than a full Plasma session
+- Keyboard-driven operation stays first-class, matching the kill-chain menu's design goal
+- Wayland by default — this was blocked on xrdp's Wayland backend maturity (see Phase 5a); that dependency doesn't go away just because the DE changed, it's the open risk this phase carries
+
+- [ ] Gut `system/desktop.nix`'s KDE/Plasma/SDDM path once Hyprland reaches parity — not before
+- [ ] `system/desktop.nix` declares Hyprland as the compositor
+- [ ] Per-user Hyprland config via Home Manager (`home/desktop/hyprland/`), replacing `home/desktop/plasma/`
+- [ ] Status bar / launcher equivalent to the current taskbar and application menu
+- [ ] Theming pass carried over: palette, icons, cursor, fonts
+- [ ] Keybindings carried over: desktop switching, terminal, window close
+- [ ] Open risk: Enhanced Session support (Phase 5a) was built for an X11 KDE session over vsock — xrdp's Wayland backend maturity decides whether that carries over as-is or needs rework
+
+---
+
+## Phase 5a — Hyper-V Enhanced Session Support ✓ (X11/KDE; see Phase 5b for Hyprland)
 
 **Goal:** Full Enhanced Session (clipboard, audio, dynamic resolution, USB redirection) over vsock.
+
+> Built and verified against the KDE Plasma X11 session from Phase 5. This is
+> exactly why Wayland wasn't chosen the first time around — xrdp's Wayland
+> backend wasn't mature enough. Whether it's mature enough now is the open
+> question Phase 5b tracks; until it's answered, don't assume this carries
+> over to Hyprland unchanged.
 
 - [x] `virtualisation.hypervGuest.enable = true`
 - [x] `boot.blacklistedKernelModules = [ "hyperv_fb" ]` — forces `hyperv_drm`
@@ -220,7 +251,7 @@ Rationale:
 
 - [x] ~~`system/tools/{redteam,osint,privacy,sdr}.nix` as separate modules~~ — superseded by `catalog/`, which goes one file per tool. See [architecture.md](architecture.md)
 - [x] Refactor `system/security-tools.nix` into independent files
-- [ ] A profile flag that selects which catalog phases are installed
+- [ ] A profile flag that selects which catalog phases are installed — surfaced in the installer as a per-set toggle (red team tools? OSINT tools? puppet tools? etc.) instead of a separate image per set
 - [ ] Wire profile flags from Phase 3 installer into flake outputs
 - [ ] `flake.nix` conditionally includes tool modules based on selected profile
 
@@ -309,12 +340,8 @@ Everything below is what remains; the next pass gets its own branch.
 
 ## Deferred / Future Ideas
 
-- Wayland session support once xrdp Wayland backend matures
-- Hyprland as an optional power-user layer (declared via Home Manager, opt-in)
-- Calamares GUI installer as an alternative to the bash installer
 - ARM64 / Raspberry Pi image target
 - Mullvad kill-switch integration at the NixOS firewall level
 - Auto-updating tool definitions via flake inputs and pinned tool versions
-- Dedicated OSINT VM image — lighter, browser-forward, no pentest tools
 - Offline package cache for air-gapped deployments
 - Rootless container tool environments — shipped as Docker in `system/docker.nix`; podman remains the option if a daemonless runtime is wanted instead
