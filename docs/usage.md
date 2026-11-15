@@ -3,6 +3,8 @@
 Day-to-day operation: the commands AnNIXion ships, the four browser profiles,
 and how Burp interception and VPN enforcement are set up and overridden.
 
+![alt text](../assets/branding/screenshots/0-4-3_StartMenu.png)
+
 ---
 
 ## Commands
