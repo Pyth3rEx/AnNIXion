@@ -33,9 +33,13 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # Same overlays the system configs get (system/overlays.nix). Applied to
+      # the instances here too, because a nixosTest pins nixpkgs.pkgs on its
+      # nodes and so ignores a module's nixpkgs.overlays.
+      overlays = import ./overlays.nix;
+      pkgs = import nixpkgs { inherit system overlays; };
       pkgsUnfree = import nixpkgs {
-        inherit system;
+        inherit system overlays;
         config.allowUnfree = true;
       };
 
