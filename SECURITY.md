@@ -40,6 +40,13 @@ reach.
   the kernel and refuse to launch without one; Red Team fails closed on Burp
   instead, and is deliberately **not** tunnel-gated, since it has to reach
   internal targets (#37).
+- Full-disk encryption offered at install, on by default — LUKS2 over the root
+  partition with AES-256-XTS and an Argon2id passphrase KDF. There is no
+  recovery-key slot, so the passphrase is the only key; the ESP stays
+  unencrypted to boot. Decline it and the disk is left in the clear.
+- A password is set per install. The shared `operator` hash that every earlier
+  image carried is gone: the installer collects a hash during setup and the
+  system refuses to evaluate without one (`system/core/users.nix`).
 - Burp CA handled out of band via `annixion-burp-ca` and Firefox enterprise policy — no
   system-wide trust store modification.
 - Machine-specific material (`hardware-configuration.nix`, `assets/certs/`) is
@@ -50,8 +57,6 @@ reach.
 Part of **Phase 10** in [docs/roadmap.md](docs/roadmap.md) is still open. In
 particular, the following are **not** applied out of the box:
 
-- No full-disk encryption. The installer does not offer it yet, so the disk is
-  readable by anyone holding the machine.
 - No MAC randomization or IPv6 privacy extensions configured by default.
 - `kernel.unprivileged_userns_clone` is **not** set to 0, and
   `security.lockKernelModules` is off. Both are standard hardening steps, and
@@ -61,8 +66,6 @@ particular, the following are **not** applied out of the box:
 - The live ISO grants the `operator` **passwordless sudo** so the guided
   installer can run — this is a property of the *installer environment*, not the
   installed system.
-- Every install ships the same `hashedPassword` for `operator` until it is
-  changed. Set your own in `user/configuration.nix`.
 
 Harden per deployment through the `user/` override system — see
 [docs/customization.md](docs/customization.md).

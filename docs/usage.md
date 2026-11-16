@@ -3,12 +3,17 @@
 Day-to-day operation: the commands AnNIXion ships, the four browser profiles,
 and how Burp interception and VPN enforcement are set up and overridden.
 
+![The AnNIXion application menu, organised by kill-chain phase](../assets/branding/screenshots/0-4-3_StartMenu.png)
+
 ---
 
 ## Commands
 
-Everything AnNIXion ships is prefixed `annixion-`, so `annixion-<Tab>` lists the
-lot. Every one of them takes `-h` / `--help`.
+The commands AnNIXion adds itself are prefixed `annixion-`, so `annixion-<Tab>`
+lists them, and every one takes `-h` / `--help`. A few shipped tools keep their
+own name rather than the prefix — `sysreptor`, `adaptixc2`, `reptor`,
+`tlog-engagement` and `seclists` — since they are the established name of the
+thing they drive.
 
 | Command | Purpose |
 |---|---|
@@ -21,7 +26,10 @@ lot. Every one of them takes `-h` / `--help`.
 | `annixion-vpn-tunnels` | List every interface that qualifies as a live tunnel |
 | `annixion-vpn-detect` | Print the first live tunnel, or exit 1 |
 | `annixion-vpn-killswitch-load` | Arm the nftables killswitch (needs root) |
+| `annixion-offensive` | `on` / `off` / `status` — arm inbound callbacks and MITM for the session (opt-in module, see [customization](customization.md#offensive-networking)) |
 | `annixion-raise` | Focus a running window by `WM_CLASS`, or launch the app |
+| `annixion-nixpkgs-cooldown` | Re-apply the nixpkgs cooldown pin after a flake update (the `update`/`upgrade` aliases call it for you) |
+| `annixion-config-doctor` | Validate `user/` the way the installer does, before a `rebuild` |
 | `annixion-cve-report` | Regenerate the weekly CVE pipeline against your own checkout |
 
 The Hack The Box example in `user/examples/` adds `annixion-htb-hosts` and

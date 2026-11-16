@@ -50,7 +50,6 @@ or `home/`.
 | [theHarvester](https://github.com/laramies/theHarvester#readme) | passive | Email, subdomain and IP intelligence from public sources | [README](https://github.com/laramies/theHarvester#readme) |
 | [Whois](https://manpages.debian.org/stable/whois/whois.1.en.html) | passive | Domain and netblock registration lookup | [whois(1)](https://manpages.debian.org/stable/whois/whois.1.en.html) |
 | [dig](https://bind9.readthedocs.io/en/latest/manpages.html) | passive | DNS lookup, from the BIND utilities | [BIND manpages](https://bind9.readthedocs.io/en/latest/manpages.html) |
-| [SecLists](https://github.com/danielmiessler/SecLists#readme) | passive | Wordlists for discovery, fuzzing and credential attacks | [README](https://github.com/danielmiessler/SecLists#readme) |
 | [Nmap](https://nmap.org/book/man.html) | probe | Host discovery, port scanning, service and OS fingerprinting | [Reference Guide](https://nmap.org/book/man.html) |
 | [WhatWeb](https://github.com/urbanadventurer/WhatWeb/wiki) | probe | Web server and technology fingerprinting | [Wiki](https://github.com/urbanadventurer/WhatWeb/wiki) |
 | [Gobuster](https://github.com/OJ/gobuster#readme) | probe | Brute-forces directories, DNS names and virtual hosts | [README](https://github.com/OJ/gobuster#readme) |
@@ -58,9 +57,6 @@ or `home/`.
 | [HackRF Tools](https://hackrf.readthedocs.io/) | probe | Command-line interface and diagnostics for HackRF radios | [Docs](https://hackrf.readthedocs.io/) |
 | [Gqrx](https://gqrx.dk/doc) | probe | Software-defined radio receiver with a waterfall display | [Docs](https://gqrx.dk/doc) |
 | [GNU Radio Companion](https://www.gnuradio.org/) | probe | Flow-graph signal processing toolkit for SDR | [Project site](https://www.gnuradio.org/) · [wiki](https://wiki.gnuradio.org/) |
-
-`seclists` is a real command, not an alias — it opens the wordlist tree in the
-file manager.
 
 ---
 
@@ -96,6 +92,11 @@ Burp's CA is installed into the Firefox profiles by `annixion-burp-ca`; see
 | [John the Ripper](https://www.openwall.com/john/doc/) | offensive | Offline password hash cracking | [Docs](https://www.openwall.com/john/doc/) |
 | [Hashcat](https://hashcat.net/wiki/) | offensive | GPU-accelerated password recovery | [Wiki](https://hashcat.net/wiki/) |
 | [Aircrack-ng](https://www.aircrack-ng.org/documentation.html) | offensive | 802.11 capture and WEP/WPA key recovery | [Documentation](https://www.aircrack-ng.org/documentation.html) |
+| [SecLists](https://github.com/danielmiessler/SecLists#readme) | passive | Wordlists for discovery, fuzzing and credential attacks — menu entry under Credential Attacks | [README](https://github.com/danielmiessler/SecLists#readme) |
+
+`seclists` is a real command, not an alias — it prints the SecLists directory
+tree in a terminal. The wordlists themselves live under
+`/run/current-system/sw/share/wordlists/seclists/`; see [tools.md](tools.md#seclists-browser).
 
 ---
 
@@ -108,7 +109,7 @@ Burp's CA is installed into the Firefox profiles by `annixion-burp-ca`; see
 
 ---
 
-## 06. Command & Control
+## 06. C2
 
 | Tool | Class | What it is | Manual |
 |---|---|---|---|
@@ -286,9 +287,12 @@ them. Full descriptions and worked examples are in [usage](usage.md).
 | `annixion-vpn-tunnels` | Lists every interface that qualifies as a live tunnel |
 | `annixion-vpn-detect` | Prints the first live tunnel, or exits 1 |
 | `annixion-vpn-killswitch-load` | Arms the nftables killswitch (needs root) |
+| `annixion-offensive` | Arms or disarms inbound callbacks and MITM for the session — `on` / `off` / `status`, from the opt-in offensive-net module |
 | `annixion-raise` | Focuses a running window by `WM_CLASS`, or launches the app |
+| `annixion-nixpkgs-cooldown` | Re-applies the nixpkgs cooldown pin after a flake update |
+| `annixion-config-doctor` | Validates `user/` the way the installer does, before a `rebuild` |
 | `annixion-cve-report` | Regenerates the weekly CVE pipeline against your own checkout |
-| `seclists` | Opens the wordlist tree in the file manager |
+| `seclists` | Prints the SecLists directory tree in a terminal |
 | `tlog-engagement` | Opt-in terminal session recording, per engagement; pushes into SysReptor through `reptor`. See [tlog.md](tlog.md) |
 
 Importing the Hack The Box example from `user/examples/` adds

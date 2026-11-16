@@ -27,305 +27,70 @@
 
 ---
 
-AnNIXion is an offensive security distribution built on NixOS, for red teamers,
-OSINT work and persona operations.
+> **Annexion** *n.* — */a.nɛk.sjɔ̃/* — the act of taking possession of something and making it part of one’s own sphere of control or ownership.
 
-The tools, the four browser profiles, the proxy rules, the firewall policy, the
-menu, the keyboard shortcuts and the wallpaper are all declared in files in this
-repository. That is the whole system. There is no other state, nothing
-configured by hand at 2am that only you remember, and no drift between the box
-you built in March and the one you build today.
+AnNIXion is a Nix-based, opinionated offensive security distribution built around three core workflows: red-team engagements, OSINT and forensic reporting, and sock-puppet management for influence-operation assessment. It combines operational security controls with a declarative, repeatable system configuration.
+
+Customize your `./user/` folder and rebuild your system from your own configuration, without having to redo every customization after a reinstall.
 
 ---
 
-## What you boot into
+## Your new workstation
 
-<div align="center">
-
-<img src="assets/branding/screenshots/0-4-3_StartMenu.png" alt="The AnNIXion application menu open over the graffiti wallpaper. Down the left, ten numbered categories from 01. Reconnaissance to 10. Sniffing and Analysis, each with a hand-drawn mark; 03 through 07 are red, 08 Forensics is blue, 09 Reverse Engineering is magenta. On the right, pinned tiles grouped Engagement, Analysis and RE, and Workspace: Konsole, Burp Suite, Wireshark, Ghidra, VSCodium, Obsidian." width="100%">
-
-</div>
-
-**The menu is the kill chain.** Ten numbered phases in the order the work
-happens, and under each one only the tools that belong to it. The pinned tiles
-on the right are what you reach for daily.
-
-Every mark in that menu is drawn for this system on a 24-unit grid, and its
-colour is a fact rather than a decoration: green sends nothing to the target,
-amber shows up in their logs, red needs written authorisation behind it. The
-unbroken red band down the middle — 03 through 07 — is the stretch where you
-are inside someone else's estate. 08 turns forensic blue the moment the job is
-reading evidence instead of making it. And the mark on 07 is the wall's own
-X-eyed smiley, the one motif allowed off the wallpaper and into the menu,
-because there it states something true.
-
-<div align="center">
-
-<img src="assets/branding/screenshots/0-4-3_Neofetch.png" alt="A Konsole window on the graffiti wallpaper running neofetch. The glitched AnNIXion snowflake sits left of four blocks: general stats, nets configuration showing DNS and network IO on the ie-dub-wg tunnel interface, hardware configuration reading AnNIXion v0.4.3 on Linux 6.18.50 under Hyper-V UEFI, and usage statistics. The oh-my-posh prompt below shows operator at AnNIXion, the dotfiles path, and the dev branch with its dirty state." width="100%">
-
-</div>
-
-**A shell that opens already knowing where you are standing.** Konsole at 85%
-with blur, oh-my-posh on the chrome palette, the prompt carrying path, branch
-and what is dirty. Above it, the system block puts the tunnel interface and its
-throughput ahead of the hardware — so a new terminal answers *is egress still
-where I left it* before you have typed anything.
-
-The version it prints is the commit you built. On this system there is no other
-answer it could give.
+![AnNIXion desktop with a fastfetch system summary in the terminal](assets/branding/screenshots/0-4-3_Neofetch.png)
 
 ---
 
-## In the box
+## Concept & mindset
 
-| | |
-|---|---|
-| [**Egress that fails closed**](#egress-that-fails-closed) | A cgroup and an nftables rule, not a setting in browser preferences |
-| [**Four browsers that cannot contaminate each other**](#four-browsers-that-cannot-contaminate-each-other) | Separate cookies, extensions and route out of the machine, per profile |
-| [**A menu shaped like the work**](#a-menu-shaped-like-the-work) | Ten kill-chain phases, 81 marks, one file per tool |
-| [**A system that can account for itself**](#a-system-that-can-account-for-itself) | Two SBOMs and a weekly CVE scan, published with every release |
-| [**Making it yours**](#making-it-yours) | Everything upstream ships is a default; `user/` wins without `mkForce` |
+> Did you ever install Kali? Did you ever start customizing it? Did you need to reinstall it because of version drift or operational needs, then redo all your customizations? AnNIXion is built to solve that problem.
 
----
+AnNIXion provides a ready-to-work environment for three main activities:
 
-## Annexing the system
+- Red-team engagements
+- OSINT and forensic reporting
+- Sock-puppet management and influence-operation assessment
 
-*Annexion* — to take full control of a territory, absorb it completely, make it
-yours.
-
-The barrier is real and worth stating plainly. On NixOS you do not install
-software, you declare it; a package that is not written down is not on the
-machine, and no amount of `apt install` will change that. The first week is
-spent learning where things go. People bounce off it.
-
-What is on the other side of that wall:
-
-| What you get | Why it matters |
-|---|---|
-| **Nothing drifts** | The config *is* the system. A box six months old and one built this morning from the same commit are the same box. |
-| **Rollback is a reboot** | A change that breaks the desktop is undone by booting the previous generation. Nothing to uninstall, nothing to repair. |
-| **Your setup is portable** | New laptop, fresh VM, rebuilt after an engagement: one clone and one command. |
-| **You can answer "what is on it"** | Every release ships a bill of materials. You will be asked this eventually. |
-
-```mermaid
-flowchart LR
-    R["one repository<br/>flake.nix · system/ · home/ · catalog/"]
-    R --> L["your laptop"]
-    R --> V["engagement VM"]
-    R --> B["the box you rebuilt<br/>after the last job"]
-    L --- N["identical, down to the shell prompt"]
-    V --- N
-    B --- N
-    style R fill:#1A1D24,stroke:#FF0033,stroke-width:2px,color:#DFE4EA
-    style N fill:#0E0F13,stroke:#2E323D,color:#7A8494
-    style L fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
-    style V fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
-    style B fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
-```
-
-AnNIXion is that climb already made for offensive security. The tooling, the
-browser isolation, the egress rules and the desktop are configured and working
-the first time you boot it. What you add after that is yours.
+The distribution is built from NixOS configuration and opinionated dotfiles that provide system defaults. Override them with your own values in `./user/`. The learning curve is steep, particularly if you’re new to Nix, but the result is a system that is easier to reinstall, audit, and maintain for your own workflow or organization.
 
 ---
 
-## Egress that fails closed
+## Features
 
-A VPN that drops mid-engagement is not an inconvenience. The usual answers are
-weak in specific ways: a proxy set in browser preferences does not cover WebRTC
-or OCSP, and a killswitch in a VPN client is machine-wide, which is useless when
-one browser must reach the client's LAN and another must never touch it.
+### Workflow-based approach
 
-So the enforcement is a cgroup and an nftables rule, and the browser is not
-consulted:
+- **VPN enforcement for selected profiles:** OSINT and Puppet Master browser profiles run through the VPN-enforced setup, using systemd slices and nftables rules with a kernel-level kill switch. The Red Team profile is configured separately for its Burp workflow; the Unsafe Browser is not VPN-enforced for access to captive portals & other advanced usage.
+- **Declarative system:** system configuration is declared in Nix. Rebuilds use the configuration and pinned inputs rather than a sequence of manual customizations.
+- **Logging and reporting built into the workflow:** `tlog` and SysReptor are pre-installed, with custom report templates for note-taking and report writing. The `tlog` to SysReptor integration is opt-in.
+- **Full-disk encryption:** the installer supports LUKS encryption using `aes-xts-plain64`. There is no recovery-key slot configured, so keep your passphrase safe: losing it means losing access to the encrypted data.
 
-```mermaid
-flowchart TD
-    O["Firefox — OSINT"] --> S
-    P["Firefox — Puppet Master"] --> S
-    S["annixion-vpn.slice<br/>a persistent systemd cgroup"]
-    S -->|every packet, matched on cgroup| N{"nftables rule<br/>is a tunnel live?"}
-    N -->|yes| T["out through tun0"]
-    N -->|no| D["DROP<br/>no fallback, no leak"]
-    style O fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
-    style P fill:#1A1D24,stroke:#2E323D,color:#DFE4EA
-    style S fill:#1A1D24,stroke:#DFE4EA,color:#DFE4EA
-    style N fill:#0E0F13,stroke:#FFD000,color:#DFE4EA
-    style T fill:#0E0F13,stroke:#33E62B,color:#33E62B
-    style D fill:#301212,stroke:#FF0033,stroke-width:2px,color:#FF0033
-```
+### Auditable by design
 
-WebRTC, OCSP, captive-portal probes and anything else the browser does without
-telling you are all covered, because none of it can leave the cgroup. When the
-tunnel dies, traffic stops rather than quietly continuing from your real
-address.
+AnNIXion includes `annixion-cve-report`, which rebuilds the system closure, scans packages against live CVE data, triages results, and generates reports. Use it to review:
 
-Red Team is deliberately *not* confined — it has to reach the LAN as often as
-the internet — but it still fails closed on Burp, and one command puts it in
-the tunnel when the engagement calls for it.
+- The package supply chain for the running system and ISO build
+- Known CVEs affecting onboard packages
+- Package versions and the pinned inputs used to build the system
+
+The version-pinned approach favors a known package state over immediately adopting every upstream update.
+
+### Reproducible beyond limits
+
+> Arguably the best part of AnNIXion: it’s declarative.
+
+Tailor `./user/` to your needs and rebuild your customized system from its configuration. Back up your `~/Documents/` and `./user/` separately, then use them to restore your setup after a fresh install. Rebuilds are driven by your configuration and pinned inputs; the exact result depends on the build environment.
 
 ---
 
-## Four browsers that cannot contaminate each other
+## Getting started
 
-Not four windows, and not four container tabs. Four profiles, each with its own
-cookies, cache, extensions, search engines and route out of the machine.
+AnNIXion installs like a conventional distribution. Download the latest ISO from [Releases](https://github.com/Pyth3rEx/AnNIXion/releases/latest), boot it, and follow the installer.
 
-| Profile | Route out | Built for |
-|---|---|---|
-| **Red Team** | Burp at `127.0.0.1:8080`, fails closed | Web assessment, interception |
-| **OSINT** | VPN tunnel, kernel-enforced | Investigation, NoScript, canvas and UA control |
-| **Puppet Master** | VPN tunnel, kernel-enforced | Personas, multi-account containers, per-container stripe |
-| **Unsafe Browser** | Direct, no proxy | Captive portals, and nothing else |
+The installer wizard can generate a new user configuration from your choices or load a provided configuration folder.
 
-Burp's CA is fetched and installed through Firefox enterprise policy on first
-run, so interception works immediately instead of after the usual certificate
-dance.
+The live installer environment uses the `operator` / `operator` login. The installed system’s account credentials are chosen during installation.
 
----
-
-## A menu shaped like the work
-
-Ninety binaries under a single "Security" folder is not a menu, it is a list.
-This one is the kill chain:
-
-```
-AnNIXion
-├── 01. Reconnaissance
-│   ├── Passive OSINT        theHarvester · Whois · dig · SecLists
-│   ├── Active Scanning      Nmap · WhatWeb · Gobuster · ffuf
-│   └── RF / Signal Intel    HackRF · Gqrx · GNU Radio
-├── 02. Weaponization        Ghidra · Binwalk
-├── 03. Delivery             Burp Suite · sqlmap
-├── 04. Exploitation
-│   ├── Frameworks           Metasploit
-│   ├── Credential Attacks   Hydra · John the Ripper · Hashcat
-│   └── Wireless             Aircrack-ng
-├── 05. Installation         Netcat
-├── 06. C2                   Metasploit
-├── 07. Post-Exploitation    Impacket
-├── 08. Forensics            Volatility 3 · Autopsy
-├── 09. Reverse Engineering  Ghidra · Binwalk
-└── 10. Sniffing & Analysis  Wireshark · Netcat
-```
-
-Every icon is drawn for this system rather than pulled from a pack, and the
-[class colour](docs/visual-identity.md#semantic-classes) carries the meaning
-rather than the label. You can read this menu without reading it.
-
-The menu is not maintained by hand. A tool is one file, and the package list,
-the desktop entry, the menu tree and the icon are all derived from it:
-
-```mermaid
-flowchart LR
-    F["catalog/recon/scanning/nmap.nix<br/>package · name · exec · mark"]
-    F --> P["installed on the system"]
-    F --> D["its entry in the menu"]
-    F --> M["its icon in the theme"]
-    F --> C["filed under Active Scanning<br/>from the folder it sits in"]
-    style F fill:#1A1D24,stroke:#FF0033,stroke-width:2px,color:#DFE4EA
-    style P fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
-    style D fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
-    style M fill:#0E0F13,stroke:#2E323D,color:#DFE4EA
-    style C fill:#0E0F13,stroke:#2E323D,color:#7A8494
-```
-
-Adding a tool is adding that one file. Nothing registers it anywhere, so a tool
-cannot end up installed but missing from the menu, or drawn but never shipped.
-
----
-
-## A system that can account for itself
-
-Most distributions ask you to trust them. Every AnNIXion release publishes what
-is actually inside it:
-
-- a CycloneDX SBOM of the **installed** closure — every package and version on a
-  running machine
-- a second covering the **build** closure — the toolchains, sources and patches
-  that produced it
-- a readable page rendering both
-- `SHA256SUMS` over all of it and the ISO
-
-The two closures are published and counted separately on purpose. A CVE against
-a compiler that built the image is not running on your machine, is not reachable
-by an attacker, and treating it as exposure turns a security document into
-noise.
-
-Point your own scanner at the first one — `grype sbom:annixion-<version>.cdx.json`.
-None of this is a verdict. It is the material for you to reach one.
-
-A weekly scan republishes the current state, so you can also just look:
-
-| Page | What it tells you |
-|---|---|
-| [Known CVEs](docs/security/cves.md) | What is reported against the shipped system now, and what has no upstream fix |
-| [Packages](docs/security/packages.md) | Every package on a running machine, with versions |
-| [Applications](docs/security/apps.md) | The tools this distribution chose to ship, and where they stand |
-
-A pull request that pulls in a new dependency with a known CVE is told so on the
-pull request, scoped to what that branch adds rather than re-reporting the whole
-closure.
-
----
-
-## The desktop
-
-The two shots [at the top of this page](#what-you-boot-into) are straight off a
-running machine — that panel, that menu, that prompt, out of this repository.
-
-KDE Plasma 6 on X11 with Krohnkite tiling. Hyper-V Enhanced Session over vsock,
-so it is usable as a guest rather than merely bootable. ZSH with oh-my-posh, fzf
-history and syntax highlighting. Docker runs rootless, as you, with no `docker`
-group — that group is root by another name.
-
-Attack surface reduction is on by default: OpenSSH, ModemManager, geoclue, fwupd
-and the KDE PIM stack are gone, the firewall has no open ports, and a set of
-kernel sysctls is applied. All of it at priority 900, so any single piece is
-restored with one line.
-
----
-
-## Making it yours
-
-Every option in the base config ships as a default, which means anything you put
-in `user/` wins without `lib.mkForce` and without editing a tracked file:
-
-```nix
-# user/configuration.nix
-networking.hostName = "raven";
-time.timeZone = "America/New_York";
-environment.systemPackages = with pkgs; [ tcpdump ];
-```
-
-Hostname, git identity, extra packages, keyboard shortcuts, or switching parts
-of the hardening back on. `user/` is yours; upstream never touches it.
-
----
-
-## Install
-
-**From the ISO**, if you do not already run NixOS:
-
-1. Download the [latest release](https://github.com/Pyth3rEx/AnNIXion/releases/latest)
-2. Flash it with [Rufus](https://rufus.ie) or `dd`
-3. Boot — it logs in automatically as `operator`
-4. Connect with `nmtui`, then run `annixion-install`
-
-**On a machine already running NixOS:**
-
-```bash
-git clone https://github.com/Pyth3rEx/AnNIXion ~/.dotfiles
-cp /etc/nixos/hardware-configuration.nix ~/.dotfiles/
-git -C ~/.dotfiles add hardware-configuration.nix -f
-sudo nixos-rebuild switch --flake ~/.dotfiles#AnNIXion --impure
-```
-
-The toolset is large — allow 30–60 minutes on a slow connection. After the first
-build, `rebuild`, `upgrade` and `update` handle the rest.
-
-Hyper-V setup and the full walkthrough:
-**[docs/installation.md](docs/installation.md)**
+AnNIXion is an advanced distribution. The documentation assumes working knowledge of Nix; get familiar with the system before relying on it in the field.
 
 ---
 
@@ -333,30 +98,32 @@ Hyper-V setup and the full walkthrough:
 
 | Guide | What it covers |
 |---|---|
-| [Installation](docs/installation.md) | Prerequisites, deploy steps, Hyper-V Enhanced Session |
-| [Usage](docs/usage.md) | The `annixion-*` commands, browser profiles, Burp and VPN setup |
-| [Customization](docs/customization.md) | The override system, adding tools, the dev environment |
-| [Architecture](docs/architecture.md) | Repository layout, the tool catalog, how to add a tool |
-| [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, plugins |
-| [Tool index](docs/tool-index.md) | Every tool on the system in one line each, with a link to its official manual |
-| [CLI tools](docs/tools.md) | bat, ripgrep, fd, fzf, jq and the rest |
-| [Hardening](docs/hardening.md) | What is disabled, what is deliberately left alone, how to restore it |
-| [Visual identity](docs/visual-identity.md) | Palette, typography, the mark system |
-| [Developer guide](docs/dev.md) | Local CI levels and the contributor workflow |
-| [Testing](docs/testing.md) | The suite, and the rule that every feature ships with its tests |
-| [FAQ](docs/faq.md) | Install, boot, browser, proxy and CI troubleshooting |
-| [Roadmap](docs/roadmap.md) | What is done, and what is planned |
-| [Security](SECURITY.md) | Posture, the bill of materials, reporting a vulnerability |
-| [Contributing](CONTRIBUTING.md) | Branch model, conventions, what to run before a PR |
+| [Installation](docs/installation.md) | Prerequisites, deployment, and Hyper-V Enhanced Session |
+| [Usage](docs/usage.md) | `annixion-*` commands, browser profiles, Burp, and VPN setup |
+| [SysReptor](docs/sysreptor.md) | The self-hosted reporting platform, its report designs, and the `reptor` client |
+| [AdaptixC2](docs/adaptixc2.md) | Building and running the C2 teamserver and its native operator client |
+| [Session recording](docs/tlog.md) | `tlog-engagement` — opt-in terminal capture, pushed into SysReptor as evidence |
+| [Customization](docs/customization.md) | The override system, adding tools, and the development environment |
+| [Architecture](docs/architecture.md) | Repository layout, the tool catalog, and how to add a tool |
+| [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, and plugins |
+| [Tool index](docs/tool-index.md) | Tools on the system and links to their official manuals |
+| [CLI tools](docs/tools.md) | bat, ripgrep, fd, fzf, jq, and other command-line tools |
+| [Hardening](docs/hardening.md) | What is disabled, what is deliberately left alone, and how to restore it |
+| [Visual identity](docs/visual-identity.md) | Palette, typography, and the mark system |
+| [Developer guide](docs/dev.md) | Local CI levels and contributor workflow |
+| [Testing](docs/testing.md) | The test suite and the rule that every feature ships with tests |
+| [FAQ](docs/faq.md) | Install, boot, browser, proxy, and CI troubleshooting |
+| [Roadmap](docs/roadmap.md) | What is done and what is planned |
+| [Security](SECURITY.md) | Security posture, bill of materials, and vulnerability reporting |
+| [Contributing](CONTRIBUTING.md) | Branch model, conventions, and what to run before a PR |
 
 ---
 
 <div align="center">
 
-Built on NixOS and proud of the lineage. Not affiliated with, endorsed by or
-connected to the NixOS Foundation or the Nix project.
+Built on NixOS and proud of the lineage. Not affiliated with, endorsed by, or connected to the NixOS Foundation or the Nix project.
 
-**For authorized security testing, research and educational use only.**
+**For authorized security testing, research, and educational use only.**
 Obtain explicit written permission before any assessment.
 The authors assume no liability for misuse.
 

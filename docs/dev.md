@@ -41,11 +41,11 @@ If you are running AnNIXion, your real `hardware-configuration.nix` is already p
 | **L2** | `nix build .#nixosConfigurations.AnNIXion-ci.config.system.build.toplevel` | Full system closure — all packages resolve | 5–15 min |
 | **L3** | `nix build .#checks.x86_64-linux.<test>` — CI builds every check the flake defines | VM boot + service behaviour + tool presence (needs KVM) | ~10 min |
 
-Eight VM tests exist — `boot`, `security-tools`, `vpn-enforcement`, `shells`,
-`xrdp-session`, `bind-axfr`, `git-credential-helper` and `docker`. L1 evaluates
-all of them; CI's L3 step discovers and builds every check the flake defines,
-so a test that is wired in cannot fail to run. Run one on its own with
-`nix build .#checks.x86_64-linux.vpn-enforcement`.
+Nine VM tests exist — `boot`, `security-tools`, `vpn-enforcement`,
+`offensive-net`, `shells`, `xrdp-session`, `bind-axfr`, `git-credential-helper`
+and `docker`. L1 evaluates all of them; CI's L3 step discovers and builds every
+check the flake defines, so a test that is wired in cannot fail to run. Run one
+on its own with `nix build .#checks.x86_64-linux.vpn-enforcement`.
 
 **Supply-chain artifacts**
 
@@ -220,8 +220,8 @@ triaged issue in. They drive the real scripts through their `--select`,
 so they cannot drift from it. No network, no GitHub, no Nix build — they run in
 well under a second, and CI runs them in the same **Lint** job.
 
-The VM tests under `tests/*.nix` are a different thing: those are nixosTests
-built by L1 and L3.
+The VM tests under `tests/system/*.nix` are a different thing: those are
+nixosTests built by L1 and L3.
 
 L0 and L1 before every push. L2 before opening a PR. L3 is optional locally —
 CI runs it on every PR. The ISO build and its size gate run only on PRs into

@@ -61,9 +61,13 @@ that read. It is expected and safe here.
 
 ### How do I add a security tool?
 
-Add the nixpkgs package to `environment.systemPackages` in
-`system/security-tools.nix` and run `rebuild`. See
-[customization.md](customization.md).
+Drop one file under `catalog/`, in the kill-chain phase the tool belongs to, and
+run `rebuild`. That one file declares the package, its menu entry and its icon
+together — `system/security-tools.nix` derives the package set from the catalog,
+so there is no list to edit. The schema is in
+[architecture.md](architecture.md#adding-a-tool); for a plain system-wide
+package with no menu entry, add it to `environment.systemPackages` in
+`user/configuration.nix`. See [customization.md](customization.md).
 
 ### How do I change a setting without touching shared config?
 
