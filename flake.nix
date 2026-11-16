@@ -43,6 +43,7 @@
       # and the CI stand-in so the two cannot drift apart.
       baseModules = [
         # ── Feature modules ──────────────────────────────────
+        ./system/overlays.nix
         ./system/compat.nix
         ./system/desktop.nix
         ./system/firefox-profiles.nix
