@@ -48,6 +48,7 @@
             "net.ipv4.conf.all.accept_redirects",
             "net.ipv4.conf.all.send_redirects",
             "net.ipv4.conf.all.accept_source_route",
+            "net.ipv6.conf.all.accept_redirects",
         ]:
             path = "/proc/sys/" + key.replace(".", "/")
             val = machine.succeed("cat " + path).strip()
@@ -78,8 +79,11 @@
         machine.succeed(
             "nft list chain inet nixos-fw input | (! grep -q annixion-offensive)"
         )
-        assert machine.succeed(
-            "cat /proc/sys/net/ipv4/conf/all/accept_redirects"
-        ).strip() == "0"
+        for key in [
+            "net.ipv4.conf.all.accept_redirects",
+            "net.ipv6.conf.all.accept_redirects",
+        ]:
+            path = "/proc/sys/" + key.replace(".", "/")
+            assert machine.succeed("cat " + path).strip() == "0", key
   '';
 }

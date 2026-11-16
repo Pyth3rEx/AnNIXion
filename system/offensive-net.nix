@@ -83,9 +83,8 @@ let
         status)
           echo "offensive-net: $(systemctl is-active "$unit")"
           echo "interfaces:    ${ifaceList}"
-          for k in net.ipv4.conf.all.accept_redirects \
-                   net.ipv4.conf.all.send_redirects \
-                   net.ipv4.conf.all.accept_source_route; do
+          # Same set arm/disarm toggle, so status can't report a subset of it.
+          for k in ${lib.escapeShellArgs (lib.attrNames redirectSysctls)}; do
             p="/proc/sys/''${k//.//}"
             echo "$k = $(cat "$p" 2>/dev/null || echo '?')"
           done
