@@ -296,8 +296,8 @@ Everything below is what remains; the next pass gets its own branch.
   - [x] Disable unnecessary services (OpenSSH, ModemManager, geoclue, fwupd, avahi, printing, KDE PIM)
   - [ ] Unit sandboxing for the services that remain — xrdp first, it is the only remotely reachable one
   - [ ] Harden tmpfiles cleanup
-- [ ] Accounts:
-  - [ ] Retire the shared `operator` password hash (see Phase 3)
+- [x] Accounts:
+  - [x] Retire the shared `operator` password hash (done in Phase 3 — the installer collects a per-install hash and the system refuses to evaluate without one)
 - [ ] Audit:
   - [ ] Verify system does not contact unknown hosts on boot
   - [ ] Baseline network traffic analysis

@@ -53,7 +53,7 @@ annixion-install --branch dev
 
 ### 6. Complete the wizard
 
-The wizard asks for the settings that go into `user/configuration.nix` and `user/home.nix,` including:
+The wizard asks for the settings that go into `user/configuration.nix` and `user/home.nix`, including:
 
 - Hostname, account username, and password. The username defaults to `operator`; you can choose another.
 - Timezone and keyboard layout.
@@ -216,7 +216,9 @@ See the [Zsh reference](zsh.md) for the full list of shell shortcuts and aliases
 
 ## Hyper-V Enhanced Session
 
-**<u>THIS WILL GET DROPPED AS OF 0.6 RELEASE → SWITCHING TO VMWARE</u>**
+> **Heads-up:** Hyper-V is the supported hypervisor through the 0.5 series. A
+> move to VMware as the primary target is planned for 0.6, at which point this
+> Enhanced Session path is expected to be retired. Nothing changes for 0.5.
 
 If deploying on Hyper-V, run this on the Windows host, then fully shut down the VM and reconnect:
 

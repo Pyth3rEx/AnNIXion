@@ -37,7 +37,7 @@ Customize your `./user/` folder and rebuild your system from your own configurat
 
 ## Your new workstation
 
-![alt text](assets/branding/screenshots/0-4-3_Neofetch.png)
+![AnNIXion desktop with a fastfetch system summary in the terminal](assets/branding/screenshots/0-4-3_Neofetch.png)
 
 ---
 
@@ -100,6 +100,9 @@ AnNIXion is an advanced distribution. The documentation assumes working knowledg
 |---|---|
 | [Installation](docs/installation.md) | Prerequisites, deployment, and Hyper-V Enhanced Session |
 | [Usage](docs/usage.md) | `annixion-*` commands, browser profiles, Burp, and VPN setup |
+| [SysReptor](docs/sysreptor.md) | The self-hosted reporting platform, its report designs, and the `reptor` client |
+| [AdaptixC2](docs/adaptixc2.md) | Building and running the C2 teamserver and its native operator client |
+| [Session recording](docs/tlog.md) | `tlog-engagement` — opt-in terminal capture, pushed into SysReptor as evidence |
 | [Customization](docs/customization.md) | The override system, adding tools, and the development environment |
 | [Architecture](docs/architecture.md) | Repository layout, the tool catalog, and how to add a tool |
 | [Shell reference](docs/zsh.md) | Prompt, keybindings, aliases, and plugins |
