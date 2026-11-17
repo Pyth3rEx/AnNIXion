@@ -103,6 +103,7 @@ extract_defaults() {
       timezone = c.time.timeZone;
       keymap = c.console.keyMap;
       compositing = c.annixion.desktop.compositing;
+      offensiveNet = c.annixion.offensiveNet.enable;
       username = c.users.users.operator.name;
       sysreptorUser = c.annixion.sysreptor.user;
       profiles = {

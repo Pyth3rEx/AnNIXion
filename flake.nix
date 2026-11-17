@@ -21,6 +21,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nixos-26.05 carries 1.7.6, whose vulnxscan aborts the whole scan when
+    # repology.org challenges non-browser clients with a 403 (tiiuae/sbomnix#350);
+    # 1.10.0 degrades the repology enrichment instead. Drop once nixpkgs ships it.
+    sbomnix = {
+      url = "github:tiiuae/sbomnix/v1.10.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs =
@@ -36,7 +44,7 @@
       # Same overlays the system configs get (system/overlays.nix). Applied to
       # the instances here too, because a nixosTest pins nixpkgs.pkgs on its
       # nodes and so ignores a module's nixpkgs.overlays.
-      overlays = import ./overlays.nix;
+      overlays = import ./overlays.nix { inherit inputs; };
       pkgs = import nixpkgs { inherit system overlays; };
       pkgsUnfree = import nixpkgs {
         inherit system overlays;

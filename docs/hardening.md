@@ -85,8 +85,9 @@ reverse shell is an *inbound* connection, so the target's callback to your handl
 dropped before Metasploit sees it — the exploit "completes" with no session — and
 redirect/MITM and pivoting are blocked.
 
-`system/offensive-net.nix` is an opt-in runtime toggle for exactly that window. Enable
-it per host:
+`system/offensive-net.nix` is an opt-in runtime toggle for exactly that window.
+`annixion-install`'s wizard asks whether to enable it; answering no (or re-running
+`annixion-config-doctor` later) leaves it off. Enable it by hand per host instead:
 
 ```nix
 # user/configuration.nix
