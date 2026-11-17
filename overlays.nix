@@ -1,7 +1,9 @@
-# Targeted fixes over the pinned nixpkgs, as a plain overlay list so both the
+# Targeted fixes over the pinned nixpkgs, as one overlay list so both the
 # system configs (via system/overlays.nix) and the test package instances in
 # flake.nix apply exactly the same set. Each entry is documented and meant to
-# be dropped once nixpkgs carries the fix.
+# be dropped once nixpkgs carries the fix. Takes the flake inputs, so an entry
+# can substitute a package pinned by an input.
+{ inputs }:
 [
   (_: prev: {
     pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
@@ -17,5 +19,11 @@
         });
       })
     ];
+  })
+
+  (final: _: {
+    # 1.7.6's vulnxscan dies mid-scan on repology.org's bot challenge
+    # (tiiuae/sbomnix#350); 1.10.0 degrades the repology enrichment instead.
+    sbomnix = inputs.sbomnix.packages.${final.stdenv.hostPlatform.system}.sbomnix;
   })
 ]
