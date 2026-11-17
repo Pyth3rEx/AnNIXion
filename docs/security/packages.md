@@ -1,6 +1,6 @@
-# Packages — AnNIXion 0.4.3
+# Packages — AnNIXion 0.5.1
 
-`2026-10-26 13:28 UTC` · 2206 packages in the installed closure · 2660 store paths · 24.27 GiB
+`2026-11-17 11:42 UTC` · 2253 packages in the installed closure · 2701 store paths · 25.53 GiB
 
 [← index](README.md) · [CVEs](cves.md) · [apps](apps.md)
 
@@ -14,10 +14,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `aalib` | `1.4rc5` | GNU Library General Public License v2 | **none** |  |  |
 | `abseil-cpp` | `20260107.1` | Apache License 2.0 | [@GaetanLepage](https://github.com/GaetanLepage) |  |  |
 | `accounts-qt` | `1.17` | *unresolved* | *unresolved* |  |  |
-| `accountsservice` | `23.13.9` | GNU General Public License v3.0 or later | [@pSub](https://github.com/pSub) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) | 1 |  |
+| `accountsservice` | `23.13.9` | GNU General Public License v3.0 or later | [@pSub](https://github.com/pSub) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) | 1 |  |
 | `acl` | `2.4.0` | GNU General Public License v2.0 or later | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `act` | `0.2.88` | MIT License | [@kashw2](https://github.com/kashw2) [@MiniHarinn](https://github.com/MiniHarinn) |  |  |
 | `ada` | `3.4.4` | Apache License 2.0, MIT License | [@NickCao](https://github.com/NickCao) | 1 |  |
+| `adaptix-extension-kit` | `1.2` | *unresolved* | *unresolved* |  |  |
+| `adaptixc2` | `` | *unresolved* | *unresolved* |  |  |
+| `adaptixc2-1.2` | `` | *unresolved* | *unresolved* |  |  |
+| `adaptixclient` | `1.2` | *unresolved* | *unresolved* |  |  |
 | `adwaita-icon-theme` | `50.0` | Creative Commons Attribution Share Alike 3.0 | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `afflib` | `3.7.22` | BSD 4-clause "Original" or "Old" License | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `aha` | `0.5.1` | GNU Library General Public License v2 or later, Mozilla Public License 1.1 | [@pSub](https://github.com/pSub) |  |  |
@@ -32,11 +36,13 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `alsoft.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-burp-ca` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-cc` | `` | *unresolved* | *unresolved* |  |  |
+| `annixion-config-doctor` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-cve-report` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-icon-set` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-icons` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-meta-key-handler` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-meta-key.service` | `` | *unresolved* | *unresolved* |  |  |
+| `annixion-nixpkgs-cooldown` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-plymouth-theme` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-raise` | `` | *unresolved* | *unresolved* |  |  |
 | `annixion-redteam` | `` | *unresolved* | *unresolved* |  |  |
@@ -56,54 +62,56 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `appstream-qt` | `1.1.2` | *unresolved* | *unresolved* |  |  |
 | `ark` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `aspell` | `0.60.8.2` | GNU Library General Public License v2 or later | **none** |  |  |
-| `at-spi2-core` | `2.60.6` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `at-spi2-core` | `2.60.7` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `attica` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `attica` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `attr` | `2.6.0` | GNU General Public License v2.0 or later | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `audit-4.2.1` | `` | *unresolved* | *unresolved* |  |  |
+| `audit` | `4.2.1` | GNU General Public License v2.0 or later | [@LordGrimmauld](https://github.com/LordGrimmauld) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `aurorae` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `autopsy` | `4.22.1` | Apache License 2.0, IBM Public License v1.0, GNU Lesser General Public License v3.0 only, GNU Lesser General Public License v2.1 only, zlib License, Do What The F*ck You Want To Public License, BSD 3-clause "New" or "Revised" License, Creative Commons Attribution 3.0, MIT License, GNU General Public License v2.0 only | [@zebreus](https://github.com/zebreus) |  |  |
 | `avahi` | `0.8` | GNU Library General Public License v2 or later | **none** | 2 |  |
-| `aws-c-auth` | `0.9.1` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-cal` | `0.9.2` | Apache License 2.0 | **none** |  |  |
-| `aws-c-common` | `0.12.4` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-compression` | `0.3.1` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-event-stream` | `0.7.0` | Apache License 2.0 | **none** |  |  |
-| `aws-c-http` | `0.11.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-io` | `0.27.2` | Apache License 2.0 | **none** |  |  |
-| `aws-c-mqtt` | `0.13.3` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-s3` | `0.8.7` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-c-sdkutils` | `0.2.4` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-checksums` | `0.2.7` | Apache License 2.0 | **none** |  |  |
-| `aws-crt-cpp` | `0.34.3` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
-| `aws-sdk-cpp` | `1.11.647` | Apache License 2.0 | **none** |  |  |
+| `aws-c-auth` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-cal` | `1.0.0` | Apache License 2.0 | **none** |  |  |
+| `aws-c-common` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-compression` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-event-stream` | `1.0.0` | Apache License 2.0 | **none** |  |  |
+| `aws-c-http` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-io` | `1.0.0` | Apache License 2.0 | **none** |  |  |
+| `aws-c-mqtt` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-s3` | `1.1.2` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-c-sdkutils` | `1.0.0` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
+| `aws-checksums` | `1.0.0` | Apache License 2.0 | **none** |  |  |
+| `aws-crt-cpp` | `0.43.6` | Apache License 2.0 | [@r-burns](https://github.com/r-burns) |  |  |
 | `ayatana-ido` | `0.10.4` | GNU Lesser General Public License v3.0 or later, GNU Lesser General Public License v2.1 or later | [@NickHu](https://github.com/NickHu) |  |  |
 | `baloo` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `baloo-widgets` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `bash` | `5.3p9` | GNU General Public License v3.0 or later | [@infinisil](https://github.com/infinisil) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `bash-completion` | `2.17.0` | GNU General Public License v2.0 or later | [@philiptaron](https://github.com/philiptaron) |  |  |
 | `bash-interactive` | `5.3p9` | *unresolved* | *unresolved* |  |  |
-| `bat-0.26.1` | `` | *unresolved* | *unresolved* |  |  |
+| `bat` | `0.26.1` | Apache License 2.0, MIT License | [@dywedir](https://github.com/dywedir) [@zowoq](https://github.com/zowoq) [@SuperSandro2000](https://github.com/SuperSandro2000) [@SigmaSquadron](https://github.com/SigmaSquadron) |  |  |
 | `bc` | `1.08.2` | GNU General Public License v3.0 or later | **none** |  |  |
 | `bcache-tools` | `1.1` | GNU General Public License v2.0 only | [@bjornfor](https://github.com/bjornfor) [@pineapplehunter](https://github.com/pineapplehunter) |  |  |
 | `bcg729` | `1.1.1` | GNU General Public License v3.0 or later | **none** |  |  |
-| `bind-9.20.26` | `` | *unresolved* | *unresolved* |  |  |
+| `bear` | `4.0.4` | GNU General Public License v3.0 or later | [@DieracDelta](https://github.com/DieracDelta) |  |  |
+| `bind` | `9.20.30` | Mozilla Public License 2.0 | [@bartoostveen](https://github.com/bartoostveen) |  |  |
+| `binutils` | `2.46` | GNU General Public License v3.0 or later | [@Ericson2314](https://github.com/Ericson2314) [@lovesegfault](https://github.com/lovesegfault) | 13 |  |
+| `binutils-wrapper` | `2.46` | *unresolved* | *unresolved* |  |  |
 | `binwalk` | `3.1.0` | MIT License | [@k0ral](https://github.com/k0ral) [@felbinger](https://github.com/felbinger) |  |  |
 | `bison` | `3.8.2` | GNU General Public License v3.0 or later | **none** | 2 |  |
-| `bitwarden-2026.8.0` | `` | *unresolved* | *unresolved* |  |  |
+| `bitwarden-2026.10.2` | `` | *unresolved* | *unresolved* |  |  |
 | `blas` | `3` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `bluez` | `5.86` | BSD 2-clause "Simplified" License, GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 or later, MIT License | **none** | 1 |  |
-| `boehm-gc-8.2.12` | `` | *unresolved* | *unresolved* |  |  |
+| `boehm-gc` | `8.2.12` | *unresolved* | *unresolved* |  |  |
 | `bookmarks.html` | `` | *unresolved* | *unresolved* |  |  |
-| `boost-1.89.0` | `` | *unresolved* | *unresolved* |  |  |
+| `boost` | `1.89.0` | Boost Software License 1.0 | **none** | 2 |  |
 | `bootspec` | `2.0.0` | MIT License | [@cole-h](https://github.com/cole-h) |  |  |
 | `breeze` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `breeze-gtk` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `breeze-icons` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `breeze-icons` | `6.26.0` | *unresolved* | *unresolved* |  |  |
-| `brotli` | `1.2.0` | MIT License | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
+| `brotli` | `1.2.1` | MIT License | [@mdaniels5757](https://github.com/mdaniels5757) | 1 |  |
 | `btrfs-progs` | `6.19.1` | GNU General Public License v2.0 only | [@7c6f434c](https://github.com/7c6f434c) |  |  |
-| `bubblewrap` | `0.11.2` | GNU Library General Public License v2 or later | [@dotlambda](https://github.com/dotlambda) |  |  |
+| `bubblewrap` | `0.12.0` | GNU Lesser General Public License v2.1 or later | [@dotlambda](https://github.com/dotlambda) |  |  |
 | `bundler` | `2.7.2` | MIT License | [@anthonyroussel](https://github.com/anthonyroussel) [@guylamar2006](https://github.com/guylamar2006) |  |  |
 | `burpsuite` | `2026.4.3` | Unfree | [@bennofs](https://github.com/bennofs) [@zeshi09](https://github.com/zeshi09) [@fabaff](https://github.com/fabaff) [@yechielw](https://github.com/yechielw) |  |  |
 | `burpsuite-2026.4.3-bwrap` | `` | *unresolved* | *unresolved* |  |  |
@@ -113,21 +121,21 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `burpsuite.jar` | `` | *unresolved* | *unresolved* |  |  |
 | `busybox` | `1.37.0` | GNU General Public License v2.0 only | [@TethysSvensson](https://github.com/TethysSvensson) [@alyssais](https://github.com/alyssais) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 2 |  |
 | `bzip2` | `1.0.8` | bzip2 and libbzip2 License v1.0.6 | [@Mic92](https://github.com/Mic92) |  |  |
-| `c-ares` | `1.34.8` | MIT License | **none** |  |  |
+| `c-ares` | `1.34.9` | MIT License | **none** |  |  |
 | `c-dvar` | `1.2.0` | *unresolved* | *unresolved* |  |  |
 | `c-ini` | `1.1.0` | *unresolved* | *unresolved* |  |  |
 | `c-rbtree` | `3.2.0` | *unresolved* | *unresolved* |  |  |
 | `c-shquote` | `1.1.0` | *unresolved* | *unresolved* |  |  |
 | `c-utf8` | `1.1.0` | *unresolved* | *unresolved* |  |  |
 | `cabextract` | `1.11` | GNU General Public License v3.0 | [@pSub](https://github.com/pSub) |  |  |
-| `cairo` | `1.18.4` | GNU Library General Public License v2 or later, Mozilla Public License 1.0 | **none** | 1 |  |
+| `cairo` | `1.18.4` | GNU Library General Public License v2 or later, Mozilla Public License 1.0 | **none** | 2 |  |
 | `canvasblocker-1.12` | `` | *unresolved* | *unresolved* |  |  |
 | `cdparanoia-iii` | `10.2` | GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `cfitsio` | `4.6.4` | CFITSIO License | [@returntoreality](https://github.com/returntoreality) [@xbreak](https://github.com/xbreak) | 2 |  |
+| `cfitsio` | `4.7.0` | CFITSIO License | [@returntoreality](https://github.com/returntoreality) [@xbreak](https://github.com/xbreak) | 2 |  |
 | `chafa` | `1.18.2` | GNU Lesser General Public License v3.0 or later | [@mogorman](https://github.com/mogorman) [@Prince213](https://github.com/Prince213) |  |  |
 | `check-link-targets.sh` | `` | *unresolved* | *unresolved* |  |  |
 | `check-mountpoints` | `` | *unresolved* | *unresolved* |  |  |
-| `check-phase-thread-limit-hook` | `` | *unresolved* | *unresolved* |  |  |
+| `check-phase-thread-limit-hook` | `26.05pre-git` | *unresolved* | *unresolved* |  |  |
 | `chfn.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `chpasswd.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `chroma` | `2.24.1` | MIT License | [@MiniHarinn](https://github.com/MiniHarinn) |  |  |
@@ -135,10 +143,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `chsh.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `cjson` | `1.7.19` | MIT License | [@matthiasbeyer](https://github.com/matthiasbeyer) | 4 |  |
 | `clang` | `21.1.8` | unknown | [@RossComputerGuy](https://github.com/RossComputerGuy) [@alyssais](https://github.com/alyssais) [@Ericson2314](https://github.com/Ericson2314) [@emilazy](https://github.com/emilazy) [@peterwaller-arm](https://github.com/peterwaller-arm) [@rrbutani](https://github.com/rrbutani) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `clang-tools` | `21.1.8` | unknown | [@Patryk27](https://github.com/Patryk27) [@RossComputerGuy](https://github.com/RossComputerGuy) [@alyssais](https://github.com/alyssais) [@Ericson2314](https://github.com/Ericson2314) [@emilazy](https://github.com/emilazy) [@peterwaller-arm](https://github.com/peterwaller-arm) [@rrbutani](https://github.com/rrbutani) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `clang-wrapper` | `21.1.8` | *unresolved* | *unresolved* |  |  |
 | `cleanup` | `` | *unresolved* | *unresolved* |  |  |
 | `client.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `clinfo` | `3.0.25.02.14` | Creative Commons Zero v1.0 Universal | [@athas](https://github.com/athas) [@r-burns](https://github.com/r-burns) |  |  |
+| `cmake` | `4.1.6` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) [@LnL7](https://github.com/LnL7) |  |  |
 | `codec2` | `1.2.0` | GNU Lesser General Public License v2.1 only | [@markuskowa](https://github.com/markuskowa) |  |  |
+| `compiler-rt-libc` | `21.1.8` | *unresolved* | *unresolved* |  |  |
 | `config.jsonc` | `` | *unresolved* | *unresolved* |  |  |
 | `console-env` | `` | *unresolved* | *unresolved* |  |  |
 | `container-init` | `` | *unresolved* | *unresolved* |  |  |
@@ -151,18 +163,18 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `cracklib` | `2.10.3` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `cryptsetup` | `2.8.6` | GNU General Public License v2.0 or later | [@numinit](https://github.com/numinit) |  |  |
 | `ctop` | `0.7.7` | MIT License | [@apeyroux](https://github.com/apeyroux) |  |  |
-| `cups-2.4.19` | `` | *unresolved* | *unresolved* |  |  |
-| `curl-8.21.0` | `` | *unresolved* | *unresolved* |  |  |
+| `cups` | `2.4.19` | Apache License 2.0 | **none** | 10 |  |
+| `curl` | `8.23.0` | curl License | [@Scrumplex](https://github.com/Scrumplex) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `cyrus-sasl` | `2.1.28` | *unresolved* | *unresolved* |  |  |
 | `daemon.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `daemon.json` | `` | *unresolved* | *unresolved* |  |  |
-| `darkreader-4.9.130` | `` | *unresolved* | *unresolved* |  |  |
+| `darkreader-4.9.135` | `` | *unresolved* | *unresolved* |  |  |
 | `dash` | `0.5.13.3` | BSD 3-clause "New" or "Revised" License, GNU General Public License v2.0 or later | **none** | 1 |  |
 | `data.json` | `` | *unresolved* | *unresolved* |  |  |
 | `dav1d` | `1.5.3` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `db` | `4.8.30` | Sleepycat License | **none** |  |  |
 | `db` | `5.3.28` | Sleepycat License | **none** |  |  |
-| `dbus` | `1.16.2` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) | 3 |  |
+| `dbus` | `1.16.2` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) | 3 |  |
 | `dbus-1` | `` | *unresolved* | *unresolved* |  |  |
 | `dbus-broker` | `37` | Apache License 2.0 | [@peterhoeg](https://github.com/peterhoeg) [@R-VdP](https://github.com/R-VdP) |  |  |
 | `dconf` | `0.49.0` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
@@ -173,9 +185,10 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `default.pa` | `` | *unresolved* | *unresolved* |  |  |
 | `dejavu-fonts` | `2.37` | *unresolved* | *unresolved* |  |  |
 | `dejavu-fonts-minimal` | `2.37` | *unresolved* | *unresolved* |  |  |
+| `design-annixion` | `` | *unresolved* | *unresolved* |  |  |
 | `desktop-file-utils` | `0.28` | GNU General Public License v2.0 or later | **none** |  |  |
 | `desktops` | `` | *unresolved* | *unresolved* |  |  |
-| `dhcpcd` | `10.3.1` | BSD 2-clause "Simplified" License | **none** | 4 | 4 |
+| `dhcpcd` | `10.3.1` | BSD 2-clause "Simplified" License | **none** | 4 |  |
 | `diffutils` | `3.12` | GNU General Public License v3.0 | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
 | `direnv` | `2.37.1` | MIT License | [@zimbatm](https://github.com/zimbatm) |  |  |
 | `discount` | `3.0.1.2` | BSD 3-clause "New" or "Revised" License | [@VShell](https://github.com/VShell) |  |  |
@@ -188,12 +201,12 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `docbook-xml` | `4.5` | *unresolved* | *unresolved* |  |  |
 | `docbook-xsl-nons` | `1.79.2` | MIT License | **none** |  |  |
 | `docbook-xsl-ns` | `1.79.2` | MIT License | **none** |  |  |
-| `docker` | `29.7.2` | Apache License 2.0 | [@vdemeester](https://github.com/vdemeester) [@teutat3s](https://github.com/teutat3s) | 1 |  |
+| `docker` | `29.9.3` | Apache License 2.0 | [@vdemeester](https://github.com/vdemeester) [@teutat3s](https://github.com/teutat3s) |  |  |
 | `docker-buildx` | `0.31.1` | Apache License 2.0 | [@bobrik](https://github.com/bobrik) [@developer-guy](https://github.com/developer-guy) |  |  |
-| `docker-compose` | `5.4.0` | Apache License 2.0 | [@airone01](https://github.com/airone01) |  |  |
-| `docker-containerd` | `29.7.2` | *unresolved* | *unresolved* |  |  |
-| `docker-runc` | `29.7.2` | *unresolved* | *unresolved* |  |  |
-| `docker-tini` | `29.7.2` | *unresolved* | *unresolved* |  |  |
+| `docker-compose` | `5.6.1` | Apache License 2.0 | [@airone01](https://github.com/airone01) |  |  |
+| `docker-containerd` | `29.9.3` | *unresolved* | *unresolved* |  |  |
+| `docker-runc` | `29.9.3` | *unresolved* | *unresolved* |  |  |
+| `docker-tini` | `29.9.3` | *unresolved* | *unresolved* |  |  |
 | `dolphin` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `dolphin-plugins` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `dosfstools` | `4.2` | GNU General Public License v3.0 | **none** |  |  |
@@ -201,13 +214,13 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `drkonqi` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `duktape` | `2.7.0` | MIT License | [@fgaz](https://github.com/fgaz) |  |  |
 | `dumpifs` | `0-unstable-2020-05-07` | *unstated* | **none** |  |  |
-| `e2fsprogs-1.47.4` | `` | *unresolved* | *unresolved* |  |  |
+| `e2fsprogs` | `1.47.4` | GNU General Public License v2.0 or later, GNU Library General Public License v2 or later, BSD 3-clause "New" or "Revised" License, MIT License | [@usertam](https://github.com/usertam) |  |  |
 | `ebook-tools` | `0.2.2` | *unresolved* | *unresolved* |  |  |
 | `ed` | `1.22.5` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
 | `editline` | `1.17.1-unstable-2025-05-24` | BSD 4-clause "Original" or "Old" License | [@oxalica](https://github.com/oxalica) |  |  |
 | `editorconfig-core-c` | `0.12.11` | BSD 2-clause "Simplified" License, BSD 3-clause "New" or "Revised" License | [@dochang](https://github.com/dochang) |  |  |
-| `electron-43.1.0` | `` | *unresolved* | *unresolved* |  |  |
-| `electron-unwrapped` | `43.1.0` | *unresolved* | *unresolved* |  |  |
+| `electron` | `43.8.7` | MIT License | [@TomaSajt](https://github.com/TomaSajt) [@yayayayaka](https://github.com/yayayayaka) [@teutat3s](https://github.com/teutat3s) |  |  |
+| `electron-unwrapped` | `43.8.7` | *unresolved* | *unresolved* |  |  |
 | `elfutils` | `0.194` | GNU General Public License v2.0 only, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@r-burns](https://github.com/r-burns) |  |  |
 | `ell` | `0.83` | GNU Lesser General Public License v2.1 or later | [@Mic92](https://github.com/Mic92) |  |  |
 | `empty-directory` | `` | *unresolved* | *unresolved* |  |  |
@@ -215,6 +228,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `enchant` | `2.6.9` | GNU Lesser General Public License v2.1 or later | [@jtojnar](https://github.com/jtojnar) |  |  |
 | `etc` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-alsa-conf.d-99-pulseaudio.conf` | `` | *unresolved* | *unresolved* |  |  |
+| `etc-annixion-sysreptor.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-bash_logout` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-bashrc` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-environment.d-50-systemd-path.conf` | `` | *unresolved* | *unresolved* |  |  |
@@ -254,8 +268,9 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `etc-systemd-timesyncd.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-systemd-user-preset-00-nixos.preset` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-systemd-user.conf` | `` | *unresolved* | *unresolved* |  |  |
+| `etc-tlog-tlog-play.conf` | `` | *unresolved* | *unresolved* |  |  |
+| `etc-tlog-tlog-rec.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-UPower-UPower.conf` | `` | *unresolved* | *unresolved* |  |  |
-| `etc-wpa_supplicant-nixos.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-X11-xorg.conf.d-00-keyboard.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-zinputrc` | `` | *unresolved* | *unresolved* |  |  |
 | `etc-zprofile` | `` | *unresolved* | *unresolved* |  |  |
@@ -265,11 +280,12 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `exfat` | `1.4.0` | GNU General Public License v2.0 or later | [@dywedir](https://github.com/dywedir) |  |  |
 | `exiv2` | `0.28.9` | GNU General Public License v2.0 or later | [@wegank](https://github.com/wegank) | 2 |  |
 | `expand-response-params` | `` | MIT License | **none** |  |  |
-| `expat` | `2.8.3` | MIT License | **none** |  |  |
+| `expat` | `2.10.0` | MIT License | **none** |  |  |
+| `extensions-json-default` | `` | *unresolved* | *unresolved* |  |  |
 | `f2fs-tools` | `1.16.0` | GNU General Public License v2.0 only | **none** |  |  |
 | `faad2` | `2.11.2` | GNU General Public License v2.0 or later | **none** |  |  |
 | `fallback-cursor-theme` | `` | *unresolved* | *unresolved* |  |  |
-| `fastfetch-2.63.1` | `` | *unresolved* | *unresolved* |  |  |
+| `fastfetch` | `2.63.1` | MIT License | [@luftmensch-luftmensch](https://github.com/luftmensch-luftmensch) [@khaneliman](https://github.com/khaneliman) [@Defelo](https://github.com/Defelo) |  |  |
 | `fc-00-nixos-cache.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `fc-10-nixos-rendering.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `fc-52-nixos-default-fonts.conf` | `` | *unresolved* | *unresolved* |  |  |
@@ -282,25 +298,25 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `fdk-aac` | `2.0.3` | *unresolved* | *unresolved* |  |  |
 | `feedbroreader-4.16.3` | `` | *unresolved* | *unresolved* |  |  |
 | `ffado` | `2.4.9` | GNU General Public License v3.0 | [@michojel](https://github.com/michojel) |  |  |
-| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 82 | 62 |
-| `ffmpeg` | `8.1.2` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 82 | 62 |
-| `ffmpeg-headless` | `8.1.2` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) |  |  |
-| `fftw-double-3.3.11` | `` | *unresolved* | *unresolved* |  |  |
-| `fftw-single-3.3.11` | `` | *unresolved* | *unresolved* |  |  |
+| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 75 |  |
+| `ffmpeg` | `8.1.3` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 75 |  |
+| `ffmpeg-headless` | `8.1.3` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) |  |  |
+| `fftw-double` | `3.3.11` | *unresolved* | *unresolved* |  |  |
+| `fftw-single` | `3.3.11` | *unresolved* | *unresolved* |  |  |
 | `ffuf` | `2.2.1` | MIT License | [@fabaff](https://github.com/fabaff) |  |  |
 | `fhsenv-ensure-gsettings-schemas-directory` | `` | *unresolved* | *unresolved* |  |  |
 | `file` | `5.47` | BSD 2-clause "Simplified" License | [@doronbehar](https://github.com/doronbehar) |  |  |
 | `filelight` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `find-xml-catalogs-hook` | `26.05pre-git` | *unresolved* | *unresolved* |  |  |
 | `findutils` | `4.10.0` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `firefox-155.0.1` | `` | *unresolved* | *unresolved* |  |  |
-| `firefox-unwrapped-155.0.1` | `` | *unresolved* | *unresolved* |  |  |
+| `firefox` | `160.0` | Mozilla Public License 2.0 | [@booxter](https://github.com/booxter) [@mweinelt](https://github.com/mweinelt) | 15 |  |
+| `firefox-unwrapped` | `160.0` | Mozilla Public License 2.0 | [@booxter](https://github.com/booxter) [@mweinelt](https://github.com/mweinelt) |  |  |
 | `firmware` | `` | *unresolved* | *unresolved* |  |  |
 | `flac` | `1.5.0` | BSD 3-clause "New" or "Revised" License, GNU Free Documentation License v1.3 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 or later | [@ruuda](https://github.com/ruuda) | 1 |  |
-| `flatpak` | `1.16.6` | GNU Lesser General Public License v2.1 or later | [@getchoo](https://github.com/getchoo) |  |  |
+| `flatpak` | `1.18.4` | GNU Lesser General Public License v2.1 or later | [@getchoo](https://github.com/getchoo) |  |  |
 | `flex` | `2.6.4` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `flite` | `2.2` | BSD 4-clause "Original" or "Old" License | [@getchoo](https://github.com/getchoo) |  |  |
-| `fluidsynth` | `2.5.3` | GNU Lesser General Public License v2.1 or later | [@guylamar2006](https://github.com/guylamar2006) | 7 |  |
+| `fluidsynth` | `2.5.6` | GNU Lesser General Public License v2.1 or later | [@guylamar2006](https://github.com/guylamar2006) | 1 |  |
 | `fmt` | `12.1.0` | MIT License | **none** |  |  |
 | `font-adobe-100dpi` | `1.0.4` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
 | `font-adobe-75dpi` | `1.0.4` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
@@ -308,30 +324,32 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `font-cursor-misc` | `1.0.4` | Public Domain | **none** |  |  |
 | `font-misc-misc` | `1.1.3` | Public Domain | **none** |  |  |
 | `font-util` | `1.4.2` | MIT License, BSD 2-clause "Simplified" License, BSD Source Code Attribution, MIT Open Group variant, Unicode Terms of Use | **none** |  |  |
-| `fontconfig` | `2.17.1` | BSD 2-clause "Simplified" License | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `fontconfig` | `2.17.1` | BSD 2-clause "Simplified" License | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `fontconfig-conf` | `` | *unresolved* | *unresolved* |  |  |
 | `fontconfig-etc` | `` | *unresolved* | *unresolved* |  |  |
-| `foxyproxy-standard-9.7` | `` | *unresolved* | *unresolved* |  |  |
+| `foxyproxy-standard-9.9` | `` | *unresolved* | *unresolved* |  |  |
 | `frameworkintegration` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `frameworkintegration` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `freefont-ttf` | `20120503` | *unresolved* | *unresolved* |  |  |
 | `freeglut` | `3.8.0` | MIT License | [@bjornfor](https://github.com/bjornfor) |  |  |
 | `freepats` | `20060219` | GNU General Public License v2.0 | [@bjornfor](https://github.com/bjornfor) |  |  |
 | `freetype` | `2.14.3` | GNU General Public License v2.0 or later | [@ttuegel](https://github.com/ttuegel) |  |  |
-| `fribidi` | `1.0.16` | GNU Lesser General Public License v2.1 | **none** |  |  |
+| `fribidi` | `1.0.18` | GNU Lesser General Public License v2.1 | [@hesiod](https://github.com/hesiod) |  |  |
 | `fstrm` | `0.6.1` | Apache License 2.0 | **none** |  |  |
 | `fuse` | `2.9.9` | GNU General Public License v2.0 only, GNU Lesser General Public License v2.1 only | [@oxalica](https://github.com/oxalica) |  |  |
 | `fuse` | `3.17.4` | GNU General Public License v2.0 only, GNU Lesser General Public License v2.1 only | [@oxalica](https://github.com/oxalica) |  |  |
 | `fuse-overlayfs` | `1.17` | GNU General Public License v3.0 | [@sphaugh](https://github.com/sphaugh) [@saschagrunert](https://github.com/saschagrunert) [@vdemeester](https://github.com/vdemeester) |  |  |
-| `fzf-0.72.0` | `` | *unresolved* | *unresolved* |  |  |
-| `game-music-emu` | `0.6.4` | GNU Lesser General Public License v2.1 or later | **none** | 2 |  |
+| `fzf` | `0.72.0` | MIT License | [@Ma27](https://github.com/Ma27) [@zowoq](https://github.com/zowoq) | 2 |  |
+| `game-music-emu` | `0.6.4` | GNU Lesser General Public License v2.1 or later | **none** | 1 |  |
 | `gawk` | `5.4.1` | GNU General Public License v3.0 or later | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
-| `gcc-15.2.0` | `` | *unresolved* | *unresolved* |  |  |
-| `gcr` | `4.4.0.1` | GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `gcc` | `15.2.0` | GNU General Public License v3.0 or later | [@vcunat](https://github.com/vcunat) [@Ericson2314](https://github.com/Ericson2314) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 2 |  |
+| `gcc` | `15.3.0` | GNU General Public License v3.0 or later | [@vcunat](https://github.com/vcunat) [@Ericson2314](https://github.com/Ericson2314) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 2 |  |
+| `gcr` | `4.4.1` | GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `gd` | `2.3.3` | Unspecified free software license | **none** |  |  |
+| `gdb` | `17.2` | GNU General Public License v3.0 or later | [@nbp](https://github.com/nbp) [@globin](https://github.com/globin) |  |  |
 | `gdb-host-cpu-only` | `17.2` | *unresolved* | *unresolved* |  |  |
 | `gdbm` | `1.26` | GNU General Public License v3.0 or later | **none** |  |  |
-| `gdk-pixbuf` | `2.44.7` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) | 1 |  |
+| `gdk-pixbuf` | `2.44.8` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `gdk-pixbuf-loaders.cache` | `` | *unresolved* | *unresolved* |  |  |
 | `gemfile-and-lockfile` | `` | *unresolved* | *unresolved* |  |  |
 | `geoclue` | `2.7.2` | *unresolved* | *unresolved* |  |  |
@@ -339,30 +357,32 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `getent-glibc` | `2.42` | *unresolved* | *unresolved* |  |  |
 | `gettext` | `1.0` | GNU General Public License v2.0 or later | [@zimbatm](https://github.com/zimbatm) |  |  |
 | `getty` | `` | *unresolved* | *unresolved* |  |  |
-| `gfortran-15.2.0` | `` | *unresolved* | *unresolved* |  |  |
-| `gh-2.100.0` | `` | *unresolved* | *unresolved* |  |  |
-| `ghidra` | `12.0.4` | Apache License 2.0 | [@roblabla](https://github.com/roblabla) [@vringar](https://github.com/vringar) | 16 | 14 |
-| `ghostscript-with-X` | `10.07.1` | *unresolved* | *unresolved* |  |  |
-| `giflib` | `5.2.2` | MIT License | **none** | 3 | 3 |
-| `git-2.54.0` | `` | *unresolved* | *unresolved* |  |  |
-| `git-lfs` | `3.7.1` | MIT License | [@Twey](https://github.com/Twey) [@savtrip](https://github.com/savtrip) |  |  |
-| `git-minimal-2.54.0` | `` | *unresolved* | *unresolved* |  |  |
+| `gfortran` | `15.3.0` | GNU General Public License v3.0 or later | [@vcunat](https://github.com/vcunat) [@Ericson2314](https://github.com/Ericson2314) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `gh` | `2.104.0` | MIT License | [@mdaniels5757](https://github.com/mdaniels5757) [@zowoq](https://github.com/zowoq) [@savtrip](https://github.com/savtrip) |  |  |
+| `ghidra` | `12.0.4` | Apache License 2.0 | [@roblabla](https://github.com/roblabla) [@vringar](https://github.com/vringar) | 24 |  |
+| `ghostscript-with-X` | `10.08.0` | *unresolved* | *unresolved* |  |  |
+| `giflib` | `5.2.2` | MIT License | **none** | 1 |  |
+| `git` | `2.54.0` | GNU General Public License v2.0 | [@wmertens](https://github.com/wmertens) [@kashw2](https://github.com/kashw2) [@me-and](https://github.com/me-and) [@philiptaron](https://github.com/philiptaron) [@zivarah](https://github.com/zivarah) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 6 |  |
+| `git-lfs` | `3.8.1` | MIT License | [@Twey](https://github.com/Twey) [@savtrip](https://github.com/savtrip) |  |  |
+| `git-minimal` | `2.54.0` | *unresolved* | *unresolved* |  |  |
 | `github-desktop` | `3.5.8` | MIT License | [@dtomvan](https://github.com/dtomvan) |  |  |
 | `gle` | `3.1.2` | GNU General Public License v2.0 | [@7c6f434c](https://github.com/7c6f434c) |  |  |
-| `glib` | `2.88.3` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `glib` | `2.88.3` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) | 1 |  |
 | `glib-networking` | `2.80.1` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
-| `glibc` | `2.42-84` | GNU Library General Public License v2 or later | [@Ma27](https://github.com/Ma27) [@ConnorBaker](https://github.com/ConnorBaker) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 8 | 6 |
+| `glibc` | `2.42-103` | GNU Library General Public License v2 or later | [@Ma27](https://github.com/Ma27) [@ConnorBaker](https://github.com/ConnorBaker) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 31 |  |
 | `glibc-iconv-2.42` | `` | *unresolved* | *unresolved* |  |  |
-| `glibc-locales` | `2.42-84` | *unresolved* | *unresolved* |  |  |
+| `glibc-locales` | `2.42-103` | *unresolved* | *unresolved* |  |  |
 | `glibmm` | `2.66.8` | GNU Library General Public License v2 or later | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `glow` | `2.1.2` | MIT License | [@HigherOrderLogic](https://github.com/HigherOrderLogic) |  |  |
 | `glslang` | `16.2.0` | Apache License 2.0 | [@Ralith](https://github.com/Ralith) |  |  |
 | `glu` | `9.0.3` | *unresolved* | *unresolved* |  |  |
+| `gmp` | `6.3.0` | GNU Lesser General Public License v3.0 only, GNU General Public License v2.0 only | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `gmp-with-cxx` | `6.3.0` | *unresolved* | *unresolved* |  |  |
 | `gnome-desktop` | `44.5` | GNU General Public License v2.0 or later, GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `gnome-settings-daemon-50.1-gsettings-schemas` | `` | *unresolved* | *unresolved* |  |  |
 | `gnugrep` | `3.12` | GNU General Public License v3.0 or later | [@dasJ](https://github.com/dasJ) [@m00wl](https://github.com/m00wl) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `gnum4` | `1.4.21` | GNU General Public License v3.0 or later | **none** |  |  |
+| `gnumake` | `4.4.1` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
 | `gnupg` | `2.4.9` | GNU General Public License v3.0 or later | [@fpletz](https://github.com/fpletz) [@stigtsp](https://github.com/stigtsp) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 1 |  |
 | `gnuplot` | `6.0.4` | gnuplot License | **none** |  |  |
 | `gnuradio` | `3.10.12.0` | GNU General Public License v3.0 | [@doronbehar](https://github.com/doronbehar) [@bjornfor](https://github.com/bjornfor) [@fpletz](https://github.com/fpletz) [@jiegec](https://github.com/jiegec) |  |  |
@@ -387,7 +407,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `graphics-drivers` | `` | *unresolved* | *unresolved* |  |  |
 | `graphite2` | `1.3.15` | GNU Lesser General Public License v2.1 | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `graphviz` | `12.2.1` | Eclipse Public License 1.0 | [@bjornfor](https://github.com/bjornfor) [@7c6f434c](https://github.com/7c6f434c) |  |  |
-| `groff` | `1.24.1` | GNU General Public License v3.0 or later | [@pSub](https://github.com/pSub) |  |  |
+| `groff` | `1.24.2` | GNU General Public License v3.0 or later | [@pSub](https://github.com/pSub) |  |  |
 | `groupadd.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `groupdel.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `groupmems.pam` | `` | *unresolved* | *unresolved* |  |  |
@@ -395,19 +415,19 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `grype` | `0.112.0` | Apache License 2.0 | [@fabaff](https://github.com/fabaff) [@06kellyjac](https://github.com/06kellyjac) [@kashw2](https://github.com/kashw2) |  |  |
 | `gsettings-desktop-schemas` | `50.1` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `gsettings-wrapper` | `` | *unresolved* | *unresolved* |  |  |
-| `gsl` | `2.8` | GNU General Public License v3.0 or later | **none** |  |  |
+| `gsl` | `2.8` | GNU General Public License v3.0 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `gsm` | `1.0.24` | BSD 2-clause "Simplified" License | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `gssdp` | `1.6.6` | GNU Library General Public License v2 or later | **none** |  |  |
 | `gst-libav` | `1.26.11` | *unresolved* | *unresolved* |  |  |
 | `gst-plugins-bad` | `1.26.11` | *unresolved* | *unresolved* |  |  |
 | `gst-plugins-base` | `1.26.11` | *unresolved* | *unresolved* |  |  |
 | `gst-plugins-good` | `1.26.11` | *unresolved* | *unresolved* | 2 |  |
-| `gstreamer` | `1.26.11` | *unresolved* | *unresolved* | 20 | 18 |
+| `gstreamer` | `1.26.11` | *unresolved* | *unresolved* | 20 |  |
 | `gstreamer-vaapi` | `1.26.11` | *unresolved* | *unresolved* |  |  |
 | `gtest` | `1.17.0` | BSD 3-clause "New" or "Revised" License | [@ivan-tkatchev](https://github.com/ivan-tkatchev) |  |  |
 | `gtk+3` | `3.24.52` | *unresolved* | *unresolved* |  |  |
-| `gtk4` | `4.22.4` | GNU Library General Public License v2 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
-| `gts` | `0.7.6` | GNU Library General Public License v2 or later | **none** |  |  |
+| `gtk4` | `4.22.5` | GNU Library General Public License v2 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `gts` | `0.7.6` | GNU Library General Public License v2 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `gupnp` | `1.6.10` | GNU Library General Public License v2 or later | **none** |  |  |
 | `gupnp-igd` | `1.6.0` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `gwenview` | `26.04.3` | *unresolved* | *unresolved* |  |  |
@@ -417,7 +437,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `hackrf` | `2026.01.3` | GNU General Public License v2.0 | [@sjmackenzie](https://github.com/sjmackenzie) |  |  |
 | `hacktools-0.4.0` | `` | *unresolved* | *unresolved* |  |  |
 | `hamlib` | `3.3` | GNU General Public License v2.0 or later, GNU Library General Public License v2 or later | [@relrod](https://github.com/relrod) |  |  |
-| `harfbuzz` | `13.2.1` | MIT License | [@Chaostheorie](https://github.com/Chaostheorie) | 1 |  |
+| `harfbuzz` | `13.2.1` | MIT License | [@Chaostheorie](https://github.com/Chaostheorie) | 3 |  |
 | `harfbuzz-icu` | `13.2.1` | *unresolved* | *unresolved* |  |  |
 | `hashcat` | `7.1.2` | MIT License | [@felixalbrigtsen](https://github.com/felixalbrigtsen) [@zimbatm](https://github.com/zimbatm) | 3 |  |
 | `hfst-ospell` | `0.5.4` | Apache License 2.0 | [@Lurkki14](https://github.com/Lurkki14) |  |  |
@@ -443,6 +463,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `hm_.configmozillafirefoxredteamuser.js` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.configmozillafirefoxuntrusted.keep` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.configmozillafirefoxuntrusteduser.js` | `` | *unresolved* | *unresolved* |  |  |
+| `hm_.localshareapplicationsannixionadaptixc2.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionaircrack.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionark.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionautopsy.desktop` | `` | *unresolved* | *unresolved* |  |  |
@@ -477,8 +498,10 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `hm_.localshareapplicationsannixionnmap.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionobsidian.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixiononlyoffice.desktop` | `` | *unresolved* | *unresolved* |  |  |
+| `hm_.localshareapplicationsannixionpowershell.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionseclists.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionsqlmap.desktop` | `` | *unresolved* | *unresolved* |  |  |
+| `hm_.localshareapplicationsannixionsysreptor.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionsystemsettings.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixiontheharvester.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localshareapplicationsannixionvolatility.desktop` | `` | *unresolved* | *unresolved* |  |  |
@@ -525,7 +548,6 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `hm_.localsharedesktopdirectoriesannixiontools.directory` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localsharedesktopdirectoriesannixionutils.directory` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_.localsharedolphinview_propertiesglobal.directory` | `` | *unresolved* | *unresolved* |  |  |
-| `hm_.vscodeossextensions.extensionsimmutable.json` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_autostartplasmamanagerautostart.desktop` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_environment.d10homemanager.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `hm_fontconfigconf.d10hmfonts.conf` | `` | *unresolved* | *unresolved* |  |  |
@@ -561,25 +583,26 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `hwdata` | `0.406` | GNU General Public License v2.0 or later | [@johnrtitor](https://github.com/johnrtitor) [@PedroHLC](https://github.com/PedroHLC) |  |  |
 | `hwdb.bin` | `` | *unresolved* | *unresolved* |  |  |
 | `hwloc` | `2.13.0` | BSD 3-clause "New" or "Revised" License | [@fpletz](https://github.com/fpletz) [@markuskowa](https://github.com/markuskowa) |  |  |
-| `hyperv-daemons` | `6.18.50` | *unresolved* | *unresolved* |  |  |
-| `hyperv-daemons-bin` | `6.18.50` | *unresolved* | *unresolved* |  |  |
+| `hyperv-daemons` | `6.18.63` | *unresolved* | *unresolved* |  |  |
+| `hyperv-daemons-bin` | `6.18.63` | *unresolved* | *unresolved* |  |  |
 | `hyphen` | `2.8.8` | GNU General Public License v2.0, GNU Lesser General Public License v2.1, Mozilla Public License 1.1 | **none** |  |  |
 | `iana-etc` | `20251215` | MIT License | **none** |  |  |
 | `ibus` | `1.5.33` | GNU Lesser General Public License v2.1 or later | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `iceauth` | `1.0.10` | MIT Open Group variant | **none** |  |  |
 | `icu4c` | `76.1` | *unresolved* | *unresolved* |  |  |
 | `icu4c` | `78.3` | *unresolved* | *unresolved* |  |  |
-| `ijs` | `10.07.1` | GNU General Public License v3.0 or later | **none** |  |  |
-| `imagemagick` | `7.1.2-30` | Apache License 2.0 | [@dotlambda](https://github.com/dotlambda) [@rhendric](https://github.com/rhendric) [@faukah](https://github.com/faukah) | 29 | 23 |
+| `ijs` | `10.08.0` | GNU General Public License v3.0 or later | **none** |  |  |
+| `imagemagick` | `7.1.2-35` | Apache License 2.0 | [@dotlambda](https://github.com/dotlambda) [@rhendric](https://github.com/rhendric) [@faukah](https://github.com/faukah) | 4 |  |
 | `imath` | `3.2.2` | BSD 3-clause "New" or "Revised" License | [@paperdigits](https://github.com/paperdigits) |  |  |
-| `inetutils` | `2.7` | GNU General Public License v3.0 or later | **none** | 1 | 1 |
+| `inetutils` | `2.7` | GNU General Public License v3.0 or later | **none** | 1 |  |
 | `inih` | `62` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `iniparser` | `4.2.6` | MIT License | **none** |  |  |
-| `initrd-linux-6.18.50` | `` | *unresolved* | *unresolved* |  |  |
+| `initrd-linux-6.18.63` | `` | *unresolved* | *unresolved* |  |  |
 | `install-systemd-boot.sh` | `` | *unresolved* | *unresolved* |  |  |
 | `iproute2` | `7.0.0` | GNU General Public License v2.0 only | [@fpletz](https://github.com/fpletz) |  |  |
-| `iptables-1.8.13` | `` | *unresolved* | *unresolved* |  |  |
+| `iptables` | `1.8.13` | GNU General Public License v2.0 or later | [@fpletz](https://github.com/fpletz) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `iputils` | `20250605` | GNU General Public License v2.0 or later, BSD 3-clause "New" or "Revised" License | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
+| `isl` | `0.20` | GNU Lesser General Public License v2.1 | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `iso-codes` | `4.20.1` | *unresolved* | *unresolved* |  |  |
 | `issue` | `` | *unresolved* | *unresolved* |  |  |
 | `iw` | `6.17` | ISC License | **none** |  |  |
@@ -589,7 +612,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `jefferson` | `0.4.7` | MIT License | [@tnias](https://github.com/tnias) [@vlaci](https://github.com/vlaci) |  |  |
 | `jemalloc` | `5.3.1` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `john` | `1.9.0-Jumbo-1-unstable-2026-04-13` | GNU General Public License v2.0 or later | [@CherryKitten](https://github.com/CherryKitten) [@therealhammer](https://github.com/therealhammer) |  |  |
-| `jq` | `1.8.2` | MIT License | [@7c6f434c](https://github.com/7c6f434c) [@Artturin](https://github.com/Artturin) [@ncfavier](https://github.com/ncfavier) [@06kellyjac](https://github.com/06kellyjac) | 2 |  |
+| `jq` | `1.8.2` | MIT License | [@7c6f434c](https://github.com/7c6f434c) [@Artturin](https://github.com/Artturin) [@ncfavier](https://github.com/ncfavier) [@06kellyjac](https://github.com/06kellyjac) | 1 |  |
 | `json-c` | `0.18` | *unresolved* | *unresolved* |  |  |
 | `json-glib` | `1.10.8` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `judy` | `1.0.5` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
@@ -603,7 +626,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `kate` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `kauth` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `kauth` | `6.26.0` | *unresolved* | *unresolved* |  |  |
-| `kbd-2.9.0` | `` | *unresolved* | *unresolved* |  |  |
+| `kbd` | `2.9.0` | GNU General Public License v2.0 or later | [@davidak](https://github.com/davidak) |  |  |
 | `kbookmarks` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `kbookmarks` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `kcalc` | `26.04.3` | *unresolved* | *unresolved* |  |  |
@@ -703,7 +726,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `kpty` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `kquickcharts` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `kquickimageeditor` | `0.6.1` | *unresolved* | *unresolved* |  |  |
-| `krb5-1.22.2` | `` | *unresolved* | *unresolved* |  |  |
+| `krb5` | `1.22.2` | MIT License | **none** |  |  |
 | `krunner` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `kscreen` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `kscreenlocker` | `6.6.6` | *unresolved* | *unresolved* |  |  |
@@ -738,10 +761,11 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `kxmlgui` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `kxmlgui` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `lame` | `3.100` | GNU Library General Public License v2 | **none** |  |  |
-| `lapack` | `3` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) | 1 | 1 |
+| `lapack` | `3` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) | 1 |  |
 | `layer-shell-qt` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `lazydocker` | `0.25.2` | MIT License | [@das-g](https://github.com/das-g) |  |  |
 | `lcms2` | `2.18` | MIT License | **none** |  |  |
+| `ld-library-path` | `` | *unresolved* | *unresolved* |  |  |
 | `ldacBT` | `2.0.2.3` | *unresolved* | *unresolved* |  |  |
 | `ldconfig` | `` | *unresolved* | *unresolved* |  |  |
 | `ldns` | `1.9.2` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
@@ -753,21 +777,21 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libaacs` | `0.11.1` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libaccounts-glib` | `1.27` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libad9361` | `0.3` | GNU Lesser General Public License v2.1 or later | [@sikmir](https://github.com/sikmir) |  |  |
-| `libadwaita` | `1.9.3` | GNU Lesser General Public License v2.1 or later | [@dotlambda](https://github.com/dotlambda) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `libadwaita` | `1.9.4` | GNU Lesser General Public License v2.1 or later | [@dotlambda](https://github.com/dotlambda) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `libaio` | `0.3.113` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libajantv2` | `17.5.0` | MIT License | [@lukegb](https://github.com/lukegb) |  |  |
 | `libao` | `1.2.2` | GNU General Public License v2.0 | **none** |  |  |
 | `libao.conf` | `` | *unresolved* | *unresolved* |  |  |
-| `libaom` | `3.12.1` | BSD 2-clause "Simplified" License | [@D4ndellion](https://github.com/D4ndellion) |  |  |
+| `libaom` | `3.15.2` | BSD 2-clause "Simplified" License | [@D4ndellion](https://github.com/D4ndellion) |  |  |
 | `libapparmor` | `4.1.7` | GNU General Public License v2.0 only, GNU Lesser General Public License v2.1 only | [@ju1m](https://github.com/ju1m) [@thoughtpolice](https://github.com/thoughtpolice) [@LordGrimmauld](https://github.com/LordGrimmauld) |  |  |
 | `libappimage` | `1.0.4-5` | MIT License | [@K900](https://github.com/K900) |  |  |
 | `libarchive` | `3.8.9` | BSD 3-clause "New" or "Revised" License | [@jcumming](https://github.com/jcumming) |  |  |
-| `libass` | `0.17.4` | ISC License | **none** |  |  |
+| `libass` | `0.17.5` | ISC License | **none** |  |  |
 | `libassuan` | `3.0.2` | GNU Library General Public License v2 or later | **none** |  |  |
 | `libasyncns` | `0.8` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libatasmart` | `0.19` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libavc1394` | `0.5.4` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libavif` | `1.4.1` | BSD 2-clause "Simplified" License | [@mkg20001](https://github.com/mkg20001) |  |  |
+| `libavif` | `1.4.2` | BSD 2-clause "Simplified" License | [@mkg20001](https://github.com/mkg20001) |  |  |
 | `libayatana-appindicator` | `0.5.92` | GNU Lesser General Public License v3.0 or later, GNU Lesser General Public License v2.1 or later | [@NickHu](https://github.com/NickHu) |  |  |
 | `libayatana-indicator` | `0.9.4` | GNU General Public License v3.0 or later | [@NickHu](https://github.com/NickHu) |  |  |
 | `libb2` | `0.98.1` | Creative Commons Zero v1.0 Universal | [@dfoxfranke](https://github.com/dfoxfranke) [@dotlambda](https://github.com/dotlambda) |  |  |
@@ -777,7 +801,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libblake3` | `1.8.5` | Apache License 2.0, Creative Commons Zero v1.0 Universal | [@fgaz](https://github.com/fgaz) [@fpletz](https://github.com/fpletz) [@silvanshade](https://github.com/silvanshade) |  |  |
 | `libblockdev` | `3.4.0` | GNU Library General Public License v2 or later, GNU General Public License v2.0 or later | [@JohnAZoidberg](https://github.com/JohnAZoidberg) |  |  |
 | `libbluray` | `1.4.1` | GNU Lesser General Public License v2.1 | [@amarshall](https://github.com/amarshall) |  |  |
-| `libbpf-1.7.0` | `` | *unresolved* | *unresolved* |  |  |
+| `libbpf` | `1.7.0` | GNU Lesser General Public License v2.1, BSD 2-clause "Simplified" License | [@thoughtpolice](https://github.com/thoughtpolice) [@vcunat](https://github.com/vcunat) [@saschagrunert](https://github.com/saschagrunert) [@martinetd](https://github.com/martinetd) | 2 |  |
 | `libbs2b` | `3.1.0` | MIT License | **none** |  |  |
 | `libbsd` | `0.12.2` | Beerware License, BSD 2-clause "Simplified" License, BSD 3-clause "New" or "Revised" License, BSD 4-clause "Original" or "Old" License, ISC License, MIT License | **none** |  |  |
 | `libbytesize` | `2.12` | GNU Library General Public License v2 or later | [@PlasmaPower](https://github.com/PlasmaPower) |  |  |
@@ -791,13 +815,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libcerf` | `3.3` | MIT License | [@Hythera](https://github.com/Hythera) |  |  |
 | `libconfig` | `1.8` | GNU Lesser General Public License v3.0 | [@stv0g](https://github.com/stv0g) |  |  |
 | `libcpuid` | `0.8.1` | BSD 2-clause "Simplified" License | **none** |  |  |
+| `libcxx` | `19.1.7` | MIT License, University of Illinois/NCSA Open Source License | [@RossComputerGuy](https://github.com/RossComputerGuy) [@alyssais](https://github.com/alyssais) [@Ericson2314](https://github.com/Ericson2314) [@emilazy](https://github.com/emilazy) [@peterwaller-arm](https://github.com/peterwaller-arm) [@rrbutani](https://github.com/rrbutani) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `libdaemon` | `0.14` | GNU Library General Public License v2 or later | **none** |  |  |
 | `libdatrie` | `2019-12-20` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libdbusmenu-glib` | `16.04.0` | *unresolved* | *unresolved* |  |  |
 | `libdbusmenu-gtk3` | `16.04.0` | GNU General Public License v3.0, GNU Lesser General Public License v2.1, GNU Lesser General Public License v3.0 | [@msteen](https://github.com/msteen) |  |  |
 | `libdbusmenu-qt5` | `0.9.3+16` | GNU Library General Public License v2 | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `libdc1394` | `2.2.7` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libde265` | `1.1.1` | GNU Lesser General Public License v3.0 | **none** |  |  |
+| `libde265` | `1.1.3` | GNU Lesser General Public License v3.0 | **none** |  |  |
 | `libdecor` | `0.2.5` | MIT License | [@Artturin](https://github.com/Artturin) |  |  |
 | `libdeflate` | `1.25` | MIT License | [@KAction](https://github.com/KAction) |  |  |
 | `libdisplay-info` | `0.3.0` | MIT License | [@PedroHLC](https://github.com/PedroHLC) |  |  |
@@ -809,7 +834,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libdvdcss` | `1.4.3` | GNU General Public License v2.0 | **none** |  |  |
 | `libdvdnav` | `6.1.1` | GNU General Public License v2.0 | [@wmertens](https://github.com/wmertens) |  |  |
 | `libdvdread` | `7.0.1` | GNU General Public License v2.0 | [@wmertens](https://github.com/wmertens) |  |  |
-| `libebml` | `1.4.5` | GNU Lesser General Public License v2.1 | **none** |  |  |
+| `libebml` | `1.4.7` | GNU Lesser General Public License v2.1 | **none** |  |  |
 | `libebur128` | `1.2.6` | MIT License | **none** |  |  |
 | `libedit` | `20251016-3.1` | BSD 3-clause "New" or "Revised" License | [@corngood](https://github.com/corngood) |  |  |
 | `libei` | `1.5.0` | MIT License | [@PedroHLC](https://github.com/PedroHLC) |  |  |
@@ -826,12 +851,12 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libfontenc` | `1.1.9` | MIT License | **none** |  |  |
 | `libfreeaptx` | `0.2.2` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libfyaml` | `0.9.6` | MIT License | [@ilkecan](https://github.com/ilkecan) |  |  |
-| `libgcrypt` | `1.12.2` | GNU Library General Public License v2 or later | **none** |  |  |
+| `libgcrypt` | `1.12.4` | GNU Library General Public License v2 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `libgit2` | `1.9.7` | GNU General Public License v2.0 only | [@SuperSandro2000](https://github.com/SuperSandro2000) |  |  |
 | `libglvnd` | `1.7.0` | MIT License, BSD 1-Clause License, BSD 3-clause "New" or "Revised" License, GNU General Public License v3.0 only, Apache License 2.0 | **none** |  |  |
 | `libgpg-error` | `1.59` | GNU Library General Public License v2 or later | **none** |  |  |
 | `libgudev` | `238` | GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
-| `libheif` | `1.23.2` | GNU Lesser General Public License v3.0 or later | [@kuflierl](https://github.com/kuflierl) | 2 |  |
+| `libheif` | `1.23.7` | GNU Lesser General Public License v3.0 or later | [@kuflierl](https://github.com/kuflierl) | 2 |  |
 | `libical` | `3.0.20` | Mozilla Public License 2.0 | **none** | 1 |  |
 | `libice` | `1.1.2` | MIT Open Group variant | **none** |  |  |
 | `libidn` | `1.44` | GNU Library General Public License v2 or later | **none** |  |  |
@@ -841,7 +866,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libimagequant` | `4.4.1` | GNU General Public License v3.0 or later | [@sphaugh](https://github.com/sphaugh) |  |  |
 | `libimobiledevice` | `1.4.0` | GNU Lesser General Public License v2.1 or later | [@RossComputerGuy](https://github.com/RossComputerGuy) |  |  |
 | `libimobiledevice-glue` | `1.3.2` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libinput` | `1.31.3` | MIT License | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) | 1 |  |
+| `libinput` | `1.31.3` | MIT License | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) | 1 |  |
 | `libipt` | `2.2` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libjack2` | `1.9.22` | GNU General Public License v2.0 or later | **none** |  |  |
 | `libjpeg-turbo` | `3.1.4` | *unresolved* | *unresolved* | 1 |  |
@@ -859,18 +884,18 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `liblqr-1` | `0.4.3` | *unresolved* | *unresolved* |  |  |
 | `libmad` | `0.15.1b` | GNU General Public License v2.0 | **none** | 1 |  |
 | `libmanette` | `0.2.13` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
-| `libmatroska` | `1.7.1` | GNU Lesser General Public License v2.1 | [@getchoo](https://github.com/getchoo) |  |  |
+| `libmatroska` | `1.7.2` | GNU Lesser General Public License v2.1 | [@getchoo](https://github.com/getchoo) |  |  |
 | `libmaxminddb` | `1.13.3` | Apache License 2.0 | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
-| `libmbim` | `1.34.0` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `libmbim` | `1.34.0` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `libmd` | `1.1.0` | BSD 3-clause "New" or "Revised" License, BSD 2-clause "Simplified" License, ISC License, Beerware License, Public Domain | **none** |  |  |
 | `libmicrodns` | `0.2.0` | GNU Lesser General Public License v2.1 | [@shazow](https://github.com/shazow) |  |  |
-| `libmicrohttpd` | `1.0.2` | GNU Library General Public License v2 or later | [@fpletz](https://github.com/fpletz) | 2 | 2 |
+| `libmicrohttpd` | `1.0.10` | GNU Library General Public License v2 or later | [@fpletz](https://github.com/fpletz) |  |  |
 | `libmng` | `2.0.3` | zlib License | **none** |  |  |
 | `libmnl` | `1.0.5` | GNU Lesser General Public License v2.1 or later | [@maevii](https://github.com/maevii) |  |  |
 | `libmodplug` | `0.8.9.0` | Public Domain | [@7c6f434c](https://github.com/7c6f434c) | 3 |  |
-| `libmpc` | `1.4.0` | GNU Lesser General Public License v3.0 or later | **none** |  |  |
+| `libmpc` | `1.4.0` | GNU Lesser General Public License v3.0 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `libmpg123` | `1.33.7` | GNU Lesser General Public License v2.1 only | [@ftrvxmtrx](https://github.com/ftrvxmtrx) |  |  |
-| `libmtp` | `1.1.22` | GNU Lesser General Public License v2.1 | [@lovesegfault](https://github.com/lovesegfault) |  |  |
+| `libmtp` | `1.1.23` | GNU Lesser General Public License v2.1 | [@lovesegfault](https://github.com/lovesegfault) |  |  |
 | `libmysofa` | `1.3.4` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libndctl` | `83` | GNU Lesser General Public License v2.1 | [@thoughtpolice](https://github.com/thoughtpolice) |  |  |
 | `libndp` | `1.9` | GNU Lesser General Public License v2.1 | **none** |  |  |
@@ -883,56 +908,57 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libnotify` | `0.8.8` | GNU Lesser General Public License v2.1 | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `libnvme` | `1.16.1` | GNU Lesser General Public License v2.1 or later | [@vifino](https://github.com/vifino) |  |  |
 | `libogg` | `1.3.6` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
-| `libopenmpt` | `0.8.6` | BSD 3-clause "New" or "Revised" License | [@OPNA2608](https://github.com/OPNA2608) |  |  |
+| `libopenmpt` | `0.8.9` | BSD 3-clause "New" or "Revised" License | [@OPNA2608](https://github.com/OPNA2608) |  |  |
 | `libopus` | `1.6.1` | BSD 3-clause "New" or "Revised" License | [@getchoo](https://github.com/getchoo) [@jopejoe1](https://github.com/jopejoe1) |  |  |
 | `libpaper` | `1.1.29` | GNU General Public License v2.0 | **none** |  |  |
-| `libpcap-1.10.6` | `` | *unresolved* | *unresolved* |  |  |
+| `libpcap` | `1.10.7` | BSD 3-clause "New" or "Revised" License | [@fpletz](https://github.com/fpletz) | 1 |  |
 | `libpciaccess` | `0.19` | MIT License, ISC License, X11 License | **none** |  |  |
+| `libpfm` | `4.13.0` | GNU General Public License v2.0 | [@nbp](https://github.com/nbp) [@t4ccer](https://github.com/t4ccer) |  |  |
 | `libpipeline` | `1.5.8` | GNU General Public License v3.0 | **none** |  |  |
 | `libplacebo` | `5.264.1` | GNU Lesser General Public License v2.1 or later | [@ProxyVT](https://github.com/ProxyVT) |  |  |
 | `libplasma` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `libplist` | `2.7.0` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libpng-apng` | `1.6.58` | *unresolved* | *unresolved* |  |  |
-| `libpq-18.6` | `` | *unresolved* | *unresolved* |  |  |
+| `libpng-apng` | `1.6.59` | *unresolved* | *unresolved* |  |  |
+| `libpq` | `18.6` | PostgreSQL License | [@Ma27](https://github.com/Ma27) [@thoughtpolice](https://github.com/thoughtpolice) [@wolfgangwalther](https://github.com/wolfgangwalther) |  |  |
 | `libproxy` | `0.5.12` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libpsl` | `0.21.5` | MIT License | **none** |  |  |
 | `libpulseaudio` | `17.0` | GNU Library General Public License v2 or later | **none** |  |  |
 | `libpwquality` | `1.4.5` | BSD 3-clause "New" or "Revised" License, GNU General Public License v2.0 or later | [@06kellyjac](https://github.com/06kellyjac) |  |  |
 | `libqaccessibilityclient` | `0.6.0` | *unresolved* | *unresolved* |  |  |
 | `libqalculate` | `5.10.0` | GNU General Public License v2.0 or later | [@doronbehar](https://github.com/doronbehar) [@cyclic-pentane](https://github.com/cyclic-pentane) |  |  |
-| `libqmi` | `1.38.0` | GNU Library General Public License v2 or later, GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
-| `libqrtr-glib` | `1.2.2` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `libqmi` | `1.38.0` | GNU Library General Public License v2 or later, GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
+| `libqrtr-glib` | `1.2.2` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `libraqm` | `0.10.5` | MIT License | [@sifmelcara](https://github.com/sifmelcara) |  |  |
-| `libraw` | `0.22.1` | Common Development and Distribution License 1.0, GNU Library General Public License v2 or later | **none** | 6 | 4 |
+| `libraw` | `0.22.1` | Common Development and Distribution License 1.0, GNU Library General Public License v2 or later | **none** | 6 |  |
 | `libraw1394` | `2.1.2` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libressl-4.2.1` | `` | *unresolved* | *unresolved* |  |  |
+| `libressl` | `4.2.3` | Public Domain, BSD 4-clause "Original" or "Old" License, BSD Zero Clause License, BSD 3-clause "New" or "Revised" License, GNU General Public License v3.0, ISC License, OpenSSL License | [@thoughtpolice](https://github.com/thoughtpolice) [@fpletz](https://github.com/fpletz) [@ruuda](https://github.com/ruuda) | 4 |  |
 | `librist` | `0.2.11` | BSD 2-clause "Simplified" License, MIT License, ISC License | [@raphaelr](https://github.com/raphaelr) |  |  |
-| `librsvg` | `2.62.3` | GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) | 1 |  |
+| `librsvg` | `2.62.4` | GNU Library General Public License v2 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) | 1 |  |
 | `libsamplerate` | `0.2.2` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `libseccomp` | `2.6.1` | GNU Lesser General Public License v2.1 only | [@thoughtpolice](https://github.com/thoughtpolice) |  |  |
-| `libsecret` | `0.21.7` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
+| `libsecret` | `0.21.8.2` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `libselinux` | `3.10` | GNU General Public License v2.0 or later | [@RossComputerGuy](https://github.com/RossComputerGuy) [@numinit](https://github.com/numinit) |  |  |
 | `libsepol` | `3.10` | GNU General Public License v2.0 or later | [@RossComputerGuy](https://github.com/RossComputerGuy) [@numinit](https://github.com/numinit) |  |  |
 | `libshout` | `2.4.6` | GNU General Public License v2.0 | [@jcumming](https://github.com/jcumming) |  |  |
 | `libsigc++` | `2.12.1` | *unresolved* | *unresolved* |  |  |
-| `libslirp` | `4.9.3` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
+| `libslirp` | `4.9.6` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libsm` | `1.2.6` | MIT License, MIT Open Group variant | **none** |  |  |
 | `libsmi` | `0.5.0` | Unspecified free software license | **none** |  |  |
-| `libsndfile` | `1.2.2` | GNU Library General Public License v2 or later | **none** | 5 |  |
+| `libsndfile` | `1.2.2` | GNU Library General Public License v2 or later | **none** | 4 |  |
 | `libsodium` | `1.0.22-unstable-2026-04-09` | ISC License | [@mdaniels5757](https://github.com/mdaniels5757) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `libsoup` | `3.6.6` | *unresolved* | *unresolved* | 6 | 6 |
+| `libsoup` | `3.8.0` | *unresolved* | *unresolved* |  |  |
 | `libspectre` | `0.2.12` | GNU General Public License v2.0 or later | **none** |  |  |
 | `libsrtp` | `2.8.0` | *unresolved* | *unresolved* |  |  |
-| `libssh` | `0.12.2` | GNU Library General Public License v2 or later | **none** | 7 |  |
+| `libssh` | `0.12.2` | GNU Library General Public License v2 or later | **none** | 6 |  |
 | `libssh2` | `1.11.1` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libsysprof-capture` | `50.0` | BSD-2-Clause Plus Patent License | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `libtasn1` | `4.21.0` | GNU Library General Public License v2 or later | **none** |  |  |
 | `libtatsu` | `1.0.5` | GNU Lesser General Public License v2.1 or later | [@nxm](https://github.com/nxm) |  |  |
 | `libthai` | `0.1.30` | GNU Lesser General Public License v2.1 or later | [@crertel](https://github.com/crertel) |  |  |
 | `libtheora` | `1.2.0` | BSD 3-clause "New" or "Revised" License | [@getchoo](https://github.com/getchoo) |  |  |
-| `libtiff` | `4.7.2` | libtiff License | [@imincik](https://github.com/imincik) [@autra](https://github.com/autra) [@l0b0](https://github.com/l0b0) [@nh2](https://github.com/nh2) [@nialov](https://github.com/nialov) [@sikmir](https://github.com/sikmir) [@willcohen](https://github.com/willcohen) | 1 |  |
+| `libtiff` | `4.7.2` | libtiff License | [@imincik](https://github.com/imincik) [@autra](https://github.com/autra) [@l0b0](https://github.com/l0b0) [@nh2](https://github.com/nh2) [@nialov](https://github.com/nialov) [@sikmir](https://github.com/sikmir) [@willcohen](https://github.com/willcohen) |  |  |
 | `libtiger` | `0.3.4` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `libtirpc-1.3.7` | `` | *unresolved* | *unresolved* |  |  |
+| `libtirpc` | `1.3.7` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libtool` | `2.5.4` | GNU General Public License v2.0 or later | **none** |  |  |
 | `libtpms` | `0.10.2` | BSD 3-clause "New" or "Revised" License | [@baloo](https://github.com/baloo) |  |  |
 | `libtraceevent` | `1.9` | GNU Lesser General Public License v2.1 only | [@wentasah](https://github.com/wentasah) |  |  |
@@ -950,14 +976,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libva` | `2.23.0` | MIT License | [@SuperSandro2000](https://github.com/SuperSandro2000) |  |  |
 | `libva-minimal` | `2.23.0` | MIT License | [@SuperSandro2000](https://github.com/SuperSandro2000) |  |  |
 | `libvdpau` | `1.5` | MIT License | [@vcunat](https://github.com/vcunat) |  |  |
-| `libvlc` | `3.0.23-2` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
+| `libvlc` | `3.0.24` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libvmaf` | `3.0.0` | BSD-2-Clause Plus Patent License | [@cfsmp3](https://github.com/cfsmp3) |  |  |
 | `libvoikko` | `4.3.3` | GNU Lesser General Public License v2.1 or later | [@Lurkki14](https://github.com/Lurkki14) |  |  |
 | `libvorbis` | `1.3.7` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libvpx` | `1.16.0` | BSD 3-clause "New" or "Revised" License | **none** | 2 |  |
-| `libwacom` | `2.18.0` | Historic Permission Notice and Disclaimer | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `libwacom` | `2.18.0` | Historic Permission Notice and Disclaimer | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `libwebp` | `1.6.0` | BSD 3-clause "New" or "Revised" License | [@ajs124](https://github.com/ajs124) [@savtrip](https://github.com/savtrip) |  |  |
-| `libx11` | `1.8.13` | MIT License, MIT Open Group variant, X11 License, Historical Permission Notice and Disclaimer - documentation variant, Historical Permission Notice and Disclaimer - sell variant, TekHVC License, Historical Permission Notice and Disclaimer - documentation sell variant, Historic Permission Notice and Disclaimer, BSD 1-Clause License, ISC License | **none** |  |  |
+| `libx11` | `1.8.14` | MIT License, MIT Open Group variant, X11 License, Historical Permission Notice and Disclaimer - documentation variant, Historical Permission Notice and Disclaimer - sell variant, TekHVC License, Historical Permission Notice and Disclaimer - documentation sell variant, Historic Permission Notice and Disclaimer, BSD 1-Clause License, ISC License | **none** |  |  |
 | `libxau` | `1.0.12` | MIT Open Group variant | **none** |  |  |
 | `libxaw` | `1.0.16` | MIT Open Group variant, X11 License, Historical Permission Notice and Disclaimer - sell variant, Historic Permission Notice and Disclaimer | **none** |  |  |
 | `libxcb` | `1.17.0` | X11 License | **none** |  |  |
@@ -978,23 +1004,23 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libxfixes` | `6.0.2` | Historical Permission Notice and Disclaimer - sell variant, MIT License | **none** |  |  |
 | `libxfont_2` | `2.0.9` | MIT License, MIT Open Group variant, Historic Permission Notice and Disclaimer, Historical Permission Notice and Disclaimer - sell variant, BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `libxft` | `2.3.9` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
-| `libxi` | `1.8.3` | MIT Open Group variant, Historic Permission Notice and Disclaimer, MIT License | **none** |  |  |
+| `libxi` | `1.8.4` | MIT Open Group variant, Historic Permission Notice and Disclaimer, MIT License | **none** |  |  |
 | `libxinerama` | `1.1.6` | MIT License, MIT Open Group variant, X11 no permit persons clause | **none** |  |  |
 | `libxkbcommon` | `1.13.1` | MIT License | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `libxkbfile` | `1.1.3` | Historic Permission Notice and Disclaimer, MIT Open Group variant | **none** |  |  |
 | `libxml++` | `3.2.5` | *unresolved* | *unresolved* |  |  |
-| `libxml2` | `2.15.3` | MIT License | [@jtojnar](https://github.com/jtojnar) | 13 | 8 |
-| `libxmlb-0.3.25` | `` | *unresolved* | *unresolved* |  |  |
+| `libxml2` | `2.15.4` | MIT License | [@jtojnar](https://github.com/jtojnar) | 2 |  |
+| `libxmlb` | `0.3.25` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `libxmu` | `1.3.1` | MIT Open Group variant, Historic Permission Notice and Disclaimer, X11 License, ISC License | **none** |  |  |
-| `libxpm` | `3.5.19` | X11 License, MIT License | **none** |  |  |
+| `libxpm` | `3.5.20` | X11 License, MIT License | **none** |  |  |
 | `libxpresent` | `1.0.2` | Historical Permission Notice and Disclaimer - sell variant, MIT License | **none** |  |  |
 | `libxrandr` | `1.5.5` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
-| `libxrender` | `0.9.12` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
+| `libxrender` | `0.9.13` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
 | `libxscrnsaver` | `1.2.5` | X11 License | **none** |  |  |
 | `libxshmfence` | `1.3.3` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
 | `libxslt` | `1.1.45` | MIT License | [@jtojnar](https://github.com/jtojnar) | 2 |  |
 | `libxt` | `1.3.1` | MIT License, Historical Permission Notice and Disclaimer - sell variant, Historic Permission Notice and Disclaimer, MIT Open Group variant, X11 License | **none** |  |  |
-| `libxtst` | `1.2.5` | MIT Open Group variant, Historical Permission Notice and Disclaimer - sell variant, Historical Permission Notice and Disclaimer - documentation variant, X11 License, Historical Permission Notice and Disclaimer - documentation sell variant | **none** |  |  |
+| `libxtst` | `1.2.6` | MIT Open Group variant, Historical Permission Notice and Disclaimer - sell variant, Historical Permission Notice and Disclaimer - documentation variant, X11 License, Historical Permission Notice and Disclaimer - documentation sell variant | **none** |  |  |
 | `libxv` | `1.0.13` | Historic Permission Notice and Disclaimer, Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
 | `libxxf86dga` | `1.1.6` | X11 License | **none** |  |  |
 | `libxxf86vm` | `1.1.7` | X11 License | **none** |  |  |
@@ -1004,10 +1030,11 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `lilv` | `0.26.4` | MIT License | **none** |  |  |
 | `limesuite` | `23.11.0` | Apache License 2.0 | [@markuskowa](https://github.com/markuskowa) |  |  |
 | `link` | `` | *unresolved* | *unresolved* |  |  |
-| `linux-6.18.50` | `` | *unresolved* | *unresolved* |  |  |
-| `linux-6.18.50-modules` | `` | *unresolved* | *unresolved* |  |  |
+| `linux` | `6.18.63` | GNU General Public License v2.0 only | [@thoughtpolice](https://github.com/thoughtpolice) [@alyssais](https://github.com/alyssais) [@K900](https://github.com/K900) [@Ma27](https://github.com/Ma27) [@zowoq](https://github.com/zowoq) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 196 |  |
+| `linux-6.18.63-modules` | `` | *unresolved* | *unresolved* |  |  |
 | `linux-headers` | `6.18.7` | *unresolved* | *unresolved* |  |  |
-| `linux-pam-1.7.2` | `` | *unresolved* | *unresolved* |  |  |
+| `linux-pam` | `1.7.2` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
+| `lldb` | `21.1.8` | unknown | [@RossComputerGuy](https://github.com/RossComputerGuy) [@alyssais](https://github.com/alyssais) [@Ericson2314](https://github.com/Ericson2314) [@emilazy](https://github.com/emilazy) [@peterwaller-arm](https://github.com/peterwaller-arm) [@rrbutani](https://github.com/rrbutani) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `llhttp` | `9.4.3` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
 | `llvm` | `21.1.8` | unknown | [@RossComputerGuy](https://github.com/RossComputerGuy) [@alyssais](https://github.com/alyssais) [@Ericson2314](https://github.com/Ericson2314) [@emilazy](https://github.com/emilazy) [@peterwaller-arm](https://github.com/peterwaller-arm) [@rrbutani](https://github.com/rrbutani) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `lm-sensors` | `3.6.2` | *unresolved* | *unresolved* |  |  |
@@ -1023,9 +1050,10 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `lrdf` | `0.6.1` | GNU General Public License v2.0 | **none** |  |  |
 | `lsof` | `4.99.6` | lsof License | **none** |  |  |
 | `lttng-ust` | `2.14.0` | GNU Lesser General Public License v2.1 only, GNU General Public License v2.0 only, MIT License | [@bjornfor](https://github.com/bjornfor) |  |  |
-| `lua` | `5.2.4` | MIT License | **none** | 1 | 1 |
-| `lua` | `5.4.7` | MIT License | **none** | 1 | 1 |
-| `lvm2-2.03.39` | `` | *unresolved* | *unresolved* |  |  |
+| `lua` | `5.2.4` | MIT License | **none** | 2 |  |
+| `lua` | `5.3.6` | MIT License | **none** | 2 |  |
+| `lua` | `5.4.7` | MIT License | **none** | 2 |  |
+| `lvm2` | `2.03.39` | GNU General Public License v2.0 only, BSD 2-clause "Simplified" License, GNU Lesser General Public License v2.1 | [@7c6f434c](https://github.com/7c6f434c) [@ajs124](https://github.com/ajs124) |  |  |
 | `lz4` | `1.10.0` | BSD 2-clause "Simplified" License, GNU General Public License v2.0 or later | [@tobim](https://github.com/tobim) |  |  |
 | `lzfse` | `1.0` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `lzo` | `2.10` | GNU General Public License v2.0 or later | **none** |  |  |
@@ -1035,14 +1063,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `malcontent` | `0.13.1` | GNU Lesser General Public License v2.1 or later | [@jtojnar](https://github.com/jtojnar) | 2 |  |
 | `man-db` | `2.13.1` | GNU General Public License v2.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
 | `mariadb-connector-c` | `3.3.5` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
-| `mariadb-server` | `11.4.12` | *unresolved* | *unresolved* |  |  |
+| `mariadb-server` | `11.4.13` | *unresolved* | *unresolved* |  |  |
 | `mbedtls` | `3.6.6` | Apache License 2.0, GNU General Public License v2.0 or later | [@raphaelr](https://github.com/raphaelr) |  |  |
 | `mcpp` | `2.7.2.3` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `md4c` | `0.5.2` | MIT License | **none** | 1 |  |
 | `mdadm` | `4.4` | GNU General Public License v2.0 or later | **none** |  |  |
 | `media-player-info` | `26` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `merve` | `1.2.2` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
-| `mesa-26.1.8` | `` | *unresolved* | *unresolved* |  |  |
+| `mesa` | `26.1.8` | MIT License | [@K900](https://github.com/K900) [@vcunat](https://github.com/vcunat) |  |  |
 | `mesa-demos` | `9.0.0` | MIT License | [@andersk](https://github.com/andersk) |  |  |
 | `mesa-libgbm` | `26.0.3` | *unresolved* | *unresolved* |  |  |
 | `metasploit-bundler-env` | `` | *unresolved* | *unresolved* |  |  |
@@ -1054,20 +1082,20 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `mjpegtools` | `2.2.1` | GNU General Public License v2.0 or later | **none** |  |  |
 | `mkpasswd` | `5.6.6` | GNU General Public License v2.0 or later | [@fpletz](https://github.com/fpletz) |  |  |
 | `mobile-broadband-provider-info` | `20240407` | Public Domain | **none** |  |  |
-| `moby` | `29.7.2` | *unresolved* | *unresolved* |  |  |
-| `modemmanager` | `1.24.2` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `moby` | `29.9.3` | *unresolved* | *unresolved* |  |  |
+| `modemmanager` | `1.24.2` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `modemmanager-qt` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `mounts.sh` | `` | *unresolved* | *unresolved* |  |  |
 | `mozilla-native-messaging-hosts` | `` | *unresolved* | *unresolved* |  |  |
 | `mpdecimal` | `4.0.1` | BSD 2-clause "Simplified" License | [@KAction](https://github.com/KAction) |  |  |
-| `mpfr` | `4.2.2` | GNU Lesser General Public License v3.0 or later | **none** |  |  |
+| `mpfr` | `4.2.2` | GNU Lesser General Public License v3.0 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `mpg123` | `1.33.7` | GNU Lesser General Public License v2.1 only | [@ftrvxmtrx](https://github.com/ftrvxmtrx) |  |  |
 | `mpir` | `3.0.0` | GNU Lesser General Public License v3.0 or later | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `mtdev` | `1.1.7` | MIT License | **none** |  |  |
-| `mtools` | `4.0.49` | GNU General Public License v3.0 | **none** |  |  |
-| `multi-account-containers-8.3.8` | `` | *unresolved* | *unresolved* |  |  |
+| `mtools` | `4.0.50` | GNU General Public License v3.0 | **none** |  |  |
+| `multi-account-containers-8.4.0` | `` | *unresolved* | *unresolved* |  |  |
 | `nameservers` | `` | *unresolved* | *unresolved* |  |  |
-| `nano` | `9.2` | GNU General Public License v3.0 or later | [@SigmaSquadron](https://github.com/SigmaSquadron) |  |  |
+| `nano` | `9.3` | GNU General Public License v3.0 or later | [@SigmaSquadron](https://github.com/SigmaSquadron) |  |  |
 | `ncompress` | `5.0` | Public Domain | **none** |  |  |
 | `ncurses` | `6.6` | MIT License | **none** |  |  |
 | `neon` | `0.37.1` | GNU Library General Public License v2 | **none** |  |  |
@@ -1077,7 +1105,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `netcat-gnu` | `0.7.1` | GNU General Public License v2.0 or later | [@RossComputerGuy](https://github.com/RossComputerGuy) |  |  |
 | `nettle` | `3.10.2` | GNU General Public License v2.0 or later | [@vcunat](https://github.com/vcunat) |  |  |
 | `network-manager-applet` | `1.36.0` | *unresolved* | *unresolved* |  |  |
-| `networkmanager` | `1.56.0` | GNU General Public License v2.0 or later | [@obadz](https://github.com/obadz) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `networkmanager` | `1.56.0` | GNU General Public License v2.0 or later | [@obadz](https://github.com/obadz) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `NetworkManager-openvpn` | `1.12.3` | *unresolved* | *unresolved* |  |  |
 | `networkmanager-qt` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `NetworkManager.conf` | `` | *unresolved* | *unresolved* |  |  |
@@ -1088,39 +1116,26 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `nftables-ensure-deletions` | `` | *unresolved* | *unresolved* |  |  |
 | `nftables-rules` | `` | *unresolved* | *unresolved* |  |  |
 | `nftables-save-deletions` | `` | *unresolved* | *unresolved* |  |  |
-| `nghttp2` | `1.69.0` | MIT License | **none** | 1 | 1 |
+| `nghttp2` | `1.69.0` | MIT License | **none** | 1 |  |
 | `nghttp3` | `1.15.0` | MIT License | [@Izorkin](https://github.com/Izorkin) |  |  |
 | `ngtcp2` | `1.22.1` | MIT License | [@Izorkin](https://github.com/Izorkin) |  |  |
 | `nil` | `2025-06-13` | MIT License, Apache License 2.0 | [@oxalica](https://github.com/oxalica) |  |  |
 | `nilfs-utils` | `2.2.12` | GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 | [@7c6f434c](https://github.com/7c6f434c) |  |  |
-| `nix` | `2.31.5` | GNU Lesser General Public License v2.1 or later | [@Artturin](https://github.com/Artturin) [@Ericson2314](https://github.com/Ericson2314) [@lovesegfault](https://github.com/lovesegfault) [@Mic92](https://github.com/Mic92) [@philiptaron](https://github.com/philiptaron) [@roberth](https://github.com/roberth) [@tomberek](https://github.com/tomberek) [@xokdvium](https://github.com/xokdvium) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `nix` | `2.34.8` | GNU Lesser General Public License v2.1 or later | [@Artturin](https://github.com/Artturin) [@Ericson2314](https://github.com/Ericson2314) [@lovesegfault](https://github.com/lovesegfault) [@Mic92](https://github.com/Mic92) [@philiptaron](https://github.com/philiptaron) [@roberth](https://github.com/roberth) [@tomberek](https://github.com/tomberek) [@xokdvium](https://github.com/xokdvium) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `ninja` | `1.13.2` | Apache License 2.0 | [@thoughtpolice](https://github.com/thoughtpolice) [@bjornfor](https://github.com/bjornfor) | 1 |  |
+| `nix` | `2.34.9` | GNU Lesser General Public License v2.1 or later | [@Artturin](https://github.com/Artturin) [@Ericson2314](https://github.com/Ericson2314) [@lovesegfault](https://github.com/lovesegfault) [@Mic92](https://github.com/Mic92) [@philiptaron](https://github.com/philiptaron) [@roberth](https://github.com/roberth) [@tomberek](https://github.com/tomberek) [@xokdvium](https://github.com/xokdvium) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `nix-bash-completions` | `0.6.8` | BSD 3-clause "New" or "Revised" License | [@hedning](https://github.com/hedning) [@ncfavier](https://github.com/ncfavier) |  |  |
-| `nix-cmd` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-cmd` | `2.34.8` | *unresolved* | *unresolved* |  |  |
+| `nix-cmd` | `2.34.9` | *unresolved* | *unresolved* |  |  |
 | `nix-direnv` | `3.1.2` | MIT License | [@Mic92](https://github.com/Mic92) [@bbenne10](https://github.com/bbenne10) |  |  |
-| `nix-expr` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-expr` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-expr-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-fetchers` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-fetchers` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-fetchers-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-flake` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-flake` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-flake-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
+| `nix-expr` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-fetchers` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-flake` | `2.34.9` | *unresolved* | *unresolved* |  |  |
 | `nix-info` | `` | *unstated* | **none** |  |  |
-| `nix-main` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-main` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-main-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-manual` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-nswrapper` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-perl` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-store` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-store` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-store-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-util` | `2.31.5` | *unresolved* | *unresolved* |  |  |
-| `nix-util` | `2.34.8` | *unresolved* | *unresolved* |  |  |
-| `nix-util-c` | `2.34.8` | *unresolved* | *unresolved* |  |  |
+| `nix-ld` | `2.0.6` | MIT License | [@Mic92](https://github.com/Mic92) |  |  |
+| `nix-main` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-manual` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-nswrapper` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-store` | `2.34.9` | *unresolved* | *unresolved* |  |  |
+| `nix-util` | `2.34.9` | *unresolved* | *unresolved* |  |  |
 | `nix-visualize` | `1.0.5-unstable-2024-01-17` | Apache License 2.0 | [@henrirosten](https://github.com/henrirosten) |  |  |
 | `nix-your-shell` | `1.4.10` | MIT License | [@9999years](https://github.com/9999years) |  |  |
 | `nix-zsh-completions` | `0.5.1-unstable-2025-12-12` | BSD 3-clause "New" or "Revised" License | [@olejorgenb](https://github.com/olejorgenb) [@hedning](https://github.com/hedning) [@Ma27](https://github.com/Ma27) |  |  |
@@ -1131,30 +1146,29 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `nixos-firewall-tool` | `` | MIT License | [@clerie](https://github.com/clerie) [@duament](https://github.com/duament) [@nbdd0121](https://github.com/nbdd0121) |  |  |
 | `nixos-generate-config` | `` | *unresolved* | *unresolved* |  |  |
 | `nixos-icons` | `0-unstable-2025-06-28` | Creative Commons Attribution 4.0 | **none** |  |  |
-| `nixos-init-0.1.0` | `` | *unresolved* | *unresolved* |  |  |
+| `nixos-init` | `0.1.0` | MIT License | [@nikstur](https://github.com/nikstur) |  |  |
 | `nixos-install` | `` | MIT License | **none** |  |  |
 | `nixos-option` | `` | MIT License | [@FireyFly](https://github.com/FireyFly) [@azuwis](https://github.com/azuwis) [@Aleksanaa](https://github.com/Aleksanaa) |  |  |
 | `nixos-rebuild-ng` | `26.05` | MIT License | [@thiagokokada](https://github.com/thiagokokada) |  |  |
 | `nixos-tmpfiles.d` | `` | *unresolved* | *unresolved* |  |  |
 | `nixos-version` | `` | *unresolved* | *unresolved* |  |  |
 | `nixos.conf` | `` | *unresolved* | *unresolved* |  |  |
-| `nlohmann_json` | `3.12.0` | MIT License | **none** |  |  |
-| `nmap` | `7.99` | GNU General Public License v2.0 only | [@thoughtpolice](https://github.com/thoughtpolice) [@fpletz](https://github.com/fpletz) | 1 | 1 |
-| `nodejs` | `24.19.0` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
-| `nodejs-slim-24.19.0` | `` | *unresolved* | *unresolved* |  |  |
+| `nmap` | `7.99` | GNU General Public License v2.0 only | [@thoughtpolice](https://github.com/thoughtpolice) [@fpletz](https://github.com/fpletz) | 1 |  |
+| `nodejs` | `24.22.3` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
+| `nodejs-slim` | `24.22.3` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
 | `nordzy-cursor-theme` | `2.4.0` | GNU General Public License v3.0 | [@Alexnortung](https://github.com/Alexnortung) |  |  |
-| `noscript-13.6.32` | `` | *unresolved* | *unresolved* |  |  |
+| `noscript-13.6.38` | `` | *unresolved* | *unresolved* |  |  |
 | `noto-fonts` | `2026.05.01` | SIL Open Font License 1.1 | [@Mathnerd314](https://github.com/Mathnerd314) [@emilazy](https://github.com/emilazy) [@jopejoe1](https://github.com/jopejoe1) |  |  |
 | `noto-fonts-cjk-sans` | `2.004` | SIL Open Font License 1.1 | [@Mathnerd314](https://github.com/Mathnerd314) [@emilazy](https://github.com/emilazy) |  |  |
 | `noto-fonts-cjk-serif` | `2.003` | SIL Open Font License 1.1 | [@Mathnerd314](https://github.com/Mathnerd314) [@emilazy](https://github.com/emilazy) [@leana8959](https://github.com/leana8959) |  |  |
 | `noto-fonts-color-emoji` | `2.051` | SIL Open Font License 1.1, Apache License 2.0 | [@Mathnerd314](https://github.com/Mathnerd314) [@sternenseemann](https://github.com/sternenseemann) |  |  |
 | `npth` | `1.8` | GNU Lesser General Public License v3.0 | **none** |  |  |
-| `nsncd` | `1.5.2` | Apache License 2.0 | [@flokli](https://github.com/flokli) [@picnoir](https://github.com/picnoir) |  |  |
+| `nsncd` | `1.5.3` | Apache License 2.0 | [@flokli](https://github.com/flokli) [@picnoir](https://github.com/picnoir) |  |  |
 | `nspr` | `4.40` | Mozilla Public License 2.0 | [@ajs124](https://github.com/ajs124) [@mweinelt](https://github.com/mweinelt) |  |  |
 | `nss` | `3.112.5` | Mozilla Public License 2.0 | [@mweinelt](https://github.com/mweinelt) [@ajs124](https://github.com/ajs124) |  |  |
-| `nss` | `3.128` | Mozilla Public License 2.0 | [@mweinelt](https://github.com/mweinelt) [@ajs124](https://github.com/ajs124) |  |  |
-| `nss-cacert` | `3.126` | *unresolved* | *unresolved* |  |  |
-| `ntfs3g` | `2026.7.7` | GNU General Public License v2.0 or later, GNU Library General Public License v2 or later | [@ryand56](https://github.com/ryand56) |  |  |
+| `nss` | `3.133` | Mozilla Public License 2.0 | [@mweinelt](https://github.com/mweinelt) [@ajs124](https://github.com/ajs124) |  |  |
+| `nss-cacert` | `3.131.1` | *unresolved* | *unresolved* |  |  |
+| `ntfs3g` | `2026.9.18` | GNU General Public License v2.0 or later, GNU Library General Public License v2 or later | [@ryand56](https://github.com/ryand56) |  |  |
 | `numactl` | `2.0.18` | GNU General Public License v2.0 only, GNU Lesser General Public License v2.1 | **none** |  |  |
 | `nuspell` | `5.1.7` | GNU Lesser General Public License v3.0 or later | [@fpletz](https://github.com/fpletz) |  |  |
 | `obsidian` | `1.13.7` | Obsidian End User Agreement | [@ConradMearns](https://github.com/ConradMearns) [@zaninime](https://github.com/zaninime) [@kashw2](https://github.com/kashw2) [@w-lfchen](https://github.com/w-lfchen) [@Prince213](https://github.com/Prince213) | 1 |  |
@@ -1173,7 +1187,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `onlyoffice-desktopeditors-9.1.0-fhsenv-profile` | `` | *unresolved* | *unresolved* |  |  |
 | `onlyoffice-desktopeditors-9.1.0-fhsenv-rootfs` | `` | *unresolved* | *unresolved* |  |  |
 | `onlyoffice-desktopeditors-9.1.0-init` | `` | *unresolved* | *unresolved* |  |  |
-| `onnxruntime-1.24.4` | `` | *unresolved* | *unresolved* |  |  |
+| `onnxruntime` | `1.24.4` | MIT License | [@puffnfresh](https://github.com/puffnfresh) [@ck3d](https://github.com/ck3d) |  |  |
 | `openal-soft` | `1.24.3` | GNU Library General Public License v2 | [@ftrvxmtrx](https://github.com/ftrvxmtrx) |  |  |
 | `openapv` | `0.2.1.3` | BSD 3-clause "New" or "Revised" License | [@pyrox0](https://github.com/pyrox0) |  |  |
 | `openblas` | `0.3.33` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) |  |  |
@@ -1181,103 +1195,107 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `openconnect` | `9.12-unstable-2025-11-03` | GNU Lesser General Public License v2.1 only | [@tricktron](https://github.com/tricktron) [@cyclic-pentane](https://github.com/cyclic-pentane) |  |  |
 | `opencore-amr` | `0.1.6` | Apache License 2.0 | **none** |  |  |
 | `opencv` | `4.13.0` | BSD 3-clause "New" or "Revised" License | [@basvandijk](https://github.com/basvandijk) | 2 |  |
-| `openexr` | `3.4.11` | BSD 3-clause "New" or "Revised" License | [@paperdigits](https://github.com/paperdigits) | 10 | 2 |
+| `openexr` | `3.4.15` | BSD 3-clause "New" or "Revised" License | [@paperdigits](https://github.com/paperdigits) | 1 |  |
 | `openfec` | `1.4.2.12` | CeCILL-C Free Software License Agreement | [@bgamari](https://github.com/bgamari) |  |  |
 | `openh264` | `2.6.0` | BSD 2-clause "Simplified" License | **none** |  |  |
-| `openjdk-21.0.12.1+1` | `` | *unresolved* | *unresolved* |  |  |
-| `openjdk-minimal-jre` | `21.0.12.1+1` | *unresolved* | *unresolved* |  |  |
+| `openjdk` | `21.0.13.0.2+1` | GNU General Public License v2.0 only | [@Infinidoge](https://github.com/Infinidoge) [@FliegendeWurst](https://github.com/FliegendeWurst) [@chayleaf](https://github.com/chayleaf) [@tomodachi94](https://github.com/tomodachi94) [@msgilligan](https://github.com/msgilligan) |  |  |
+| `openjdk-minimal-jre` | `21.0.13.0.2+1` | *unresolved* | *unresolved* |  |  |
 | `openjpeg` | `2.5.4` | BSD 2-clause "Simplified" License | **none** | 1 |  |
 | `openldap` | `2.6.13` | Open LDAP Public License v2.8 | [@Conni2461](https://github.com/Conni2461) [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
 | `openresolv` | `3.17.4` | BSD 2-clause "Simplified" License | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `openssh` | `10.5p1` | BSD 2-clause "Simplified" License | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) [@numinit](https://github.com/numinit) [@philiptaron](https://github.com/philiptaron) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 17 | 9 |
-| `openssl` | `3.6.3` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 24 | 22 |
+| `openssh` | `10.6p2` | BSD 2-clause "Simplified" License | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) [@numinit](https://github.com/numinit) [@philiptaron](https://github.com/philiptaron) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 8 |  |
+| `openssl` | `3.6.5` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `openssl` | `4.0.3` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `openssl.conf` | `` | *unresolved* | *unresolved* |  |  |
-| `openvpn` | `2.6.21` | GNU General Public License v2.0 only | [@peterhoeg](https://github.com/peterhoeg) | 9 |  |
+| `openvpn` | `2.6.23` | GNU General Public License v2.0 only | [@peterhoeg](https://github.com/peterhoeg) | 1 |  |
 | `opusfile` | `0.12` | BSD 3-clause "New" or "Revised" License | [@Radvendii](https://github.com/Radvendii) |  |  |
 | `orc` | `0.4.41` | BSD 3-clause "New" or "Revised" License, BSD 2-clause "Simplified" License | **none** | 1 |  |
 | `ostree` | `2026.1` | GNU Library General Public License v2 or later | **none** |  |  |
 | `other.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `oxygen-icons` | `6.2.0` | *unresolved* | *unresolved* |  |  |
-| `p11-kit` | `0.26.2` | BSD 3-clause "New" or "Revised" License | **none** | 2 |  |
+| `p11-kit` | `0.26.2` | BSD 3-clause "New" or "Revised" License | **none** | 1 |  |
 | `p7zip` | `17.06` | GNU Library General Public License v2 or later, BSD 3-clause "New" or "Revised" License | [@7c6f434c](https://github.com/7c6f434c) [@06kellyjac](https://github.com/06kellyjac) | 2 |  |
 | `packagekit-qt` | `1.1.4` | *unresolved* | *unresolved* |  |  |
 | `pango` | `1.57.1` | GNU Library General Public License v2 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `parted` | `3.7` | GNU General Public License v3.0 or later | [@kybe236](https://github.com/kybe236) |  |  |
 | `passwd.pam` | `` | *unresolved* | *unresolved* |  |  |
-| `patch` | `2.8` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) | 2 | 2 |
+| `patch` | `2.8` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) | 2 |  |
 | `pciutils` | `3.15.0` | GNU General Public License v2.0 or later | [@vcunat](https://github.com/vcunat) |  |  |
-| `pcre2` | `10.46` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) | 6 | 6 |
+| `pcre2` | `10.49` | BSD 3-clause "New" or "Revised" License | [@ttuegel](https://github.com/ttuegel) |  |  |
 | `pcsclite` | `2.4.1` | BSD 3-clause "New" or "Revised" License | [@anthonyroussel](https://github.com/anthonyroussel) |  |  |
-| `perl` | `5.42.0` | Artistic License 1.0 | [@stigtsp](https://github.com/stigtsp) [@marcusramberg](https://github.com/marcusramberg) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 8 | 7 |
-| `perl-5.42.0-env` | `` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Authen-SASL` | `2.1900` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Capture-Tiny` | `0.48` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-CGI` | `4.59` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-CGI-Fast` | `2.16` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Clone` | `0.46` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Compress-Raw-Lzma` | `2.206` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Config-IniFiles` | `3.000003` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Convert-ASN1` | `0.34` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Crypt-URandom` | `0.55` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-DBD-MariaDB` | `1.23` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-DBI` | `1.648` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Devel-CheckLib` | `1.16` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Digest-HMAC` | `1.05` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Digest-MD4` | `1.9` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Digest-SHA1` | `2.13` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Encode-Locale` | `1.05` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-FCGI` | `0.82` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-FCGI-ProcManager` | `0.28` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-File-BaseDir` | `0.09` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-File-DesktopEntry` | `0.22` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-File-Listing` | `6.16` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-File-MimeInfo` | `0.33` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-File-Slurp` | `9999.32` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Getopt-Long` | `2.58` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTML-Parser` | `3.81` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTML-TagCloud` | `0.38` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTML-Tagset` | `3.20` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-CookieJar` | `0.014` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-Cookies` | `6.10` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-Daemon` | `6.17` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-Date` | `6.06` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-Message` | `6.45` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-HTTP-Negotiate` | `6.01` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-IO-HTML` | `1.004` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-IO-Socket-SSL` | `2.083` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-IO-Stringy` | `2.113` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-IPC-System-Simple` | `1.30` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-JSON` | `4.10` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-libnet` | `3.15` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-libwww-perl` | `6.72` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-LWP-MediaTypes` | `6.04` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Mock-Config` | `0.03` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Module-Manifest` | `1.09` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Mozilla-CA` | `20230821` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Net-DBus` | `1.2.0` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Net-HTTP` | `6.23` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Net-SMTP-SSL` | `1.04` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Net-SSLeay` | `1.92` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Params-Util` | `1.102` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-perl-ldap` | `0.68` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-TermReadKey` | `2.38` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-Deep` | `1.204` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-DistManifest` | `1.014` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-Fatal` | `0.017` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-Needs` | `0.002010` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-Pod` | `1.52` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Test-RequiresInternet` | `0.05` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-TimeDate` | `2.33` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-Try-Tiny` | `0.31` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-URI` | `5.21` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-WWW-RobotRules` | `6.02` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-X11-Protocol` | `0.56` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-XML-Parser` | `2.46` | *unresolved* | *unresolved* |  |  |
-| `perl5.42.0-XML-Twig` | `3.52` | *unresolved* | *unresolved* |  |  |
+| `perl` | `5.42.3` | Artistic License 1.0 | [@stigtsp](https://github.com/stigtsp) [@marcusramberg](https://github.com/marcusramberg) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 6 |  |
+| `perl-5.42.3-env` | `` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Authen-SASL` | `2.2100` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Capture-Tiny` | `0.48` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-CGI` | `4.59` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-CGI-Fast` | `2.16` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Clone` | `0.46` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Compress-Raw-Bzip2` | `2.218` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Compress-Raw-Lzma` | `2.206` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Compress-Raw-Zlib` | `2.222` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Config-IniFiles` | `3.002000` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Convert-ASN1` | `0.34` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Crypt-URandom` | `0.55` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-DBD-MariaDB` | `1.23` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-DBI` | `1.653` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Devel-CheckLib` | `1.16` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Digest-HMAC` | `1.05` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Digest-MD4` | `1.9` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Digest-SHA1` | `2.13` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Encode-Locale` | `1.05` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-FCGI` | `0.82` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-FCGI-ProcManager` | `0.28` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-File-BaseDir` | `0.09` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-File-DesktopEntry` | `0.22` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-File-Listing` | `6.16` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-File-MimeInfo` | `0.33` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-File-Slurp` | `9999.32` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Getopt-Long` | `2.58` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTML-Parser` | `3.85` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTML-TagCloud` | `0.38` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTML-Tagset` | `3.20` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-CookieJar` | `0.014` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-Cookies` | `6.10` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-Daemon` | `6.17` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-Date` | `6.08` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-Message` | `7.02` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-HTTP-Negotiate` | `6.01` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-IO-Compress` | `2.221` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-IO-HTML` | `1.004` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-IO-Socket-SSL` | `2.083` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-IO-Stringy` | `2.113` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-IPC-System-Simple` | `1.30` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-JSON` | `4.10` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-libnet` | `3.15` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-libwww-perl` | `6.83` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-LWP-MediaTypes` | `6.04` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Mock-Config` | `0.03` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Module-Manifest` | `1.09` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Mozilla-CA` | `20230821` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Net-DBus` | `1.2.0` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Net-HTTP` | `6.23` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Net-SMTP-SSL` | `1.04` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Net-SSLeay` | `1.92` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Params-Util` | `1.102` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-perl-ldap` | `0.68` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-TermReadKey` | `2.38` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-Deep` | `1.204` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-DistManifest` | `1.014` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-Fatal` | `0.017` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-Needs` | `0.002010` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-Pod` | `1.52` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Test-RequiresInternet` | `0.05` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-TimeDate` | `2.33` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-Try-Tiny` | `0.31` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-URI` | `5.21` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-WWW-RobotRules` | `6.02` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-X11-Protocol` | `0.56` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-XML-Parser` | `2.46` | *unresolved* | *unresolved* |  |  |
+| `perl5.42.3-XML-Twig` | `3.54` | *unresolved* | *unresolved* |  |  |
 | `phonon` | `4.12.0` | *unresolved* | *unresolved* |  |  |
 | `phonon-vlc` | `0.12.0` | *unresolved* | *unresolved* |  |  |
 | `pinentry-qt` | `1.3.2` | GNU General Public License v2.0 or later | [@fpletz](https://github.com/fpletz) |  |  |
-| `pipewire-1.6.6` | `` | *unresolved* | *unresolved* |  |  |
+| `pipewire` | `1.6.6` | MIT License | [@K900](https://github.com/K900) [@qweered](https://github.com/qweered) |  |  |
 | `pixman` | `0.46.4` | MIT License | **none** | 1 |  |
 | `pkg-config` | `0.29.2` | GNU General Public License v2.0 or later | **none** |  |  |
 | `pkg-config-wrapper` | `0.29.2` | *unresolved* | *unresolved* |  |  |
@@ -1301,20 +1319,21 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `plymouth-logos` | `` | *unresolved* | *unresolved* |  |  |
 | `plymouth-themes` | `` | *unresolved* | *unresolved* |  |  |
 | `plymouthd.conf` | `` | *unresolved* | *unresolved* |  |  |
-| `polkit` | `127` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) | 1 | 1 |
+| `polkit` | `127` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) | 1 |  |
 | `polkit-1.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `polkit-kde-agent-1` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `polkit-qt-1` | `0.114.0` | *unresolved* | *unresolved* |  |  |
 | `polkit-qt-1` | `0.201.1` | *unresolved* | *unresolved* |  |  |
 | `poppler-data` | `0.4.12` | *unresolved* | *unresolved* |  |  |
-| `poppler-qt6` | `26.06.0` | *unresolved* | *unresolved* |  |  |
+| `poppler-qt6` | `26.11.0` | *unresolved* | *unresolved* |  |  |
 | `popt` | `1.19` | MIT License | [@alyssais](https://github.com/alyssais) |  |  |
 | `potrace` | `1.16` | GNU General Public License v2.0 | [@pSub](https://github.com/pSub) |  |  |
 | `powerdevil` | `6.6.6` | *unresolved* | *unresolved* |  |  |
+| `powershell` | `7.6.5` | MIT License | [@wegank](https://github.com/wegank) | 3 |  |
 | `ppp` | `2.5.2` | BSD 4-clause "Original" or "Old" License, Public Domain, GNU General Public License v2.0 only, GNU Library General Public License v2 | [@stv0g](https://github.com/stv0g) |  |  |
 | `pre-switch-checks` | `` | *unresolved* | *unresolved* |  |  |
 | `prison` | `6.26.0` | *unresolved* | *unresolved* |  |  |
-| `privacy-badger-2026.8.7` | `` | *unresolved* | *unresolved* |  |  |
+| `privacy-badger-2026.9.15` | `` | *unresolved* | *unresolved* |  |  |
 | `procps` | `4.0.6` | GNU General Public License v2.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
 | `protobuf` | `34.1` | BSD 3-clause "New" or "Revised" License | [@GaetanLepage](https://github.com/GaetanLepage) |  |  |
 | `protobuf-c` | `1.5.2` | *unresolved* | *unresolved* |  |  |
@@ -1324,9 +1343,9 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `pulseaudio-qt` | `1.8.1` | *unresolved* | *unresolved* |  |  |
 | `purpose` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `pybind11-setup-hook` | `26.05pre-git` | *unresolved* | *unresolved* |  |  |
-| `python3-3.11.16` | `` | *unresolved* | *unresolved* |  |  |
-| `python3-3.13.15` | `` | *unresolved* | *unresolved* |  |  |
-| `python3-3.13.15-env` | `` | *unresolved* | *unresolved* |  |  |
+| `python3` | `3.11.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 12 |  |
+| `python3` | `3.13.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 12 |  |
+| `python3-3.13.18-env` | `` | *unresolved* | *unresolved* |  |  |
 | `python3.13-aiodns` | `4.0.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-aiofiles` | `25.1.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-aiohappyeyeballs` | `2.6.1` | *unresolved* | *unresolved* |  |  |
@@ -1337,9 +1356,10 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-aiosqlite` | `0.21.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-annotated-doc` | `0.0.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-annotated-types` | `0.7.0` | *unresolved* | *unresolved* |  |  |
-| `python3.13-anyio` | `4.13.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-anyio` | `4.15.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-appdirs` | `1.4.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-argcomplete` | `3.6.3` | *unresolved* | *unresolved* |  |  |
+| `python3.13-asgiref` | `3.11.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-async-timeout` | `5.0.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-attrs` | `26.1.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-backoff` | `2.2.1` | *unresolved* | *unresolved* |  |  |
@@ -1348,7 +1368,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-binaryornot` | `0.4.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-blinker` | `1.9.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-boolean-py` | `5.0` | *unresolved* | *unresolved* |  |  |
-| `python3.13-brotli` | `1.2.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-brotli` | `1.2.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-btrees` | `6.3` | *unresolved* | *unresolved* |  |  |
 | `python3.13-capstone` | `5.0.7` | *unresolved* | *unresolved* |  |  |
 | `python3.13-cattrs` | `25.3.0` | *unresolved* | *unresolved* |  |  |
@@ -1365,12 +1385,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-cramjam` | `2.12.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-cryptography` | `48.0.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-curio` | `1.6-unstable-2024-04-11` | *unresolved* | *unresolved* |  |  |
+| `python3.13-cvss` | `3.6` | *unresolved* | *unresolved* |  |  |
 | `python3.13-cycler` | `0.12.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dataproperty` | `1.1.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dbus-python` | `1.4.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-deprecated` | `1.3.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-df-diskcache` | `0.0.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dissect-cstruct` | `4.7` | *unresolved* | *unresolved* |  |  |
+| `python3.13-django` | `5.2.19` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dnspython` | `2.8.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dpkt` | `1.9.8` | *unresolved* | *unresolved* |  |  |
 | `python3.13-dsinternals` | `1.2.5` | *unresolved* | *unresolved* |  |  |
@@ -1420,7 +1442,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-pathvalidate` | `3.3.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pefile` | `2024.8.26` | *unresolved* | *unresolved* |  |  |
 | `python3.13-persistent` | `6.5` | *unresolved* | *unresolved* |  |  |
-| `python3.13-pillow` | `12.3.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-pillow` | `13.0.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pip` | `25.3` | *unresolved* | *unresolved* |  |  |
 | `python3.13-platformdirs` | `4.5.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-playwright` | `1.59.0` | *unresolved* | *unresolved* |  |  |
@@ -1429,7 +1451,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-propcache` | `0.4.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-protobuf` | `7.34.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-psutil` | `7.2.2` | *unresolved* | *unresolved* |  |  |
-| `python3.13-pyasn1` | `0.6.3` | *unresolved* | *unresolved* |  |  |
+| `python3.13-pyasn1` | `0.6.5` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pyasn1-modules` | `0.4.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pybind11` | `3.0.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pycairo` | `1.29.0` | *unresolved* | *unresolved* |  |  |
@@ -1451,7 +1473,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-pyppeteer` | `2.0.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pyqt5` | `5.15.10` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pyqt5-sip` | `12.17.0` | *unresolved* | *unresolved* |  |  |
-| `python3.13-pyqtgraph-0.14.0` | `` | *unresolved* | *unresolved* |  |  |
+| `python3.13-pyqtgraph` | `0.14.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pyrate-limiter` | `4.1.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-pyserial` | `3.5` | *unresolved* | *unresolved* |  |  |
 | `python3.13-python-dateutil` | `2.9.0.post0` | *unresolved* | *unresolved* |  |  |
@@ -1465,6 +1487,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-pyzmq` | `27.1.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-redis` | `7.4.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-referencing` | `0.37.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-reptor` | `0.34` | *unresolved* | *unresolved* |  |  |
 | `python3.13-requests` | `2.33.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-requests-cache` | `1.3.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-requests-file` | `2.1.0` | *unresolved* | *unresolved* |  |  |
@@ -1473,6 +1496,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-reuse` | `6.2.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-rich` | `14.3.3` | *unresolved* | *unresolved* |  |  |
 | `python3.13-rpds-py` | `0.30.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-sbomnix` | `1.10.0+g94ce54e` | *unresolved* | *unresolved* |  |  |
 | `python3.13-scapy` | `2.7.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-scipy` | `1.17.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-sentry-sdk` | `2.60.0` | *unresolved* | *unresolved* |  |  |
@@ -1487,32 +1511,38 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `python3.13-soupsieve` | `2.8.3` | *unresolved* | *unresolved* |  |  |
 | `python3.13-sqliteschema` | `2.0.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-sqlmap` | `1.10.5` | *unresolved* | *unresolved* |  |  |
+| `python3.13-sqlparse` | `0.5.5` | *unresolved* | *unresolved* |  |  |
 | `python3.13-starlette` | `1.1.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tabledata` | `1.3.5` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tabulate` | `0.10.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tcolorpy` | `0.1.7` | *unresolved* | *unresolved* |  |  |
+| `python3.13-termcolor` | `3.3.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-thrift` | `0.22.0` | *unresolved* | *unresolved* |  |  |
-| `python3.13-tkinter` | `3.13.15` | *unresolved* | *unresolved* |  |  |
+| `python3.13-tkinter` | `3.13.18` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tldextract` | `5.3.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-toml` | `0.10.2` | *unresolved* | *unresolved* |  |  |
+| `python3.13-tomli` | `2.4.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-tomli-w` | `1.2.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tomlkit` | `0.14.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tqdm` | `4.67.1` | *unresolved* | *unresolved* |  |  |
 | `python3.13-transaction` | `5.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-trio` | `0.32.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-typepy` | `1.3.4` | *unresolved* | *unresolved* |  |  |
-| `python3.13-typing-extensions` | `4.15.0` | *unresolved* | *unresolved* |  |  |
+| `python3.13-typing-extensions` | `4.16.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-typing-inspection` | `0.4.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-tzdata` | `2026.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-uefi-firmware-parser` | `1.16` | *unresolved* | *unresolved* |  |  |
 | `python3.13-ujson` | `5.11.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-url-normalize` | `3.0.0` | *unresolved* | *unresolved* |  |  |
-| `python3.13-urllib3` | `2.6.3` | *unresolved* | *unresolved* |  |  |
+| `python3.13-urllib3` | `2.7.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-uvicorn` | `0.40.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-uvloop` | `0.22.1` | *unresolved* | *unresolved* |  |  |
+| `python3.13-vulnix` | `1.12.5` | *unresolved* | *unresolved* |  |  |
 | `python3.13-websockets` | `16.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-werkzeug` | `3.1.6` | *unresolved* | *unresolved* |  |  |
 | `python3.13-wrapt` | `1.17.2` | *unresolved* | *unresolved* |  |  |
 | `python3.13-xlsxwriter` | `3.2.9` | *unresolved* | *unresolved* |  |  |
+| `python3.13-xmltodict` | `1.0.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-yara-python` | `4.5.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-yarl` | `1.23.0` | *unresolved* | *unresolved* |  |  |
 | `python3.13-zc-lockfile` | `4.0` | *unresolved* | *unresolved* |  |  |
@@ -1533,50 +1563,52 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `qqc2-desktop-style` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `qrca` | `26.04.3` | *unresolved* | *unresolved* |  |  |
 | `qrencode` | `4.1.1` | GNU Lesser General Public License v2.1 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
-| `qt5compat` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtbase` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtbase-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtbase-6.11.1-only-plugins-qml` | `` | *unresolved* | *unresolved* |  |  |
-| `qtdeclarative` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtdeclarative-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtgraphicaleffects-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtimageformats` | `6.11.1` | *unresolved* | *unresolved* |  |  |
+| `qt5compat` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtbase` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtbase` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtbase-6.11.3-only-plugins-qml` | `` | *unresolved* | *unresolved* |  |  |
+| `qtdeclarative` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtdeclarative` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtgraphicaleffects` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtimageformats` | `6.11.3` | *unresolved* | *unresolved* |  |  |
 | `qtkeychain` | `0.16.0` | *unresolved* | *unresolved* |  |  |
-| `qtlocation` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtmultimedia` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtpositioning` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtquick3d` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtquickcontrols-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtquickcontrols2-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtsensors` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtserialport` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtshadertools` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtspeech` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtsvg` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtsvg-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qttools` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qttools-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qttranslations` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qttranslations-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtvirtualkeyboard` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtwayland` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtwayland-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtwebchannel` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtwebchannel-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
-| `qtwebengine` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtwebsockets` | `6.11.1` | *unresolved* | *unresolved* |  |  |
-| `qtx11extras-5.15.19` | `` | *unresolved* | *unresolved* |  |  |
+| `qtlocation` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtmultimedia` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtpositioning` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtquick3d` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtquickcontrols` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtquickcontrols2` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtsensors` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtserialport` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtshadertools` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtspeech` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtsvg` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtsvg` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qttools` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qttools` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qttranslations` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qttranslations` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtvirtualkeyboard` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtwayland` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtwayland` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtwebchannel` | `5.15.19` | *unresolved* | *unresolved* |  |  |
+| `qtwebchannel` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtwebengine` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtwebsockets` | `6.11.3` | *unresolved* | *unresolved* |  |  |
+| `qtx11extras` | `5.15.19` | *unresolved* | *unresolved* |  |  |
 | `qwt` | `6.3.0` | *unresolved* | *unresolved* |  |  |
 | `raptor2` | `2.0.16` | *unresolved* | *unresolved* |  |  |
 | `readline` | `8.3p3` | GNU General Public License v3.0 or later | **none** |  |  |
+| `rhash` | `1.4.6` | BSD Zero Clause License | [@GraysonTinker](https://github.com/GraysonTinker) |  |  |
 | `ripgrep` | `15.1.0` | The Unlicense, MIT License | [@globin](https://github.com/globin) [@Ma27](https://github.com/Ma27) [@zowoq](https://github.com/zowoq) |  |  |
 | `roc-toolkit` | `0.4.0` | Mozilla Public License 2.0 | [@bgamari](https://github.com/bgamari) |  |  |
 | `rootlesskit` | `2.3.6` | Apache License 2.0 | **none** |  |  |
+| `rsync` | `3.5.2` | GNU General Public License v3.0 or later | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `rtaudio` | `5.2.0` | MIT License | [@magnetophon](https://github.com/magnetophon) |  |  |
 | `rtkit` | `0.14` | GNU General Public License v3.0 or later, MIT License | [@Gliczy](https://github.com/Gliczy) |  |  |
 | `rtl-sdr-blog` | `1.3.5` | GNU General Public License v2.0 or later | [@bjornfor](https://github.com/bjornfor) [@skovati](https://github.com/skovati) [@Tungsten842](https://github.com/Tungsten842) |  |  |
 | `rtmpdump` | `2.6` | GNU General Public License v2.0 or later | **none** |  |  |
-| `ruby` | `3.4.9` | Ruby License | **none** |  |  |
+| `ruby` | `3.4.12` | Ruby License | **none** |  |  |
 | `ruby3.4-aarch64` | `3.0.0` | *unresolved* | *unresolved* |  |  |
 | `ruby3.4-abbrev` | `0.1.2` | *unresolved* | *unresolved* |  |  |
 | `ruby3.4-actionpack` | `7.2.3.1` | *unresolved* | *unresolved* |  |  |
@@ -1792,11 +1824,9 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `runuser-l.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `runuser.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `s2n-tls` | `1.7.6` | Apache License 2.0 | **none** |  |  |
-| `samba` | `4.23.10` | GNU General Public License v3.0 | [@aneeshusa](https://github.com/aneeshusa) | 2 |  |
+| `samba` | `4.25.1` | GNU General Public License v3.0 | [@aneeshusa](https://github.com/aneeshusa) | 1 |  |
 | `sasquatch` | `4.5.1-6` | GNU General Public License v2.0 or later | [@vlaci](https://github.com/vlaci) |  |  |
 | `sbc` | `2.2` | GNU General Public License v2.0 | **none** |  |  |
-| `sbomnix` | `1.7.6` | Apache License 2.0, BSD 3-clause "New" or "Revised" License, Creative Commons Attribution 3.0 | [@henrirosten](https://github.com/henrirosten) [@06kellyjac](https://github.com/06kellyjac) |  |  |
-| `schroedinger` | `1.0.11` | Mozilla Public License 1.1, GNU Library General Public License v2, MIT License | **none** |  |  |
 | `sd-switch` | `0.6.3` | GNU General Public License v3.0 or later | [@rycee](https://github.com/rycee) |  |  |
 | `sddm` | `0.21.0` | *unresolved* | *unresolved* |  |  |
 | `sddm-autologin.pam` | `` | *unresolved* | *unresolved* |  |  |
@@ -1804,9 +1834,9 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `sddm-unwrapped` | `0.21.0` | *unresolved* | *unresolved* |  |  |
 | `sddm.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `sddm.pam` | `` | *unresolved* | *unresolved* |  |  |
-| `sdl2-compat` | `2.32.68` | zlib License | [@nadiaholmquist](https://github.com/nadiaholmquist) [@pbsds](https://github.com/pbsds) [@LordGrimmauld](https://github.com/LordGrimmauld) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) [@marcin-serwin](https://github.com/marcin-serwin) |  |  |
-| `sdl3` | `3.4.10` | zlib License | [@getchoo](https://github.com/getchoo) [@pbsds](https://github.com/pbsds) [@LordGrimmauld](https://github.com/LordGrimmauld) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) [@marcin-serwin](https://github.com/marcin-serwin) |  |  |
-| `SDL_compat` | `1.2.76` | zlib License | [@peterhoeg](https://github.com/peterhoeg) [@pbsds](https://github.com/pbsds) [@LordGrimmauld](https://github.com/LordGrimmauld) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) [@marcin-serwin](https://github.com/marcin-serwin) |  |  |
+| `sdl2-compat` | `2.32.68` | zlib License | [@nadiaholmquist](https://github.com/nadiaholmquist) [@LordGrimmauld](https://github.com/LordGrimmauld) [@marcin-serwin](https://github.com/marcin-serwin) [@pbsds](https://github.com/pbsds) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) |  |  |
+| `sdl3` | `3.4.10` | zlib License | [@getchoo](https://github.com/getchoo) [@LordGrimmauld](https://github.com/LordGrimmauld) [@marcin-serwin](https://github.com/marcin-serwin) [@pbsds](https://github.com/pbsds) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) |  |  |
+| `SDL_compat` | `1.2.76` | zlib License | [@peterhoeg](https://github.com/peterhoeg) [@LordGrimmauld](https://github.com/LordGrimmauld) [@marcin-serwin](https://github.com/marcin-serwin) [@pbsds](https://github.com/pbsds) [@EvysGarden](https://github.com/EvysGarden) [@jansol](https://github.com/jansol) |  |  |
 | `search.json.mozlz4` | `` | *unresolved* | *unresolved* |  |  |
 | `seclists` | `` | MIT License | [@Tochiaha](https://github.com/Tochiaha) [@Pamplemousse](https://github.com/Pamplemousse) |  |  |
 | `seclists` | `2025.3` | MIT License | [@Tochiaha](https://github.com/Tochiaha) [@Pamplemousse](https://github.com/Pamplemousse) |  |  |
@@ -1835,14 +1865,15 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `setxkbmap` | `1.3.4` | Historic Permission Notice and Disclaimer | **none** |  |  |
 | `shaderc` | `2026.1` | Apache License 2.0 | **none** | 1 |  |
 | `shadow` | `4.19.4` | BSD 3-clause "New" or "Revised" License | [@mdaniels5757](https://github.com/mdaniels5757) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `shared-mime-info` | `2.4` | GNU General Public License v2.0 or later | [@mimame](https://github.com/mimame) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `shared-mime-info` | `2.4` | GNU General Public License v2.0 or later | [@mimame](https://github.com/mimame) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `shellcheck` | `0.11.0` | GNU General Public License v3.0 only | [@zowoq](https://github.com/zowoq) | 1 |  |
+| `shfmt` | `3.13.1` | BSD 3-clause "New" or "Revised" License | [@zowoq](https://github.com/zowoq) [@SuperSandro2000](https://github.com/SuperSandro2000) |  |  |
 | `shutdown-ramfs-contents.json` | `` | *unresolved* | *unresolved* |  |  |
 | `signond` | `8.61-unstable-2023-11-24` | *unresolved* | *unresolved* |  |  |
 | `simdjson` | `4.6.4` | Apache License 2.0 | [@chessai](https://github.com/chessai) |  |  |
 | `simdutf` | `6.5.0` | Apache License 2.0, MIT License | [@wineee](https://github.com/wineee) |  |  |
 | `simdutf` | `9.0.0` | Apache License 2.0, MIT License | [@wineee](https://github.com/wineee) |  |  |
-| `single-file-1.24.3` | `` | *unresolved* | *unresolved* |  |  |
+| `single-file-1.37.0` | `` | *unresolved* | *unresolved* |  |  |
 | `skopeo` | `1.22.2` | Apache License 2.0 | [@nlewo](https://github.com/nlewo) [@developer-guy](https://github.com/developer-guy) [@ryan4yin](https://github.com/ryan4yin) [@saschagrunert](https://github.com/saschagrunert) [@vdemeester](https://github.com/vdemeester) | 1 |  |
 | `slang` | `2.3.3` | GNU General Public License v2.0 or later | **none** |  |  |
 | `sleuthkit` | `4.14.0` | IBM Public License v1.0 | [@7c6f434c](https://github.com/7c6f434c) [@gfrascadorio](https://github.com/gfrascadorio) | 3 |  |
@@ -1867,6 +1898,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `sord` | `0.16.20` | BSD Zero Clause License, ISC License | **none** |  |  |
 | `sound-theme-freedesktop` | `0.8` | Creative Commons Attribution 3.0, Creative Commons Attribution Share Alike 2.5, GNU General Public License v2.0, GNU General Public License v2.0 or later | **none** |  |  |
 | `soundtouch` | `2.4.1` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
+| `source` | `` | *unresolved* | *unresolved* |  |  |
 | `source-highlight` | `3.1.9` | *unresolved* | *unresolved* |  |  |
 | `sox` | `unstable-2021-05-09` | GNU General Public License v2.0 or later | **none** |  |  |
 | `soxr` | `0.1.3` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
@@ -1875,10 +1907,10 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `spdlog` | `1.17.0` | MIT License | [@obadz](https://github.com/obadz) |  |  |
 | `spectacle` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `speech-dispatcher` | `0.12.1` | *unresolved* | *unresolved* |  |  |
-| `speex` | `1.2.1` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
+| `speex` | `1.2.1` | BSD 3-clause "New" or "Revised" License | **none** | 1 |  |
 | `speexdsp` | `1.2.1` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
-| `sqlite` | `3.51.2` | Public Domain | [@np](https://github.com/np) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 2 | 2 |
-| `squashfuse` | `0.6.1` | BSD 2-clause "Simplified" License | **none** |  |  |
+| `sqlite` | `3.53.3` | Public Domain | [@np](https://github.com/np) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 11 |  |
+| `squashfuse` | `0.6.3` | BSD 2-clause "Simplified" License | **none** |  |  |
 | `sratom` | `0.6.22` | MIT License | **none** |  |  |
 | `srec2bin` | `1.51` | GNU General Public License v3.0 only | **none** |  |  |
 | `srt` | `1.5.4` | Mozilla Public License 2.0 | [@nh2](https://github.com/nh2) |  |  |
@@ -1886,7 +1918,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `stoken` | `0.93` | GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `strongswan` | `6.1.0` | GNU General Public License v2.0 or later | [@NickCao](https://github.com/NickCao) |  |  |
 | `su.pam` | `` | *unresolved* | *unresolved* |  |  |
-| `sudo-1.9.17p2` | `` | *unresolved* | *unresolved* |  |  |
+| `sudo` | `1.9.17p2` | Sudo License (ISC-style), BSD 2-clause "Simplified" License, BSD 3-clause "New" or "Revised" License, zlib License | [@rhendric](https://github.com/rhendric) |  |  |
 | `sudo.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `sudoers` | `` | *unresolved* | *unresolved* |  |  |
 | `svt-av1` | `3.1.2` | Alliance for Open Media Patent License 1.0, BSD 3-clause "New" or "Revised" License | **none** |  |  |
@@ -1896,57 +1928,64 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `syndication` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `syntax-highlighting` | `5.116.0` | *unresolved* | *unresolved* |  |  |
 | `syntax-highlighting` | `6.26.0` | *unresolved* | *unresolved* |  |  |
+| `sysreptor` | `` | *unresolved* | *unresolved* |  |  |
+| `sysreptor-2026.95` | `` | *unresolved* | *unresolved* |  |  |
+| `sysreptor-designs` | `` | *unresolved* | *unresolved* |  |  |
 | `system-generators` | `` | *unresolved* | *unresolved* |  |  |
 | `system-path` | `` | *unresolved* | *unresolved* |  |  |
 | `system-sendmail` | `1.0` | *unstated* | **none** |  |  |
 | `system-shutdown` | `` | *unresolved* | *unresolved* |  |  |
 | `system-units` | `` | *unresolved* | *unresolved* |  |  |
 | `systemd` | `` | BSD 2-clause "Simplified" License, BSD 3-clause "New" or "Revised" License, Creative Commons Zero v1.0 Universal, GNU Lesser General Public License v2.1 or later, GNU Library General Public License v2 or later, MIT License, MIT No Attribution, SIL Open Font License 1.1, Public Domain | [@flokli](https://github.com/flokli) [@nikstur](https://github.com/nikstur) [@ElvishJerricco](https://github.com/ElvishJerricco) [@LordGrimmauld](https://github.com/LordGrimmauld) [@aanderse](https://github.com/aanderse) [@arianvp](https://github.com/arianvp) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `systemd-260.2` | `` | *unresolved* | *unresolved* |  |  |
+| `systemd` | `260.5` | BSD 2-clause "Simplified" License, BSD 3-clause "New" or "Revised" License, Creative Commons Zero v1.0 Universal, GNU Lesser General Public License v2.1 or later, GNU Library General Public License v2 or later, MIT License, MIT No Attribution, SIL Open Font License 1.1, Public Domain | [@flokli](https://github.com/flokli) [@nikstur](https://github.com/nikstur) [@ElvishJerricco](https://github.com/ElvishJerricco) [@LordGrimmauld](https://github.com/LordGrimmauld) [@aanderse](https://github.com/aanderse) [@arianvp](https://github.com/arianvp) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `systemd-boot` | `` | *unresolved* | *unresolved* |  |  |
 | `systemd-generator-environment.json` | `` | *unresolved* | *unresolved* |  |  |
-| `systemd-minimal-260.2` | `` | *unresolved* | *unresolved* |  |  |
-| `systemd-minimal-libs-260.2` | `` | *unresolved* | *unresolved* |  |  |
+| `systemd-minimal` | `260.5` | *unresolved* | *unresolved* |  |  |
+| `systemd-minimal-libs` | `260.5` | *unresolved* | *unresolved* |  |  |
 | `systemd-run0.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `systemd-user.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `systemsettings` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `taglib` | `1.13.1` | GNU Lesser General Public License v2.1 only, Mozilla Public License 1.1 | [@ttuegel](https://github.com/ttuegel) | 1 |  |
 | `taglib` | `2.2.1` | GNU Lesser General Public License v2.1 only, Mozilla Public License 1.1 | [@ttuegel](https://github.com/ttuegel) | 1 |  |
-| `talloc` | `2.4.4` | GNU General Public License v3.0 | [@matthiasbeyer](https://github.com/matthiasbeyer) |  |  |
+| `talloc` | `2.5.0` | GNU General Public License v3.0 | [@matthiasbeyer](https://github.com/matthiasbeyer) |  |  |
 | `tcb` | `1.2` | BSD 3-clause "New" or "Revised" License | [@Izorkin](https://github.com/Izorkin) |  |  |
 | `tcl` | `8.6.16` | TCL/TK License | [@agbrooks](https://github.com/agbrooks) |  |  |
 | `tdb` | `1.4.15` | GNU Lesser General Public License v3.0 or later | **none** |  |  |
 | `tecla` | `1.6.3` | MIT License | **none** |  |  |
-| `temporary-containers-plus-2.1.5` | `` | *unresolved* | *unresolved* |  |  |
-| `tesseract` | `5.5.2` | Apache License 2.0 | [@PatrickDaG](https://github.com/PatrickDaG) |  |  |
+| `template-annixion` | `` | *unresolved* | *unresolved* |  |  |
+| `temporary-containers-plus-2.1.7` | `` | *unresolved* | *unresolved* |  |  |
+| `tesseract` | `5.5.4` | Apache License 2.0 | [@PatrickDaG](https://github.com/PatrickDaG) |  |  |
 | `testdisk` | `7.2` | GNU General Public License v2.0 or later | [@fgaz](https://github.com/fgaz) [@ryand56](https://github.com/ryand56) |  |  |
-| `tevent` | `0.17.1` | GNU Lesser General Public License v3.0 or later | **none** |  |  |
+| `tevent` | `0.17.2` | GNU Lesser General Public License v3.0 or later | **none** |  |  |
 | `thc-hydra` | `9.7` | GNU Affero General Public License v3.0 or later | **none** |  |  |
 | `theharvester` | `4.10.1` | GNU General Public License v2.0 only | [@fabaff](https://github.com/fabaff) [@treemo](https://github.com/treemo) |  |  |
 | `thin-provisioning-tools` | `1.3.2` | GNU General Public License v3.0 | **none** |  |  |
 | `threadweaver` | `6.26.0` | *unresolved* | *unresolved* |  |  |
-| `thrift` | `0.22.0` | Apache License 2.0 | [@bjornfor](https://github.com/bjornfor) | 26 |  |
+| `thrift` | `0.25.0` | Apache License 2.0 | [@bjornfor](https://github.com/bjornfor) | 1 |  |
 | `time` | `1.10` | GNU General Public License v3.0 or later | [@mdaniels5757](https://github.com/mdaniels5757) |  |  |
 | `tinysparql` | `3.11.1` | GNU General Public License v2.0 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `tk` | `8.6.16` | TCL/TK License | **none** |  |  |
+| `tlog` | `14` | *unresolved* | *unresolved* |  |  |
+| `tlog-engagement` | `` | *unresolved* | *unresolved* |  |  |
+| `tlog-engagement-14` | `` | *unresolved* | *unresolved* |  |  |
 | `tmpfiles.d` | `` | *unresolved* | *unresolved* |  |  |
-| `tpm2-tss` | `4.2.0` | BSD 2-clause "Simplified" License | [@baloo](https://github.com/baloo) [@scottstephens](https://github.com/scottstephens) |  |  |
+| `tpm2-tss` | `4.2.1` | BSD 2-clause "Simplified" License | [@baloo](https://github.com/baloo) [@scottstephens](https://github.com/scottstephens) |  |  |
 | `tray.target` | `` | *unresolved* | *unresolved* |  |  |
 | `tree` | `2.3.2` | GNU General Public License v2.0 or later | [@NickCao](https://github.com/NickCao) |  |  |
 | `tremor` | `unstable-2018-03-16` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `trivy` | `0.72.0` | Apache License 2.0 | [@fabaff](https://github.com/fabaff) [@06kellyjac](https://github.com/06kellyjac) |  |  |
 | `twolame` | `2017-09-27` | GNU Library General Public License v2 or later | **none** |  |  |
-| `tzdata` | `2026c` | BSD 3-clause "New" or "Revised" License, Public Domain | [@ajs124](https://github.com/ajs124) [@fpletz](https://github.com/fpletz) |  |  |
+| `tzdata` | `2026f` | BSD 3-clause "New" or "Revised" License, Public Domain | [@ajs124](https://github.com/ajs124) [@fpletz](https://github.com/fpletz) |  |  |
 | `ubi_reader` | `0.8.10` | GNU General Public License v3.0 only | [@vlaci](https://github.com/vlaci) |  |  |
-| `ublock-origin-1.74.0` | `` | *unresolved* | *unresolved* |  |  |
+| `ublock-origin-1.76.4` | `` | *unresolved* | *unresolved* |  |  |
 | `udev-check-hook` | `26.05pre-git` | *unresolved* | *unresolved* |  |  |
 | `udev-path` | `` | *unresolved* | *unresolved* |  |  |
 | `udev-rules` | `` | *unresolved* | *unresolved* |  |  |
-| `udisks` | `2.11.2` | GNU Library General Public License v2 or later, GNU General Public License v2.0 or later | [@JohnAZoidberg](https://github.com/JohnAZoidberg) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `udisks` | `2.11.2` | GNU Library General Public License v2 or later, GNU General Public License v2.0 or later | [@JohnAZoidberg](https://github.com/JohnAZoidberg) [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `udisks2.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `uhd` | `4.9.0.1` | GNU General Public License v3.0 or later | [@bjornfor](https://github.com/bjornfor) [@fpletz](https://github.com/fpletz) [@tomberek](https://github.com/tomberek) [@doronbehar](https://github.com/doronbehar) |  |  |
 | `umockdev` | `0.19.3` | GNU Lesser General Public License v2.1 or later | [@flokli](https://github.com/flokli) |  |  |
-| `unbound` | `1.26.0` | BSD 3-clause "New" or "Revised" License | [@Scrumplex](https://github.com/Scrumplex) | 9 | 9 |
+| `unbound` | `1.26.2` | BSD 3-clause "New" or "Revised" License | [@Scrumplex](https://github.com/Scrumplex) |  |  |
 | `unifont` | `17.0.04` | GNU General Public License v2.0 or later, Font exception 2.0 | [@rycee](https://github.com/rycee) [@qweered](https://github.com/qweered) |  |  |
 | `unit--.slice` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-accounts-daemon.service` | `` | *unresolved* | *unresolved* |  |  |
@@ -1989,6 +2028,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `unit-nix-gc.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-nix-gc.timer` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-nix-optimise.service` | `` | *unresolved* | *unresolved* |  |  |
+| `unit-nix-optimise.timer` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-nixos-activation.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-nixos-fake-graphical-session.target` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-nixos-rebuild-sycoca.service` | `` | *unresolved* | *unresolved* |  |  |
@@ -2029,7 +2069,6 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `unit-script-sleep-actions-pre-stop` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-script-sleep-actions-start` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-script-suid-sgid-wrappers-start` | `` | *unresolved* | *unresolved* |  |  |
-| `unit-script-wpa_supplicant-start` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-script-xrdp-pre-start` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-serial-getty-.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-sleep-actions.service` | `` | *unresolved* | *unresolved* |  |  |
@@ -2065,18 +2104,18 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `unit-systemd-udevd.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-systemd-update-utmp.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-systemd-user-sessions.service` | `` | *unresolved* | *unresolved* |  |  |
+| `unit-systemd-zram-setup-.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-user-.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-user-runtime-dir-.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-user.slice` | `` | *unresolved* | *unresolved* |  |  |
-| `unit-wpa_supplicant.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-xrdp-sesman.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unit-xrdp.service` | `` | *unresolved* | *unresolved* |  |  |
 | `unixodbc` | `2.3.14` | GNU Library General Public License v2 | [@Hythera](https://github.com/Hythera) |  |  |
 | `unyaffs` | `0.9` | GNU General Public License v2.0 only | **none** |  |  |
 | `unzip` | `6.0` | Info-ZIP License | [@RossComputerGuy](https://github.com/RossComputerGuy) |  |  |
-| `upower` | `1.91.3` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) |  |  |
+| `upower` | `1.91.5` | GNU General Public License v2.0 or later | [@jtojnar](https://github.com/jtojnar) [@Hythera](https://github.com/Hythera) [@hesiod](https://github.com/hesiod) |  |  |
 | `usbutils` | `019` | GNU General Public License v2.0 only, GNU General Public License v2.0 or later | [@cafkafk](https://github.com/cafkafk) [@chuangzhu](https://github.com/chuangzhu) |  |  |
-| `user-agent-string-switcher-0.7.1` | `` | *unresolved* | *unresolved* |  |  |
+| `user-agent-string-switcher-0.7.2` | `` | *unresolved* | *unresolved* |  |  |
 | `user-environment` | `` | *unresolved* | *unresolved* |  |  |
 | `user-generators` | `` | *unresolved* | *unresolved* |  |  |
 | `user-units` | `` | *unresolved* | *unresolved* |  |  |
@@ -2085,8 +2124,8 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `userdel.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `usermod.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `users-groups.json` | `` | *unresolved* | *unresolved* |  |  |
-| `util-linux` | `2.42.2` | GNU General Public License v2.0 only, GNU General Public License v2.0 or later, GNU General Public License v3.0 or later, GNU Lesser General Public License v2.1 or later, BSD 3-clause "New" or "Revised" License, BSD 4-Clause University of California-Specific, Public Domain | [@numinit](https://github.com/numinit) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `util-linux-minimal` | `2.42.2` | *unresolved* | *unresolved* |  |  |
+| `util-linux` | `2.42.4` | GNU General Public License v2.0 only, GNU General Public License v2.0 or later, GNU General Public License v3.0 or later, GNU Lesser General Public License v2.1 or later, BSD 3-clause "New" or "Revised" License, BSD 4-Clause University of California-Specific, Public Domain | [@numinit](https://github.com/numinit) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `util-linux-minimal` | `2.42.4` | *unresolved* | *unresolved* |  |  |
 | `uvwasi` | `0.0.23` | MIT License | [@aduh95](https://github.com/aduh95) |  |  |
 | `v4l-utils` | `1.32.0` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later | [@Yarny0](https://github.com/Yarny0) |  |  |
 | `vconsole.conf` | `` | *unresolved* | *unresolved* |  |  |
@@ -2098,25 +2137,32 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `volk` | `3.2.0` | GNU General Public License v3.0 or later | [@doronbehar](https://github.com/doronbehar) |  |  |
 | `volume_key` | `0.3.11` | GNU General Public License v2.0 | **none** |  |  |
 | `vpnc-scripts` | `unstable-2023-01-03` | GNU General Public License v2.0 only | [@jerith666](https://github.com/jerith666) |  |  |
+| `vscode-extension-aaron-bond-better-comments` | `3.0.2` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-gitlens` | `17.11.1` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-jnoortheen-nix-ide` | `0.5.9` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-llvm-vs-code-extensions-vscode-clangd` | `0.4.0` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-mads-hartmann-bash-ide-vscode` | `1.43.0` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-mkhl-direnv` | `0.17.0` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-ms-vscode-cmake-tools` | `1.23.52` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-ms-vscode-makefile-tools` | `0.12.17` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-ms-vscode-PowerShell` | `2025.4.0` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-oderwat-indent-rainbow` | `8.3.1` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-redhat-vscode-yaml` | `1.23.0` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-SanjulaGanepola-github-local-actions` | `1.2.5` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-tamasfe-even-better-toml` | `0.21.2` | *unresolved* | *unresolved* |  |  |
 | `vscode-extension-timonwong-shellcheck` | `0.39.3` | *unresolved* | *unresolved* |  |  |
+| `vscode-extension-vadimcn-vscode-lldb` | `1.12.1` | *unresolved* | *unresolved* |  |  |
+| `vscode-extensions` | `` | *unstated* | **none** |  |  |
 | `vscode-user-settings` | `` | *unresolved* | *unresolved* |  |  |
 | `vscodium` | `1.116.02821` | MIT License | [@bobby285271](https://github.com/bobby285271) |  |  |
 | `vscodium-global-storage-modify` | `` | *unresolved* | *unresolved* |  |  |
 | `vulkan-loader` | `1.4.341.0` | Apache License 2.0 | [@Ralith](https://github.com/Ralith) |  |  |
 | `vulkan-tools` | `1.4.341.0` | Apache License 2.0 | [@Ralith](https://github.com/Ralith) |  |  |
-| `vulnix` | `1.12.4` | BSD 3-clause "New" or "Revised" License | [@henrirosten](https://github.com/henrirosten) |  |  |
 | `wavpack` | `5.9.0` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `wayland` | `1.25.0` | MIT License | [@alyssais](https://github.com/alyssais) |  |  |
 | `wayland-protocols` | `1.48` | MIT License | [@wineee](https://github.com/wineee) |  |  |
 | `wayland-utils` | `1.3.0` | MIT License | [@wineee](https://github.com/wineee) |  |  |
-| `webkitgtk` | `2.52.6` | *unresolved* | *unresolved* |  |  |
+| `webkitgtk` | `2.54.2` | *unresolved* | *unresolved* |  |  |
 | `webrtc-audio-processing` | `1.3` | BSD 3-clause "New" or "Revised" License | [@fzdslr](https://github.com/fzdslr) |  |  |
 | `webrtc-audio-processing` | `2.1` | BSD 3-clause "New" or "Revised" License | [@fzdslr](https://github.com/fzdslr) |  |  |
 | `wget` | `1.25.0` | GNU General Public License v3.0 or later | [@fpletz](https://github.com/fpletz) |  |  |
@@ -2129,9 +2175,8 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `wireguard-tools` | `1.0.20260223` | GNU General Public License v2.0 only | [@zx2c4](https://github.com/zx2c4) [@Ma27](https://github.com/Ma27) |  |  |
 | `wireless-regdb-2026.05.30-zstd` | `` | *unresolved* | *unresolved* |  |  |
 | `wireless-tools` | `30.pre9` | *unresolved* | *unresolved* |  |  |
-| `wireshark-qt` | `4.6.8` | GNU General Public License v2.0 or later | [@bjornfor](https://github.com/bjornfor) [@fpletz](https://github.com/fpletz) |  |  |
+| `wireshark-qt` | `4.6.9` | GNU General Public License v2.0 or later | [@bjornfor](https://github.com/bjornfor) [@fpletz](https://github.com/fpletz) |  |  |
 | `wmctrl` | `1.07` | GNU General Public License v2.0 or later | [@Anton-Latukha](https://github.com/Anton-Latukha) |  |  |
-| `wpa_supplicant` | `2.11` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `write_config` | `` | *unresolved* | *unresolved* |  |  |
 | `X-Reload-Triggers-polkit` | `` | *unresolved* | *unresolved* |  |  |
 | `X-Restart-Triggers-dbus-broker` | `` | *unresolved* | *unresolved* |  |  |
@@ -2148,25 +2193,25 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `X-Restart-Triggers-systemd-timesyncd` | `` | *unresolved* | *unresolved* |  |  |
 | `X-Restart-Triggers-systemd-tmpfiles-resetup` | `` | *unresolved* | *unresolved* |  |  |
 | `X-Restart-Triggers-systemd-udevd` | `` | *unresolved* | *unresolved* |  |  |
-| `X-Restart-Triggers-wpa_supplicant` | `` | *unresolved* | *unresolved* |  |  |
 | `x264` | `0-unstable-2025-01-03` | GNU General Public License v2.0 or later | **none** |  |  |
-| `x265-4.1` | `` | *unresolved* | *unresolved* |  |  |
+| `x265` | `4.1` | GNU General Public License v2.0 or later | **none** |  |  |
 | `xauth` | `1.1.5` | MIT Open Group variant | **none** |  |  |
 | `xbitmaps` | `1.1.3` | ICU, Standard ML of New Jersey License | **none** |  |  |
 | `xcb-imdkit` | `1.0.9` | GNU Lesser General Public License v2.1 or later | [@poscat0x04](https://github.com/poscat0x04) |  |  |
-| `xdg-dbus-proxy` | `0.1.7` | GNU Lesser General Public License v2.1 or later | [@jtojnar](https://github.com/jtojnar) |  |  |
-| `xdg-desktop-portal` | `1.20.4` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) |  |  |
+| `xdg-dbus-proxy` | `0.1.9` | GNU Lesser General Public License v2.1 or later | [@jtojnar](https://github.com/jtojnar) |  |  |
+| `xdg-desktop-portal` | `1.20.4` | GNU Library General Public License v2 or later | [@jtojnar](https://github.com/jtojnar) | 2 |  |
 | `xdg-desktop-portal-gtk` | `1.15.3` | GNU Lesser General Public License v2.1 or later | [@jtojnar](https://github.com/jtojnar) |  |  |
 | `xdg-desktop-portal-kde` | `6.6.6` | *unresolved* | *unresolved* |  |  |
 | `xdg-user-dirs` | `0.20` | GNU General Public License v2.0 | [@donovanglover](https://github.com/donovanglover) [@iFreilicht](https://github.com/iFreilicht) |  |  |
-| `xdg-utils` | `1.2.1` | MIT License | **none** |  |  |
+| `xdg-utils` | `1.2.1` | MIT License | **none** | 1 |  |
 | `xdpyinfo` | `1.4.0` | MIT Open Group variant | **none** |  |  |
 | `xf86-input-evdev` | `2.11.0` | Historical Permission Notice and Disclaimer - sell variant, MIT License | **none** |  |  |
 | `xf86-input-libinput` | `1.5.0` | MIT License | **none** |  |  |
 | `xf86-video-fbdev` | `0.5.1` | X11 License | **none** |  |  |
 | `xfconf` | `4.20.0` | GNU General Public License v2.0 or later | [@bobby285271](https://github.com/bobby285271) [@romildo](https://github.com/romildo) [@muscaln](https://github.com/muscaln) |  |  |
 | `xfsprogs` | `6.19.0` | GNU General Public License v2.0 only, GNU Lesser General Public License v2.1, GNU General Public License v3.0 or later | [@ajs124](https://github.com/ajs124) |  |  |
-| `xgcc-15.2.0` | `` | *unresolved* | *unresolved* |  |  |
+| `xgcc` | `15.2.0` | *unresolved* | *unresolved* |  |  |
+| `xgcc` | `15.3.0` | *unresolved* | *unresolved* |  |  |
 | `xinput` | `1.6.4` | Historical Permission Notice and Disclaimer - sell variant, MIT License | **none** |  |  |
 | `xkbcomp` | `1.5.0` | Historic Permission Notice and Disclaimer, MIT Open Group variant, Historical Permission Notice and Disclaimer - DEC variant | **none** |  |  |
 | `xkeyboard-config` | `2.47` | Historical Permission Notice and Disclaimer - sell variant, X11 License, MIT Open Group variant, MIT License, Historic Permission Notice and Disclaimer, Cronyx License, hyphen-bulgarian License | **none** |  |  |
@@ -2179,7 +2224,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `xprop` | `1.2.8` | MIT Open Group variant, Historical Permission Notice and Disclaimer - sell variant, MIT License | **none** |  |  |
 | `xrandr` | `1.5.4` | Historical Permission Notice and Disclaimer - sell variant | **none** |  |  |
 | `xrdb` | `1.2.2` | Historical Permission Notice and Disclaimer - DEC variant, MIT Open Group variant | **none** |  |  |
-| `xrdp` | `0.10.6` | Apache License 2.0 | [@chvp](https://github.com/chvp) [@lucasew](https://github.com/lucasew) | 10 | 10 |
+| `xrdp` | `0.10.6.1` | Apache License 2.0 | [@chvp](https://github.com/chvp) [@lucasew](https://github.com/lucasew) |  |  |
 | `xrdp-sesman.pam` | `` | *unresolved* | *unresolved* |  |  |
 | `xrdp.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `Xresources-Xft` | `` | *unresolved* | *unresolved* |  |  |
@@ -2193,24 +2238,26 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `Xstop` | `` | *unresolved* | *unresolved* |  |  |
 | `xterm` | `410` | MIT License | **none** |  |  |
 | `xvidcore` | `1.3.7` | GNU General Public License v2.0 | **none** |  |  |
-| `xwayland` | `24.1.13` | MIT License | [@Emantor](https://github.com/Emantor) [@K900](https://github.com/K900) |  |  |
-| `xxhash-0.8.3` | `` | *unresolved* | *unresolved* |  |  |
-| `xz` | `5.8.3` | GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 or later | **none** |  |  |
+| `xwayland` | `24.1.15` | MIT License | [@Emantor](https://github.com/Emantor) [@K900](https://github.com/K900) |  |  |
+| `xxhash` | `0.8.3` | BSD 2-clause "Simplified" License, GNU General Public License v2.0 or later | **none** |  |  |
+| `xz` | `5.8.4` | GNU General Public License v2.0 or later, GNU Lesser General Public License v2.1 or later | **none** |  |  |
 | `yara` | `4.5.5` | Apache License 2.0 | [@fabaff](https://github.com/fabaff) |  |  |
 | `yyjson` | `0.12.0` | MIT License | [@Sigmanificient](https://github.com/Sigmanificient) |  |  |
 | `zenity` | `4.2.2` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `zeromq` | `4.3.5` | Mozilla Public License 2.0 | [@fpletz](https://github.com/fpletz) |  |  |
 | `zimg` | `3.0.6` | Do What The F*ck You Want To Public License | [@rnhmjoj](https://github.com/rnhmjoj) |  |  |
 | `zix` | `0.6.2` | ISC License | **none** |  |  |
-| `zlib` | `1.3.2` | zlib License | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 3 |  |
+| `zlib` | `1.3.2` | zlib License | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 2 |  |
 | `zlib-ng` | `2.3.3` | zlib License | [@Izorkin](https://github.com/Izorkin) |  |  |
 | `zoxide` | `0.9.9` | MIT License | [@ysndr](https://github.com/ysndr) [@cole-h](https://github.com/cole-h) [@SuperSandro2000](https://github.com/SuperSandro2000) [@matthiasbeyer](https://github.com/matthiasbeyer) [@ryan4yin](https://github.com/ryan4yin) |  |  |
+| `zram-generator` | `1.2.1` | MIT License | [@NickCao](https://github.com/NickCao) |  |  |
+| `zram-generator.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `zsh` | `5.9.1` | MIT License Modern Variant | [@pSub](https://github.com/pSub) [@Artturin](https://github.com/Artturin) |  |  |
 | `zsh-autopair` | `1.0-unstable-2024-07-14` | MIT License | [@0xKDI](https://github.com/0xKDI) [@DataHearth](https://github.com/DataHearth) |  |  |
-| `zsh-autosuggestions` | `0.7.1` | MIT License | [@loskutov](https://github.com/loskutov) |  |  |
+| `zsh-autosuggestions` | `0.7.1` | MIT License | [@loskutov](https://github.com/loskutov) [@StarryReverie](https://github.com/StarryReverie) |  |  |
 | `zsh-fast-syntax-highlighting` | `1.56` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
 | `zsh-fzf-tab` | `1.3.0` | MIT License | [@diredocks](https://github.com/diredocks) [@MiniHarinn](https://github.com/MiniHarinn) |  |  |
 | `zsh-you-should-use` | `1.11.1` | GNU General Public License v3.0 | [@tomodachi94](https://github.com/tomodachi94) |  |  |
 | `zstd` | `1.5.7` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
-| `zvbi` | `0.2.45` | unknown | [@jopejoe1](https://github.com/jopejoe1) |  |  |
+| `zvbi` | `0.2.46` | unknown | [@jopejoe1](https://github.com/jopejoe1) |  |  |
 | `zxing-cpp` | `2.3.0` | Apache License 2.0 | [@lukegb](https://github.com/lukegb) |  |  |
