@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "562b0365-3fd1-5f4a-a80d-1cadbb521f80",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "ef0380e9-094e-5d9c-a9f1-769119bc393b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Reputational Harm Assessed as the Campaign's Objective",
+        "cvss": "n/a",
+        "summary": "The campaign pursues damage to the organisation's standing as an end in itself, with no\naccompanying demand, correction sought, or commercial beneficiary identified.\n",
+        "description": "Most hostile attention wants something — money, a policy change, a competitive edge. A\ncampaign that wants nothing is a different problem, because there is no negotiation\navailable and no concession that ends it.\n\nHarm-seeking campaigns are identified by what is absent: no demand, no contact, no\nescalation path offered, and a willingness to use claims that cannot survive scrutiny\nbecause durability is not the point. Volume substitutes for credibility.\n\nAttribution is usually weak in these cases and should be presented as such. The absence\nof a beneficiary removes the most common attribution route, and analysts under pressure\nto name someone tend to overreach precisely here.\n",
+        "recommendation": "* Do not seek engagement or negotiation; there is nothing on offer to the campaign that\n  ends it.\n* Concentrate on reducing reach — platform reporting, provenance for official content —\n  rather than on rebutting each claim.\n* Prepare named staff for sustained attention, including the possibility that it moves\n  from the organisation to them personally.\n",
+        "short_recommendation": "Reduce reach rather than rebut; prepare named staff for persistence.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0140"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0140 — Cause Harm",
+            "note": ""
+          },
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0066 — Degrade Adversary",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

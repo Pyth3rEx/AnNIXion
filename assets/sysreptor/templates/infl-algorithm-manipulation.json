@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "8b75ed73-e68b-5d81-81b7-30432d0230cc",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f2961a5b-a40b-59a8-8ed5-a58f8648b514",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Platform Algorithm Manipulated to Extend Reach",
+        "cvss": "n/a",
+        "summary": "Engagement was manufactured in the patterns platform ranking systems reward — rapid early\ninteraction, reply chains, and incentivised sharing — pushing campaign content into feeds\nfar beyond the operation's own following.\n",
+        "description": "Algorithmic amplification is the multiplier that makes small operations consequential. A\nfew hundred coordinated accounts generating the right early signals can place content in\nfront of audiences numbering in the millions, none of whom follow any campaign asset.\n\nThe manufactured signals are usually visible as a sharp, implausibly early engagement\nspike followed by organic spread. Separating the two phases matters: the organic portion\nconsists of real people who now hold the belief, and they will not be addressed by a\nreport about inauthentic accounts.\n\nEngagement figures therefore overstate the operation's size and understate its reach.\nBoth should be reported, and the difference between them explained.\n",
+        "recommendation": "* Separate manufactured from organic amplification in the analysis, and address the\n  organic audience as genuine.\n* Report the early engagement pattern to the platform, which is the part its ranking\n  integrity teams act on.\n* Do not infer the operation's size from its reach; state both and explain the difference.\n",
+        "short_recommendation": "Separate manufactured from organic spread; report the early signal pattern.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0121"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0121 — Manipulate Platform Algorithm",
+            "note": ""
+          },
+          {
+            "tactic": "TA17 — Maximise Exposure",
+            "technique": "T0120 — Incentivize Sharing",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

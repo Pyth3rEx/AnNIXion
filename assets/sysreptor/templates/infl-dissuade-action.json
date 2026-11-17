@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "82621457-e6a4-5fba-9309-4ddeba65cad3",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "27b5b6b3-3394-5044-9986-74a4487baddb",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Campaign Seeks to Dissuade a Specific Action",
+        "cvss": "n/a",
+        "summary": "Content is timed and framed to discourage a particular decision — an investment, a\nhiring round, a regulatory submission or a customer renewal — rather than to damage\nreputation generally.\n",
+        "description": "Dissuasion is the most measurable influence objective, and the easiest to miss, because\nthe content itself may be mild. What identifies it is timing: activity rises ahead of a\ndecision point and falls once the decision has passed, regardless of whether the\nnarrative was ever resolved.\n\nDistraction accompanies it. Where the campaign cannot argue against the decision\ndirectly, it raises an unrelated controversy loudly enough to occupy the people who\nwould otherwise be making the case for it.\n\nMap campaign activity against the client's own calendar of decisions. The correlation,\nwhere it exists, is the finding — and where it does not exist, say that too, because the\nalternative explanation is that the client is reading intent into noise.\n",
+        "recommendation": "* Map campaign activity against upcoming decision points and share that mapping with the\n  decision owners, not only with communications.\n* Where a decision is being targeted, ensure the decision-makers receive the assessment\n  directly, so that the campaign is not their only input.\n* Expect activity to resume at the next decision point and prepare for it rather than\n  treating the lull as resolution.\n",
+        "short_recommendation": "Map activity to decision dates and brief the decision owners.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0139"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0139 — Dissuade from Acting",
+            "note": ""
+          },
+          {
+            "tactic": "TA02 — Plan Objectives",
+            "technique": "T0077 — Distract",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

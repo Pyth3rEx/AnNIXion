@@ -3,6 +3,7 @@
   inputs,
   lib,
   pkgs,
+  osConfig,
   ...
 }:
 
@@ -16,126 +17,149 @@ let
   };
 in
 {
-  programs.firefox.profiles."untrusted" = {
-    id = 0;
-    # Explicit: Home Manager treats id 0 as the default profile unless
-    # told otherwise, and the default is OSINT.
-    isDefault = false;
-    name = "Unsafe Browser";
-    search = {
-      default = "ddg";
-      privateDefault = "ddg";
-      force = true;
-      engines = {
-        nix-packages = {
-          name = "Nix Packages";
-          urls = [
-            {
-              template = "https://search.nixos.org/packages";
-              params = [
+  programs.firefox.profiles."untrusted" =
+    lib.mkIf osConfig.annixion.firefox.profiles.untrusted.enable
+      {
+        id = 0;
+        name = "Unsafe Browser";
+        search = {
+          default = "ddg";
+          privateDefault = "ddg";
+          force = true;
+          engines = {
+            nix-packages = {
+              name = "Nix Packages";
+              urls = [
                 {
-                  name = "type";
-                  value = "packages";
-                }
-                {
-                  name = "query";
-                  value = "{searchTerms}";
+                  template = "https://search.nixos.org/packages";
+                  params = [
+                    {
+                      name = "type";
+                      value = "packages";
+                    }
+                    {
+                      name = "query";
+                      value = "{searchTerms}";
+                    }
+                  ];
                 }
               ];
-            }
+              icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+              definedAliases = [ "@np" ];
+            };
+
+            nixos-wiki = {
+              name = "NixOS Wiki";
+              urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];
+              iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
+              definedAliases = [ "@nw" ];
+            };
+
+            bing.metaData.hidden = true;
+            google.metaData.alias = "@g";
+          };
+          order = [
+            "ddg"
+            "google"
           ];
-          icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-          definedAliases = [ "@np" ];
         };
+        settings = {
+          "extensions.autoDisableScopes" = 0;
+          "network.proxy.type" = 0;
 
-        nixos-wiki = {
-          name = "NixOS Wiki";
-          urls = [ { template = "https://wiki.nixos.org/w/index.php?search={searchTerms}"; } ];
-          iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
-          definedAliases = [ "@nw" ];
+          # ── HTTPS only ────────────────────────────────────────────
+          "dom.security.https_only_mode" = true;
+          "dom.security.https_only_mode_ever_enabled" = true;
+
+          # ── Fingerprinting — targeted only (RFP breaks WebAuthn/passkeys) ──
+          # Full RFP spoofs OS, platform and timing details that the WebAuthn
+          # ceremony checks against real hardware, so platform authenticators
+          # and security keys fail or time out. canvasblocker (below) plus
+          # trackingprotection.fingerprinting cover canvas/font fingerprinting
+          # without it — the same tradeoff puppet.nix makes too. osint.nix takes
+          # full RFP instead, since recon work doesn't need passkey logins.
+          "privacy.fingerprintingProtection" = true;
+
+          # ── Enhanced tracking protection — strict ──────────────────
+          "privacy.trackingprotection.enabled" = true;
+          "privacy.trackingprotection.socialtracking.enabled" = true;
+          "privacy.trackingprotection.fingerprinting.enabled" = true;
+          "privacy.trackingprotection.cryptomining.enabled" = true;
+          "privacy.socialtracking.block_cookies.enabled" = true;
+          "privacy.query_stripping.enabled" = true;
+
+          # ── Certificate revocation — CRLite ──────────────────────────
+          "security.pki.crlite_mode" = 2;
+
+          # ── Cookie isolation (Total Cookie Protection) ─────────────
+          "network.cookie.cookieBehavior" = 5;
+
+          # ── WebRTC + geolocation ───────────────────────────────────
+          "media.peerconnection.enabled" = false;
+          "geo.enabled" = false;
+
+          # ── No speculative requests ────────────────────────────────
+          "network.dns.disablePrefetch" = true;
+          "network.prefetch-next" = false;
+          "network.predictor.enabled" = false;
+          "network.http.speculative-parallel-limit" = 0;
+
+          # ── Safe browsing ──────────────────────────────────────────
+          "browser.safebrowsing.malware.enabled" = true;
+          "browser.safebrowsing.phishing.enabled" = true;
+
+          # ── Telemetry ─────────────────────────────────────────────
+          "datareporting.healthreport.uploadEnabled" = false;
+          "datareporting.policy.dataSubmissionEnabled" = false;
+          "toolkit.telemetry.unified" = false;
+          "browser.ping-centre.telemetry" = false;
+
+          # ── Pinned despite being Firefox defaults today ─────────────
+          # Never assume a default holds on an opsec-sensitive profile — pin it.
+          "network.http.http3.enable" = true;
+          "fission.autostart" = true;
+          "gfx.webrender.all" = true;
+
+          # ── No sponsored content ───────────────────────────────────
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.newtabpage.activity-stream.feeds.topsites" = false;
+          "browser.newtabpage.activity-stream.system.showSponsored" = false;
+          "extensions.pocket.enabled" = false;
+
+          # ── PDF ────────────────────────────────────────────────────
+          "pdfjs.enableScripting" = false;
+
+          # ── Storage ───────────────────────────────────────────────
+          "signon.rememberSignons" = false;
+          "browser.formfill.enable" = false;
+          "media.autoplay.default" = 5;
+          "browser.download.useDownloadDir" = false;
+
+          # ── Nothing outlives the window ───────────────────────────
+          # Permanent private browsing. Every window opens private, and history,
+          # cookies, storage and cache are held in memory and dropped on exit —
+          # this is what makes the profile forget, not a shutdown sanitiser.
+          "browser.privatebrowsing.autostart" = true;
+          "browser.privatebrowsing.forceMediaMemoryCache" = true;
+          "places.history.enabled" = false;
+          "browser.cache.disk.enable" = false;
+          "browser.cache.offline.enable" = false;
+
+          # A blank page every launch, with no session able to restore the last.
+          "browser.startup.page" = 0;
+          "browser.startup.homepage" = "about:blank";
+          "browser.sessionstore.resume_from_crash" = false;
+          "browser.sessionstore.privacy_level" = 2;
+          "browser.sessionstore.max_resumed_crashes" = 0;
         };
-
-        bing.metaData.hidden = true;
-        google.metaData.alias = "@g";
+        extensions = {
+          packages = with addons; [
+            ublock-origin
+            canvasblocker
+            privacy-badger
+          ];
+        };
       };
-      order = [
-        "ddg"
-        "google"
-      ];
-    };
-    settings = {
-      "extensions.autoDisableScopes" = 0;
-      "network.proxy.type" = 0;
-
-      # ── HTTPS only ────────────────────────────────────────────
-      "dom.security.https_only_mode" = true;
-      "dom.security.https_only_mode_ever_enabled" = true;
-
-      # ── Fingerprinting — targeted only (RFP breaks WebAuthn/passkeys) ──
-      # Full RFP spoofs OS, platform and timing details that the WebAuthn
-      # ceremony checks against real hardware, so platform authenticators
-      # and security keys fail or time out. canvasblocker (below) plus
-      # trackingprotection.fingerprinting cover canvas/font fingerprinting
-      # without it — same tradeoff osint.nix and puppet.nix already make.
-      "privacy.fingerprintingProtection" = true;
-
-      # ── Enhanced tracking protection — strict ──────────────────
-      "privacy.trackingprotection.enabled" = true;
-      "privacy.trackingprotection.socialtracking.enabled" = true;
-      "privacy.trackingprotection.fingerprinting.enabled" = true;
-      "privacy.trackingprotection.cryptomining.enabled" = true;
-
-      # ── Cookie isolation (Total Cookie Protection) ─────────────
-      "network.cookie.cookieBehavior" = 5;
-
-      # ── WebRTC + geolocation ───────────────────────────────────
-      "media.peerconnection.enabled" = false;
-      "geo.enabled" = false;
-
-      # ── No speculative requests ────────────────────────────────
-      "network.dns.disablePrefetch" = true;
-      "network.prefetch-next" = false;
-      "network.predictor.enabled" = false;
-      "network.http.speculative-parallel-limit" = 0;
-
-      # ── Safe browsing ──────────────────────────────────────────
-      "browser.safebrowsing.malware.enabled" = true;
-      "browser.safebrowsing.phishing.enabled" = true;
-
-      # ── Telemetry ─────────────────────────────────────────────
-      "datareporting.healthreport.uploadEnabled" = false;
-      "datareporting.policy.dataSubmissionEnabled" = false;
-      "toolkit.telemetry.unified" = false;
-      "browser.ping-centre.telemetry" = false;
-
-      # ── Storage ───────────────────────────────────────────────
-      "signon.rememberSignons" = false;
-      "browser.formfill.enable" = false;
-      "media.autoplay.default" = 5;
-      "browser.download.useDownloadDir" = false;
-
-      # ── Nothing outlives the window ───────────────────────────
-      # Permanent private browsing. Every window opens private, and history,
-      # cookies, storage and cache are held in memory and dropped on exit —
-      # this is what makes the profile forget, not a shutdown sanitiser.
-      "browser.privatebrowsing.autostart" = true;
-      "places.history.enabled" = false;
-      "browser.cache.disk.enable" = false;
-      "browser.cache.offline.enable" = false;
-
-      # A blank page every launch, with no session able to restore the last.
-      "browser.startup.page" = 0;
-      "browser.startup.homepage" = "about:blank";
-      "browser.sessionstore.resume_from_crash" = false;
-      "browser.sessionstore.privacy_level" = 2;
-      "browser.sessionstore.max_resumed_crashes" = 0;
-    };
-    extensions = {
-      packages = with addons; [
-        ublock-origin
-        canvasblocker
-        privacy-badger
-      ];
-    };
-  };
 }

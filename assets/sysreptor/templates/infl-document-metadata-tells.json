@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "b7c450bb-d91c-5c57-a5b2-aa43f67e9423",
+  "tags": [
+    "puppet",
+    "media"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "6819557e-a39e-5305-b183-eda43e6dcea9",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Production Metadata Embedded in Distributed Content Assets",
+        "cvss": "n/a",
+        "summary": "Images, PDFs or videos distributed as campaign content carry embedded production\nmetadata — editing application, system locale, device model, GPS coordinates, a\n\"last saved by\" field — inconsistent with the asset's claimed origin.\n",
+        "description": "This is the cheapest check available against a campaign asset and the one most often\nskipped, because it rarely survives past the first post. Most platforms strip EXIF and\nre-encode video on upload, so the tell is usually only present on the earliest-generation\ncopy — the original post, a linked download, or a mirror a less careful platform never\ntouched — and absent from every viral re-share after it.\n\nWhat is worth pulling: a camera model or GPS tag inconsistent with the claimed location;\na PDF's producer application and XMP language setting inconsistent with the claimed\nauthor's tooling; an Office document's author, company or \"last modified by\" field,\noften left in a script the claimed author does not use; a video container's encoder\nstring and creation timestamp, which carries a timezone offset of its own.\n\nThe absence of any of this proves nothing on its own: an attentive operator scrubs\nmetadata deliberately, and a platform's own re-encoding does the same thing by accident.\nTreat a clean asset as inconclusive, not as evidence the asset is genuine. This finding\nis about the campaign's own distributed content; it is a different check from\nreconnaissance against a target organisation's own documents, which the OSINT discipline\ncovers separately.\n",
+        "recommendation": "* Pull metadata from the earliest-generation copy of the asset, not a re-share — most\n  platforms strip EXIF and re-encode video on upload, which erases the tell from\n  everything posted after the first instance.\n* Preserve the original file before raising it with the platform or the public; a\n  takedown report is also a deletion of the evidence.\n* Treat a metadata-clean asset as inconclusive rather than exculpatory; scrubbing and\n  platform re-encoding produce the same absence a genuinely clean asset would.\n* Where metadata is present, cross-reference device model, GPS and locale fields against\n  the claimed origin, and weigh the result alongside the corpus's other tells rather than\n  citing it alone.\n",
+        "short_recommendation": "Pull metadata from the earliest-generation copy before it is stripped, and treat a clean result as inconclusive.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0086",
+          "https://disarmframework.herokuapp.com/T0130"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0086 — Develop Image-Based Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0130.001 — Conceal Sponsorship",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

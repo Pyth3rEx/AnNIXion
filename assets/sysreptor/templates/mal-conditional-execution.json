@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "372870a8-2826-5c99-9c60-6134f095c939",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "4fc514b6-d315-5229-a669-335382c4813d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Conditional / Trigger-Based Execution",
+        "cvss": "n/a",
+        "summary": "The sample gates its real behaviour behind a condition unrelated to anti-analysis evasion — a specific date, a target-specific identifier, a count threshold — executing its payload only once that condition is met.",
+        "description": "This differs from the anti-analysis guardrails covered elsewhere in intent, though the\nmechanism can overlap: a logic bomb set to trigger on a future date, a check for a\nspecific domain-joined environment or hostname indicating a particular target, or a\ncounter requiring a minimum number of prior executions before escalating behaviour. The\ncommon thread is a condition chosen for the attacker's operational purposes, not to defeat\nan analyst.\n",
+        "recommendation": "* Recover and evaluate the exact condition rather than assuming anti-analysis intent; a date or target-identifier check indicates deliberate operational targeting or timing.\n* Where a future-dated trigger is found, treat it as a logic bomb and remediate before the trigger date regardless of current inactivity.\n* Correlate the condition against known campaign or target information; a hostname or domain check in particular may directly identify the intended victim.\n",
+        "short_recommendation": "Recover the exact trigger condition; a date or target identifier indicates deliberate operational targeting, not anti-analysis.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1480/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1480 — Execution Guardrails",
+            "procedure": "Compared the current system date against a hardcoded future trigger date and withheld the destructive payload until it was reached."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0025 — Conditional Execution",
+            "implementation": "Withheld payload execution until a hardcoded future date was reached, functioning as a logic bomb."
+          }
+        ]
+      }
+    }
+  ]
+}

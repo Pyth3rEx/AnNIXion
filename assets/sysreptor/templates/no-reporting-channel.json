@@ -1,0 +1,31 @@
+{
+  "format": "templates/v2",
+  "id": "5b999ba7-fc62-51af-ad84-2967c6236342",
+  "tags": [
+    "puppet",
+    "social",
+    "detection",
+    "process"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "44eb54ec-a200-5dd9-a666-89f841417fb0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "No Effective Route to Report Suspicious Activity",
+        "cvss": "n/a",
+        "summary": "Staff had no obvious or low-friction way to report a suspicious message, call or visitor, and those who did report received no acknowledgement. The organisation therefore lost the earliest and cheapest warning available to it.\n",
+        "description": "Prevention of social engineering is never complete, so the controlling factor is how quickly an attempt is reported. One person reporting a phishing message within minutes allows the rest to be pulled before they are opened; the same message unreported gives the attacker a working day inside the estate.\n\nReporting fails for mundane reasons: the route is a shared mailbox nobody remembers, it requires forwarding with headers, it takes longer than deleting the message, or previous reports vanished without response. Each teaches that reporting is not worth the effort.\n\nFear suppresses it further. Where simulated phishing is used punitively, people who click do not report — they hope it was nothing — which converts the single most valuable detection signal into silence precisely when it matters.\n",
+        "recommendation": "* Provide one-click reporting in the mail client, and an equally simple route for calls, texts and suspicious visitors.\n* Acknowledge every report automatically and close the loop with a human answer, including when it was legitimate.\n* Publish what reporting achieved — messages pulled, accounts protected — so the value is visible.\n* State explicitly that nobody is penalised for clicking or for reporting late, and mean it.\n* Measure reporting rate and time-to-report as primary metrics, ahead of click rate.\n",
+        "short_recommendation": "Provide one-click reporting and respond visibly to every report.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1566/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

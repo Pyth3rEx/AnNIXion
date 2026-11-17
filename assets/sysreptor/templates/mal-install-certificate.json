@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "17f759bf-de04-5888-b778-f2ce681db2a1",
+  "tags": [
+    "malware",
+    "endpoint",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "78389b05-e0e7-520f-a438-1c1cafb5a1b2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Malicious Root-Certificate Installation",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:N",
+        "summary": "The sample installs an operator-controlled root or intermediate certificate into the system's trust store, allowing it to intercept TLS traffic or make its own malicious code appear validly signed.",
+        "description": "Once a certificate is trusted at the root or intermediate level, anything it signs — a\nTLS connection it is interposed on, a binary it countersigns — is accepted as legitimate by\nevery application that relies on the system trust store, not only the sample itself. This\nis a powerful, broad-reaching capability because it affects trust decisions made by\nunrelated software on the host, well beyond whatever the sample directly does.\n",
+        "recommendation": "* Enumerate the certificate trust store for any root or intermediate certificate not matching a known-good baseline, rather than relying on signature validation that the rogue certificate would itself pass.\n* Remove the rogue certificate and treat every TLS session and signed artefact validated against it during the exposure window as untrusted, pending independent verification.\n* Audit for an associated interception proxy or configuration change (browser or system proxy settings) that the certificate was installed to support.\n",
+        "short_recommendation": "Enumerate the trust store directly for rogue certificates; signature validation itself will not catch what the rogue certificate signs.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1553/004/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1553.004 — Install Root Certificate",
+            "procedure": "Added an operator-generated root certificate to the system trust store via the standard certificate-management API, then configured a local proxy to intercept TLS traffic using it."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0013 — Privilege Escalation",
+            "behavior": "F0016 — Install Certificate",
+            "implementation": "Installed a rogue root certificate into the system trust store to support local TLS interception."
+          }
+        ]
+      }
+    }
+  ]
+}

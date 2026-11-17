@@ -61,9 +61,13 @@ that read. It is expected and safe here.
 
 ### How do I add a security tool?
 
-Add the nixpkgs package to `environment.systemPackages` in
-`system/security-tools.nix` and run `rebuild`. See
-[customization.md](customization.md).
+Drop one file under `catalog/`, in the kill-chain phase the tool belongs to, and
+run `rebuild`. That one file declares the package, its menu entry and its icon
+together — `system/security-tools.nix` derives the package set from the catalog,
+so there is no list to edit. The schema is in
+[architecture.md](architecture.md#adding-a-tool); for a plain system-wide
+package with no menu entry, add it to `environment.systemPackages` in
+`user/configuration.nix`. See [customization.md](customization.md).
 
 ### How do I change a setting without touching shared config?
 
@@ -71,6 +75,25 @@ Use the `user/` override system — `user/configuration.nix` (system) and
 `user/home.nix` (user environment). Base options use `lib.mkDefault`, so your
 values win without `lib.mkForce` (the one exception is Firefox proxy prefs; see
 [usage.md](usage.md)). Details in [user/README.md](../user/README.md).
+
+### An AppImage fails with "cannot execute: required file not found"
+
+The file is fine — the message names the wrong thing. Prebuilt Linux binaries
+ask for the interpreter `/lib64/ld-linux-x86-64.so.2`, and it is the
+*interpreter* the kernel cannot find; the shell reports it as if the executable
+were missing. Re-downloading will not help.
+
+AnNIXion ships `programs.nix-ld` (`system/nix-ld.nix`) to provide that path,
+along with the X11, Wayland, GL and D-Bus libraries a GUI binary loads at run
+time. If something still fails after `rebuild`, it wants a library outside that
+set — add it to `programs.nix-ld.libraries` in `user/configuration.nix`:
+
+```nix
+programs.nix-ld.libraries = with pkgs; [ libsomething ];
+```
+
+Libraries loaded through `dlopen` do not show up in `ldd` output, so a binary
+that starts and then dies on a missing symbol is usually this.
 
 ### I created a new file in `user/` and Nix doesn't see it
 

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "f60c7d43-9581-597f-9c9c-133c907e842e",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f4d4a446-72d8-543d-8846-356a1cd6b6de",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Platform Reporting Abused to Suppress the Response",
+        "cvss": "n/a",
+        "summary": "The organisation's own accounts and content, and those of staff, were subjected to mass\nfalse reporting, triggering automated enforcement that removed legitimate material.\n",
+        "description": "Mass reporting turns platform moderation into a weapon. Automated systems act on volume,\nand a coordinated set of complaints can suspend a legitimate account faster than any\nappeal can restore it — which is precisely when the organisation most needs to\ncommunicate.\n\nThe attack is usually timed: reports arrive when the organisation is about to respond, so\nthat the response is prevented rather than answered. That timing is itself evidence, and\nit is worth recording alongside the enforcement actions.\n\nRecovery depends almost entirely on whether a direct channel to the platform exists before\nit is needed. Standard appeal routes are too slow to matter during an active campaign.\n",
+        "recommendation": "* Establish verified status and a named platform contact before an incident, not during\n  one.\n* Preserve enforcement notices and their timing; they evidence the abuse and support\n  escalation.\n* Hold a communication route that does not depend on the platforms under attack.\n* Report mass false reporting as coordinated abuse of the reporting system.\n",
+        "short_recommendation": "Secure a direct platform contact in advance and keep an independent channel.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0131"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0131 — Exploit TOS/Content Moderation",
+            "note": ""
+          },
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0124 — Suppress Opposition",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

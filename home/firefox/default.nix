@@ -6,9 +6,22 @@
 # and annixion-raise can tell the windows apart.
 {
   lib,
+  osConfig,
   ...
 }:
 
+let
+  # Preference order for which profile becomes isDefault when more than one
+  # is enabled — osint unless it's off, then whichever of these comes first.
+  order = [
+    "osint"
+    "redteam"
+    "puppet"
+    "untrusted"
+  ];
+  profileCfg = osConfig.annixion.firefox.profiles;
+  defaultProfile = lib.findFirst (n: profileCfg.${n}.enable) null order;
+in
 {
   imports = [
     ./untrusted.nix
@@ -20,6 +33,13 @@
 
   programs.firefox.enable = lib.mkDefault true;
 
+  # Each profile file declares its own settings but not isDefault — centralised
+  # here so disabling one profile can hand the role to another, rather than
+  # two files racing to set the same option.
+  programs.firefox.profiles = lib.genAttrs order (
+    name: lib.mkIf profileCfg.${name}.enable { isDefault = name == defaultProfile; }
+  );
+
   home.file = {
     ".local/share/applications/firefox.desktop".text = ''
       [Desktop Entry]
@@ -27,6 +47,8 @@
       Name=Firefox
       NoDisplay=true
     '';
+  }
+  // lib.optionalAttrs profileCfg.untrusted.enable {
     ".local/share/applications/firefox-untrusted.desktop".text = ''
       [Desktop Entry]
       Type=Application
@@ -39,6 +61,8 @@
       Categories=X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
     '';
+  }
+  // lib.optionalAttrs profileCfg.redteam.enable {
     # The only profile that does not exec Firefox directly: annixion-redteam
     # (home/desktop/redteam-launch.nix) brings Burp up behind it, then execs the same
     # command the others carry inline.
@@ -54,6 +78,8 @@
       Categories=X-AnNIXion-Delivery-Proxy;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
     '';
+  }
+  // lib.optionalAttrs profileCfg.osint.enable {
     ".local/share/applications/firefox-osint.desktop".text = ''
       [Desktop Entry]
       Type=Application
@@ -66,6 +92,8 @@
       Categories=X-AnNIXion-Recon-OSINT;X-AnNIXion-Internet;Network;WebBrowser;
       MimeType=text/html;text/xml;
     '';
+  }
+  // lib.optionalAttrs profileCfg.puppet.enable {
     ".local/share/applications/firefox-puppet.desktop".text = ''
       [Desktop Entry]
       Type=Application

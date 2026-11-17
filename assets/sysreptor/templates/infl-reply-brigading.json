@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "8fbb8b0c-5101-5e8e-9b58-fa333f018abb",
+  "tags": [
+    "puppet",
+    "platform",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d10c0e4e-02d2-5178-873d-90c2fd5c49db",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Reply Brigading Against Official Channels",
+        "cvss": "n/a",
+        "summary": "Coordinated replies were directed at the organisation's official accounts and at posts\nby named staff, so that campaign claims appear beneath the organisation's own\ncommunications.\n",
+        "description": "Attaching to official posts is efficient: the operation borrows the organisation's\naudience rather than building one, and every subsequent official communication becomes a\ndelivery surface for the campaign.\n\nThe secondary effect is on the organisation's own behaviour. Teams stop posting to avoid\nthe replies, which concedes the channel, and named individuals disengage. That\nsuppression is frequently the actual objective and should be recorded as an impact rather\nthan treated as an incidental consequence.\n\nWhere replies target individuals rather than the corporate account, the finding concerns\nthose people. They should be informed before the report circulates, and the duty-of-care\nresponse matters more than the communications response.\n",
+        "recommendation": "* Keep posting; withdrawing from the channel concedes it and is usually the objective.\n* Use platform reply controls where available rather than responding to individual replies.\n* Brief and support named individuals directly, and do not leave them to manage it\n  personally.\n",
+        "short_recommendation": "Keep posting, use reply controls, and support named staff directly.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0116"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0116 — Comment or Reply on Content",
+            "note": ""
+          },
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0048 — Harass",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

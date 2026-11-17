@@ -3,30 +3,8 @@
 # JSON under the tileModel key. Six columns by nine rows is what the popup
 # shows without scrolling, so the whole layout fits in that budget.
 let
-  alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
   # The applet decodes this with Qt.atob, so plain JSON will not load.
-  toBase64 =
-    str:
-    let
-      bytes = map lib.strings.charToInt (lib.stringToCharacters str);
-      len = builtins.length bytes;
-      byteAt = i: if i < len then builtins.elemAt bytes i else 0;
-      sym = i: builtins.substring i 1 alphabet;
-      quad =
-        i:
-        let
-          b0 = byteAt (i * 3);
-          b1 = byteAt (i * 3 + 1);
-          b2 = byteAt (i * 3 + 2);
-          rest = len - i * 3;
-        in
-        sym (b0 / 4)
-        + sym ((lib.mod b0 4) * 16 + b1 / 16)
-        + (if rest > 1 then sym ((lib.mod b1 16) * 4 + b2 / 64) else "=")
-        + (if rest > 2 then sym (lib.mod b2 64) else "=");
-    in
-    lib.concatMapStrings quad (lib.range 0 ((len + 2) / 3 - 1));
+  toBase64 = import ../../../catalog/base64.nix { inherit lib; };
 
   columns = 6;
 

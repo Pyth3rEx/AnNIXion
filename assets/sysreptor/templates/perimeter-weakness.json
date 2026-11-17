@@ -1,0 +1,29 @@
+{
+  "format": "templates/v2",
+  "id": "6bc4811d-65ea-59b5-ab2c-65f3ee3e0a39",
+  "tags": [
+    "red",
+    "physical"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d3857c11-51b9-58cd-9917-eb8ea303809a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Site Perimeter and Out-of-Hours Controls Insufficient",
+        "cvss": "CVSS:3.1/AV:P/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The site perimeter could be crossed away from the monitored main entrance — through secondary doors, smoking areas, loading bays, car park access or gates left open — and activity outside working hours produced no response.\n",
+        "description": "Perimeter security is measured at its weakest point, not its main entrance. Investment concentrates on the front door while fire exits propped open for ventilation, smoking-area doors wedged for convenience, loading bays open during deliveries, and barriers that stay raised in the morning all provide an unwatched route in.\n\nOut of hours the question becomes whether anyone responds. Alarms that report to a console nobody watches, or a guard round on a predictable schedule, mean an intruder has an effectively unlimited working window — which is when the slower objectives, such as searching desks and placing devices, become practical.\n\nPerimeter cameras often do not help, because they are positioned for post-incident review rather than live monitoring, and retention is short enough that an undetected intrusion is overwritten before it is suspected.\n",
+        "recommendation": "* Walk the perimeter and enumerate every opening, including fire exits, service and smoking doors; alarm those that are not monitored and fit self-closing hardware.\n* Address propping directly by solving the reason for it — ventilation, convenience — rather than by instruction alone.\n* Control loading bays as access points, with a named responsible person during deliveries.\n* Test out-of-hours response rather than assuming it: trigger a detector and measure what happens.\n* Review camera coverage against the routes found, and confirm retention is long enough to investigate.\n",
+        "short_recommendation": "Close secondary routes and verify out-of-hours response.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1200/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

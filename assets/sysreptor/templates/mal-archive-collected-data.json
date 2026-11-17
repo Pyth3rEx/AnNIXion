@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "df50eb57-bca5-5b76-8206-e05906eaefb4",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "02c476fe-9c6e-5117-9109-2b6d89142b7a",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Collected Data Staged and Archived",
+        "cvss": "n/a",
+        "summary": "Before exfiltration, the sample consolidates everything it has gathered — captured input, documents, screenshots — into a single compressed or encrypted archive, usually via a bundled or living-off-the-land utility.",
+        "description": "Staging reduces exfiltration to a single transfer rather than many small ones, which is\nboth more efficient for the operator and less noisy against egress monitoring tuned to spot\nrepeated small connections. The archiving step itself — a call to a bundled compression\nlibrary, or shelling out to a system utility like tar or a scripting host's native\ncompression — is often a useful detection point, since it is a distinct, loggable event\nseparate from the collection that preceded it.\n",
+        "recommendation": "* Hunt for archive creation events (file-creation of .zip/.rar/.7z/.tar in unusual locations, or command-line invocation of archive utilities) as a staging signal independent of the collection techniques feeding it.\n* Recover the staged archive if it has not yet been exfiltrated — it is a direct inventory of everything collected, with no inference needed.\n* Correlate archive creation timing against collection events to establish the collection window precisely.\n",
+        "short_recommendation": "Hunt for archive-creation events as a staging signal distinct from the collection techniques feeding it.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1560/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1560 — Archive Collected Data",
+            "procedure": "Invoked a bundled compression routine to bundle captured files into a single encrypted archive prior to upload."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0003 — Collection",
+            "behavior": "E1560 — Archive Collected Data",
+            "implementation": "Consolidated captured files into a password-protected archive using a statically linked compression library."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "16f5341c-75c0-50b0-94b8-1b4569fdb90c",
+  "tags": [
+    "malware",
+    "endpoint",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "96fd925d-ac7d-5eea-b02d-7abac32928ce",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Cryptocurrency Wallet Targeting",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "The sample searches the host for cryptocurrency wallet files, browser-extension wallet storage, or private keys, and stages them for exfiltration rather than targeting conventional credentials.",
+        "description": "Targets are predictable because wallet software uses well-known file and path conventions\n— wallet.dat and similar for desktop clients, specific extension storage directories for\nbrowser wallets, and clipboard content matching address-format regular expressions for\nopportunistic clipper-style theft. Because a private key or seed phrase gives immediate,\nirreversible control of funds with no password reset available, recovery after exposure is\ngenuinely different from a credential leak: there is no revocation.\n",
+        "recommendation": "* Move funds to a new wallet generated on a clean device immediately; a seed phrase or key file exposure cannot be revoked or rotated.\n* Identify the specific wallet paths and browser-extension storage the sample targeted to scope which wallets were actually at risk.\n* Treat clipboard-matching address theft (see clipboard hijacking) as a related but distinct capability worth checking for separately.\n",
+        "short_recommendation": "Move funds to a newly generated wallet on a clean device; key and seed exposure cannot be revoked.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1555/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0006 — Credential Access",
+            "technique": "T1555 — Credentials from Password Stores",
+            "procedure": "Enumerated known wallet file paths and browser-extension storage directories and staged matching files for exfiltration."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0003 — Collection",
+            "behavior": "B0028 — Cryptocurrency",
+            "implementation": "Searched fixed wallet-file paths and browser-extension local storage for private-key material."
+          }
+        ]
+      }
+    }
+  ]
+}

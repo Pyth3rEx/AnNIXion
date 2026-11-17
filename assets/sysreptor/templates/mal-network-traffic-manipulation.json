@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "a273c690-302e-500f-8889-012aac017215",
+  "tags": [
+    "malware",
+    "infrastructure",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2a5da7f6-5d86-5805-82ca-97854cc5c434",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Network Traffic Manipulation",
+        "cvss": "CVSS:3.1/AV:A/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The sample intercepts and alters network traffic in transit — injecting content into unencrypted responses, redirecting requests, or modifying DNS resolution — rather than merely observing it.",
+        "description": "This requires a position in the traffic path, achieved either through a host-level\ncapability (a local proxy, a modified hosts file or resolver, a malicious browser\nextension) or a network-level one (ARP spoofing, a compromised router). The result is\ncontent the victim did not request and did not come from the legitimate server — injected\nadvertising, a swapped download link, or a redirected login page — delivered over a\nconnection that otherwise looks normal.\n",
+        "recommendation": "* Identify the interception point (local proxy configuration, hosts file, DNS settings, network device) rather than only the manipulated content observed.\n* Compare traffic at the suspected interception point against a known-clean capture of the same destination to confirm manipulation versus legitimate server-side content.\n* Where the interception is network-level rather than host-level, scope the investigation to every host on the affected network segment, not only the one where symptoms were observed.\n",
+        "short_recommendation": "Identify the interception point itself (proxy, DNS, network device), not only the manipulated content observed.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1565/002/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1565.002 — Transmitted Data Manipulation",
+            "procedure": "Installed a local proxy configuration that injected advertising content into unencrypted HTTP responses in transit."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "B0019 — Manipulate Network Traffic",
+            "implementation": "Local proxy rewrote unencrypted HTTP response bodies in transit to inject additional content."
+          }
+        ]
+      }
+    }
+  ]
+}

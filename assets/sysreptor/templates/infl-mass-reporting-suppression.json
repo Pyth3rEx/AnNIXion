@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "37020f62-976d-5ada-b13b-f90f06badd5a",
+  "tags": [
+    "puppet",
+    "platform",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "c0046b8e-85c2-5b22-8caf-9b17fe38c501",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Opposition Voices Suppressed by Mass Reporting",
+        "cvss": "n/a",
+        "summary": "Accounts contradicting the campaign narrative — including customers, staff and\nindependent commentators — were removed or restricted following coordinated false\nreporting.\n",
+        "description": "Suppressing contradiction is cheaper than out-arguing it, and platform enforcement\nprovides the mechanism. Where the people correcting the record are silenced, the campaign\nnarrative stands unopposed without the operation having to win any argument.\n\nThe effect compounds: others observe the removals and decline to speak, so the\nsuppression extends well beyond the accounts actually actioned. That chilling effect is\npart of the impact and is worth stating even though it cannot be counted precisely.\n\nThose suppressed are often not connected to the organisation at all, which complicates\nthe response — the client has no standing to appeal on their behalf, but the silence\nserves the campaign against it.\n",
+        "recommendation": "* Document suppressed accounts and the timing of enforcement; the pattern is what platforms\n  act on.\n* Raise the pattern with platform integrity teams rather than appealing individual\n  decisions the client has no standing in.\n* Record the chilling effect as an impact even where it cannot be quantified.\n",
+        "short_recommendation": "Document the enforcement pattern and raise it with platform integrity teams.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0124"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0124 — Suppress Opposition",
+            "note": ""
+          },
+          {
+            "tactic": "TA18 — Drive Online Harms",
+            "technique": "T0125 — Platform Filtering",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

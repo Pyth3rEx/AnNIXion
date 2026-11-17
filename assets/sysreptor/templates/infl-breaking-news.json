@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "bd203eb3-d95e-5d76-9b7a-d1732e8a4df7",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "737c7987-fe0d-5a5b-bf11-a5f1b91c9542",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Narrative Deployed Against a Breaking Incident",
+        "cvss": "n/a",
+        "summary": "Campaign content was published during an active incident involving the organisation,\nexploiting the period before authoritative information was available.\n",
+        "description": "The information vacuum during an incident is the operation's opportunity. The\norganisation cannot yet say what happened, the audience wants an explanation, and a\nconfident account — however unfounded — fills the space and becomes the reference point\nagainst which the eventual official account is judged.\n\nSpeed of deployment is diagnostic. Content that is substantive and well-produced within\nthe first hours was prepared, which means either foreknowledge or a standing capability\naimed at the organisation. Both are significant findings and should be distinguished\ncarefully, since the first implies a much more serious compromise.\n\nIncident response and communications are usually working separately at this point, which\nis the condition the campaign exploits.\n",
+        "recommendation": "* Hold a pre-agreed holding statement that can be issued within minutes, so the vacuum is\n  not left open.\n* Connect incident response and communications from the first hour, under one decision\n  owner.\n* Assess whether prepared content implies foreknowledge, and treat that as a separate and\n  more serious finding.\n",
+        "short_recommendation": "Fill the vacuum with a pre-agreed holding statement in the first hour.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0068"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA14 — Develop Narratives",
+            "technique": "T0068 — Respond to Breaking News Event or Active Crisis",
+            "note": ""
+          },
+          {
+            "tactic": "TA09 — Deliver Content",
+            "technique": "T0115 — Post Content",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

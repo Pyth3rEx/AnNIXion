@@ -5,10 +5,14 @@
 # launcher, in home/desktop/plasma.nix.
 {
   pkgs,
+  osConfig,
+  lib,
   ...
 }:
 
 let
+  offensiveEnabled = osConfig.annixion.offensiveNet.enable or false;
+
   py = pkgs.python3.withPackages (
     p: with p; [
       dbus-python
@@ -24,60 +28,75 @@ let
       bluez # bluetoothctl
       kdePackages.kdialog # dialog UI
       procps # pkill
+      systemd # systemctl
+      coreutils # timeout
     ];
     text = ''
-      case "''${1:-}" in
-        -h | --help)
-          printf '%s\n' 'usage: annixion-cc
+            case "''${1:-}" in
+              -h | --help)
+                printf '%s\n' 'usage: annixion-cc
 
-      Opens the AnNIXion control center: Wi-Fi, Bluetooth and the network
-      killswitch. Running it again closes an open dialog.
+            Opens the AnNIXion control center: Wi-Fi, Bluetooth and the network
+            killswitch. Running it again closes an open dialog.
 
-        -h, --help  show this help'
-          exit 0
-          ;;
-      esac
+              -h, --help  show this help'
+                exit 0
+                ;;
+            esac
 
-      # Toggle: if already open, close it
-      if pgrep -x kdialog > /dev/null 2>&1; then
-        pkill -x kdialog
-        exit 0
-      fi
+            # Toggle: if already open, close it. kdialog runs wrapped
+            # (.kdialog-wrapped), so match the command line, not comm.
+            if pgrep -f kdialog > /dev/null 2>&1; then
+              pkill -f kdialog
+              exit 0
+            fi
 
-      WIFI=$(nmcli radio wifi 2>/dev/null || echo "unknown")
-      BT_RAW=$(bluetoothctl show 2>/dev/null | awk '/Powered:/{print $2}')
-      BT=$([ "$BT_RAW" = "yes" ] && echo "on" || echo "off")
+            WIFI=$(nmcli radio wifi 2>/dev/null || echo "unknown")
+            BT_RAW=$(timeout 2 bluetoothctl show 2>/dev/null | awk '/Powered:/{print $2}' || true)
+            BT=$([ "$BT_RAW" = "yes" ] && echo "on" || echo "off")
+            ${lib.optionalString offensiveEnabled ''OFF_RAW=$(systemctl is-active annixion-offensive.service 2>/dev/null || echo inactive); OFFENSIVE=$([ "$OFF_RAW" = active ] && echo on || echo off)''}
 
-      CHOICE=$(kdialog \
-        --title "Control Center" \
-        --menu "AnNIXion Control Center" \
-        "wifi"       "Wi-Fi         [$WIFI]" \
-        "bt"         "Bluetooth     [$BT]" \
-        "killswitch" "Network Killswitch" \
-        2>/dev/null) || exit 0
+            CHOICE=$(kdialog \
+              --title "Control Center" \
+              --menu "AnNIXion Control Center" \
+              "wifi"       "Wi-Fi         [$WIFI]" \
+              "bt"         "Bluetooth     [$BT]" \
+              "killswitch" "Network Killswitch" \
+      ${lib.optionalString offensiveEnabled "        \"offensive\"  \"Offensive Net [$OFFENSIVE]\" \\\n"}        2>/dev/null) || exit 0
 
-      case "$CHOICE" in
-        wifi)
-          if [ "$WIFI" = "enabled" ]; then
-            nmcli radio wifi off
-          else
-            nmcli radio wifi on
-          fi
-          ;;
-        bt)
-          if [ "$BT" = "on" ]; then
-            bluetoothctl power off
-          else
-            bluetoothctl power on
-          fi
-          ;;
-        killswitch)
-          kdialog \
-            --warningyesno "Kill ALL network interfaces?\nManual reconnect required to restore." \
-            --title "Network Killswitch" 2>/dev/null \
-            && nmcli networking off
-          ;;
-      esac
+            case "$CHOICE" in
+              wifi)
+                if [ "$WIFI" = "enabled" ]; then
+                  nmcli radio wifi off
+                else
+                  nmcli radio wifi on
+                fi
+                ;;
+              bt)
+                if [ "$BT" = "on" ]; then
+                  bluetoothctl power off
+                else
+                  bluetoothctl power on
+                fi
+                ;;
+              killswitch)
+                kdialog \
+                  --warningyesno "Kill ALL network interfaces?\nManual reconnect required to restore." \
+                  --title "Network Killswitch" 2>/dev/null \
+                  && nmcli networking off
+                ;;
+              ${lib.optionalString offensiveEnabled ''
+                offensive)
+                          if [ "$OFFENSIVE" = "on" ]; then
+                            systemctl stop annixion-offensive.service
+                          else
+                            kdialog \
+                              --warningyesno "Arm offensive networking?\nOpens inbound on the VPN interface and enables redirect/MITM.\nReboot or disarm to restore the hardened posture." \
+                              --title "Offensive Net" 2>/dev/null \
+                              && systemctl start annixion-offensive.service
+                          fi
+                          ;;''}
+            esac
     '';
   };
 

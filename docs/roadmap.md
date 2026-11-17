@@ -17,15 +17,15 @@ Development is organized in phases. Each phase produces a working, testable arti
 
 ---
 
-## Phase 2 — Disk Layout and Full Disk Encryption
+## Phase 2 — Disk Layout and Full Disk Encryption ✓
 
 **Goal:** The ISO can partition a disk, set up LUKS2 encryption, and install NixOS.
 
-- [ ] LUKS2 encryption offered by `annixion-install`, on by default — `cryptsetup` on the root partition, unlocked as `cryptroot`, ESP left unencrypted
-- [ ] Passphrase read twice and passed to `cryptsetup` over stdin (`--key-file -`, no trailing newline, so the key matches what is typed at the boot prompt)
-- [ ] Installer verifies `nixos-generate-config` emitted `boot.initrd.luks.devices` and aborts before `nixos-install` if it did not — otherwise the install succeeds and produces a system whose initrd never asks for a passphrase
-- [ ] Document the keymap trap: the passphrase is typed at the boot prompt under the console keymap (US by default), not the layout used during install
-- [ ] Tested in a VM: full install with encryption passphrase, boots successfully, decrypts on boot
+- [x] LUKS2 encryption offered by `annixion-install`, on by default — `cryptsetup` on the root partition, unlocked as `cryptroot`, ESP left unencrypted
+- [x] Passphrase read twice and passed to `cryptsetup` over stdin (`--key-file -`, no trailing newline, so the key matches what is typed at the boot prompt)
+- [x] Installer verifies `nixos-generate-config` emitted `boot.initrd.luks.devices` and aborts before `nixos-install` if it did not — otherwise the install succeeds and produces a system whose initrd never asks for a passphrase
+- [x] Document the keymap trap: the passphrase is typed at the boot prompt under the console keymap (US by default), not the layout used during install
+- [x] Tested in a VM: full install with encryption passphrase, boots successfully, decrypts on boot
 
 > **disko is not planned.** The layout is already declared, in fifteen lines of
 > `parted`. disko's payoff is btrfs subvolumes and impermanence, neither of
@@ -45,43 +45,46 @@ Development is organized in phases. Each phase produces a working, testable arti
 - [x] Installer available in live session as `annixion-install`
 - [x] Auto-elevates via `sudo`, mounts by device node (no udev race), stages the generated `hardware-configuration.nix` for the flake
 - [x] Installs the config to `~/.dotfiles` (its canonical location) and hands ownership to `operator` so runtime assets (wallpaper, icons, certs) resolve
-- [ ] Refuse to run on legacy BIOS: check `/sys/firmware/efi` before the sudo re-exec, so a machine booted in CSM mode is turned away before any disk is touched rather than failing at the boot loader with the disk already wiped
-- [ ] Whiptail TUI for disk selection and options (currently plain readline prompts)
-- [ ] Encryption passphrase prompt (see Phase 2)
-- [ ] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
-- [ ] Username and password prompt
-- [ ] Timezone selection (searchable list)
-- [ ] Keyboard layout selection, written as `console.keyMap` — also what the LUKS prompt uses
-- [ ] Profile selection (RedTeam, OSINT, Privacy — multi-select)
+- [x] Refuse to run on legacy BIOS: check `/sys/firmware/efi` before the sudo re-exec, so a machine booted in CSM mode is turned away before any disk is touched rather than failing at the boot loader with the disk already wiped
+- [x] `gum` TUI for the wizard (not whiptail — smaller closure, easier to theme red/dark)
+- [x] Encryption passphrase prompt (see Phase 2) — stacked on top of this wizard, closes #78
+- [x] Hostname prompt (pre-filled with random `DESKTOP-XXXXXXX` style name)
+- [x] Password prompt (`users.users.operator.hashedPassword`, `annixion.sysreptor.hashedPassword`)
+- [x] Username prompt (`users.users.operator.name`) — turned out narrower than this once estimated: home-manager's own NixOS integration already derives `home.username`/`home.homeDirectory` from it dynamically, so only `scripts/annixion-install`'s own `/home/operator` paths and two option defaults (`home/desktop/apps-menu.nix`, `user/examples/hackthebox.nix`) needed fixing — the VM test fixtures don't exercise a renamed account and didn't need touching
+- [x] Timezone selection (searchable list)
+- [x] Keyboard layout selection, written as `console.keyMap` — also what the LUKS prompt will use
+- [x] Profile selection (the four Firefox profiles — redteam/osint/puppet/untrusted — multi-select; new `annixion.firefox.profiles.*.enable` toggles, since none existed before this)
+- [x] Desktop compositing, defaulted from the hardware rather than asked blind: `annixion.desktop.compositing` is off by default because a Hyper-V guest has no render node and KWin would rasterize every frame through llvmpipe (#167), but that is a property of the machine being installed to, not a preference — probe `/dev/dri/renderD*` and pre-select on, with the cost named, where one exists. Off costs Konsole transparency and panel blur, which reads as a theming bug rather than a performance setting, so the prompt has to say what it turns off
+- [x] Nixpkgs cooldown pin — default (the repo's own), latest stable release, a specific one, N releases behind the newest, or a fixed number of days old, as a buffer against a supply-chain-compromised nixpkgs commit that hasn't been caught yet. Resolved against GitHub's API and baked into `flake.lock` via `nix flake lock --override-input`, since `nixpkgs` is a flake input resolved before any `annixion.*` option exists to hold this. Persisted in `user/.annixion-nixpkgs-pin`; a plain `nix flake update` has no memory of the override, so `annixion-nixpkgs-cooldown` (and the `update`/`upgrade` aliases, automatically) reapply it afterward. Never aborts the install on a network/API failure — degrades to the repo's own pin with a warning. Closes #39
 - [ ] Secure Boot: offer key creation and enrolment (see Phase 10)
 - [ ] Error handling: graceful rollback on failed partitioning or install
-- [ ] Fix: the script ends on `[[ ... ]] && reboot`, so declining the reboot makes a successful install exit 1
+- [x] Fix: the script ends on `[[ ... ]] && reboot`, so declining the reboot makes a successful install exit 1
 
-### `user/` as the install profile
+### `user/` as the install profile ✓
 
 The installer generates the user config on a first install and consumes it on
 later ones, so an install is reproducible from a folder the operator already
 owns — no second config format.
 
-- [ ] First install writes the answers (username, password hash, hostname, timezone, keymap, encryption, profiles) into `user/configuration.nix` and `user/home.nix`
-- [ ] `--user-config <path|git-url>` imports an existing folder and skips the prompts it covers
-- [ ] Disk selection stays interactive in both modes — it describes the machine in front of you, not a preference
-- [ ] Validate a provided config **before the disk is wiped**: copy `system/hardware-stub.nix` into place and `nix eval` the toplevel `drvPath`, so an incompatible config costs seconds instead of a formatted disk
-- [ ] Strip `system.stateVersion` and hardware-shaped settings on import — stateVersion is machine state, and inheriting an old one silently changes stateful defaults with no error
-- [ ] Retire the shared `hashedPassword` in `flake.nix`, which ships one password hash to every install, in favour of the one collected at install time
-- [ ] Document that the `user/` folder is secret-bearing once it holds a password hash
-- [ ] Note that a provided config is arbitrary Nix evaluated as root during install — pulling one from a URL is code execution from that source
+- [x] First install writes the answers (password hashes, hostname, timezone, keymap, profiles, compositing) into `user/configuration.nix` — nothing the wizard collects belongs in `user/home.nix`, so that file is left alone
+- [x] `--user-config <path|git-url>` imports an existing folder and skips the prompts it covers
+- [x] Disk selection stays interactive in both modes — it describes the machine in front of you, not a preference
+- [x] Validate a provided config **before the disk is wiped**: stage it into a clone of the flake and `nix eval` the `AnNIXion-ci` toplevel's `drvPath` (`system/hardware-stub.nix` stands in for a real machine), so an incompatible config costs seconds instead of a formatted disk
+- [x] Strip `system.stateVersion` on import — it is machine state, and inheriting an old one silently changes stateful defaults with no error. "Hardware-shaped settings" otherwise fall out of the same eval check: a conflicting `fileSystems`/etc. in a candidate collides with the stub and surfaces as a rejected config, not a silent import
+- [x] Retire the shared `hashedPassword`, which shipped one password hash to every install (`system/core/users.nix`), in favour of the one collected at install time — `system/sysreptor.nix`'s matching default retired the same way, same comment called out ("the roadmap retires both together")
+- [x] Document that the `user/` folder is secret-bearing once it holds a password hash
+- [x] Note that a provided config is arbitrary Nix evaluated as root during install — pulling one from a URL is code execution from that source
 
 ### Handling configs from older AnNIXion versions
 
 Only what the installer generated can be migrated mechanically; hand-written Nix
 can be detected but not rewritten.
 
-- [ ] `system/compat.nix` using `lib.mkRenamedOptionModule` / `mkRemovedOptionModule` for the `annixion.*` namespace — adopt as policy now, while there is almost nothing to rename
-- [ ] Write a version stamp (`user/.annixion-version`) at generation and check it on import
-- [ ] On eval failure, offer edit / continue without the config / abort rather than a bare abort
-- [ ] `annixion-config-doctor` — same validation, runnable before `rebuild` on an installed system
-- [ ] `docs/migration.md` per breaking release
+- [x] `system/compat.nix` using `lib.mkRenamedOptionModule` / `mkRemovedOptionModule` for the `annixion.*` namespace — adopted as policy now, while there is still nothing to rename
+- [x] Write a version stamp (`user/.annixion-version`) at generation and check it on import — a missing stamp (hand-written config) and a stamp below `MIN_CONFIG_VERSION` (`scripts/installer/validate.sh`) are both treated as "re-run the wizard, using this as defaults," never as "skip it"
+- [x] On eval failure, offer edit / continue without the config / abort rather than a bare abort
+- [x] `annixion-config-doctor` — same validation, runnable before `rebuild` on an installed system
+- [ ] `docs/migration.md` per breaking release — nothing to migrate yet; written the first time `system/compat.nix` gains a real shim
 
 ### Installing onto an existing partition
 
@@ -91,7 +94,8 @@ can be detected but not rewritten.
 
 ### Testing
 
-- [ ] `tests/repo/installer.sh` — run the installer with every destructive command stubbed and assert the device sequence, the encryption branches and the LUKS guard; wire in as `checks.installer` and in CI. No disk, no VM, no network
+- [x] `tests/repo/installer.sh` — run the installer with every destructive command stubbed (and `nix` itself stubbed, same as `tests/repo/cve-report.sh`) and assert the device sequence, the `--user-config` branches, the EFI guard and the reboot exit-code fix; wired into CI's "[L0] Script tests" step alongside the other `tests/repo/*.sh`. No disk, no VM, no network. The encryption branches and the LUKS guard land with #78. The nixpkgs cooldown pin (#39) lands here too — a `curl` stub backs the GitHub API calls, with assertions for every mode, the no-network degrade path, and the stamp surviving a skip-wizard `--user-config` install
+- [x] `tests/repo/nixpkgs-pin.sh` — unit-level coverage of `installer/nixpkgs-pin.sh`'s resolution logic in isolation (branch offset math, release-string normalization, day-count-to-sha lookup, the no-network degrade path for every mode), stubbing only `curl`
 - [ ] Manual VM install before each release — the stub test proves the right commands are issued, not that the result boots
 
 ---
@@ -113,13 +117,16 @@ can be detected but not rewritten.
 
 ---
 
-## Phase 5 — Desktop Environment ✓
+## Phase 5 — Desktop Environment ✓ (superseded, see Phase 5b)
 
 **Goal:** A functional desktop accessible to both technical and non-technical operators.
 
-**Decision: KDE Plasma 6 on X11**
+**Superseded decision: KDE Plasma 6 on X11**
 
-Rationale:
+> Reversed — see Phase 5b. Kept below for the historical record; this work
+> isn't being redone, it's being gutted.
+
+Rationale (at the time):
 - Broadest audience compatibility — familiar paradigm for operators coming from Windows
 - Full keyboard-driven workflow available via KRunner and Krohnkite tiling
 - Stable X11 session required for reliable xrdp/Enhanced Session support
@@ -137,9 +144,37 @@ Rationale:
 
 ---
 
-## Phase 5a — Hyper-V Enhanced Session Support ✓
+## Phase 5b — Hyprland Migration
+
+**Goal:** Gut KDE/Plasma and X11, bring in Hyprland as the main DE.
+
+**Decision: Hyprland (Wayland)**
+
+Rationale:
+- Tiling-native workflow — no bolted-on tiling script needed, unlike Krohnkite on Plasma
+- Lighter runtime footprint than a full Plasma session
+- Keyboard-driven operation stays first-class, matching the kill-chain menu's design goal
+- Wayland by default — this was blocked on xrdp's Wayland backend maturity (see Phase 5a); that dependency doesn't go away just because the DE changed, it's the open risk this phase carries
+
+- [ ] Gut `system/desktop.nix`'s KDE/Plasma/SDDM path once Hyprland reaches parity — not before
+- [ ] `system/desktop.nix` declares Hyprland as the compositor
+- [ ] Per-user Hyprland config via Home Manager (`home/desktop/hyprland/`), replacing `home/desktop/plasma/`
+- [ ] Status bar / launcher equivalent to the current taskbar and application menu
+- [ ] Theming pass carried over: palette, icons, cursor, fonts
+- [ ] Keybindings carried over: desktop switching, terminal, window close
+- [ ] Open risk: Enhanced Session support (Phase 5a) was built for an X11 KDE session over vsock — xrdp's Wayland backend maturity decides whether that carries over as-is or needs rework
+
+---
+
+## Phase 5a — Hyper-V Enhanced Session Support ✓ (X11/KDE; see Phase 5b for Hyprland)
 
 **Goal:** Full Enhanced Session (clipboard, audio, dynamic resolution, USB redirection) over vsock.
+
+> Built and verified against the KDE Plasma X11 session from Phase 5. This is
+> exactly why Wayland wasn't chosen the first time around — xrdp's Wayland
+> backend wasn't mature enough. Whether it's mature enough now is the open
+> question Phase 5b tracks; until it's answered, don't assume this carries
+> over to Hyprland unchanged.
 
 - [x] `virtualisation.hypervGuest.enable = true`
 - [x] `boot.blacklistedKernelModules = [ "hyperv_fb" ]` — forces `hyperv_drm`
@@ -216,7 +251,7 @@ Rationale:
 
 - [x] ~~`system/tools/{redteam,osint,privacy,sdr}.nix` as separate modules~~ — superseded by `catalog/`, which goes one file per tool. See [architecture.md](architecture.md)
 - [x] Refactor `system/security-tools.nix` into independent files
-- [ ] A profile flag that selects which catalog phases are installed
+- [ ] A profile flag that selects which catalog phases are installed — surfaced in the installer as a per-set toggle (red team tools? OSINT tools? puppet tools? etc.) instead of a separate image per set
 - [ ] Wire profile flags from Phase 3 installer into flake outputs
 - [ ] `flake.nix` conditionally includes tool modules based on selected profile
 
@@ -261,8 +296,8 @@ Everything below is what remains; the next pass gets its own branch.
   - [x] Disable unnecessary services (OpenSSH, ModemManager, geoclue, fwupd, avahi, printing, KDE PIM)
   - [ ] Unit sandboxing for the services that remain — xrdp first, it is the only remotely reachable one
   - [ ] Harden tmpfiles cleanup
-- [ ] Accounts:
-  - [ ] Retire the shared `operator` password hash (see Phase 3)
+- [x] Accounts:
+  - [x] Retire the shared `operator` password hash (done in Phase 3 — the installer collects a per-install hash and the system refuses to evaluate without one)
 - [ ] Audit:
   - [ ] Verify system does not contact unknown hosts on boot
   - [ ] Baseline network traffic analysis
@@ -279,7 +314,7 @@ Everything below is what remains; the next pass gets its own branch.
 
 **Goal:** Someone who has never used NixOS can follow the README and get a working install.
 
-- [ ] ISO tested on real hardware (at least one machine type)
+- [x] ISO tested on real hardware (at least one machine type)
 - [x] Install instructions cover both ISO and existing-NixOS paths
 - [x] `CONTRIBUTING.md` for people who want to add tools or profiles
 - [x] `SECURITY.md` documenting hardening decisions and what is not hardened
@@ -305,12 +340,8 @@ Everything below is what remains; the next pass gets its own branch.
 
 ## Deferred / Future Ideas
 
-- Wayland session support once xrdp Wayland backend matures
-- Hyprland as an optional power-user layer (declared via Home Manager, opt-in)
-- Calamares GUI installer as an alternative to the bash installer
 - ARM64 / Raspberry Pi image target
 - Mullvad kill-switch integration at the NixOS firewall level
 - Auto-updating tool definitions via flake inputs and pinned tool versions
-- Dedicated OSINT VM image — lighter, browser-forward, no pentest tools
 - Offline package cache for air-gapped deployments
 - Rootless container tool environments — shipped as Docker in `system/docker.nix`; podman remains the option if a daemonless runtime is wanted instead

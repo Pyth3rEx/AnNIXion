@@ -55,6 +55,27 @@ wrong=$(jq -er --argjson want "$want" '
 report "$([ -z "$wrong" ] && echo 0 || echo 1)" \
   "the unsafe browser persists nothing" "$wrong"
 
+# ── No sponsored content on any profile's new-tab page ─────────────────────
+# Stock Firefox defaults to sponsored shortcuts + sponsored Pocket stories on
+# about:home, both of which phone home to ad/telemetry endpoints (#204).
+want='{"browser.newtabpage.activity-stream.showSponsored":false,
+       "browser.newtabpage.activity-stream.showSponsoredTopSites":false,
+       "browser.newtabpage.activity-stream.feeds.section.topstories":false,
+       "browser.newtabpage.activity-stream.feeds.topsites":false,
+       "browser.newtabpage.activity-stream.system.showSponsored":false,
+       "extensions.pocket.enabled":false}'
+for profile in osint redteam puppet untrusted; do
+  wrong=$(jq -er --argjson want "$want" --arg p "$profile" '
+    .[$p].settings as $got
+    | [ $want | to_entries[] | . as $e
+        | select($got[$e.key] != $e.value)
+        | "\($e.key)=\(if ($got | has($e.key)) then ($got[$e.key] | tostring) else "unset" end)"
+          + " want \($e.value)" ]
+      | join("; ")' <<<"$profiles") || wrong="jq failed to compare the settings"
+  report "$([ -z "$wrong" ] && echo 0 || echo 1)" \
+    "$profile has no sponsored content" "$wrong"
+done
+
 # ── A launcher that claims a MIME type must be able to receive a URL ───────
 # Without %u/%U the URL is never substituted, Firefox reads the bare argument
 # as a path, and the click lands on file:// instead of the site.

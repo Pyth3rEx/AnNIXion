@@ -1,0 +1,48 @@
+{
+  "format": "templates/v2",
+  "id": "96087f62-c405-503e-ad37-526c637bd413",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "bf6677df-616d-5683-b53c-37f0edaf1c8f",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Keylogging Capability",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "The sample installs a keyboard hook or polls key state to record keystrokes to a local buffer or file for later exfiltration, independent of which application has focus.",
+        "description": "The two common mechanisms are a low-level keyboard hook (SetWindowsHookEx with\nWH_KEYBOARD_LL) and polling GetAsyncKeyState in a tight loop; the former sees every\nkeystroke system-wide through a single callback, the latter requires no hook installation\nat all and is correspondingly harder for hook-enumeration tools to find. Captured output is\ntypically buffered locally and exfiltrated in batches rather than streamed live, to reduce\nnetwork noise.\n",
+        "recommendation": "* Check for both hook-based (SetWindowsHookEx) and polling-based (GetAsyncKeyState loop) capture; the second leaves no hook-chain artefact to enumerate.\n* Locate and recover the local capture buffer or log file before it is next exfiltrated and cleared.\n* Rotate credentials typed on the affected host since the estimated infection window, prioritising anything typed while the hook was confirmed active.\n",
+        "short_recommendation": "Check for polling-based capture in addition to hook-based, and recover the local log before exfiltration.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1056/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1056.001 — Keylogging",
+            "procedure": "Buffered captured keystrokes to a local file and exfiltrated the file in batches over the existing C2 channel."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0003 — Collection",
+            "behavior": "F0002 — Keylogging",
+            "implementation": "Installed a WH_KEYBOARD_LL hook capturing system-wide keystrokes independent of window focus."
+          },
+          {
+            "objective": "OB0005 — Credential Access",
+            "behavior": "F0002 — Keylogging",
+            "implementation": "Installed a WH_KEYBOARD_LL hook capturing system-wide keystrokes independent of window focus."
+          }
+        ]
+      }
+    }
+  ]
+}

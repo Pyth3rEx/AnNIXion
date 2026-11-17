@@ -77,8 +77,11 @@ in
     ./desktop/seclists-explorer.nix
   ];
 
-  home.username = lib.mkDefault "operator";
-  home.homeDirectory = lib.mkDefault "/home/operator";
+  # home.username/home.homeDirectory are never set here: the NixOS
+  # home-manager integration (flake.nix) already derives both from
+  # users.users.operator.name/.home at a priority nothing in this repo
+  # overrides, and there's no standalone homeConfigurations output that
+  # would need a fallback of its own.
 
   # Like system.stateVersion — never change this.
   home.stateVersion = "26.05";

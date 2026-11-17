@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "e8411273-eefb-5c3a-96ae-57a760986f19",
+  "tags": [
+    "malware",
+    "endpoint",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1c1c4e27-5db8-5336-a573-2ab606e4869b",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Execution-Flow Hijacking (DLL Search-Order / COM)",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N",
+        "summary": "The sample places a malicious DLL where a legitimate, trusted application will load it in preference to the real one — via DLL search-order, a missing side-loaded dependency, or a hijacked COM object registration.",
+        "description": "The trusted application does the work of execution for the attacker: it loads and runs the\nmalicious DLL under its own, often signed, identity, with its own permissions, without the\napplication's code needing to be modified at all. Candidates are found by identifying\nwhich DLLs an application requests by name without a full path, or which COM class an\napplication instantiates, and placing or registering a substitute the loader resolves\nfirst.\n",
+        "recommendation": "* Audit DLL search order and missing-dependency load attempts for commonly abused applications, rather than assuming a signed parent process means trusted content.\n* Check COM class registrations for entries pointing outside expected installation directories.\n* Treat an unsigned or recently modified DLL loaded by a signed, trusted parent as a hijacking indicator, not as evidence the parent itself is compromised.\n",
+        "short_recommendation": "Audit DLL search order and COM registrations for substitutions, rather than trusting a signed parent process.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1574/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1574 — Hijack Execution Flow",
+            "procedure": "Placed a malicious DLL earlier in the search path of a signed, trusted application that loaded it by name without a full path."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "F0015 — Hijack Execution Flow",
+            "implementation": "Registered a substitute COM handler that a trusted application instantiated in place of the legitimate one."
+          }
+        ]
+      }
+    }
+  ]
+}

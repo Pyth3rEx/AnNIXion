@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "40f89616-87f8-5045-96c5-43388e036d9b",
+  "tags": [
+    "puppet",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "a6c26f19-66d2-5691-802d-1aee5fb84aec",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Operational Infrastructure Concealed Behind Intermediaries",
+        "cvss": "n/a",
+        "summary": "Campaign infrastructure — domains, hosting and accounts — is registered through privacy\nservices, resellers and intermediaries that break the link between the assets and any\noperator.\n",
+        "description": "Concealment is routine rather than remarkable, and its presence is weak evidence of\nsophistication: privacy registration is the default at most registrars. What carries\nweight is concealment that is inconsistent or incomplete — one asset in a cluster\nregistered openly, a reused registrant email, infrastructure that predates the privacy\nservice.\n\nThose inconsistencies are where attribution actually comes from, and they are usually\nfound by looking at the cluster rather than at the best-hidden member of it.\n\nThe report should be explicit that concealment limits attribution rather than implying\nanything about who is behind it. Operators conceal infrastructure; so do ordinary people\nwith ordinary privacy preferences.\n",
+        "recommendation": "* Preserve registration and hosting records at the time of observation; they change and\n  historical records are not always retrievable.\n* Pursue the inconsistent assets in a cluster rather than the best-concealed one.\n* State plainly where concealment prevents attribution rather than filling the gap with\n  inference.\n",
+        "short_recommendation": "Preserve registration records; attribute from the cluster's inconsistencies.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0130"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0130 — Conceal Infrastructure",
+            "note": ""
+          },
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0129 — Conceal Operational Activity",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

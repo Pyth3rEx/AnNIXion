@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "fa8cd92d-0af9-583b-97fd-dbdf1f523e69",
+  "tags": [
+    "malware",
+    "endpoint",
+    "windows"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "b22b8c71-e529-5062-9406-c7a0abf4a9a3",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Persistence via Registry Run Keys / Startup Folder",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The sample writes an entry to a standard autorun registry key or drops a shortcut into a startup folder, so its payload relaunches automatically on every user logon or system start.",
+        "description": "This is the most heavily used and most heavily monitored persistence mechanism available,\nprecisely because it is simple, reliable across OS versions, and requires no special\nprivilege beyond the current user's own registry access for the per-user keys. Its\nubiquity cuts both ways for the sample's authors: it works almost everywhere, but it is\nalso the first place any competent triage looks, which is why it is frequently paired with\na registry-modification evasion step (see defense-evasion registry modification) to hide\nthe entry itself.\n",
+        "recommendation": "* Enumerate all standard autorun locations (Run/RunOnce keys, startup folders, both per-user and machine-wide) directly rather than relying on a single tool's default coverage.\n* Remove the offending entry and verify the referenced binary or script is also removed or quarantined, not only the registry pointer to it.\n* Baseline autorun entries across the fleet to spot new additions quickly; this location changes rarely in legitimate operation.\n",
+        "short_recommendation": "Enumerate all standard autorun locations directly; this is the most heavily monitored persistence mechanism precisely because it is so common.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1547/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0003 — Persistence",
+            "technique": "T1547.001 — Registry Run Keys / Startup Folder",
+            "procedure": "Wrote a value under HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run pointing at its own executable path."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0012 — Persistence",
+            "behavior": "F0012 — Registry Run Keys / Startup Folder",
+            "implementation": "Persisted via a standard per-user Run key entry referencing its own executable path."
+          }
+        ]
+      }
+    }
+  ]
+}

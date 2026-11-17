@@ -1,0 +1,48 @@
+{
+  "format": "templates/v2",
+  "id": "1ae341bd-7442-5546-a539-cb05d1d302e1",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "67a85dcf-7336-5272-882f-cf0af24a239c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Hidden Files, Processes and Windows",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "The sample sets the hidden/system file attributes, uses a leading dot or reserved naming convention, or otherwise marks its dropped files and directories so they do not appear in a default directory listing.",
+        "description": "This is a cheap, user-mode technique — no kernel component is needed, only standard file\nattribute APIs or naming conventions the shell happens to suppress by default — but it is\neffective against exactly the casual review it is aimed at: an analyst or user browsing\nExplorer or a default `dir`/`ls` will not see the dropped files at all. It is frequently\ncombined with a plausible-looking name (a dotted system-folder name on macOS/Linux, a\nname resembling a legitimate Windows component) rather than relying on hiding alone.\n",
+        "recommendation": "* List directory contents with hidden and system files shown explicitly (dir /a, ls -la) rather than relying on default tooling during triage.\n* Check hidden locations against a known-good baseline for the OS and version in use; legitimate hidden files follow predictable patterns.\n* Treat a hidden file with a name resembling a legitimate component as higher suspicion than an openly visible one with the same name.\n",
+        "short_recommendation": "List directories with hidden and system files shown explicitly; default tooling will not surface this.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1564/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1564 — Hide Artifacts",
+            "procedure": "Set the hidden and system file attributes on its dropped payload and configuration files immediately after writing them."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "E1564 — Hide Artifacts",
+            "implementation": "Dropped files carried the hidden and system attributes and a name resembling a legitimate OS component."
+          },
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "F0005 — Hidden Files and Directories",
+            "implementation": "Dropped files carried the hidden and system attributes and a name resembling a legitimate OS component."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "1ede0a84-1d96-5f17-a208-9050f5d69a39",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "461a7483-80a6-5e3c-9e82-58d782438fa2",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Generic Input Capture via API Hooking",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "The sample hooks or polls input APIs to capture everything typed or entered through standard UI controls, not only keystrokes — form fields, password-masked inputs, and GUI dialog content.",
+        "description": "This is broader than keylogging: it covers hooking at the window-message or accessibility-\nAPI level, which captures input regardless of which keylogging technique (if any) also\nruns, including content entered into password-masked fields that never generates a\nstandard WM_KEYDOWN the keyboard hook would see. It is frequently paired with a specific\ntarget list — banking portals, password managers — rather than capturing indiscriminately.\n",
+        "recommendation": "* Enumerate installed window and accessibility hooks (SetWindowsHookEx chain, UI Automation subscribers) rather than assuming keyboard-only capture.\n* Rotate credentials for any application whose input the sample's target list or captured buffer references.\n* Deploy input-capture detections at the API level (hook installation, accessibility-API subscription) rather than relying solely on keylogger-specific signatures.\n",
+        "short_recommendation": "Enumerate installed window and accessibility hooks rather than assuming keyboard-only capture.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1056/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0009 — Collection",
+            "technique": "T1056 — Input Capture",
+            "procedure": "Installed a window-message hook and an accessibility-API subscription targeting known banking-portal window classes."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0005 — Credential Access",
+            "behavior": "E1056 — Input Capture",
+            "implementation": "Subscribed to UI Automation events to capture form-field content independent of the keyboard hook."
+          }
+        ]
+      }
+    }
+  ]
+}

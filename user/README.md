@@ -14,7 +14,7 @@ Your files here have higher priority by default (100 vs 1000). So:
 
 ```nix
 # base config says:
-time.timeZone = lib.mkDefault "Europe/Paris";
+time.timeZone = lib.mkDefault "UTC";
 
 # you write in user/configuration.nix:
 time.timeZone = "America/New_York";   # ← this wins, no lib.mkForce needed
@@ -33,6 +33,27 @@ user/
     ├── zsh.nix           welcome banner + recon aliases
     └── hackthebox.nix    HTB networking helper (dnsmasq, annixion-htb-hosts, annixion-htb-vpn)
 ```
+
+---
+
+## This folder holds secrets once it holds a password
+
+`annixion-install`'s wizard (or you, by hand) sets
+`users.users.operator.hashedPassword` and `annixion.sysreptor.hashedPassword`
+here. They're hashes, not plaintext, but treat the folder as secret-bearing
+from that point on — don't paste its contents anywhere public, and don't
+commit it to a fork you intend to share.
+
+---
+
+## Nixpkgs cooldown
+
+If the wizard's nixpkgs cooldown question picked anything other than
+"same as the repo," that policy is stamped in `user/.annixion-nixpkgs-pin`
+— not a secret, just a policy. The `update`/`upgrade` aliases reapply it
+automatically after `nix flake update`, since a plain flake update has no
+memory of the override on its own; run `annixion-nixpkgs-cooldown` by hand
+if you ever call `nix flake update` some other way.
 
 ---
 
@@ -85,6 +106,9 @@ environment.systemPackages = with pkgs; [ tcpdump ];
 
 # Add yourself to a group
 users.users.operator.extraGroups = [ "wheel" "networkmanager" "docker" ];
+
+# Drop a Firefox profile you don't want (all four ship by default)
+annixion.firefox.profiles.puppet.enable = false;
 ```
 
 Full option list: <https://nixos.org/manual/nixos/stable/options>

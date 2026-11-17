@@ -1,0 +1,30 @@
+{
+  "format": "templates/v2",
+  "id": "1d016eac-97ee-563c-abb0-544a523a6aed",
+  "tags": [
+    "red",
+    "physical",
+    "osint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "a0905408-c66c-561e-bfe3-7e75607bd1d0",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Sensitive Material Exposed on Desks and in Waste",
+        "cvss": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "summary": "Confidential documents, written credentials and internal material were visible on desks, on whiteboards and in unsecured waste, and could be read or removed by anyone passing through the office.\n",
+        "description": "Printed material is outside every technical control: it is not encrypted, not logged, and not revoked. A walk through an office after hours typically yields network diagrams, staff lists, contracts, customer data and credentials written on notes near monitors.\n\nWaste is the richer source. Ordinary bins and unsecured recycling collections contain drafts, printed emails, visitor logs and expired access lists — material that is individually unremarkable and collectively a detailed picture of the organisation, its people and its systems.\n\nWhiteboards left after meetings are a particular problem in rooms visitors are left alone in, since they often carry architecture, project names and credentials from troubleshooting sessions.\n",
+        "recommendation": "* Set a clean desk standard: material secured when the desk is unattended overnight, with lockable storage provided to make that possible.\n* Place cross-cut shredders or secured confidential waste bins at every print area, and audit what reaches general waste.\n* Require secure print release at the device, so printed output is not left in trays.\n* Clear whiteboards after meetings, especially in rooms used with visitors.\n* Extend the same handling to home-working environments.\n",
+        "short_recommendation": "Enforce a clean desk standard and secure confidential waste.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1052/"
+        ],
+        "affected_components": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "fc964d55-9c92-5025-8edc-10123472a5ab",
+  "tags": [
+    "malware",
+    "endpoint",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "227ba4e4-9599-518a-b2fe-7d5f8f286228",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Mass-Mailing Self-Propagation",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:N",
+        "summary": "The sample sends email from the infected host or a compromised mailbox to propagate itself or deliver further payloads, using the victim's own contacts or address book as a target list.",
+        "description": "Propagating through a victim's own contact list or compromised mailbox lends the outbound\nmessage inherited trust — recipients see a message from someone they genuinely know,\nwhich defeats the usual heuristic of distrusting unfamiliar senders. Implementations range\nfrom driving a local mail client's send function directly, to authenticating against a\ncompromised webmail or SMTP account and sending independently of any client the victim\nuses.\n",
+        "recommendation": "* Audit the compromised account's sent-mail folder and server-side logs for the full recipient list, since the victim's own client history may not show server-side sends.\n* Rotate credentials for any mail account the sample had access to, and review for forwarding rules or app-password grants added alongside the compromise.\n* Notify recipients promptly; a message from a genuinely known sender is more likely to be acted on, raising the urgency of containment relative to the initial infection alone.\n",
+        "short_recommendation": "Audit server-side sent-mail logs for the full recipient list, and rotate credentials for the compromised account.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1534/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0008 — Lateral Movement",
+            "technique": "T1534 — Internal Spearphishing",
+            "procedure": "Authenticated against the victim's webmail account via stolen session cookies and sent a copy of itself to every contact in the address book."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0009 — Execution",
+            "behavior": "B0020 — Send Email",
+            "implementation": "Harvested the address book and sent itself to every contact using the compromised account's own send capability."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "a97ddf2a-dad1-529d-922a-155a8d7d8890",
+  "tags": [
+    "puppet",
+    "platform"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "f63c4e31-e1d3-5698-a9e1-60e0d39d3750",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Funds Solicited Under the Organisation's Name",
+        "cvss": "n/a",
+        "summary": "Fundraising was conducted using the organisation's name, branding or cause, directing\ndonations to accounts outside its control.\n",
+        "description": "Monetised campaigns behave differently from purely political ones. Revenue sustains the\noperation, and the need to keep earning shapes the content towards whatever converts,\nwhich makes the campaign more responsive and more persistent.\n\nIt also creates the strongest attribution evidence available. Payment infrastructure is\nregulated and identity-bound in ways that posting is not, and a payment processor\nresponds to a fraud complaint from a trademark holder far faster than a platform responds\nto a misinformation report.\n\nDonors are victims here, and the organisation's handling of them affects whether they\naccept the correction. A statement framed solely as protecting the brand will not reach\npeople who believe they gave to a cause.\n",
+        "recommendation": "* Report to the payment processor and the fundraising platform as fraud and trademark\n  abuse, which is the fastest available route.\n* Publish the organisation's genuine donation routes so there is an authoritative\n  comparison.\n* Address affected donors as people who were defrauded rather than as a reputational\n  problem.\n* Preserve payment identifiers; they are the strongest attribution evidence in most\n  campaigns.\n",
+        "short_recommendation": "Report to the payment processor as fraud; publish genuine donation routes.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0017"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA10 — Drive Offline Activity",
+            "technique": "T0017 — Conduct Fundraising",
+            "note": ""
+          },
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0014 — Prepare Fundraising Campaigns",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

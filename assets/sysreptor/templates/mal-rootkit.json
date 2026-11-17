@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "f90848fb-c1bb-5f91-a38e-bb27dea3ef25",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "00b0df07-00fe-50b2-a3ff-662db20b639d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Kernel-Mode Rootkit",
+        "cvss": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The sample installs a kernel-mode driver or hooks kernel structures to hide its own files, processes, registry keys or network connections from user-mode tools, including some EDR sensors.",
+        "description": "Kernel-mode operation gives the rootkit a vantage point above most detection tooling,\nwhich typically runs in user mode: a hidden process simply does not appear in an\nenumeration API the kernel component has altered, regardless of how the request was made.\nModern variants frequently abuse a signed, vulnerable third-party driver (a 'bring your own\nvulnerable driver' pattern) rather than shipping an unsigned one, to pass driver-signing\nenforcement.\n",
+        "recommendation": "* Enumerate loaded drivers against a known-good baseline, including version and signer, rather than trusting user-mode process and file listings alone.\n* Boot from external/offline media to inspect disk and registry state the live kernel may be hiding.\n* Check driver-signing allow-lists for known-vulnerable signed drivers that could be abused to load unsigned code alongside them.\n",
+        "short_recommendation": "Enumerate loaded drivers against a known-good baseline; do not trust live user-mode listings alone.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1014/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1014 — Rootkit",
+            "procedure": "Loaded a kernel driver that hooked the process-enumeration syscall table to remove its own PID from returned listings."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "E1014 — Rootkit",
+            "implementation": "Kernel driver hooked NtQuerySystemInformation to filter the sample's own process from enumeration results."
+          }
+        ]
+      }
+    }
+  ]
+}

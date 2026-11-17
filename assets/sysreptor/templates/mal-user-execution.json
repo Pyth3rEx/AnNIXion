@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "815bc5c3-4a75-5382-80d6-510bcea2b163",
+  "tags": [
+    "malware",
+    "endpoint",
+    "social"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d3345840-a4b7-5a62-97c1-8ac547074600",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "User-Execution Lure (Double Extension / Icon Spoof)",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:L",
+        "summary": "The sample relies on the victim taking a specific action to launch it — opening an attachment, enabling macros, running a file disguised with a spoofed icon or double extension — rather than exploiting a vulnerability.",
+        "description": "This is the lowest-cost delivery mechanism available and remains common precisely because\nit needs no exploit to work, only a convincing enough lure and a brief lapse in attention:\na file named invoice.pdf.exe with a PDF icon, a document whose content is a fabricated\nwarning instructing the user to 'enable content' to view it, or an archive whose contents\nare named to encourage opening without a second thought.\n",
+        "recommendation": "* Configure Explorer and mail clients to always show full file extensions; a double-extension lure depends entirely on this being hidden by default.\n* Disable macro execution by default for documents originating from the internet, and require explicit justification to re-enable per document.\n* Train users on the specific lure pattern observed (icon spoofing, fabricated 'enable content' prompts) rather than generic phishing awareness alone — concrete examples transfer better than abstractions.\n",
+        "short_recommendation": "Show full file extensions by default and disable macros for internet-sourced documents; the lure depends on both being hidden.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1204/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0002 — Execution",
+            "technique": "T1204 — User Execution",
+            "procedure": "Named the dropped executable 'Invoice.pdf.exe' with an embedded PDF-viewer icon resource to spoof the file type at a glance."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0009 — Execution",
+            "behavior": "E1204 — User Execution",
+            "implementation": "Dropped file used a spoofed icon resource and double extension to encourage the victim to open it as a document."
+          }
+        ]
+      }
+    }
+  ]
+}

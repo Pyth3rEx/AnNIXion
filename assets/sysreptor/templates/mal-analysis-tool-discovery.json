@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "08fcb00d-c9b1-523a-a0b7-e894953e305b",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3b627dbe-8f11-544a-939e-cb0b5e829b1c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Analysis and Security-Tool Discovery",
+        "cvss": "n/a",
+        "summary": "The sample enumerates running processes and installed software for known security and analysis tools — AV/EDR agents, debuggers, network sniffers, virtualization guest tools — and adjusts its behaviour based on what it finds.",
+        "description": "Unlike the generic sandbox and VM checks covered elsewhere, this targets named, specific\ntools: a hardcoded list of process names or installed-software entries corresponding to\nparticular vendors' products. The response varies by family — some simply withhold their\npayload, others selectively disable or evade the specific product detected, having a\ntailored response ready for each.\n",
+        "recommendation": "* Recover the hardcoded tool list; it directly indicates which security products the sample's authors specifically tested against and planned around.\n* Where the response is product-specific rather than uniform withholding, test the sample against the named products individually to observe the tailored behaviour.\n* Treat absence of the normally-expected security-tool processes, if removed or hidden by the sample, as a secondary indicator alongside this check.\n",
+        "short_recommendation": "Recover the hardcoded security-tool list to learn which products the sample's authors specifically planned around.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1518/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0007 — Discovery",
+            "technique": "T1518.001 — Security Software Discovery",
+            "procedure": "Enumerated running processes against a hardcoded list of EDR and AV vendor process names and withheld payload execution on a match."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0007 — Discovery",
+            "behavior": "B0013 — Analysis Tool Discovery",
+            "implementation": "Checked installed-software and running-process lists against named security-vendor entries."
+          }
+        ]
+      }
+    }
+  ]
+}

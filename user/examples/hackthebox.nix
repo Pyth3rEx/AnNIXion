@@ -171,7 +171,7 @@ in
     };
     user = lib.mkOption {
       type = lib.types.str;
-      default = "operator";
+      default = config.users.users.operator.name;
       description = "Username of the user";
     };
     upstreams = lib.mkOption {

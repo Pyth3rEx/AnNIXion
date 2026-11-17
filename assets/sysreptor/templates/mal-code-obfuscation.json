@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "db80bece-b27d-5da9-b1b7-54fb52330bbe",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "154cfe04-64d0-5331-aca5-81e413417b60",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Obfuscated Code and Control Flow",
+        "cvss": "n/a",
+        "summary": "Strings, control flow or both are deliberately obscured in the shipped binary or script — encoded strings decoded at runtime, opaque predicates, junk instructions — to slow static review without necessarily packing the whole file.",
+        "description": "Unlike packing, obfuscation of this kind leaves the file's overall structure intact and\noperates at a finer grain: a string table that decodes itself with a one-byte XOR loop at\nstartup, control flow flattened into a single dispatcher with a state variable, or dead\nbranches inserted purely to inflate a disassembler's work. The intent is the same —\nincrease analyst time per sample — but the mechanism does not require an unpacking step.\n",
+        "recommendation": "* Decode obfuscated strings programmatically (identify the routine, re-run it standalone against the encoded blob) rather than by hand.\n* Where control flow is flattened, trace the dispatcher's state variable through one execution to recover the logical order before reading the disassembly linearly.\n* Keep the deobfuscation script; it is almost always reusable, unmodified, across the rest of the family.\n",
+        "short_recommendation": "Automate string and control-flow deobfuscation rather than reviewing it by hand.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027 — Obfuscated Files or Information",
+            "procedure": "Strings decoded themselves via a single-byte XOR loop executed at module start."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0002 — Anti-Static Analysis",
+            "behavior": "B0032 — Executable Code Obfuscation",
+            "implementation": "String table stored XOR-encoded and decoded in place before first use."
+          }
+        ]
+      }
+    }
+  ]
+}

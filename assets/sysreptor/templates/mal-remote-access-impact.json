@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "c7d506e1-cccc-57d2-98ff-03724657a5e7",
+  "tags": [
+    "malware",
+    "endpoint",
+    "detection"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "560bb7bc-28fc-5771-86b0-f5bcc0b0ffc7",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Operator Remote-Access / RAT Control Channel",
+        "cvss": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "summary": "The sample exposes a remote-control channel giving the operator interactive access to the host — screen view, file transfer, command execution — equivalent to a legitimate remote-access tool but installed and run covertly.",
+        "description": "This describes full interactive control rather than a scripted C2 command set: the operator\ncan browse the filesystem, run arbitrary commands, and often see the desktop live, which is\nwhy capability-wise a RAT of this kind is closer to a legitimate remote-support tool\nrunning without the user's knowledge than to a narrow-purpose implant. Some families\nreuse a legitimate remote-access tool's binary wholesale (a 'living off trusted software'\npattern) rather than implementing the channel themselves, trading custom-malware detection\nrisk for the tool's normally-trusted reputation.\n",
+        "recommendation": "* Identify whether the remote-access capability is custom or a repurposed legitimate tool; the latter needs vendor-specific detection and configuration review, not malware signatures.\n* Terminate the active session and rotate any credentials or sessions the operator could have observed during interactive access.\n* Audit for other legitimate remote-access software installed without a corresponding change-management record, given how often this capability reuses trusted tools.\n",
+        "short_recommendation": "Determine whether the channel is custom or a repurposed legitimate remote-access tool; the response differs for each.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1219/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0011 — Command and Control",
+            "technique": "T1219 — Remote Access Tools",
+            "procedure": "Installed a bundled copy of a legitimate remote-access tool configured to connect out to operator infrastructure on startup."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "B0022 — Remote Access",
+            "implementation": "Provided the operator full interactive desktop and file-transfer access over an outbound connection."
+          }
+        ]
+      }
+    }
+  ]
+}

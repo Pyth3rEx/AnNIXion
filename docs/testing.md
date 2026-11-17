@@ -56,7 +56,7 @@ should not have to guess whether it was considered or forgotten.
 
 ## The two kinds
 
-| | Fixture tests (`tests/*.sh`) | VM tests (`tests/*.nix`) |
+| | Fixture tests (`tests/{repo,shell}/*.sh`) | VM tests (`tests/system/*.nix`) |
 |---|---|---|
 | What they are | Plain shell, driving a real script | `nixosTest` — boots one or more machines in QEMU |
 | What they prove | A decision is made correctly | A system behaves correctly once running |
@@ -81,17 +81,30 @@ a path a module chose.
 | Test | What it covers |
 |---|---|
 | `tests/repo/milestone.sh` | Which milestone new work lands on, and the column that implies. Drives `assign-milestone.sh` and `board-status.sh` through `--select` and `--decide`. |
+| `tests/repo/nixpkgs-pin.sh` | That `installer/nixpkgs-pin.sh`'s cooldown resolution holds up on its own: branch existence checks, the offset math behind "N releases behind the newest" (including running out of known history), release-string normalization (bare vs `nixos-`-prefixed, and a nonexistent one), the day-count-to-commit-sha lookup, and that every mode except `specific` degrades to a clean failure — never a crash — with no network, while `specific` deliberately trusts its typed value instead since it cannot be validated offline. Stubs `curl` as a shell function; no network, no `nix`. |
+| `tests/repo/installer.sh` | That `annixion-install` issues the right commands with every destructive or interactive step stubbed on `PATH` — `parted`, `mkfs.*`, `mount`, `nixos-install`, `gum`, `mkpasswd`, and `nix` itself as a log-and-answer stub. Asserts the device sequence, the `--user-config` and `--branch` branches, the UEFI guard that turns away a legacy-BIOS boot before any disk is touched, the LUKS and cooldown-pin paths, and the reboot exit-code fix. No disk, no VM, no network. |
+| `tests/shell/nix-ld.sh` | That a prebuilt foreign binary asking for `/lib64/ld-linux-x86-64.so.2` finds a loader — `programs.nix-ld` supplies the interpreter and the GUI libraries one pulls in at run time, so the "cannot execute: required file not found" failure on a file that is present does not happen. |
+| `tests/shell/resource-housekeeping.sh` | The four resource bounds that only surface as a slow leak — a capped journal, store optimisation, a zram memory cushion, and no `wpa_supplicant` on a machine with no radio (#168) — checked against the configuration the next activation would apply, since none of them fail loudly. |
+| `tests/shell/click-behaviour.sh` | That a single click selects rather than opens (#171): plasma-manager writes `clickItemTo` and `kdeglobals` through different paths that can disagree without either looking wrong, and the desktop runs focus-follows-mouse, which makes an accidental open easy to trigger. |
 | `tests/shell/prompt-width.sh` | The prompt's responsive ladder: the top line never wraps, and a `nix-shell` stays marked, at every width. Renders the theme the repository ships. |
 | `tests/shell/firefox-profiles.sh` | Which profile owns a link, whether the throwaway one forgets, and whether a launcher can receive a URL at all. |
 | `tests/shell/catalog.sh` | That the catalog still describes a menu that can be built: no node holding both sub-menus and tools, no leaf without a category, no two nodes claiming one, every `alsoIn` naming a phase that exists, every mark name unique, and as many `.desktop` entries reaching the desktop as the catalog declares tools. None of these error on their own — the menu just comes out missing something. |
 | `tests/shell/menu-icons.sh` | That every `Icon=` the application menu writes resolves to a real file in the theme the desktop selects, and that every un-namespaced file in that theme is an alias onto a mark that exists. A name that resolves nowhere draws a blank placeholder rather than erroring. |
 | `tests/shell/menu-exec.sh` | That a catalog tool's `Exec=` is a real binary on `PATH`, not only a `programs.zsh.shellAliases` entry — a menu launch runs non-interactively and never sources `.zshrc`, so an alias-only command fails with "command not found" from every launcher except a prompt already inside an interactive shell (#126). |
 | `tests/shell/branding.sh` | That the boot splash, the greeter and the installer image are still the AnNIXion ones. All three fail quietly — Plymouth to a black screen, SDDM to stock Breeze, the ISO to NixOS artwork. |
+| `tests/shell/greeter-session.sh` | That the greeter runs the display server the session runs. A Wayland greeter handing off to an X11 session is never reaped, so its scope keeps a second compositor and ~680 MB for the whole uptime (#165) — asserted on the config SDDM actually reads, not only on the option upstream takes. Also that dropping the Wayland greeter did not drop the Wayland session from the list. |
+| `tests/shell/vscodium-gpu.sh` | That the editor still launches with `--disable-gpu`. With no DRM render node Chromium falls back to SwiftShader, whose eight rasterizer threads are 83% of the editor's entire CPU time (#166). Built, not read out of the expression — the flag lives in a wrapper, and the failure is a package bump that drops it. Also that every launch path (desktop entry, menu, `Meta+F11`) goes through that wrapper rather than round it. |
+| `tests/shell/vscodium-settings.sh` | The editor settings and extensions nothing in the UI surfaces, so a profile rename or an upstream default flip would drop them silently — including dispatching keybindings on `keyCode` rather than scan codes, since Hyper-V Enhanced Session reports scan codes the editor cannot trust and dispatching on them turns AltGr into a bare cursor-left and loses AZERTY's third level (#163). |
+| `tests/shell/kwin-compositing.sh` | The compositing gate: off by default, because llvmpipe costs about three quarters of a core on a guest with no render node (#167), and still answers to `annixion.desktop.compositing` so bare metal can have its compositor back. Read out of the kwinrc activation would write, since KWin 6 dropped the D-Bus method that allowed a live toggle. |
 | `tests/shell/etc-hosts.sh` | That `/etc/hosts` stays a real file root can edit, and stays world-readable. At `0700` the rootless daemon hangs in `activating` forever, which parks `default.target` and with it any `nixos-rebuild switch`. |
+| `tests/shell/sysreptor.sh` | That `sysreptor setup` never rewrites the `app.env` it already wrote. SysReptor encrypts the database with those keys, so a setup that regenerates them exits zero and leaves every existing report unreadable. Also the rest of the wrapper's contract: the secrets land where `env_file: ../app.env` resolves, both external volumes get created, a restore checks its file before dropping the database, and the annixion designs are imported exactly once — `importdemodata` duplicates every design in a pack each time it runs — with an extraDesigns fixture proving the same reconciliation for a user-supplied HTB pack, built with no network through `sysreptor-packs.nix`. Plus what `annixion.sysreptor` decides, asserted on both postures: loopback-only keeps the firewall shut, `networkAccessible` opens the port and puts the hostname in `ALLOWED_HOSTS`. The generated config is read the way the wrapper reads it — by sourcing it. The login is created once and never re-applied. Also that the distribution's own finding library reaches the pack intact, and that the web theme is valid JSON whose header logo decodes to the mark `catalog/logo.nix` draws. The three report designs built so far are checked the same way: every `report.*` and `finding.*` the template references must be a field the design declares, and the inline mark must carry no double quote. Driven against the built script with a stub `docker` and a stand-in health endpoint on loopback — no daemon, no images. |
+| `tests/shell/tlog.sh` | That `--log-input` really is the deliberate opt-in it claims to be: a secret fed to a recorded session is absent from the recording by default and present only once `--log-input` is given — the one property that matters most here. Also the vendored package actually builds (`tlog` is not in nixpkgs yet), the wrapper's own contract — `start` refuses to nest inside an already-recording shell, `list`/`play` find what `start` wrote, `push` resolves the right file (an explicit path, or the shell's own `$ANNIXION_TLOG_FILE`, or the most recent on disk) and hands `reptor` both the raw recording and a transcript generated by reading the JSON directly rather than through `tlog-play`, which hangs on a non-interactive stdin — and that a missing `tlog-rec`/`tlog-play`/`reptor` fails by name. Driven against the built package with a stand-in build-tree config layout (there is no real `/etc/tlog` outside a NixOS system) and a stub `reptor` — no docker, no network, no VM. |
 | `tests/repo/workflow-injection.sh` | That no workflow interpolates a `${{ }}` expression into a `run:` block, where text a stranger can write becomes shell. |
 | `tests/repo/workflow-permissions.sh` | That every job declares what its token may do, rather than inheriting a ceiling set in a web UI. |
 | `tests/repo/stale-reviews.sh` | When an unanswered review goes stale, driven through the real script's `--decide`. |
 | `tests/repo/pr-column.sh` | Which board column a pull request lands in as it opens, moves in and out of draft, or is closed unmerged — and that `project.yml` still receives those events. |
+| `tests/repo/form-fields.sh` | The Priority and Size the board reads off an issue form, and the events that carry them there — written only when empty, so a maintainer's correction is never overwritten by a later re-run. |
+| `tests/repo/closing-issues.sh` | The closing references read out of a pull request body: GitHub populates `closingIssuesReferences` asynchronously, so a merge landing before it resolves used to move nothing (#169); the body-parsing fallback is what the test pins. |
 | `tests/repo/sbom.sh` | That both release SBOMs are generated, measured and published — and that the ways they degrade silently are refused: a store path in place of a flakeref, a document with no components, a runtime SBOM where nothing carries a licence, a build closure that no longer contains the runtime one. Drives the real script with `sbomnix` and `nix` stubbed. |
 | `tests/repo/security-pages.sh` | That the four published security pages keep the installed closure, its findings and the applications somebody chose apart — and that every maintainer stays individually reachable rather than collapsing into a `+3` nobody can contact. |
 | `tests/repo/cve-status-workflow.sh` | That the weekly scan publishes only when it has news: a run where nothing but the clock moved must not commit, and one where a count changed on that same line must. Also that `ci.yml` ignores pushes to the generated pages — without it every Monday's bot commit starts a three-hour ISO build. |
@@ -108,6 +121,7 @@ a path a module chose.
 | `tests/system/boot.nix` | The system boots, and the services a login depends on come up. |
 | `tests/system/security-tools.nix` | The security toolset is actually on `PATH` on a built system. |
 | `tests/system/vpn-enforcement.nix` | The killswitch: what is allowed out, what is not, and what happens when the tunnel drops. |
+| `tests/system/offensive-net.nix` | The opt-in offensive-networking toggle: `annixion-offensive on` opens inbound on a trusted interface and relaxes the redirect/MITM sysctls, `off` restores the hardened posture, and the box still boots hardened with only the machinery installed. |
 | `tests/system/shells.nix` | The shell module — prompt and tint asserted against the same sources the system wires in, so it cannot pass on a stale copy. |
 | `tests/system/xrdp-session.nix` | That a user manager does not outlive the session it was set up for, that a connection takes over a desktop that is already running rather than waiting on a D-Bus name it cannot have, and that Enhanced Session stays configured. |
 | `tests/system/bind-axfr.nix` | A real zone transfer between two machines, and `dns-axfr.sh` driven against a server we control — the AXFR path with no network involved. |
@@ -122,17 +136,30 @@ a path a module chose.
 # L0 — fixture tests. Fast enough to run on every save.
 .github/scripts/lint.sh
 tests/repo/milestone.sh
+tests/repo/nixpkgs-pin.sh
+tests/repo/installer.sh
 tests/shell/prompt-width.sh
 tests/shell/firefox-profiles.sh
 tests/shell/catalog.sh
 tests/shell/menu-icons.sh
 tests/shell/menu-exec.sh
 tests/shell/branding.sh
+tests/shell/greeter-session.sh
+tests/shell/vscodium-gpu.sh
+tests/shell/vscodium-settings.sh
+tests/shell/kwin-compositing.sh
+tests/shell/click-behaviour.sh
+tests/shell/nix-ld.sh
+tests/shell/resource-housekeeping.sh
 tests/shell/etc-hosts.sh
+tests/shell/sysreptor.sh
+tests/shell/tlog.sh
 tests/repo/workflow-injection.sh
 tests/repo/workflow-permissions.sh
 tests/repo/stale-reviews.sh
 tests/repo/pr-column.sh
+tests/repo/form-fields.sh
+tests/repo/closing-issues.sh
 tests/repo/sbom.sh
 tests/repo/supply-chain.sh
 tests/repo/package-provenance.sh

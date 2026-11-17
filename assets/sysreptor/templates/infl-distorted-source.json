@@ -1,0 +1,41 @@
+{
+  "format": "templates/v2",
+  "id": "10af4600-34da-53d1-a3ca-96c2396aa0a8",
+  "tags": [
+    "puppet",
+    "narrative"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "d2049433-8577-57e5-8ae8-0ddda5a16d36",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Genuine Material Distorted to Carry the Claim",
+        "cvss": "n/a",
+        "summary": "The campaign's central claim is built on genuine material — a real document, statistic or\nquotation — presented without the context that changes its meaning.\n",
+        "description": "This is the most durable construction available to an operator, because every element is\nverifiable. Fact-checking confirms the source, the quotation and the number, and\nconfirmation is what the audience takes away. The distortion lives in framing, which\nfact-checking does not address.\n\nA kernel of truth also protects the campaign against takedown: platforms are reluctant to\nact on content that is technically accurate, and the organisation's own rebuttal must\nbegin by conceding the facts.\n\nThe analytic task is to state precisely what was removed — the sentence before the\nquotation, the denominator under the statistic, the date. That specificity is what makes\nthe finding usable; \"taken out of context\" without the missing context is not a finding.\n",
+        "recommendation": "* Respond by supplying the missing context in full rather than by disputing the facts,\n  which are correct.\n* Publish the complete source material where possible, so the context is available\n  without the organisation having to narrate it.\n* Expect platform reporting to fail on this content and plan the response accordingly.\n",
+        "short_recommendation": "Supply the missing context; do not dispute the verifiable facts.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0023"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0023 — Distort Facts",
+            "note": ""
+          },
+          {
+            "tactic": "TA08 — Conduct Pump Priming",
+            "technique": "T0042 — Seed Kernel of Truth",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

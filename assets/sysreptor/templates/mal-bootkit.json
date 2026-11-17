@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "5cf0dd41-84be-5659-9ddf-222dace9b900",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3097ff22-1719-5eb2-a5a1-75cbe19d517c",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Bootkit / Pre-OS Persistence Hijack",
+        "cvss": "CVSS:3.1/AV:L/AC:H/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "summary": "The sample replaces or patches boot-chain components — the MBR, bootloader, or UEFI firmware — so its code runs before the operating system, and before most security tooling, loads.",
+        "description": "Executing ahead of the OS is the whole point: a bootkit can disable or patch the security\ncontrols the OS would otherwise start, and survives a straightforward OS reinstall that\ndoes not also rewrite the boot chain. UEFI variants, in particular, can persist through a\nfull disk wipe if they live in flash rather than on the drive itself, which changes the\nremediation calculus from 'reimage' to 'reflash firmware, then reimage'.\n",
+        "recommendation": "* Verify boot-chain integrity (Secure Boot status, bootloader hash, UEFI firmware version/hash) against a known-good baseline, not just the OS volume.\n* Where UEFI compromise is suspected, reflash firmware from a trusted source before reimaging — a disk wipe alone will not remove it.\n* Enable Secure Boot and firmware write-protection as a baseline control; this class of persistence depends on being able to write to the boot chain in the first place.\n",
+        "short_recommendation": "Verify boot-chain and firmware integrity directly; reimaging the OS volume alone will not remove this.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1542/003/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1542.003 — Bootkit",
+            "procedure": "Overwrote the master boot record with a loader that patched kernel initialisation before the OS's own drivers loaded."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "F0013 — Bootkit",
+            "implementation": "Patched the master boot record to load the payload ahead of the operating system kernel."
+          }
+        ]
+      }
+    }
+  ]
+}

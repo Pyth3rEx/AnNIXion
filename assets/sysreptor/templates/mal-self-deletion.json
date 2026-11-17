@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "e0483f21-2d51-5c10-ab1c-da406cc86f4e",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3860911f-dcee-5ffb-b820-8c24b82d3c99",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Self-Deletion After Execution",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:N",
+        "summary": "After establishing persistence or completing its task, the sample deletes its own executable from disk, leaving no file for later static analysis or signature scanning to find.",
+        "description": "Self-deletion is usually implemented as a delayed delete-on-close, a batch script spawned\nto remove the parent after it exits, or a direct call that deletes the file while it is\nstill mapped and running (possible on Windows via a rename-then-delete trick, since an open\nhandle does not block deletion of the directory entry). What survives is whatever\npersistence mechanism re-launches the payload from memory, a dropped copy elsewhere, or a\nfileless technique — the deleted file itself is gone.\n",
+        "recommendation": "* Capture the binary before the deletion trigger fires — on first execution, from network transfer, or from memory before deletion completes.\n* Identify the persistence mechanism separately; self-deletion implies the payload survives some other way, and that mechanism is the actual target for remediation.\n* Where only the deletion artefact remains (a stub batch script, a scheduled-task residue), treat it as a pivot to find what it deleted and when.\n",
+        "short_recommendation": "Capture the binary before the deletion trigger fires, and find the separate persistence mechanism that survives it.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1070/004/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1070.004 — File Deletion",
+            "procedure": "Spawned a short-lived batch script to delete its own executable after the primary payload had launched from a separate persistence location."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "F0007 — Self Deletion",
+            "implementation": "Deleted its own file on disk via a spawned helper process once persistence had been established elsewhere."
+          }
+        ]
+      }
+    }
+  ]
+}

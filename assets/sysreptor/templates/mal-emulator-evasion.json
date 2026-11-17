@@ -1,0 +1,48 @@
+{
+  "format": "templates/v2",
+  "id": "4cb8c521-f336-5941-b10a-edd5e225dd9f",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "5f8ef798-1475-50af-bb70-647be84f1c23",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Emulator Detection and Evasion",
+        "cvss": "n/a",
+        "summary": "The sample executes CPU instructions or syscalls that are rarely implemented correctly by lightweight emulators, and branches away from its real payload when the result does not match a genuine CPU.",
+        "description": "Full-system emulators and the lightweight CPU emulators used in some unpacking and\ntriage tools do not implement every instruction, privilege transition or side effect\nidentically to real silicon. Malware authors exploit this with deliberately obscure\ninstruction sequences, undocumented opcodes, or syscalls whose return value an emulator\ngets subtly wrong — and treat a mismatch as proof the environment is not a real CPU.\n",
+        "recommendation": "* Identify the specific instruction or syscall used as the fingerprint and verify the emulator's handling of it directly.\n* Where available, re-run under a hardware-assisted hypervisor rather than a software emulator to remove the class of check entirely.\n* Record the fingerprint; it is a useful detection signal for the emulation layer itself, independent of this sample.\n",
+        "short_recommendation": "Re-run under a hardware-assisted hypervisor rather than a software CPU emulator.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1497/001/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1497 — Virtualization/Sandbox Evasion",
+            "procedure": "Executed an undocumented instruction sequence and compared its result against the expected hardware behaviour."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0004 — Emulator Detection",
+            "implementation": "Issued a rarely-implemented instruction sequence and compared the result against genuine CPU behaviour."
+          },
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0005 — Emulator Evasion",
+            "implementation": "Issued a rarely-implemented instruction sequence and compared the result against genuine CPU behaviour."
+          }
+        ]
+      }
+    }
+  ]
+}

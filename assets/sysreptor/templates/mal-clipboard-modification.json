@@ -1,0 +1,44 @@
+{
+  "format": "templates/v2",
+  "id": "5caf5d95-59a0-51b6-9614-3c3aa05c41b8",
+  "tags": [
+    "malware",
+    "endpoint",
+    "crypto"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "7690c62c-c015-56b8-9c29-445102a25f16",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Clipboard Hijacking (Crypto-Clipper)",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:H/A:N",
+        "summary": "The sample monitors the clipboard for content matching a cryptocurrency address pattern and silently replaces it with an operator-controlled address, redirecting the next paste.",
+        "description": "This relies entirely on a user not re-checking a pasted address character-by-character\nbefore confirming a transaction — a reasonable assumption given how unwieldy wallet\naddresses are to read. The monitoring itself is lightweight (a clipboard-format change\nnotification or a polling loop checking GetClipboardData against a set of regular\nexpressions for different coin address formats) and runs continuously in the background\nwith no other visible activity.\n",
+        "recommendation": "* Verify the destination address against a trusted source (QR code, address book entry) immediately before confirming any cryptocurrency transaction, rather than trusting a pasted value.\n* Hunt for processes registering clipboard-format change notifications or polling the clipboard API persistently with no corresponding UI.\n* Recover the regular-expression address patterns used; they indicate which cryptocurrencies the sample specifically targets.\n",
+        "short_recommendation": "Verify any pasted cryptocurrency address against a trusted source before confirming a transaction.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1565/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1565 — Data Manipulation",
+            "procedure": "Polled the clipboard for content matching Bitcoin and Ethereum address regular expressions and replaced matches with an operator-controlled address."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "E1510 — Clipboard Modification",
+            "implementation": "Clipboard monitor replaced address-pattern matches with an operator-controlled address before the next paste."
+          }
+        ]
+      }
+    }
+  ]
+}

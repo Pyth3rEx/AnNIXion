@@ -56,7 +56,7 @@ catalog/
 ├── bodies.nix                  drawings worn by more than one mark
 ├── recon/
 │   ├── _menu.nix               "01. Reconnaissance"
-│   ├── passive/
+│   ├── osint/
 │   │   ├── _menu.nix           "Passive OSINT" → X-AnNIXion-Recon-OSINT
 │   │   ├── theharvester.nix    ← a tool
 │   │   ├── whois.nix

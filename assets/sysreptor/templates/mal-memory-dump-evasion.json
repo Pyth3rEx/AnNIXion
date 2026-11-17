@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "6b044112-8eab-5215-a3b3-704083a56d73",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "2db43905-b742-5714-9572-90b25dae19aa",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Memory-Dump and Forensic-Acquisition Evasion",
+        "cvss": "n/a",
+        "summary": "The sample actively resists memory acquisition: it overwrites decrypted code and strings immediately after use, locks or re-encrypts sensitive regions, or detects a dump attempt and terminates before it completes.",
+        "description": "Unlike packing, which protects the file on disk, this protects the process while it runs:\nsensitive buffers are zeroed or re-encrypted the moment they are no longer needed, so a\nmemory snapshot taken even seconds later shows nothing useful. Some samples go further and\nmonitor for the API calls a memory-acquisition tool makes (MiniDumpWriteDump, process\nhandle duplication with full access) and self-terminate or corrupt their own image when\nthey see one.\n",
+        "recommendation": "* Capture memory at the specific moment of use (breakpoint on decryption, not a time-delayed snapshot) rather than after the fact.\n* Hook or neutralise the self-termination trigger before attempting acquisition, and verify the dump is complete and uncorrupted.\n* Treat an empty or garbage result from a standard dump as evidence of this behaviour, not as an unprotected sample with nothing to find.\n",
+        "short_recommendation": "Capture memory at the moment of use via a breakpoint rather than a delayed snapshot.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1070/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1070 — Indicator Removal",
+            "procedure": "A delayed memory snapshot returned zeroed buffers where a breakpoint-timed capture showed decrypted content."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0001 — Anti-Behavioral Analysis",
+            "behavior": "B0006 — Memory Dump Evasion",
+            "implementation": "Decrypted buffers were zeroed immediately after use, defeating a delayed memory snapshot."
+          }
+        ]
+      }
+    }
+  ]
+}

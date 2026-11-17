@@ -1,0 +1,48 @@
+{
+  "format": "templates/v2",
+  "id": "d95f49f8-e9bc-5e1f-b425-3cb8fdf0bdca",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "81a33fa0-5719-55bd-b98c-da64bd34774d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Data-Flow and Call-Graph Analysis Evasion",
+        "cvss": "n/a",
+        "summary": "The sample routes a value through redundant arithmetic, opaque predicates or unused auxiliary variables so that automated data-flow and call-graph tools lose track of where a critical value actually originates.",
+        "description": "Where disassembler evasion targets instruction decoding, this targets the layer above it:\nautomated tools that try to answer 'where did this value come from' or 'what calls this\nfunction' are defeated by indirection — a value passed through a chain of trivial\ntransformations that cancel out, or a call made through a computed address rather than a\ndirect reference, so the call graph shows no edge at all.\n",
+        "recommendation": "* Resolve indirect calls by tracing the computed target value at runtime rather than relying on a static call-graph tool.\n* Simplify arithmetic chains symbolically (constant-fold and cancel redundant operations) before attempting manual data-flow analysis.\n* Treat an unusually sparse call graph as evidence of this technique rather than evidence of a simple binary.\n",
+        "short_recommendation": "Resolve indirect calls dynamically rather than relying on static call-graph tooling.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027 — Obfuscated Files or Information",
+            "procedure": "A call target was computed through a chain of arithmetic that static call-graph analysis could not resolve."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0002 — Anti-Static Analysis",
+            "behavior": "B0045 — Data Flow Analysis Evasion",
+            "implementation": "Call targets were computed at runtime through redundant arithmetic rather than referenced directly."
+          },
+          {
+            "objective": "OB0002 — Anti-Static Analysis",
+            "behavior": "B0010 — Call Graph Generation Evasion",
+            "implementation": "Call targets were computed at runtime through redundant arithmetic rather than referenced directly."
+          }
+        ]
+      }
+    }
+  ]
+}

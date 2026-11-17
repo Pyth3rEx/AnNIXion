@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "1dd704d4-93c7-5271-aebe-198ac6895007",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1463f743-d281-5de7-81fe-37c8280957a5",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Anti-Disassembly Tricks",
+        "cvss": "n/a",
+        "summary": "The binary contains code deliberately crafted to desynchronise a disassembler's instruction boundaries — overlapping instructions, jumps into the middle of another instruction's bytes — producing a garbage listing around the real logic.",
+        "description": "This targets the disassembler specifically, rather than the analyst's time generally: a\njump target that lands one byte into what looks like a different instruction causes most\nlinear disassemblers to decode the wrong instruction stream from that point, hiding the\nreal control flow in what the tool reports as nonsense or as a different, misleading\ninstruction sequence entirely.\n",
+        "recommendation": "* Switch to a recursive-traversal disassembler or correct the desynchronisation by hand at the known jump target before trusting the listing.\n* Verify disassembly against a dynamic instruction trace at the affected offset rather than the static listing alone.\n* Note the exact offset and technique; it is cheap for the analyst to correct once found but easy to miss on a first pass.\n",
+        "short_recommendation": "Verify the affected offset against a dynamic instruction trace rather than trusting static disassembly there.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027 — Obfuscated Files or Information",
+            "procedure": "A jump landed mid-instruction, desynchronising the static disassembly from the actual executed instruction stream."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0002 — Anti-Static Analysis",
+            "behavior": "B0012 — Disassembler Evasion",
+            "implementation": "Overlapping instruction encoding at a jump target desynchronised linear disassembly."
+          }
+        ]
+      }
+    }
+  ]
+}

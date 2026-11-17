@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "8f5af355-cc8c-513a-85b9-b86ce0e4994d",
+  "tags": [
+    "puppet",
+    "media",
+    "infrastructure"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "1e153652-e883-595d-a73b-f603517c0550",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Media Property Created to Carry the Narrative",
+        "cvss": "n/a",
+        "summary": "Websites presenting as independent news or research outlets were created to publish\ncampaign content, giving the claims a citable source outside social platforms.\n",
+        "description": "An owned outlet converts an assertion into a citation. Social posts can then link to\n\"reporting\" rather than to each other, the content survives platform enforcement because\nit lives on infrastructure the operator controls, and search engines index it as a source.\n\nThese properties are usually identifiable: thin or generated staff pages, no corrections\npolicy, no physical address, hosting and registration shared with other campaign assets,\nand a publication history that begins shortly before the campaign. The shared\ninfrastructure is the most productive thread, since one property frequently exposes a\nnetwork of them.\n\nWhere the outlet's name or design imitates a real publication, that is a separate and\nmore actionable finding, since the imitated publication has standing to act.\n",
+        "recommendation": "* Map hosting, registration and analytics identifiers across properties; they commonly\n  reveal the wider network.\n* Notify any genuine publication being imitated, as it can act where the client cannot.\n* Report the properties to search engines and to hosting providers under their policies\n  rather than only to social platforms.\n",
+        "short_recommendation": "Map shared hosting and registration; notify any imitated publication.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0095"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA15 — Establish Assets",
+            "technique": "T0095 — Develop Owned Media Assets",
+            "note": ""
+          },
+          {
+            "tactic": "TA16 — Establish Legitimacy",
+            "technique": "T0098 — Establish Inauthentic News Sites",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}

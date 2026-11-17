@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "932b664e-6c60-5b3a-a568-99c147ef1842",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "3c49e1a9-f435-5052-98a1-eb176c2e757d",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Obfuscated Payload Storage",
+        "cvss": "n/a",
+        "summary": "Secondary payloads, configuration, or support files the sample depends on are stored encoded or encrypted on disk, separate from the packing applied to the main executable itself.",
+        "description": "This covers dropped artefacts beyond the primary binary — an encrypted configuration blob,\na second-stage payload stored as an encoded resource, a script stored base64-and-XOR'd in a\nregistry value or file. The decoding routine is usually small and reused verbatim across a\nfamily's samples, which makes it a reliable way to recover related artefacts once\nidentified once.\n",
+        "recommendation": "* Locate the decoding routine and run it standalone against every suspected encoded artefact, not only the one it was first found decoding.\n* Search for the same decode routine (or a near-identical one) across other samples and artefacts suspected to belong to the same family.\n* Recover and analyse the decoded content before scoring the sample — the encoded form alone understates its real capability.\n",
+        "short_recommendation": "Locate the decode routine and run it against every suspected encoded artefact, not only the first one found.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1027/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0005 — Stealth",
+            "technique": "T1027 — Obfuscated Files or Information",
+            "procedure": "Stored its configuration as a base64-and-XOR-encoded resource, decoded by a small routine at module start."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0002 — Anti-Static Analysis",
+            "behavior": "E1027 — Obfuscated Files or Information",
+            "implementation": "Configuration blob was encrypted on disk and decrypted into memory immediately before use."
+          }
+        ]
+      }
+    }
+  ]
+}

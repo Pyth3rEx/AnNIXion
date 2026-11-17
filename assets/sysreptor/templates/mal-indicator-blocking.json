@@ -1,0 +1,49 @@
+{
+  "format": "templates/v2",
+  "id": "00a400df-d61c-5e52-97bf-267e2f694318",
+  "tags": [
+    "malware",
+    "endpoint",
+    "hardening"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "0c0121b7-d738-595a-a35a-2191fb1b54ce",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Security-Tool Tampering and Indicator Blocking",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:N/I:H/A:H",
+        "summary": "The sample disables, uninstalls, or tampers with the configuration of installed security tools before or during its main activity, rather than attempting to evade them covertly.",
+        "description": "This is a direct rather than stealthy move: terminating the endpoint agent's process,\nuninstalling it via its own management interface, unloading its kernel driver, or editing\nits configuration to exclude the sample's own paths. It requires elevated privilege and is\ncorrespondingly a strong signal once observed — legitimate software essentially never\ndisables a different vendor's security product.\n",
+        "recommendation": "* Alert on termination, service-stop, or driver-unload events targeting any installed security product, treating it as high-confidence malicious regardless of the actor.\n* Protect the security product's own process and configuration with tamper protection where the vendor offers it.\n* Where tampering succeeded, assume detection coverage was blind for the affected window and widen the investigation accordingly.\n",
+        "short_recommendation": "Alert on any process, service or driver action targeting an installed security product as high-confidence malicious.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1685/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0112 — Defense Impairment",
+            "technique": "T1685 — Disable or Modify Tools",
+            "procedure": "Called the endpoint agent's own management API to add an exclusion covering its own payload directory."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "F0006 — Indicator Blocking",
+            "implementation": "Issued the security product's uninstall command via its management interface rather than attempting covert evasion."
+          },
+          {
+            "objective": "OB0006 — Defense Evasion",
+            "behavior": "F0004 — Disable or Evade Security Tools",
+            "implementation": "Issued the security product's uninstall command via its management interface rather than attempting covert evasion."
+          }
+        ]
+      }
+    }
+  ]
+}

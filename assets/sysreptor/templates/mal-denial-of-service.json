@@ -1,0 +1,43 @@
+{
+  "format": "templates/v2",
+  "id": "5e6d7a43-024d-5adb-9c13-8b5cc29062eb",
+  "tags": [
+    "malware",
+    "endpoint"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "7c531f7c-d40d-5bf9-9d96-8b121fdb07f1",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Denial of Service via Resource Exhaustion or Service Stop",
+        "cvss": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:U/C:N/I:N/A:H",
+        "summary": "The sample stops or disables a targeted service or process, or exhausts local resources, denying availability of a specific function rather than destroying data.",
+        "description": "This is a narrower, often more surgical action than a wiper: stopping a specific backup\nagent, database service, or security product's service so that whatever depends on it\nstops functioning, without touching the data those services manage. It is frequently a\nsupporting step for a different primary objective (disabling backup software ahead of\nransomware, stopping a security service ahead of further activity) rather than the\nsample's main purpose.\n",
+        "recommendation": "* Identify which specific service or process was targeted and treat it as a signal of the sample's actual objective — disabling backup or security services points to a further stage still coming.\n* Restart and verify the integrity of the stopped service once the sample is contained; stopping rarely corrupts the service's own data.\n* Alert on service-stop or process-termination targeting backup and security-product services specifically, given how rarely this is legitimate.\n",
+        "short_recommendation": "Identify the specific service stopped — it is often a supporting step revealing the sample's real, further objective.",
+        "references": [
+          "https://attack.mitre.org/techniques/T1489/"
+        ],
+        "affected_components": [],
+        "mitre_techniques": [
+          {
+            "tactic": "TA0040 — Impact",
+            "technique": "T1489 — Service Stop",
+            "procedure": "Issued a service-control stop request against the host's backup agent service immediately before the ransomware stage began encrypting files."
+          }
+        ],
+        "mbc_techniques": [
+          {
+            "objective": "OB0008 — Impact",
+            "behavior": "B0033 — Denial of Service",
+            "implementation": "Stopped a targeted service via the service control manager rather than exhausting resources generically."
+          }
+        ]
+      }
+    }
+  ]
+}

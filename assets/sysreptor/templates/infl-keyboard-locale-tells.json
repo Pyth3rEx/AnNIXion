@@ -1,0 +1,42 @@
+{
+  "format": "templates/v2",
+  "id": "31d31dc0-3f47-5fbd-8fab-d2cdb47352f7",
+  "tags": [
+    "puppet",
+    "persona"
+  ],
+  "images": [],
+  "translations": [
+    {
+      "id": "e1bdf08b-eb15-567f-b8e1-7a26b7b897cd",
+      "is_main": true,
+      "language": "en-US",
+      "status": "finished",
+      "data": {
+        "title": "Keyboard-Locale Punctuation Tells in Claimed-Local Content",
+        "cvss": "n/a",
+        "summary": "Content attributed to a persona or outlet claiming one linguistic origin carries\npunctuation and input habits specific to a different keyboard layout or locale,\ncontradicting the claimed authorship.\n",
+        "description": "Typography is a habit, not a choice an author reconsiders sentence by sentence, and\nhabits formed on one keyboard survive a change of language. The clearest example in this\ncorpus is a space inserted before a closing `?`, `!`, `:` or `;` — \"word ? Word\" rather\nthan \"word? Word\". English typography has no such space; French does, as a typographic\nconvention tied to the AZERTY layout and to the locale of the word processor or\ntranslation tool that produced the text. Text in English or any other language that\ncarries this spacing consistently was produced by, or through tooling configured for, a\nFrench-locale input chain.\n\nThe same family of tell includes a decimal comma where the claimed locale uses a point, a\nnon-breaking space before a percent or currency sign, a dd/mm date where the audience\nreads mm/dd, and curly quotation marks of a style the claimed publishing platform does not\nemit natively. None of these are proof on their own — a single instance is a typo, a\npasted quotation, or a style guide nobody enforced. The signal is in the pattern: the same\ntell recurring across unrelated articles, accounts or personas that are not supposed to\nshare an author.\n\nThe tell points at the production chain — an operator, a translation tool, a shared\ntemplate, an outsourced content vendor — rather than directly at an individual or a\nnationality, and it says nothing about who tasked the chain. Treat it as one input to the\nreport's attribution hypotheses, weighed alongside infrastructure and behavioural\nindicators, not as a conclusion that stands alone.\n",
+        "recommendation": "* Catalogue every typographic tell across the corpus — punctuation spacing, decimal and\n  date format, quotation style — before citing any of it; a pattern claim needs the count\n  behind it.\n* Treat a tell as signal only where it recurs across content that is not supposed to\n  share an author or a production chain; a single instance stays a typo.\n* Feed the finding into the attribution section's competing hypotheses alongside\n  infrastructure and behavioural indicators, rather than naming an origin from typography\n  alone.\n* Hold back the exact catalogue of tells from anything published; it is a checklist for\n  the next revision's proofreader.\n",
+        "short_recommendation": "Catalogue recurring typographic tells and weigh them only alongside other indicators.",
+        "references": [
+          "https://disarmframework.herokuapp.com/T0085",
+          "https://disarmframework.herokuapp.com/T0129"
+        ],
+        "affected_components": [],
+        "disarm_techniques": [
+          {
+            "tactic": "TA06 — Develop Content",
+            "technique": "T0085.008 — Machine Translated Text",
+            "note": ""
+          },
+          {
+            "tactic": "TA11 — Persist in the Information Environment",
+            "technique": "T0129.010 — Misattribute Activity",
+            "note": ""
+          }
+        ]
+      }
+    }
+  ]
+}
