@@ -242,7 +242,7 @@ if [ "$1" = "eval" ]; then
   fi
   case "$*" in
     *--json*)
-      echo '{"hostname":"stub","timezone":"UTC","keymap":"us","compositing":false,"username":"operator","sysreptorUser":"operator","profiles":{"redteam":true,"osint":true,"puppet":true,"untrusted":true}}'
+      echo '{"hostname":"stub","timezone":"UTC","keymap":"us","compositing":false,"offensiveNet":false,"username":"operator","sysreptorUser":"operator","profiles":{"redteam":true,"osint":true,"puppet":true,"untrusted":true}}'
       ;;
     # read_username's query, distinct from eval_flake's .drvPath one below —
     # annixion-install builds /home/$INSTALL_USERNAME/... paths straight

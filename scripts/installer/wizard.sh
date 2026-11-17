@@ -37,6 +37,7 @@ WIZ_SYSREPTOR_HASH=""
 # line rather than spelling out "operator" a second, redundant way.
 WIZ_SYSREPTOR_USER=""
 WIZ_COMPOSITING="false"
+WIZ_OFFENSIVE_NET="false"
 WIZ_PROFILE_REDTEAM="true"
 WIZ_PROFILE_OSINT="true"
 WIZ_PROFILE_PUPPET="true"
@@ -67,6 +68,7 @@ wizard_screen() {
 run_wizard() {
   local defaults="${1:-}"
   local def_hostname def_username def_timezone def_keymap def_compositing
+  local def_offensive
   local def_redteam def_osint def_puppet def_untrusted
   local def_sysreptor_user def_sysreptor_shared
   local def_pin_mode def_pin_value
@@ -77,6 +79,8 @@ run_wizard() {
     def_timezone=$(jq -r '.timezone' <<<"$defaults")
     def_keymap=$(jq -r '.keymap' <<<"$defaults")
     def_compositing=$(jq -r '.compositing' <<<"$defaults")
+    def_offensive=$(jq -r '.offensiveNet' <<<"$defaults")
+    [[ "$def_offensive" == "true" ]] || def_offensive="false"
     def_redteam=$(jq -r '.profiles.redteam' <<<"$defaults")
     def_osint=$(jq -r '.profiles.osint' <<<"$defaults")
     def_puppet=$(jq -r '.profiles.puppet' <<<"$defaults")
@@ -92,6 +96,7 @@ run_wizard() {
     def_timezone="UTC"
     def_keymap="us"
     def_compositing="false"
+    def_offensive="false"
     def_redteam="true"
     def_osint="true"
     def_puppet="true"
@@ -291,6 +296,14 @@ print("pbkdf2_sha256$%d$%s$%s" % (iterations, salt, base64.b64encode(dk).decode(
   fi
 
   wizard_screen
+  gum style --width 70 "Offensive networking — the base firewall drops inbound and blocks ICMP-redirect/MITM, which kills reverse-shell callbacks, responder and pivoting. This installs a runtime toggle for that; it still boots hardened, and you arm it per session with \`annixion-offensive on\`. See docs/hardening.md."
+  if gum confirm --default="$def_offensive" "Enable the offensive networking toggle?"; then
+    WIZ_OFFENSIVE_NET="true"
+  else
+    WIZ_OFFENSIVE_NET="false"
+  fi
+
+  wizard_screen
   gum style --width 70 "Nixpkgs cooldown — a compromised commit in nixpkgs is usually caught and reverted within days of landing. Pinning to something less fresh than the repo's own default trades a slower trickle of fixes for a buffer against exactly that window. Default is fine for most installs."
   local pin_label
   case "$def_pin_mode" in
@@ -374,6 +387,7 @@ $([[ "$WIZ_USERNAME" != "operator" ]] && echo "  users.users.operator.name = \"$
 $([[ -n "$WIZ_SYSREPTOR_USER" ]] && echo "  annixion.sysreptor.user = \"$WIZ_SYSREPTOR_USER\";")
 
   annixion.desktop.compositing = $WIZ_COMPOSITING;
+  annixion.offensiveNet.enable = $WIZ_OFFENSIVE_NET;
 
   annixion.firefox.profiles = {
     redteam.enable = $WIZ_PROFILE_REDTEAM;
