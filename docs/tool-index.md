@@ -168,7 +168,7 @@ the machine. Launching and proxy behaviour is in [usage](usage.md).
 | [Kleopatra](https://docs.kde.org/?application=kleopatra) | OpenPGP and X.509 certificate management | [Handbook](https://docs.kde.org/?application=kleopatra) |
 | [System Settings](https://userbase.kde.org/System_Settings) | Plasma configuration | [UserBase](https://userbase.kde.org/System_Settings) |
 | [VSCodium](https://code.visualstudio.com/docs) | Code editor, telemetry-free VS Code build | [VS Code docs](https://code.visualstudio.com/docs) |
-| [GitHub Desktop](https://docs.github.com/en/desktop) | Git GUI | [Docs](https://docs.github.com/en/desktop) |
+| [QGit](https://github.com/tibirna/qgit) | Git GUI, provider-agnostic | [README](https://github.com/tibirna/qgit) |
 | [Obsidian](https://help.obsidian.md/) | Markdown notes over a local folder — engagement notes | [Help](https://help.obsidian.md/) |
 | [OnlyOffice](https://helpcenter.onlyoffice.com/) | Documents, spreadsheets and presentations | [Help centre](https://helpcenter.onlyoffice.com/) |
 | [SysReptor](https://docs.sysreptor.com/) | Self-hosted pentest reporting — findings, templates, DOCX/PDF export. Ships with `reptor`, its API client | [Docs](https://docs.sysreptor.com/) |
