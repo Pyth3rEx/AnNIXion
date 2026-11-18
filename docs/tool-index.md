@@ -127,6 +127,7 @@ Building and running the AdaptixC2 teamserver on AnNIXion is covered in
 |---|---|---|---|
 | [Impacket](https://github.com/fortra/impacket) | offensive | Python implementations of Windows protocols — SMB, Kerberos, DCE/RPC | [Repository](https://github.com/fortra/impacket) |
 | [NetExec](https://github.com/Pennyw0rth/NetExec) | offensive | Credential validation and remote execution across SMB/WinRM/MSSQL/LDAP hosts — maintained CrackMapExec fork | [Repository](https://github.com/Pennyw0rth/NetExec) |
+| [BloodHound CE](https://github.com/SpecterOps/BloodHound) | passive | Graphs Active Directory attack paths from collected session, ACL and membership data | [Repository](https://github.com/SpecterOps/BloodHound) |
 
 Each script is on `PATH` as `impacket-<tool>`, so `impacket-<Tab>` lists them.
 
