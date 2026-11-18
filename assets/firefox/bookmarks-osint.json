@@ -737,6 +737,10 @@
                 "name": "Satellite Imagery",
                 "bookmarks": [
                   {
+                    "name": "Skraafoto - Denmark Satview",
+                    "url": "https://skraafoto.dataforsyningen.dk/"
+                  },
+                  {
                     "name": "Zoom Earth - Satellite / Weather",
                     "url": "https://zoom.earth/"
                   },
