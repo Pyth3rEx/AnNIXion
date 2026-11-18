@@ -1,14 +1,11 @@
-# Git GUI
+# Git GUI — provider-agnostic, unlike GitHub Desktop
 _: {
-  package = null; # ships with the desktop, not this module
-  name = "GitHub Desktop";
+  package = p: p.qgit;
+  name = "QGit";
   genericName = "Git GUI";
-  exec = "github-desktop";
+  comment = "Graphical history, diff and commit browser for any git repository";
+  exec = "qgit";
   launch = "gui"; # runs directly
-  # Ships its own .desktop, which asks for the stock icon name;
-  # the mark is installed under that name too or the launcher
-  # falls through to an inherited theme.
-  aliases = [ "github-desktop" ];
   mark = {
     class = "utility";
     body = ''
