@@ -104,6 +104,7 @@ jobs:
           nix develop --command bash tests/repo/cve-status-workflow.sh
           nix develop --command bash tests/repo/pr-cve-scan.sh
           nix develop --command bash tests/repo/cve-report.sh
+          nix develop --command bash tests/repo/secrets-scan.sh
 
       # Its own step: the only test here that leaves the runner, so a red
       # build points at the network rather than at the hermetic tests above.
@@ -119,6 +120,35 @@ jobs:
           name: lint-summary
           path: ${{ runner.temp }}/lint-summary.md
           if-no-files-found: ignore
+
+  # Its own job so a secret it finds fails independently of the lint summary,
+  # and so the fast path (PRs into dev/hotfix) never pays for the full-history
+  # scan, which only the release gate below needs (#242).
+  secrets:
+    name: Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # scan-secrets.sh walks commits back to the PR's base, which has to
+          # be reachable locally — the default shallow clone only has HEAD.
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # Scoped to this PR's own commits: a secret already sitting in the base
+      # branch's history is the full-history scan's job, not every PR's.
+      - name: "[L0] Scan this PR's commits for secrets"
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: nix develop --command bash .github/scripts/scan-secrets.sh --since "$BASE_SHA"
 
   check:
     name: Nix CI
@@ -293,6 +323,15 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      # The release gate: dev/hotfix -> main is the one merge every secret in
+      # history eventually passes through, so this is where the whole history
+      # gets checked, not only the commits this PR adds (#242). The checkout
+      # above already carries fetch-depth: 0 for the version/release-name
+      # gates, so the history is already there.
+      - name: "[L0] Scan full history for secrets (release gate)"
+        if: github.event_name == 'pull_request'
+        run: nix develop --command bash .github/scripts/scan-secrets.sh --full
 
       - name: Build ISO
         run: |
