@@ -131,6 +131,10 @@ Building and running the AdaptixC2 teamserver on AnNIXion is covered in
 
 Each script is on `PATH` as `impacket-<tool>`, so `impacket-<Tab>` lists them.
 
+Standing BloodHound CE up on AnNIXion — the `bloodhound` wrapper, the admin
+account and why there is no login-less mode — is covered in
+[bloodhound.md](bloodhound.md).
+
 ---
 
 ## 08. Forensics

@@ -74,6 +74,7 @@
         ./system/git.nix
         ./system/docker.nix
         ./system/sysreptor.nix
+        ./system/bloodhound.nix
         ./system/tlog.nix
         ./system/toolchain.nix
         ./system/nix-ld.nix
