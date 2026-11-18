@@ -262,6 +262,8 @@
           # Builds the release SBOM, in CI and by hand: the same pinned version
           # either way, so a locally generated SBOM matches the published one.
           sbomnix
+          # scan-secrets.sh, locally and in CI — the same scanner either way.
+          trufflehog
           # render-cve-status.py and the form parsers. Arrives transitively with
           # sbomnix otherwise, which is not something to depend on.
           python3
