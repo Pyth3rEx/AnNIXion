@@ -1,6 +1,6 @@
 # BloodHound CE — Active Directory attack-path graph over data a collector
-# (SharpHound) already pulled. Reads and visualises; never reaches the
-# target itself.
+# (bloodhound-python, azurehound, or SharpHound run elsewhere) already
+# pulled. Reads and visualises; never reaches the target itself.
 #
 # Upstream ships no standalone package that starts on its own — the server
 # needs Postgres and Neo4j reachable and a config telling it where, which is
@@ -166,10 +166,13 @@ _: {
           bloodhound — drive the dockerised BloodHound CE graph (Postgres + Neo4j + UI).
 
           Lifecycle:
-            setup     materialise the deployment, write database passwords
             up | down | restart   the app, its database and its graph store
             open                  bring it up and open the UI in a browser
             logs | status         follow logs / list running bloodhound containers
+            setup                 materialise the deployment and write database
+                                   passwords without starting anything — up/open/
+                                   down/restart/logs all do this on their own the
+                                   first time, so nothing else needs it run first
 
           Other:
             config    print the settings in force
@@ -184,8 +187,11 @@ _: {
               not from flags: the port, the admin identity, and whether this
               is reachable off the machine.
             - First 'up' pulls the bloodhound/postgres/neo4j images — slow,
-              online. Run SharpHound/AzureHound against the target domain
-              separately and upload what they collect from the UI.
+              online. 'bloodhound-python' and 'azurehound' (their own menu
+              entries, same Lateral Movement node) collect the data; upload
+              what they produce from the UI. SharpHound stays external — a
+              Windows-only binary this box cannot run — and downloads from
+              the UI's own "Download Collectors" page instead.
           EOF
           }
 

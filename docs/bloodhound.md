@@ -25,15 +25,22 @@ rootless daemon this leans on.
 
 ## First run
 
+There is no manual setup step. The menu entry runs `bloodhound open`, and
+every command below bootstraps the deployment itself the first time it is
+missing — `up`, `open`, `down`, `restart` and `logs` all do this before
+anything else, so clicking BloodHound CE in a freshly installed AnNIXion
+already works:
+
 ```bash
-bloodhound setup   # materialises the compose file, writes database passwords
-bloodhound up      # pulls the images (slow, online, once) and starts the stack
+bloodhound open    # pulls the images (slow, online, once), starts the
+                    # stack, waits for it, opens the UI — nothing before it
 bloodhound logs    # read the admin password here — see "Accounts" below
-bloodhound open    # the two above, then opens the UI once it answers
 ```
 
-`open` is also what the menu entry runs, so the common path is just clicking
-BloodHound CE and reading the password off `bloodhound logs` once.
+`setup` still exists as its own command — materialise the compose file and
+the database passwords without starting anything — but it is there for
+inspecting or pre-staging the deployment ahead of time, not because any
+other command needs it run first.
 
 ## The `bloodhound` wrapper
 
@@ -127,10 +134,21 @@ reset of the first password, not the screen that asks for it.
 
 ## Collecting data
 
-This module deploys the graph, not the collector. SharpHound (Windows AD)
-and AzureHound (Entra ID) run against the target separately — from a domain
-session, not from this box — and their output is a `.zip` you drag into the
-UI's upload page. Nothing here fetches, builds or runs either of them.
+This module deploys the graph; two menu entries beside it, both in the same
+Lateral Movement node, do the collecting:
+
+| Collector | Runs | Against |
+|---|---|---|
+| **BloodHound.py** (`bloodhound-python`) | this box, with an already-valid domain account | on-prem AD, over LDAP/SMB/Kerberos |
+| **AzureHound** (`azurehound`) | this box, with an already-valid credential or a device-code login | Entra ID, over the Graph API |
+
+Each writes a `.zip` you drag into the UI's upload page — no wiring between
+them and the `bloodhound` wrapper beyond that.
+
+**SharpHound** stays out on purpose: it is a Windows-only .NET binary with
+nothing to run on this Linux box, and it already ships inside BloodHound
+CE's own container image — download it from the UI's own "Download
+Collectors" page and run it from a domain session instead.
 
 ---
 
