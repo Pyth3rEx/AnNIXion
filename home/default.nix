@@ -99,7 +99,6 @@ in
   home.packages = with pkgs; [
     # ── Development ───────────────────────────────────────────
     gh
-    github-desktop
     python3Packages.pip
 
     # ── Utilities ─────────────────────────────────────────────
