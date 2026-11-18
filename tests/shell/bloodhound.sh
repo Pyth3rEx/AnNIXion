@@ -93,6 +93,20 @@ run_setup() {
   drive "$home" setup "$@"
 }
 
+# ── Ships working after a plain install: no one ever has to type 'setup' ───
+# The menu entry runs 'bloodhound open', so this is what a freshly installed
+# AnNIXion actually does on the very first click — 'setup' is never invoked,
+# directly or otherwise, before this.
+fresh="$TMP/fresh"
+mkdir -p "$fresh"
+freshout=$(drive "$fresh" up)
+freshdeploy="$fresh/.local/share/bloodhound/deploy"
+report "$([ -f "$freshdeploy/docker-compose.yml" ] && [ -f "$freshdeploy/.env" ] && echo 0 || echo 1)" \
+  "'up' alone bootstraps a deployment that has never run 'setup'" \
+  "no deployment under $freshdeploy: $freshout"
+report "$(grep -q 'up -d$' "$fresh/docker.log" && echo 0 || echo 1)" \
+  "and still brings the stack up in the same invocation" "docker.log: $(cat "$fresh/docker.log" 2>/dev/null)"
+
 home="$TMP/h1"
 mkdir -p "$home"
 first=$(run_setup "$home")
