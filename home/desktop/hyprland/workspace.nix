@@ -19,8 +19,12 @@ in
   services.hyprpaper = {
     enable = lib.mkDefault true;
     settings = {
-      preload = [ "${wallpapers}/wallpaper_1.png" ];
-      wallpaper = [ ", ${wallpapers}/wallpaper_1.png" ];
+      # Swapped to a flat void (docs/visual-identity.md's "Deepest ground",
+      # #0E0F13) while the #223 identity pivot is still in flux — a clean
+      # base to design the new chrome against instead of the current
+      # graffiti art. Point back at wallpaper_1.png once that's settled.
+      preload = [ "${wallpapers}/void.png" ];
+      wallpaper = [ ", ${wallpapers}/void.png" ];
     };
   };
 
