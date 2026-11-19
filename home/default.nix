@@ -63,6 +63,7 @@ in
   imports = [
     ./firefox
     ./desktop/plasma
+    ./desktop/hyprland
     ./apps/vscodium.nix
     ./apps/only-office.nix
     ./desktop/apps-menu.nix
