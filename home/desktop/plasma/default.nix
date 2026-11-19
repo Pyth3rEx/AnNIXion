@@ -35,8 +35,15 @@
   '';
 
   # Ordered after the widget install and the kwinrc writes.
+  #
+  # Guarded on HYPRLAND_INSTANCE_SIGNATURE, not just DISPLAY: Hyprland's
+  # XWayland sets DISPLAY too, so a home-manager activation run from inside
+  # a Hyprland session (e.g. `nixos-rebuild switch` from a terminal there)
+  # would otherwise launch Plasma's panel into a session that isn't Plasma's
+  # — the KDE panel bleeding into Hyprland, reserving screen edges that
+  # Hyprland then has to account for (#223).
   home.activation.restartPlasmashell = lib.hm.dag.entryAfter [ "installTiledMenu" "configureKwin" ] ''
-    if [ -n "''${DISPLAY:-}" ]; then
+    if [ -n "''${DISPLAY:-}" ] && [ -z "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
       ${pkgs.kdePackages.plasma-workspace}/bin/plasmashell --replace \
         > /dev/null 2>&1 &
       disown 2>/dev/null || true

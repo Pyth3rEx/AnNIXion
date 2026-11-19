@@ -23,7 +23,8 @@ in
 
       background = [
         {
-          path = "${config.home.homeDirectory}/.dotfiles/assets/branding/wallpapers/wallpaper_2.png";
+          # Matches workspace.nix's flat void while #223 is still in flux.
+          path = "${config.home.homeDirectory}/.dotfiles/assets/branding/wallpapers/void.png";
           blur_passes = if compositing then 2 else 0;
           blur_size = 4;
         }
