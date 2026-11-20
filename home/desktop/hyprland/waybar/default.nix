@@ -45,24 +45,33 @@ in
     enable = lib.mkDefault true;
     systemd.enable = lib.mkDefault true;
 
+    # Whole-value lib.mkDefault — nothing else contributes to centralBar or
+    # mainBar, so unlike wayland.windowManager.hyprland.settings (fed by
+    # both workspace.nix and binds.nix) there's no sibling-key union to
+    # preserve: a full replacement from user/home.nix is exactly what's
+    # wanted here, same as monitor above.
+    #
     # Secondary displays: workspaces/idle/power only, no launchers or tray.
-    settings.centralBar = centerModules // {
-      layer = "top";
-      height = 42;
-      spacing = 6;
-      # A pure exclusion list matches nothing in waybar — an exclusions-only
-      # array needs a trailing "*" to actually fall through to "everything
-      # else" (see `man waybar`, the "output" entry).
-      output = [
-        "!eDP-1"
-        "*"
-      ];
+    settings.centralBar = lib.mkDefault (
+      centerModules
+      // {
+        layer = "top";
+        height = 42;
+        spacing = 6;
+        # A pure exclusion list matches nothing in waybar — an
+        # exclusions-only array needs a trailing "*" to actually fall
+        # through to "everything else" (see `man waybar`, "output").
+        output = [
+          "!eDP-1"
+          "*"
+        ];
 
-      modules-center = centerModulesOrder;
-    };
+        modules-center = centerModulesOrder;
+      }
+    );
 
     # Primary display (workspace "1" / eDP-1): the full bar.
-    settings.mainBar =
+    settings.mainBar = lib.mkDefault (
       centerModules
       // groupsModule
       // distroModule
@@ -92,15 +101,17 @@ in
           "clock"
           "group/tray-group"
         ];
-      };
+      }
+    );
 
-    style =
+    style = lib.mkDefault (
       builtins.readFile ./tokens/colors.css
       + builtins.readFile ./tokens/state.css
       + builtins.readFile ./tokens/workspace.css
       + builtins.readFile ./tokens/widget.css
       + builtins.readFile ./tokens/batt-clock.css
       + builtins.readFile ./tokens/slider.css
-      + builtins.readFile ./style.css;
+      + builtins.readFile ./style.css
+    );
   };
 }
