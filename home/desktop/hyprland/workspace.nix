@@ -29,7 +29,20 @@ in
   };
 
   wayland.windowManager.hyprland.settings = {
-    monitor = ",preferred,auto,1";
+    monitor = [
+      "DP-6,1920x1080@60,0x0,1"
+      "DP-5,1920x1080@60,1920x0,1"
+      "eDP-1,1920x1080@60,0x1080,1"
+    ];
+
+    # Pins workspace numbers to monitors explicitly — otherwise Hyprland
+    # assigns them by connection order, which put "2" on DP-5 and "3" on
+    # DP-6 regardless of their screen position.
+    workspace = [
+      "1,monitor:eDP-1"
+      "2,monitor:DP-6"
+      "3,monitor:DP-5"
+    ];
 
     # ── Cursor & fonts ────────────────────────────────────────
     # Same theme and size as programs.plasma.workspace.cursor, so a monitor
@@ -54,7 +67,6 @@ in
     };
 
     dwindle = {
-      pseudotile = true;
       preserve_split = true;
     };
 
