@@ -11,7 +11,7 @@
   imports = [
     ./workspace.nix
     ./binds.nix
-    ./waybar.nix
+    ./waybar
     ./wofi.nix
     ./hyprlock.nix
     ./hypridle.nix
