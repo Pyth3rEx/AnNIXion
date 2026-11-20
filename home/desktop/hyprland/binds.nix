@@ -40,15 +40,30 @@ _:
 
       # ── Launchers ─────────────────────────────────────────────
       "$mod, Return, exec, $term"
+      "$mod, Q, exec, $term"
       "$mod, Space, exec, wofi --show drun"
       "ALT, Space, exec, wofi --show drun"
 
       "$mod, L, exec, hyprlock"
+
+      # Ends the compositor and drops back to SDDM (system/hyprland.nix
+      # leaves Plasma as services.displayManager.defaultSession), so
+      # switching back to Plasma is a logout, not a reboot.
+      "$mod SHIFT, E, exit"
     ];
 
     bindm = [
       "$mod, mouse:272, movewindow"
       "$mod, mouse:273, resizewindow"
+    ];
+
+    # Bare SUPER (tap, no chord) opens wofi — the Wayland stand-in for
+    # Plasma's Tiled Menu on bare Meta (home/desktop/plasma/shortcuts.nix),
+    # which has no KWin-style ModifierOnlyShortcuts equivalent here.
+    # bindr fires on release so it doesn't fight every other $mod chord
+    # above, which all fire on press.
+    bindr = [
+      "$mod, SUPER_L, exec, wofi --show drun"
     ];
   };
 }
