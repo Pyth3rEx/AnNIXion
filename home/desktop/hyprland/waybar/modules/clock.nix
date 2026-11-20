@@ -1,0 +1,7 @@
+{
+  clock = {
+    format = "󰃱 <span size='11pt'>{:%H.%M }</span>";
+    format-alt = "󰃱 <span size='11pt'>{:%d %B %Y}</span>";
+    tooltip-format = "<tt><small>{calendar}</small></tt>";
+  };
+}
