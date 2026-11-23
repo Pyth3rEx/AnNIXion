@@ -1,0 +1,45 @@
+/* tokens/glass.css */
+
+/*======= GLASS PANES =======*/
+/* Every capsule gets the same restrained finish: a hairline sheen on top,
+   a faint inner shadow on the bottom, and a soft lift off the bar — just
+   enough glass to read as a distinct pane, not a gradient-heavy skeuomorph. */
+#distro-group,
+#power-profiles-daemon,
+#idle_inhibitor,
+#audio,
+#connections,
+#system,
+#storage,
+#tray-group,
+#battery,
+#clock,
+#workspaces {
+  box-shadow:
+    inset 0 0 0 1px alpha(@text, 0.1),
+    inset 0 1px 0 alpha(@text, 0.16),
+    inset 0 -1px 0 alpha(@ground, 0.6);
+}
+
+/*======= GLASS SEAMS =======*/
+/* A sliver of light immediately followed by a sliver of shadow — reads as
+   two panes meeting at an edge. box-shadow only, so it never nudges the
+   padding/box-model of the (already tight) buttons it sits between.
+   Applied to the first widget of each pair/run inside a capsule, never
+   the last, so groups keep one clean edge instead of a trailing seam. */
+#custom-distro,
+#custom-terminal,
+#custom-code,
+#custom-obsidian,
+#custom-office,
+#custom-files,
+#disk,
+#temperature,
+#network,
+#pulseaudio,
+#pulseaudio-slider,
+#custom-tray-arrow {
+  box-shadow:
+    1px 0 0 alpha(@text, 0.16),
+    2px 0 0 alpha(@ground, 0.5);
+}

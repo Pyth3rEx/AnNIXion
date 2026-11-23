@@ -113,6 +113,7 @@ in
         + builtins.readFile ./tokens/widget.css
         + builtins.readFile ./tokens/batt-clock.css
         + builtins.readFile ./tokens/slider.css
+        + builtins.readFile ./tokens/glass.css
         + builtins.readFile ./style.css
       );
     };
