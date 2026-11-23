@@ -1,6 +1,6 @@
 # Packages — AnNIXion 0.5.1
 
-`2026-11-17 11:42 UTC` · 2253 packages in the installed closure · 2701 store paths · 25.53 GiB
+`2026-11-23 18:13 UTC` · 2253 packages in the installed closure · 2701 store paths · 25.53 GiB
 
 [← index](README.md) · [CVEs](cves.md) · [apps](apps.md)
 
@@ -298,8 +298,8 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `fdk-aac` | `2.0.3` | *unresolved* | *unresolved* |  |  |
 | `feedbroreader-4.16.3` | `` | *unresolved* | *unresolved* |  |  |
 | `ffado` | `2.4.9` | GNU General Public License v3.0 | [@michojel](https://github.com/michojel) |  |  |
-| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 75 |  |
-| `ffmpeg` | `8.1.3` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 75 |  |
+| `ffmpeg` | `7.1.5` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 298 |  |
+| `ffmpeg` | `8.1.3` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) | 298 |  |
 | `ffmpeg-headless` | `8.1.3` | GNU Lesser General Public License v2.1 or later, GNU General Public License v2.0 or later, GNU Lesser General Public License v3.0 or later, GNU General Public License v3.0 or later | [@Atemu](https://github.com/Atemu) [@jopejoe1](https://github.com/jopejoe1) [@emilazy](https://github.com/emilazy) |  |  |
 | `fftw-double` | `3.3.11` | *unresolved* | *unresolved* |  |  |
 | `fftw-single` | `3.3.11` | *unresolved* | *unresolved* |  |  |
@@ -362,14 +362,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `ghidra` | `12.0.4` | Apache License 2.0 | [@roblabla](https://github.com/roblabla) [@vringar](https://github.com/vringar) | 24 |  |
 | `ghostscript-with-X` | `10.08.0` | *unresolved* | *unresolved* |  |  |
 | `giflib` | `5.2.2` | MIT License | **none** | 1 |  |
-| `git` | `2.54.0` | GNU General Public License v2.0 | [@wmertens](https://github.com/wmertens) [@kashw2](https://github.com/kashw2) [@me-and](https://github.com/me-and) [@philiptaron](https://github.com/philiptaron) [@zivarah](https://github.com/zivarah) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 6 |  |
+| `git` | `2.54.0` | GNU General Public License v2.0 | [@wmertens](https://github.com/wmertens) [@kashw2](https://github.com/kashw2) [@me-and](https://github.com/me-and) [@philiptaron](https://github.com/philiptaron) [@zivarah](https://github.com/zivarah) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 12 |  |
 | `git-lfs` | `3.8.1` | MIT License | [@Twey](https://github.com/Twey) [@savtrip](https://github.com/savtrip) |  |  |
 | `git-minimal` | `2.54.0` | *unresolved* | *unresolved* |  |  |
 | `github-desktop` | `3.5.8` | MIT License | [@dtomvan](https://github.com/dtomvan) |  |  |
 | `gle` | `3.1.2` | GNU General Public License v2.0 | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `glib` | `2.88.3` | GNU Lesser General Public License v2.1 or later | [@7c6f434c](https://github.com/7c6f434c) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) | 1 |  |
 | `glib-networking` | `2.80.1` | GNU Lesser General Public License v2.1 or later | [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
-| `glibc` | `2.42-103` | GNU Library General Public License v2 or later | [@Ma27](https://github.com/Ma27) [@ConnorBaker](https://github.com/ConnorBaker) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 31 |  |
+| `glibc` | `2.42-103` | GNU Library General Public License v2 or later | [@Ma27](https://github.com/Ma27) [@ConnorBaker](https://github.com/ConnorBaker) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 33 |  |
 | `glibc-iconv-2.42` | `` | *unresolved* | *unresolved* |  |  |
 | `glibc-locales` | `2.42-103` | *unresolved* | *unresolved* |  |  |
 | `glibmm` | `2.66.8` | GNU Library General Public License v2 or later | [@7c6f434c](https://github.com/7c6f434c) |  |  |
@@ -389,7 +389,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `gnuradio-wrapped` | `3.10.12.0` | *unresolved* | *unresolved* |  |  |
 | `gnused` | `4.10` | GNU General Public License v3.0 or later | [@Mic92](https://github.com/Mic92) |  |  |
 | `gnutar` | `1.35` | GNU General Public License v3.0 or later | [@RossComputerGuy](https://github.com/RossComputerGuy) |  |  |
-| `gnutls` | `3.8.13` | GNU Lesser General Public License v2.1 or later | [@vcunat](https://github.com/vcunat) | 8 |  |
+| `gnutls` | `3.8.13` | GNU Lesser General Public License v2.1 or later | [@vcunat](https://github.com/vcunat) | 6 |  |
 | `gobject-introspection` | `1.86.0` | GNU General Public License v2.0, GNU Library General Public License v2 | [@Artturin](https://github.com/Artturin) [@bobby285271](https://github.com/bobby285271) [@jtojnar](https://github.com/jtojnar) [@nekowinston](https://github.com/nekowinston) [@theCapypara](https://github.com/theCapypara) [@thunze](https://github.com/thunze) |  |  |
 | `gobject-introspection-wrapped` | `1.86.0` | *unresolved* | *unresolved* |  |  |
 | `gobuster` | `3.8.2` | Apache License 2.0 | [@fabaff](https://github.com/fabaff) [@Pamplemousse](https://github.com/Pamplemousse) |  |  |
@@ -892,7 +892,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `libmicrohttpd` | `1.0.10` | GNU Library General Public License v2 or later | [@fpletz](https://github.com/fpletz) |  |  |
 | `libmng` | `2.0.3` | zlib License | **none** |  |  |
 | `libmnl` | `1.0.5` | GNU Lesser General Public License v2.1 or later | [@maevii](https://github.com/maevii) |  |  |
-| `libmodplug` | `0.8.9.0` | Public Domain | [@7c6f434c](https://github.com/7c6f434c) | 3 |  |
+| `libmodplug` | `0.8.9.0` | Public Domain | [@7c6f434c](https://github.com/7c6f434c) |  |  |
 | `libmpc` | `1.4.0` | GNU Lesser General Public License v3.0 or later | [@coolcuber](https://github.com/coolcuber) |  |  |
 | `libmpg123` | `1.33.7` | GNU Lesser General Public License v2.1 only | [@ftrvxmtrx](https://github.com/ftrvxmtrx) |  |  |
 | `libmtp` | `1.1.23` | GNU Lesser General Public License v2.1 | [@lovesegfault](https://github.com/lovesegfault) |  |  |
@@ -1030,7 +1030,7 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `lilv` | `0.26.4` | MIT License | **none** |  |  |
 | `limesuite` | `23.11.0` | Apache License 2.0 | [@markuskowa](https://github.com/markuskowa) |  |  |
 | `link` | `` | *unresolved* | *unresolved* |  |  |
-| `linux` | `6.18.63` | GNU General Public License v2.0 only | [@thoughtpolice](https://github.com/thoughtpolice) [@alyssais](https://github.com/alyssais) [@K900](https://github.com/K900) [@Ma27](https://github.com/Ma27) [@zowoq](https://github.com/zowoq) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 196 |  |
+| `linux` | `6.18.63` | GNU General Public License v2.0 only | [@thoughtpolice](https://github.com/thoughtpolice) [@alyssais](https://github.com/alyssais) [@K900](https://github.com/K900) [@Ma27](https://github.com/Ma27) [@zowoq](https://github.com/zowoq) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 268 |  |
 | `linux-6.18.63-modules` | `` | *unresolved* | *unresolved* |  |  |
 | `linux-headers` | `6.18.7` | *unresolved* | *unresolved* |  |  |
 | `linux-pam` | `1.7.2` | BSD 3-clause "New" or "Revised" License | **none** |  |  |
@@ -1198,14 +1198,14 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `openexr` | `3.4.15` | BSD 3-clause "New" or "Revised" License | [@paperdigits](https://github.com/paperdigits) | 1 |  |
 | `openfec` | `1.4.2.12` | CeCILL-C Free Software License Agreement | [@bgamari](https://github.com/bgamari) |  |  |
 | `openh264` | `2.6.0` | BSD 2-clause "Simplified" License | **none** |  |  |
-| `openjdk` | `21.0.13.0.2+1` | GNU General Public License v2.0 only | [@Infinidoge](https://github.com/Infinidoge) [@FliegendeWurst](https://github.com/FliegendeWurst) [@chayleaf](https://github.com/chayleaf) [@tomodachi94](https://github.com/tomodachi94) [@msgilligan](https://github.com/msgilligan) |  |  |
+| `openjdk` | `21.0.13.0.2+1` | GNU General Public License v2.0 only | [@Infinidoge](https://github.com/Infinidoge) [@FliegendeWurst](https://github.com/FliegendeWurst) [@chayleaf](https://github.com/chayleaf) [@tomodachi94](https://github.com/tomodachi94) [@msgilligan](https://github.com/msgilligan) | 1 |  |
 | `openjdk-minimal-jre` | `21.0.13.0.2+1` | *unresolved* | *unresolved* |  |  |
 | `openjpeg` | `2.5.4` | BSD 2-clause "Simplified" License | **none** | 1 |  |
 | `openldap` | `2.6.13` | Open LDAP Public License v2.8 | [@Conni2461](https://github.com/Conni2461) [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) |  |  |
 | `openresolv` | `3.17.4` | BSD 2-clause "Simplified" License | [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
 | `openssh` | `10.6p2` | BSD 2-clause "Simplified" License | [@dasJ](https://github.com/dasJ) [@helsinki-Jo](https://github.com/helsinki-Jo) [@numinit](https://github.com/numinit) [@philiptaron](https://github.com/philiptaron) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 8 |  |
-| `openssl` | `3.6.5` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
-| `openssl` | `4.0.3` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) |  |  |
+| `openssl` | `3.6.5` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 13 |  |
+| `openssl` | `4.0.3` | Apache License 2.0 | [@thillux](https://github.com/thillux) [@balsoft](https://github.com/balsoft) [@andir](https://github.com/andir) [@leona-ya](https://github.com/leona-ya) [@pyrox0](https://github.com/pyrox0) | 13 |  |
 | `openssl.conf` | `` | *unresolved* | *unresolved* |  |  |
 | `openvpn` | `2.6.23` | GNU General Public License v2.0 only | [@peterhoeg](https://github.com/peterhoeg) | 1 |  |
 | `opusfile` | `0.12` | BSD 3-clause "New" or "Revised" License | [@Radvendii](https://github.com/Radvendii) |  |  |
@@ -1343,8 +1343,8 @@ Everything on a running system, including transitive dependencies nobody chose d
 | `pulseaudio-qt` | `1.8.1` | *unresolved* | *unresolved* |  |  |
 | `purpose` | `6.26.0` | *unresolved* | *unresolved* |  |  |
 | `pybind11-setup-hook` | `26.05pre-git` | *unresolved* | *unresolved* |  |  |
-| `python3` | `3.11.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 12 |  |
-| `python3` | `3.13.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 12 |  |
+| `python3` | `3.11.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 22 |  |
+| `python3` | `3.13.18` | Python Software Foundation License version 2 | [@mweinelt](https://github.com/mweinelt) | 22 |  |
 | `python3-3.13.18-env` | `` | *unresolved* | *unresolved* |  |  |
 | `python3.13-aiodns` | `4.0.4` | *unresolved* | *unresolved* |  |  |
 | `python3.13-aiofiles` | `25.1.0` | *unresolved* | *unresolved* |  |  |
