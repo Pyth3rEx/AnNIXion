@@ -6,10 +6,12 @@
   config,
   osConfig,
   lib,
+  annixionColors,
   ...
 }:
 let
   compositing = osConfig.annixion.desktop.compositing;
+  palette = config.annixion.desktop.hyprland.palette;
 in
 {
   programs.hyprlock = {
@@ -37,9 +39,9 @@ in
           monitor = "";
           dots_center = true;
           fade_on_empty = false;
-          font_color = "rgb(dfe4ea)";
-          inner_color = "rgb(1a1d24)";
-          outer_color = "rgb(ff0033)";
+          font_color = annixionColors.rgb palette.text;
+          inner_color = annixionColors.rgb palette.surface;
+          outer_color = annixionColors.rgb palette.accent;
           outline_thickness = 2;
           placeholder_text = "Password…";
         }
@@ -49,7 +51,7 @@ in
         {
           text = "cmd[update:1000] echo \"$(date +'%H:%M')\"";
           font_size = 64;
-          font_color = "rgb(dfe4ea)";
+          font_color = annixionColors.rgb palette.text;
           position = "0, 120";
           halign = "center";
           valign = "center";

@@ -9,6 +9,7 @@
 
 {
   imports = [
+    ./palette.nix
     ./workspace.nix
     ./binds.nix
     ./waybar

@@ -3,48 +3,35 @@
 /*======= MODULE INDEPENDENT =======*/
 #distro-group {
   margin: 4px 5px;
-  background-color: @surface_container;
+  background-color: @surface;
   border-radius: 20px;
-  color: @primary;
+  color: @text;
 }
 
 #custom-distro {
-  color: @primary;
+  color: @text;
   padding: 6px 15px 6px 10px;
 }
 
-#custom-terminal {
-  color: #a6e3a1;
-  padding: 0px 10px;
-}
-
-#custom-code {
-  color: #89b4fa;
-  padding: 0px 10px;
-}
-
-#custom-office {
-  color: #ff6f4c;
-  padding: 0px 10px;
-}
-
-#custom-obsidian {
-  color: #cba6f7;
+/* One launcher row, one neutral colour — docs/visual-identity.md reserves
+   the six semantic-class hues for telling tools apart, never for mood, so
+   these distinguish by glyph rather than borrowing that palette. */
+#custom-terminal,
+#custom-code,
+#custom-office,
+#custom-obsidian,
+#custom-files,
+#custom-spotify,
+#custom-browser {
+  color: @text;
   padding: 0px 10px;
 }
 
 #custom-files {
-  color: #f9e2af;
   padding: 0px 10px 0px 8px;
 }
 
-#custom-spotify {
-  color: #1db954;
-  padding: 0px 10px;
-}
-
 #custom-browser {
-  color: #fab387;
   padding: 0px 15px 0px 10px;
 }
 
@@ -52,9 +39,9 @@
 #idle_inhibitor {
   margin: 4px 5px;
   padding: 6px 15px 6px 10px;
-  background-color: @surface_container;
+  background-color: @surface;
   border-radius: 20px;
-  color: @secondary_fixed_dim;
+  color: @text;
 }
 
 /*======= MODULE CAPSUL =======*/
@@ -64,9 +51,9 @@
 #storage {
   margin: 4px 5px;
   padding: 6px 6px;
-  background-color: @surface_container;
+  background-color: @surface;
   border-radius: 20px;
-  color: @secondary_fixed_dim;
+  color: @text;
 }
 
 #disk,
@@ -90,13 +77,13 @@
 /*======= TRAY =======*/
 #tray-group {
   margin: 4px 5px;
-  background-color: @surface_container;
+  background-color: @surface;
   border-radius: 20px;
 }
 
 #custom-tray-arrow {
   padding: 6px 14px 6px 10px;
-  color: @primary;
+  color: @text;
 }
 
 #tray {
@@ -108,4 +95,3 @@
 #tray>.needs-attention {
   -gtk-icon-effect: none;
 }
-

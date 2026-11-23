@@ -4,9 +4,11 @@
   config,
   osConfig,
   lib,
+  annixionColors,
   ...
 }:
 let
+  palette = config.annixion.desktop.hyprland.palette;
   # Off by default on a Hyper-V guest with no render node (#167) — the same
   # gate kwin.nix reads for KWin's compositor. Hyprland always composites
   # (that's inherent to Wayland), so what this buys back here is blur and
@@ -19,9 +21,9 @@ in
   services.hyprpaper = {
     enable = lib.mkDefault true;
     settings = {
-      # Swapped to a flat void (docs/visual-identity.md's "Deepest ground",
-      # #0E0F13) while the #223 identity pivot is still in flux — a clean
-      # base to design the new chrome against instead of the current
+      # Swapped to a flat void (palette.ground, docs/visual-identity.md's
+      # "Deepest ground") while the #223 identity pivot is still in flux — a
+      # clean base to design the new chrome against instead of the current
       # graffiti art. Point back at wallpaper_1.png once that's settled.
       preload = [ "${wallpapers}/void.png" ];
       wallpaper = [ ", ${wallpapers}/void.png" ];
@@ -50,10 +52,10 @@ in
       gaps_in = 5;
       gaps_out = 10;
       border_size = 2;
-      # #FF0033, the signature accent (docs/visual-identity.md), active;
-      # #2E323D, the divider colour, inactive.
-      "col.active_border" = "rgba(ff0033ee)";
-      "col.inactive_border" = "rgba(2e323daa)";
+      # palette.accent, the signature accent (docs/visual-identity.md),
+      # active; palette.surface, the raised-surface neutral, inactive.
+      "col.active_border" = annixionColors.rgba palette.accent 93;
+      "col.inactive_border" = annixionColors.rgba palette.surface 67;
       layout = "dwindle";
     };
 
