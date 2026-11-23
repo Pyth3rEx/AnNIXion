@@ -11,13 +11,13 @@
   min-height: 10px;
   min-width: 80px;
   border-radius: 10px;
-  background-color: @outline_variant;
+  background-color: shade(@surface, 1.6);
 }
 
 #pulseaudio-slider highlight {
   min-height: 10px;
   border-radius: 10px;
-  background-color: @secondary_fixed_dim;
+  background-color: @accent;
 }
 
 #pulseaudio-slider slider {
@@ -25,6 +25,5 @@
   min-width: 12px;
   margin: -2px 0;
   border-radius: 100%;
-  background-color: @primary;
+  background-color: @text;
 }
-

@@ -1,11 +1,10 @@
 # Status bar ported from haikal-hakim/athena's waybar rice, adapted to this catalog.
-# Waybar stacks same-edge bars rather than overlapping them, so mainBar (the
-# primary output, every module) and centralBar (every other output, center
-# cluster only) are two separate bars, not one merged by height.
+# Waybar stacks same-edge bars rather than overlapping them, so mainBar and centralBar are two separate bars, not one merged by height.
 {
   lib,
   pkgs,
   config,
+  annixionCssPrelude,
   ...
 }:
 let
@@ -108,7 +107,7 @@ in
       );
 
       style = lib.mkDefault (
-        builtins.readFile ./tokens/colors.css
+        annixionCssPrelude
         + builtins.readFile ./tokens/state.css
         + builtins.readFile ./tokens/workspace.css
         + builtins.readFile ./tokens/widget.css

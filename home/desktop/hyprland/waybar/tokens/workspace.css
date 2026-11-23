@@ -3,7 +3,7 @@
 #workspaces {
   margin: 4px 5px;
   padding: 6px 6px;
-  background-color: @surface_container;
+  background-color: @surface;
   border-radius: 20px;
 }
 
@@ -13,37 +13,37 @@
   margin: 0 2px;
   background: transparent;
   border-radius: 16px;
-  color: @tertiary;
+  color: @utility;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
 }
 
 #workspaces button.active {
   padding: 0 12px;
   margin: 0 2px;
-  background-color: @primary;
-  color: @on_primary;
+  background-color: @accent;
+  color: @ground;
 }
 
 #workspaces button.special {
-  color: @tertiary_fixed;
+  color: shade(@text, 0.8);
 }
 
 #workspaces button:hover {
-  background-color: @surface_container_highest;
-  color: @primary;
+  background-color: shade(@surface, 1.4);
+  color: @accent;
 }
 
 #workspaces button.active:hover {
-  background-color: @primary;
-  color: @on_primary;
+  background-color: @accent;
+  color: @ground;
 }
 
 #workspaces button.empty {
-  color: @outline_variant;
+  color: shade(@utility, 0.6);
 }
 
 #workspaces button.urgent {
-  color: @error_container;
+  color: @accent;
 }
 
 #workspaces button label:first-child {
@@ -53,4 +53,3 @@
 #workspaces button label:last-child {
   margin-left: 2px;
 }
-
