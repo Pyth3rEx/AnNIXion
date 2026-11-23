@@ -2,31 +2,34 @@
   "hyprland/workspaces" = {
     format = "{icon} {windows}";
     on-click = "activate";
+    move-to-monitor = true; # Monitor to window or window to monitor
     persistent-workspaces = {
       "*" = 5;
     };
     window-rewrite-default = "󰊠";
     window-rewrite = {
       kitty = "󰆍";
+      konsole = "󰆍";
       onlyoffice = "󰏆";
-      firefox = "";
+      firefox = "󰈹";
       code = "󰨞";
-      azahar = "";
+      codium = "󰨞";
+      azahar = "󰮂";
       obsidian = "󰹕";
       mousepad = "󱓧";
-      discord = "";
-      spotify = "";
+      discord = "󰙯";
+      spotify = "󰓇";
       "org.kde.kdeconnect.app" = "󰦉";
       "org.qbittorrent.qBittorrent" = "󰘿";
-      xdg-desktop-portal-gtk = "";
-      thunar = "";
+      xdg-desktop-portal-gtk = "󱒃";
+      thunar = "󰉋";
       yazi = "󰇥";
       imv = "󰄄";
       swappy = "󰄄";
-      "org.gnome.FileRoller" = "";
+      "org.gnome.FileRoller" = "󰛫";
       vlc = "󰕼";
       mpv = "󰕼";
-      blueman-manager = "";
+      blueman-manager = "󰂳";
       pavucontrol = "󱕂";
       nm-connection-editor = "󰐻";
       nwg-look = "󰒓";
@@ -39,11 +42,14 @@
       qdbusviewer = "󰒓";
     };
     format-icons = {
+      # Pac-Man (active), ghost (shown on another monitor but not focused),
+      # pac-dot (not displayed on any monitor)
       active = "󰮯";
-      special = "󱁂";
-      default = "󰊠";
-      urgent = "󰧵";
+      visible = "󰊠";
+      default = "󰧟";
       empty = "󰧟";
+      special = "󱁂";
+      urgent = "󰧵";
     };
     show-special = true;
     all-outputs = true;
