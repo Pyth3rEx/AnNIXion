@@ -71,9 +71,17 @@ in
         passes = 2;
       };
       shadow.enabled = compositing;
+      active_opacity = 1.0;
+      inactive_opacity = 0.85;
     };
 
     animations.enabled = compositing;
+
+    windowrule = [
+      "opacity 1.0 override 1.0 override, match:fullscreen 1"
+      "opacity 0.9 override 0.82 override, match:float 1"
+      "opacity 0.88 override 0.8 override, match:class ^(konsole)$"
+    ];
 
     # Single click selects, focus follows mouse — the same choice
     # home/desktop/plasma/workspace.nix makes, for the reason noted there
