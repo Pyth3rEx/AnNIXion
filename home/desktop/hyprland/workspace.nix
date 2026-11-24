@@ -26,7 +26,12 @@ in
       # clean base to design the new chrome against instead of the current
       # graffiti art. Point back at wallpaper_1.png once that's settled.
       preload = [ "${wallpapers}/void.png" ];
-      wallpaper = [ ", ${wallpapers}/void.png" ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = "${wallpapers}/wallpaper_1.png";
+        }
+      ];
     };
   };
 
@@ -57,8 +62,8 @@ in
       # palette.accent, the signature accent (docs/visual-identity.md),
       # active; palette.surface, the raised-surface neutral, inactive.
       # Same hue as before, just as faint as that waybar hairline instead
-      # of a bold stroke.
-      "col.active_border" = annixionColors.rgba palette.accent 14;
+      # of a bold stroke. 14% read a touch too faint; nudged up slightly.
+      "col.active_border" = annixionColors.rgba palette.accent 20;
       "col.inactive_border" = annixionColors.rgba palette.surface 67;
       layout = "dwindle";
     };
