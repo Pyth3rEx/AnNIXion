@@ -69,6 +69,10 @@ in
         enabled = compositing;
         size = 6;
         passes = 2;
+        # Without this, blur and a translucent surface (Vicinae's
+        # launcher_window.opacity, the windowrule opacities below) don't
+        # compose correctly — Hyprland wiki, "Layer rules"/"Blur" gotchas.
+        ignore_opacity = true;
       };
       shadow.enabled = compositing;
       active_opacity = 1.0;

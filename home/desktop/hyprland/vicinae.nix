@@ -120,7 +120,11 @@ let
       launcher_window = {
         opacity = 0.95;
         blur.enabled = true;
-        material = "auto"; # liquid_glass where the compositor's ext-background-effect protocol supports it, blur otherwise
+        # "auto" would pick liquid_glass via ext-background-effect, but that
+        # protocol only landed in Hyprland 0.56.0 — this flake's pinned to
+        # 0.55.4, so force the compositor-blur path instead of trusting
+        # auto-detection to fall back cleanly.
+        material = "blur";
         rounding = 18; # waybar's own capsules round this hard (tokens/widget.css's border-radius: 20px)
       };
       # Pinned to the top of the root search's empty-query view
