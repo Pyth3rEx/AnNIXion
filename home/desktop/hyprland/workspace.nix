@@ -25,8 +25,13 @@ in
       # "Deepest ground") while the #223 identity pivot is still in flux — a
       # clean base to design the new chrome against instead of the current
       # graffiti art. Point back at wallpaper_1.png once that's settled.
-      preload = [ "${wallpapers}/void.png" ];
-      wallpaper = [ ", ${wallpapers}/void.png" ];
+      preload = [ "${wallpapers}/wallpaper_1.png" ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = "${wallpapers}/wallpaper_1.png";
+        }
+      ];
     };
   };
 
@@ -51,10 +56,14 @@ in
     general = {
       gaps_in = 5;
       gaps_out = 10;
-      border_size = 2;
+      # 1px hairline, same restraint as waybar's glass-pane edge
+      # (waybar/tokens/glass.css: inset 1px at alpha(@text, 0.1)).
+      border_size = 1;
       # palette.accent, the signature accent (docs/visual-identity.md),
       # active; palette.surface, the raised-surface neutral, inactive.
-      "col.active_border" = annixionColors.rgba palette.accent 93;
+      # Same hue as before, just as faint as that waybar hairline instead
+      # of a bold stroke.
+      "col.active_border" = annixionColors.rgba palette.accent 14;
       "col.inactive_border" = annixionColors.rgba palette.surface 67;
       layout = "dwindle";
     };
