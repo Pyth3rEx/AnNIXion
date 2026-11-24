@@ -1,19 +1,5 @@
-# Status bar — ported from haikal-hakim/athena's waybar rice
-# (github.com/haikal-hakim/athena/tree/main/.config/waybar), with app
-# launchers swapped for what's actually in this catalog (konsole, codium,
-# dolphin — see binds.nix / home/apps/vscodium.nix / catalog/system/dolphin.nix),
-# the spotify button dropped (not in the catalog), the hardcoded thermal-zone
-# and timezone removed (hardware/locale specific to the upstream author), and
-# the Tela-circle tray icon paths dropped (FHS paths that don't exist on NixOS).
-#
-# Waybar renders each `settings.*` entry as its own top-level bar window, and
-# stacks same-edge bars one above the other rather than overlapping them — so
-# centralBar and mainBar can't be merged into a single visual bar by just
-# giving them the same height. Instead mainBar carries every module (left,
-# center and right) and is pinned to the primary display only; centralBar
-# repeats just the center cluster (workspaces/idle/power) for the other
-# displays, which don't get the left/right system tray and launchers.
-# "Primary" here is eDP-1 — workspace.nix pins Hyprland workspace "1" to it.
+# Status bar ported from haikal-hakim/athena's waybar rice, adapted to this catalog.
+# Waybar stacks same-edge bars rather than overlapping them, so mainBar (eDP-1, every module) and centralBar (other displays, center cluster only) are two separate bars, not one merged by height.
 { lib, pkgs, ... }:
 let
   powerProfilesDaemonModule = import ./modules/power-profiles-daemon.nix;
@@ -45,12 +31,6 @@ in
     enable = lib.mkDefault true;
     systemd.enable = lib.mkDefault true;
 
-    # Whole-value lib.mkDefault — nothing else contributes to centralBar or
-    # mainBar, so unlike wayland.windowManager.hyprland.settings (fed by
-    # both workspace.nix and binds.nix) there's no sibling-key union to
-    # preserve: a full replacement from user/home.nix is exactly what's
-    # wanted here, same as monitor above.
-    #
     # Secondary displays: workspaces/idle/power only, no launchers or tray.
     settings.centralBar = lib.mkDefault (
       centerModules
@@ -58,9 +38,7 @@ in
         layer = "top";
         height = 42;
         spacing = 6;
-        # A pure exclusion list matches nothing in waybar — an
-        # exclusions-only array needs a trailing "*" to actually fall
-        # through to "everything else" (see `man waybar`, "output").
+        # An exclusions-only "output" array needs a trailing "*" to fall through to everything else (man waybar).
         output = [
           "!eDP-1"
           "*"

@@ -1,13 +1,4 @@
-# Keybindings, carried over from home/desktop/plasma/shortcuts.nix where a
-# Hyprland equivalent exists.
-#
-# annixion-raise (home/desktop/window-raise.nix), behind every Fn-key launcher
-# in shortcuts.nix, shells out to wmctrl/xprop — X11-only, so it cannot carry
-# over to a native Wayland session. Those per-app launch-or-focus hotkeys are
-# dropped here rather than silently rebuilt into plain launches; the catalog's
-# own .desktop entries (home/desktop/apps-menu.nix) already reach every tool
-# through wofi (wofi.nix), unraised. Tracked as a follow-up once a
-# Wayland-native replacement exists.
+# Carried over from plasma/shortcuts.nix where a Hyprland equivalent exists. annixion-raise's per-app launch-or-focus hotkeys are dropped (it shells out to X11-only wmctrl/xprop) rather than rebuilt as plain launches — wofi already reaches every tool, unraised. Follow-up once a Wayland-native replacement exists.
 _:
 
 {
@@ -16,7 +7,7 @@ _:
     "$term" = "konsole";
 
     bind = [
-      # ── Workspaces (kwinrc.Desktops.Number = 4, kwin.nix) ────
+      # Workspaces (kwinrc.Desktops.Number = 4, kwin.nix)
       "$mod, 1, workspace, 1"
       "$mod, 2, workspace, 2"
       "$mod, 3, workspace, 3"
@@ -27,18 +18,18 @@ _:
       "$mod CTRL, 3, movetoworkspace, 3"
       "$mod CTRL, 4, movetoworkspace, 4"
 
-      # ── Focus movement — kwin.nix's Krohnkite binds the same chord ──
+      # Focus movement — kwin.nix's Krohnkite binds the same chord
       "$mod SHIFT, up, movefocus, u"
       "$mod SHIFT, down, movefocus, d"
       "$mod SHIFT, left, movefocus, l"
       "$mod SHIFT, right, movefocus, r"
 
-      # ── Window controls ───────────────────────────────────────
+      # Window controls
       "ALT, F4, killactive"
       "$mod, F, fullscreen, 0"
       "$mod, V, togglefloating"
 
-      # ── Launchers ─────────────────────────────────────────────
+      # Launchers
       "$mod, Return, exec, $term"
       "$mod, Q, exec, $term"
       "$mod, Space, exec, wofi --show drun"
@@ -46,9 +37,7 @@ _:
 
       "$mod, L, exec, hyprlock"
 
-      # Ends the compositor and drops back to SDDM (system/hyprland.nix
-      # leaves Plasma as services.displayManager.defaultSession), so
-      # switching back to Plasma is a logout, not a reboot.
+      # Ends the compositor back to SDDM — switching to Plasma is a logout, not a reboot.
       "$mod SHIFT, E, exit"
     ];
 
@@ -57,11 +46,7 @@ _:
       "$mod, mouse:273, resizewindow"
     ];
 
-    # Bare SUPER (tap, no chord) opens wofi — the Wayland stand-in for
-    # Plasma's Tiled Menu on bare Meta (home/desktop/plasma/shortcuts.nix),
-    # which has no KWin-style ModifierOnlyShortcuts equivalent here.
-    # bindr fires on release so it doesn't fight every other $mod chord
-    # above, which all fire on press.
+    # Bare SUPER opens wofi, the Wayland stand-in for Plasma's Tiled Menu; bindr fires on release so it doesn't fight the $mod chords above, which fire on press.
     bindr = [
       "$mod, SUPER_L, exec, wofi --show drun"
     ];
