@@ -14,6 +14,13 @@ fix-branch      →  hotfix   →  (maintainer)  →  main
                                               ↘  dev
 ```
 
+- **One branch, one thing.** A branch scoped to a feature does not pick up
+  unrelated work just because it landed in the same sitting. Stack a new
+  branch on top of it for a follow-on feature that depends on it, or cut a
+  fresh branch from `dev` for anything that doesn't — never fold unrelated
+  work into an existing branch's commits, and never commit straight to `dev`
+  or `main` either way. Easier to review, easier to revert, easier to land
+  independently.
 - **Open every PR against `dev`, never `main`.**
 - The maintainer merges `dev` → `main` and owns the release.
 - **Do not** bump the `VERSION` file yourself and **do not** open PRs directly
