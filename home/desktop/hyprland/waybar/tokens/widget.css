@@ -1,0 +1,97 @@
+/* tokens/widget.css */
+
+/*======= MODULE INDEPENDENT =======*/
+#distro-group {
+  margin: 4px 5px;
+  background-color: @surface;
+  border-radius: 20px;
+  color: @text;
+}
+
+#custom-distro {
+  color: @text;
+  padding: 6px 15px 6px 10px;
+}
+
+/* One launcher row, one neutral colour — docs/visual-identity.md reserves
+   the six semantic-class hues for telling tools apart, never for mood, so
+   these distinguish by glyph rather than borrowing that palette. */
+#custom-terminal,
+#custom-code,
+#custom-office,
+#custom-obsidian,
+#custom-files,
+#custom-spotify,
+#custom-browser {
+  color: @text;
+  padding: 0px 10px;
+}
+
+#custom-files {
+  padding: 0px 10px 0px 8px;
+}
+
+#custom-browser {
+  padding: 0px 15px 0px 10px;
+}
+
+#power-profiles-daemon,
+#idle_inhibitor {
+  margin: 4px 5px;
+  padding: 6px 15px 6px 10px;
+  background-color: @surface;
+  border-radius: 20px;
+  color: @text;
+}
+
+/*======= MODULE CAPSUL =======*/
+#audio,
+#connections,
+#system,
+#storage {
+  margin: 4px 5px;
+  padding: 6px 6px;
+  background-color: @surface;
+  border-radius: 20px;
+  color: @text;
+}
+
+#disk,
+#memory,
+#cpu,
+#temperature,
+#bluetooth {
+  margin-right: 2px;
+  padding: 0 8px;
+}
+
+#network {
+  padding: 0px 10px 0px 4px;
+}
+
+#pulseaudio {
+  margin-right: 12px;
+  margin-left: 8px;
+}
+
+/*======= TRAY =======*/
+#tray-group {
+  margin: 4px 5px;
+  background-color: @surface;
+  border-radius: 20px;
+}
+
+#custom-tray-arrow {
+  padding: 6px 14px 6px 10px;
+  color: @text;
+}
+
+#tray {
+  padding: 6px 10px;
+}
+
+#tray>.passive,
+#tray>.active,
+#tray>.needs-attention {
+  -gtk-icon-effect: none;
+}

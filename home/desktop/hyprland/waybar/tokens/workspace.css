@@ -1,0 +1,55 @@
+/* tokens/workspace.css */
+
+#workspaces {
+  margin: 4px 5px;
+  padding: 6px 6px;
+  background-color: @surface;
+  border-radius: 20px;
+}
+
+#workspaces button {
+  min-width: 32px;
+  padding: 0 4px;
+  margin: 0 2px;
+  background: transparent;
+  border-radius: 16px;
+  color: @utility;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+}
+
+#workspaces button.active {
+  padding: 0 12px;
+  margin: 0 2px;
+  background-color: @accent;
+  color: @ground;
+}
+
+#workspaces button.special {
+  color: shade(@text, 0.8);
+}
+
+#workspaces button:hover {
+  background-color: shade(@surface, 1.4);
+  color: @accent;
+}
+
+#workspaces button.active:hover {
+  background-color: @accent;
+  color: @ground;
+}
+
+#workspaces button.empty {
+  color: shade(@utility, 0.6);
+}
+
+#workspaces button.urgent {
+  color: @accent;
+}
+
+#workspaces button label:first-child {
+  margin-right: 8px;
+}
+
+#workspaces button label:last-child {
+  margin-left: 2px;
+}

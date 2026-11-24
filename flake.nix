@@ -58,6 +58,7 @@
         ./system/overlays.nix
         ./system/compat.nix
         ./system/desktop.nix
+        ./system/hyprland.nix
         ./system/firefox-profiles.nix
         ./system/branding.nix
         ./system/xrdp.nix

@@ -66,9 +66,16 @@ else
   # Dropping the Wayland greeter must not drop the Wayland session from the
   # list — SDDM reads both session dirs, and losing this is how "both sessions
   # are offered" (system/desktop.nix) would quietly stop being true.
-  waylandsessions=$(sed -n 's/^SessionDir=.*wayland-sessions.*/yes/p' "$conf" | head -1)
-  report "$([ "$waylandsessions" = "yes" ] && echo 0 || echo 1)" \
+  waylandsessiondir=$(sed -n 's/^SessionDir=\(.*wayland-sessions\)$/\1/p' "$conf" | head -1)
+  report "$([ -n "$waylandsessiondir" ] && echo 0 || echo 1)" \
     "the Wayland session stays selectable" "no wayland-sessions dir in $conf"
+
+  # #223: Hyprland lands alongside Plasma, not instead of it — system/desktop.nix's
+  # defaultSession stays "plasmax11" (checked above); this is the other half,
+  # that the second session is actually there to pick.
+  report "$([ -f "$waylandsessiondir/hyprland.desktop" ] && echo 0 || echo 1)" \
+    "Hyprland is offered alongside Plasma" \
+    "no hyprland.desktop in ${waylandsessiondir:-<unset>}"
 fi
 
 echo

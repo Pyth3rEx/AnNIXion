@@ -1,0 +1,31 @@
+/* tokens/state.css */
+#custom-tray-arrow.inhibited-none,
+#custom-tray-arrow.dnd-none,
+#battery.charging,
+#power-profiles-daemon.power-saver {
+  color: @passive;
+}
+
+
+#idle_inhibitor.activated,
+#cpu.warning,
+#disk.warning,
+#memory.warning,
+#battery.warning:not(.charging),
+#custom-tray-arrow.notification,
+#custom-tray-arrow.dnd-notification,
+#custom-tray-arrow.inhibited-notification {
+  color: @probe;
+}
+
+#network.disabled,
+#cpu.critical,
+#disk.critical,
+#memory.critical,
+#temperature.critical,
+#battery.critical:not(.charging),
+#power-profiles-daemon.performance,
+#custom-tray-arrow.dnd-inhibited-none,
+#custom-tray-arrow.dnd-inhibited-notification {
+  color: @offensive;
+}
