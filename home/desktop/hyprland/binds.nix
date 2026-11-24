@@ -1,10 +1,10 @@
-# Carried over from plasma/shortcuts.nix where a Hyprland equivalent exists. annixion-raise's per-app launch-or-focus hotkeys are dropped (it shells out to X11-only wmctrl/xprop) rather than rebuilt as plain launches — wofi already reaches every tool, unraised. Follow-up once a Wayland-native replacement exists.
-_:
+# Carried over from plasma/shortcuts.nix where a Hyprland equivalent exists
 
 {
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
     "$term" = "konsole";
+    "$launcher" = "vicinae toggle";
 
     bind = [
       # Workspaces (kwinrc.Desktops.Number = 4, kwin.nix)
@@ -32,8 +32,8 @@ _:
       # Launchers
       "$mod, Return, exec, $term"
       "$mod, Q, exec, $term"
-      "$mod, Space, exec, wofi --show drun"
-      "ALT, Space, exec, wofi --show drun"
+      "$mod, Space, exec, $launcher"
+      "ALT, Space, exec, $launcher"
 
       "$mod, L, exec, hyprlock"
 
@@ -46,9 +46,9 @@ _:
       "$mod, mouse:273, resizewindow"
     ];
 
-    # Bare SUPER opens wofi, the Wayland stand-in for Plasma's Tiled Menu; bindr fires on release so it doesn't fight the $mod chords above, which fire on press.
+    # Bare SUPER opens Vicinae
     bindr = [
-      "$mod, SUPER_L, exec, wofi --show drun"
+      "$mod, SUPER_L, exec, $launcher"
     ];
   };
 }

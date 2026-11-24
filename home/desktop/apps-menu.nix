@@ -14,28 +14,7 @@
 let
   catalog = import ../../catalog { inherit lib; };
 
-  # ── Launchers ─────────────────────────────────────────────────────────────
-  term = cmd: "konsole -e ${cmd}";
-  # -name sets the WM_CLASS instance, so the window is tellable from a
-  # plain Konsole — annixion-raise and the task manager both key on it.
-  termNamed = wmName: cmd: "konsole -name ${wmName} -e ${cmd}";
-  # Exported so the shell that takes over after the tool skips the banner.
-  termHold = cmd: ''konsole -e zsh -c "export ANNIXION_NO_BANNER=1; ${cmd}; exec zsh"'';
-
-  # The catalog is data and cannot reach config, so an exec that needs the home
-  # directory says @home@ — the same trick a mark uses with @c@ for its colour.
-  execOf =
-    tool:
-    let
-      cmd = builtins.replaceStrings [ "@home@" ] [ config.home.homeDirectory ] tool.exec;
-    in
-    {
-      gui = cmd;
-      term = term cmd;
-      hold = termHold cmd;
-      named = termNamed tool.wmName cmd;
-    }
-    .${tool.launch};
+  execOf = import ./menu-lib.nix config.home.homeDirectory;
 
   dir = name: icon: ''
     [Desktop Entry]

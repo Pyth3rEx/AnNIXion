@@ -1,7 +1,4 @@
-# Hyprland desktop, offered alongside home/desktop/plasma — #223. Panel,
-# launcher, lock screen and wallpaper are declared here instead of inherited
-# from Plasma, since none of plasma-manager's config applies to a different
-# compositor.
+# Hyprland desktop, offered alongside home/desktop/plasma
 {
   lib,
   ...
@@ -13,7 +10,7 @@
     ./workspace.nix
     ./binds.nix
     ./waybar
-    ./wofi.nix
+    ./vicinae.nix
     ./hyprlock.nix
     ./hypridle.nix
   ];
