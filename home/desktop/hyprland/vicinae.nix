@@ -118,7 +118,11 @@ let
       };
       activate_on_single_click = true;
       launcher_window = {
-        opacity = 0.95;
+        # 0.95 (the earlier value) is nearly indistinguishable from fully
+        # opaque — `vicinae config default`'s own example is 0.6. Picked 0.75
+        # as a middle ground: visibly translucent without the readability
+        # problems reported at very low opacity (vicinaehq/vicinae#2097).
+        opacity = 0.75;
         blur.enabled = true;
         # "auto" would pick liquid_glass via ext-background-effect, but that
         # protocol only landed in Hyprland 0.56.0 — this flake's pinned to
