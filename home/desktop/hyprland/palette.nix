@@ -106,9 +106,7 @@ in
   };
 
   config._module.args = {
-    # String composition against the palette above — never a new literal
-    # hex. shade/tint are mix() toward black/white, the same operations
-    # GTK CSS's own shade()/tint()/mix() give the waybar/wofi side.
+    # String composition against the palette above
     annixionColors = rec {
       hex = c: "#${c}";
       rgb = c: "rgb(${c})";
