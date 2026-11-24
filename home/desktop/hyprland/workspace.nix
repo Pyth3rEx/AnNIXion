@@ -25,13 +25,8 @@ in
       # "Deepest ground") while the #223 identity pivot is still in flux — a
       # clean base to design the new chrome against instead of the current
       # graffiti art. Point back at wallpaper_1.png once that's settled.
-      preload = [ "${wallpapers}/wallpaper_1.png" ];
-      wallpaper = [
-        {
-          monitor = "";
-          path = "${wallpapers}/wallpaper_1.png";
-        }
-      ];
+      preload = [ "${wallpapers}/void.png" ];
+      wallpaper = [ ", ${wallpapers}/void.png" ];
     };
   };
 
