@@ -131,12 +131,15 @@ let
         # auto-detection to fall back cleanly.
         material = "blur";
         rounding = 18; # waybar's own capsules round this hard (tokens/widget.css's border-radius: 20px)
-        # Dropping the theme's border alpha 8% -> 3% made no visible
-        # difference, which means client_side_decorations — Vicinae drawing
-        # its own border/shadow client-side — is what's actually rendering
-        # the outline, not the theme token. Vicinae's own docs recommend
-        # turning this off and letting the compositor decorate instead.
-        client_side_decorations.enabled = false;
+        # Hyprland doesn't round layer-shell surfaces itself (only toplevel
+        # windows), so turning client_side_decorations off entirely — the
+        # previous attempt at killing the border — also lost the rounded
+        # corners. Keep CSD on for its rounded clip/shadow, zero the border
+        # stroke width instead of fighting the theme's border alpha.
+        client_side_decorations = {
+          enabled = true;
+          border_width = 0;
+        };
       };
       # Pinned to the top of the root search's empty-query view
       favorites = [ "@annixion/annixion-kill-chain:kill-chain" ];
