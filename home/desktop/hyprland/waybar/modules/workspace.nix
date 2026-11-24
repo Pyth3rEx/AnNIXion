@@ -14,6 +14,7 @@
       firefox = "󰈹";
       code = "󰨞";
       codium = "󰨞";
+      qgit = "󰅷";
       azahar = "󰮂";
       obsidian = "󰹕";
       mousepad = "󱓧";
