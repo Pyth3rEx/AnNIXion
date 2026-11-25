@@ -47,9 +47,19 @@ function contentsMarkdown(node: TreeNode): string {
 	return lines.length > 0 ? lines.map((line) => `- ${line}`).join("\n") : "_Nothing here yet._";
 }
 
-function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
-	const hasSnippets = tool.snippets.length > 0;
+function toolMarkdown(tool: Tool): string {
+	const parts: string[] = [];
+	if (tool.description) parts.push(tool.description);
+	if (tool.snippets.length > 0) {
+		const blocks = tool.snippets.map(
+			(snippet) => `**${snippet.label}**\n\`\`\`sh\n${snippet.command}\n\`\`\``,
+		);
+		parts.push(["### Snippets", ...blocks].join("\n\n"));
+	}
+	return parts.length > 0 ? parts.join("\n\n") : "_No description available._";
+}
 
+function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 	return (
 		<List.Item
 			key={tool.id}
@@ -82,7 +92,7 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 			}
 			detail={
 				<List.Item.Detail
-					markdown={tool.description ?? undefined}
+					markdown={toolMarkdown(tool)}
 					metadata={
 						<List.Item.Detail.Metadata>
 							<List.Item.Detail.Metadata.Label title="Tool" text={tool.name} />
@@ -109,18 +119,6 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 							<List.Item.Detail.Metadata.Label title="Command" text={tool.exec} />
 							{tool.docs ? (
 								<List.Item.Detail.Metadata.Link title="Documentation" target={tool.docs} text={tool.docs} />
-							) : null}
-							{hasSnippets ? (
-								<>
-									<List.Item.Detail.Metadata.Separator />
-									{tool.snippets.map((snippet, i) => (
-										<List.Item.Detail.Metadata.Label
-											key={i}
-											title={snippet.label}
-											text={snippet.command}
-										/>
-									))}
-								</>
 							) : null}
 						</List.Item.Detail.Metadata>
 					}
