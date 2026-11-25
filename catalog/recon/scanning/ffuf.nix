@@ -4,6 +4,22 @@ _: {
   name = "ffuf";
   genericName = "Web Fuzzer";
   comment = "Fast web fuzzer";
+  description = ''
+    ffuf fuzzes anything in an HTTP request — paths, parameters, headers,
+    virtual hosts — by substituting a `FUZZ` placeholder from a wordlist and
+    filtering responses by size, status or word count.
+  '';
+  docs = "https://github.com/ffuf/ffuf/wiki";
+  snippets = [
+    {
+      label = "Directory/path fuzzing";
+      command = "ffuf -u http://<target>/FUZZ -w /run/current-system/sw/share/wordlists/seclists/Discovery/Web-Content/big.txt";
+    }
+    {
+      label = "Fuzz a POST parameter, filter out failed logins";
+      command = ''ffuf -u http://<target>/login -X POST -d "user=admin&pass=FUZZ" -w wordlist.txt -fc 401'';
+    }
+  ];
   exec = "ffuf";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

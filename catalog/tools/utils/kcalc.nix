@@ -3,6 +3,8 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "KCalc";
   genericName = "Calculator";
+  description = "KCalc is a scientific calculator — the usual arithmetic plus bitwise, trigonometric and statistical modes.";
+  docs = "https://docs.kde.org/?application=kcalc";
   exec = "kcalc";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

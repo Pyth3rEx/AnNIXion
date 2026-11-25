@@ -5,6 +5,27 @@ _: {
   name = "NetExec";
   genericName = "Network Service Exploitation";
   comment = "Credential validation, command execution and lateral movement across AD hosts";
+  description = ''
+    NetExec validates credentials and executes commands across SMB, WinRM,
+    MSSQL and LDAP hosts at once — spray a credential over a subnet, dump
+    hashes, or run a command remotely. Maintained fork of the retired
+    CrackMapExec.
+  '';
+  docs = "https://github.com/Pennyw0rth/NetExec";
+  snippets = [
+    {
+      label = "Check SMB creds across a subnet";
+      command = "netexec smb <IP-range> -u <user> -p <password>";
+    }
+    {
+      label = "Dump SAM hashes";
+      command = "netexec smb <IP> -u <user> -p <password> --sam";
+    }
+    {
+      label = "Run a command over WinRM";
+      command = ''netexec winrm <IP> -u <user> -p <password> -x "whoami"'';
+    }
+  ];
   exec = "netexec";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

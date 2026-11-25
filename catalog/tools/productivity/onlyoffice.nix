@@ -5,6 +5,8 @@
   name = "OnlyOffice";
   genericName = "Office Suite";
   comment = "Office productivity suite — documents, spreadsheets, presentations";
+  description = "OnlyOffice Desktop Editors handle documents, spreadsheets and presentations with strong Microsoft Office format compatibility, for report writing and client deliverables.";
+  docs = "https://helpcenter.onlyoffice.com/";
   exec = "onlyoffice-desktopeditors";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

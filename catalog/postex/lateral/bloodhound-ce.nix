@@ -239,6 +239,28 @@ _: {
   name = "BloodHound CE";
   genericName = "AD Attack Path Mapping";
   comment = "Graphs Active Directory attack paths from collected session, ACL and membership data";
+  description = ''
+    BloodHound CE graphs Active Directory (and Entra ID, via AzureHound)
+    attack paths from data a collector already pulled — BloodHound.py,
+    AzureHound or SharpHound. It reads and visualises; it never reaches the
+    target itself. See docs/bloodhound.md for the deployment this wrapper
+    drives, the admin account, and why there is no login-less mode.
+  '';
+  docs = "https://github.com/SpecterOps/BloodHound";
+  snippets = [
+    {
+      label = "Bring the stack up and open the UI";
+      command = "bloodhound open";
+    }
+    {
+      label = "Follow logs (first-run admin password)";
+      command = "bloodhound logs";
+    }
+    {
+      label = "Check running containers";
+      command = "bloodhound status";
+    }
+  ];
   exec = "bloodhound open";
   launch = "hold"; # konsole: the first pull is long and the errors are worth reading
   mark = {

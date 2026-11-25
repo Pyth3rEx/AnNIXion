@@ -4,6 +4,22 @@ _: {
   name = "theHarvester";
   genericName = "OSINT Harvester";
   comment = "Email, domain and IP intelligence gathering";
+  description = ''
+    theHarvester pulls emails, subdomains, hostnames and IPs for a domain
+    from public sources — search engines, certificate transparency logs,
+    key servers — without ever touching the target directly.
+  '';
+  docs = "https://github.com/laramies/theHarvester#readme";
+  snippets = [
+    {
+      label = "Query one public source";
+      command = "theHarvester -d <domain> -b google";
+    }
+    {
+      label = "Query every supported source";
+      command = "theHarvester -d <domain> -b all";
+    }
+  ];
   exec = "theHarvester";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

@@ -5,6 +5,26 @@
   name = "Volatility 3";
   genericName = "Memory Forensics";
   comment = "Memory acquisition and forensics framework";
+  description = ''
+    Volatility 3 analyses memory images after the fact: process listings and
+    trees, command-line history, network state, injected code and more, all
+    recovered from a raw memory dump rather than a live system.
+  '';
+  docs = "https://volatility3.readthedocs.io/";
+  snippets = [
+    {
+      label = "List running processes";
+      command = "vol -f memory.dmp windows.pslist";
+    }
+    {
+      label = "Process tree";
+      command = "vol -f memory.dmp windows.pstree";
+    }
+    {
+      label = "Recovered command lines";
+      command = "vol -f memory.dmp windows.cmdline";
+    }
+  ];
   exec = "vol";
   launch = "term"; # konsole, closes with the tool
   mark = {

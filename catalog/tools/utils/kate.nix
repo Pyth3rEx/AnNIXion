@@ -3,6 +3,8 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "Kate";
   genericName = "Text Editor";
+  description = "Kate is KDE's text editor: syntax highlighting, split views and a plugin system, for editing config, scripts and notes outside a full IDE.";
+  docs = "https://docs.kde.org/?application=kate";
   exec = "kate";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

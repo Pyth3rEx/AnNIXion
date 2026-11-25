@@ -4,6 +4,8 @@ _: {
   name = "KWallet Manager";
   genericName = "Credential Store";
   comment = "Manage stored passwords and secrets";
+  description = "KWallet Manager browses and edits the encrypted wallets KDE applications store credentials and secrets in, unlocked at login.";
+  docs = "https://docs.kde.org/?application=kwalletmanager";
   exec = "kwalletmanager";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

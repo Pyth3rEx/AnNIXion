@@ -5,6 +5,27 @@
   name = "sqlmap";
   genericName = "SQL Injection Tool";
   comment = "Automatic SQL injection and database takeover";
+  description = ''
+    sqlmap automates detecting and exploiting SQL injection flaws, then takes
+    over the back-end database: fingerprinting the DBMS, enumerating and
+    dumping data, reading/writing files, and in some configurations reaching
+    OS command execution through the vulnerable parameter.
+  '';
+  docs = "https://github.com/sqlmapproject/sqlmap/wiki";
+  snippets = [
+    {
+      label = "Enumerate databases on a vulnerable URL";
+      command = ''sqlmap -u "<URL>" --dbs'';
+    }
+    {
+      label = "Dump a table";
+      command = "sqlmap -u \"<URL>\" -D <db> -T <table> --dump";
+    }
+    {
+      label = "Test a captured request from Burp/a file";
+      command = "sqlmap -r request.txt --batch";
+    }
+  ];
   exec = "sqlmap";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

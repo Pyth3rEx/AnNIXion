@@ -3,6 +3,8 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "Ark";
   genericName = "Archive Manager";
+  description = "Ark opens, creates and extracts zip, tar, 7z and most other archive formats through a graphical browser.";
+  docs = "https://docs.kde.org/?application=ark";
   exec = "ark";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

@@ -4,6 +4,26 @@ _: {
   name = "Netcat";
   genericName = "Network Swiss Army Knife";
   comment = "TCP/IP networking — listeners, pivots, file transfers";
+  description = ''
+    Netcat reads and writes raw TCP/UDP: a quick listener to catch a shell
+    or a file, a plain client to talk to a service by hand, or a pivot
+    between two ends of a connection.
+  '';
+  docs = "https://netcat.sourceforge.net/";
+  snippets = [
+    {
+      label = "Listen for a connection";
+      command = "nc -lvnp <port>";
+    }
+    {
+      label = "Connect to a listener";
+      command = "nc <IP> <port>";
+    }
+    {
+      label = "Receive a file";
+      command = "nc -lvnp <port> > received_file";
+    }
+  ];
   exec = "nc";
   launch = "term"; # konsole, closes with the tool
   # Earns a place under a second phase as well.

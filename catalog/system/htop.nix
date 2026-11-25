@@ -4,6 +4,12 @@ _: {
   name = "htop";
   genericName = "System Monitor";
   comment = "Interactive process viewer";
+  description = ''
+    htop is an interactive, colourised process viewer: sortable CPU/memory
+    columns, a tree view of parent/child processes, and kill/renice without
+    leaving the list.
+  '';
+  docs = "https://htop.dev/";
   exec = "htop";
   launch = "term"; # konsole, closes with the tool
   # Ships its own .desktop, which asks for the stock icon name;

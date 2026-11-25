@@ -4,6 +4,8 @@ _: {
   name = "Obsidian";
   genericName = "Note-Taking & Knowledge Base";
   comment = "Powerful knowledge base on top of a local folder of plain text Markdown files";
+  description = "Obsidian is a notes app over a local folder of plain Markdown files — backlinks, a graph view and plugins, with nothing leaving the machine unless you sync it yourself.";
+  docs = "https://help.obsidian.md/";
   exec = "obsidian";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

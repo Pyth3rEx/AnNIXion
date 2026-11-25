@@ -4,6 +4,13 @@ _: {
   name = "GNU Radio Companion";
   genericName = "SDR Signal Processing";
   comment = "SDR flow-graph signal processing toolkit";
+  description = ''
+    GNU Radio Companion builds software-defined-radio signal chains as a
+    flow graph — source blocks for a radio, signal-processing blocks in
+    between, sinks for display or output — without writing the DSP code
+    by hand.
+  '';
+  docs = "https://wiki.gnuradio.org/";
   exec = "gnuradio-companion";
   launch = "gui"; # runs directly
   mark = {

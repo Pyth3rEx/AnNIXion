@@ -4,6 +4,26 @@ _: {
   name = "HackRF Tools";
   genericName = "HackRF Utilities";
   comment = "HackRF hardware interface and diagnostics";
+  description = ''
+    The HackRF command-line tools talk to the HackRF One SDR directly:
+    confirm the device is seen, sweep a frequency range for signal power,
+    or capture/transmit raw IQ samples.
+  '';
+  docs = "https://hackrf.readthedocs.io/";
+  snippets = [
+    {
+      label = "Confirm the device is seen";
+      command = "hackrf_info";
+    }
+    {
+      label = "Sweep a frequency range for signal power";
+      command = "hackrf_sweep -f 2400:2500";
+    }
+    {
+      label = "Capture raw IQ samples";
+      command = "hackrf_transfer -r capture.iq -f 915000000 -s 2000000";
+    }
+  ];
   exec = "hackrf_info";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

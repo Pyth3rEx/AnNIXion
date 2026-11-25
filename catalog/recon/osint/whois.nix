@@ -3,6 +3,22 @@ _: {
   package = p: p.whois;
   name = "Whois";
   genericName = "Domain Lookup";
+  description = ''
+    whois queries domain and netblock registries for registration details —
+    registrant, registrar, nameservers and dates for a domain, or the
+    allocated owner of an IP range.
+  '';
+  docs = "https://manpages.debian.org/stable/whois/whois.1.en.html";
+  snippets = [
+    {
+      label = "Domain registration lookup";
+      command = "whois <domain>";
+    }
+    {
+      label = "IP/netblock allocation lookup";
+      command = "whois <IP>";
+    }
+  ];
   exec = "whois";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {
