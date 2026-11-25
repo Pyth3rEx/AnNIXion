@@ -26,6 +26,12 @@ in
     };
   };
 
+  qt = {
+    enable = true;
+    platformTheme.name = "kde";
+    style.name = "breeze";
+  };
+
   wayland.windowManager.hyprland.settings = {
     # Hardware-agnostic fallback — one monitor, best mode Hyprland can find.
     # Real layouts are machine-specific: set them in user/home.nix, which wins over this
