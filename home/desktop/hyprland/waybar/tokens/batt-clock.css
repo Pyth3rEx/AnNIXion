@@ -16,6 +16,14 @@
   color: @text;
 }
 
+#language {
+  margin: 4px 5px;
+  padding: 6px 16px;
+  background-color: @surface;
+  border-radius: 20px;
+  color: @text;
+}
+
 #custom-network-info {
   margin: 4px 5px;
   padding: 6px 16px;

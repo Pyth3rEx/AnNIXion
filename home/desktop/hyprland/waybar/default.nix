@@ -9,6 +9,7 @@
 }:
 let
   primaryOutput = config.annixion.desktop.hyprland.waybar.primaryOutput;
+  keyboardName = config.annixion.desktop.hyprland.waybar.keyboardName;
   powerProfilesDaemonModule = import ./modules/power-profiles-daemon.nix;
   workspaceModule = import ./modules/workspace.nix;
   idleInhibitorModule = import ./modules/idle-inhibitor.nix;
@@ -20,6 +21,11 @@ let
   connectionsModule = import ./modules/connections.nix;
   networkInfoModule = import ./modules/network-info.nix;
   batteryModule = import ./modules/battery.nix;
+  languageModule = lib.recursiveUpdate (import ./modules/language.nix) (
+    lib.optionalAttrs (keyboardName != null) {
+      "hyprland/language".keyboard-name = keyboardName;
+    }
+  );
   clockModule = import ./modules/clock.nix;
   trayNotifModule = import ./modules/tray-notif.nix;
 
@@ -46,6 +52,22 @@ in
       there's no agnostic default here — left unset, mainBar is shown on
       every output and centralBar is disabled. Set this in user/home.nix
       once you know your panel's name (`hyprctl monitors`).
+    '';
+  };
+
+  options.annixion.desktop.hyprland.waybar.keyboardName = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "at-translated-set-2-keyboard";
+    description = ''
+      Device name (from `hyprctl devices -j`, under "keyboards") that the
+      hyprland/language widget should read the active layout from.
+
+      Hyprland reports every HID as a "keyboard" (power button, hotkey
+      rails, video-bus, …), so without this pinned, waybar's module can
+      land on one that throws a format error and permanently disables
+      itself. Hardware-specific, so left unset here — set it in
+      user/home.nix once you know your real keyboard's name.
     '';
   };
 
@@ -86,6 +108,7 @@ in
         // connectionsModule
         // networkInfoModule
         // batteryModule
+        // languageModule
         // clockModule
         // trayNotifModule
         // {
@@ -104,6 +127,7 @@ in
           modules-right = [
             "group/audio"
             "battery"
+            "hyprland/language"
             "clock"
             "group/tray-group"
           ];
