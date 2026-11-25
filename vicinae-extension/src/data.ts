@@ -6,11 +6,19 @@ import path from "node:path";
 
 export const DATA_PATH = path.join(os.homedir(), ".local/share/annixion/kill-chain.json");
 
+export interface Snippet {
+	label: string;
+	command: string;
+}
+
 export interface Tool {
 	id: string;
 	name: string;
 	genericName: string | null;
 	comment: string | null;
+	description: string | null;
+	docs: string | null;
+	snippets: Snippet[];
 	markClass: string;
 	icon: string | null;
 	exec: string;

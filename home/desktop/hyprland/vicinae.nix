@@ -27,6 +27,9 @@ let
     inherit (tool) name;
     genericName = tool.genericName or null;
     comment = tool.comment or null;
+    description = tool.description or null;
+    docs = tool.docs or null;
+    snippets = tool.snippets or [ ];
     markClass = tool.mark.class;
     icon = iconPath key;
     exec = resolveExec tool;

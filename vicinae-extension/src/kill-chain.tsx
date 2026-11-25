@@ -48,6 +48,8 @@ function contentsMarkdown(node: TreeNode): string {
 }
 
 function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
+	const hasSnippets = tool.snippets.length > 0;
+
 	return (
 		<List.Item
 			key={tool.id}
@@ -66,10 +68,21 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 						}}
 					/>
 					<Action.CopyToClipboard title="Copy Command" content={tool.exec} />
+					{tool.docs ? (
+						<Action.OpenInBrowser title="Open Documentation" url={tool.docs} />
+					) : null}
+					{tool.snippets.map((snippet, i) => (
+						<Action.CopyToClipboard
+							key={i}
+							title={`Copy Snippet: ${snippet.label}`}
+							content={snippet.command}
+						/>
+					))}
 				</ActionPanel>
 			}
 			detail={
 				<List.Item.Detail
+					markdown={tool.description ?? undefined}
 					metadata={
 						<List.Item.Detail.Metadata>
 							<List.Item.Detail.Metadata.Label title="Tool" text={tool.name} />
@@ -94,6 +107,21 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 								<List.Item.Detail.Metadata.Label title="Comment" text={tool.comment} />
 							) : null}
 							<List.Item.Detail.Metadata.Label title="Command" text={tool.exec} />
+							{tool.docs ? (
+								<List.Item.Detail.Metadata.Link title="Documentation" target={tool.docs} text={tool.docs} />
+							) : null}
+							{hasSnippets ? (
+								<>
+									<List.Item.Detail.Metadata.Separator />
+									{tool.snippets.map((snippet, i) => (
+										<List.Item.Detail.Metadata.Label
+											key={i}
+											title={snippet.label}
+											text={snippet.command}
+										/>
+									))}
+								</>
+							) : null}
 						</List.Item.Detail.Metadata>
 					}
 				/>

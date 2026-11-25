@@ -113,6 +113,9 @@ One file. Put it in the phase it belongs to:
 | `mark` | The drawing and its semantic class. See [visual-identity.md](visual-identity.md). |
 | `aliases` | Stock icon names to install the mark under, for an app that ships its own `.desktop`. |
 | `alsoIn` | Another node path, for a tool that earns a place under a second phase. |
+| `description` | Optional. Longer prose than `comment`, shown as the main panel in the Vicinae launcher's detail view (`annixion-kill-chain`). |
+| `docs` | Optional. URL to the tool's documentation, shown as a link in the detail view and openable from the action panel. |
+| `snippets` | Optional. A list of `{ label; command; }` example invocations, shown in the detail view and individually copyable from the action panel. |
 
 The category comes from the path — `catalog/recon/scanning/` is
 `X-AnNIXion-Recon-Scanning`. Nothing retypes it.
