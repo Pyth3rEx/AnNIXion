@@ -26,7 +26,12 @@ in
       # clean base to design the new chrome against instead of the current
       # graffiti art. Point back at wallpaper_1.png once that's settled.
       preload = [ "${wallpapers}/void.png" ];
-      wallpaper = [ ", ${wallpapers}/void.png" ];
+      wallpaper = [
+        {
+          monitor = "";
+          path = "${wallpapers}/wallpaper_1.png";
+        }
+      ];
     };
   };
 
@@ -51,10 +56,14 @@ in
     general = {
       gaps_in = 5;
       gaps_out = 10;
-      border_size = 2;
+      # 1px hairline, same restraint as waybar's glass-pane edge
+      # (waybar/tokens/glass.css: inset 1px at alpha(@text, 0.1)).
+      border_size = 1;
       # palette.accent, the signature accent (docs/visual-identity.md),
       # active; palette.surface, the raised-surface neutral, inactive.
-      "col.active_border" = annixionColors.rgba palette.accent 93;
+      # Same hue as before, just as faint as that waybar hairline instead
+      # of a bold stroke. 14% read a touch too faint; nudged up slightly.
+      "col.active_border" = annixionColors.rgba palette.accent 20;
       "col.inactive_border" = annixionColors.rgba palette.surface 67;
       layout = "dwindle";
     };
@@ -69,11 +78,23 @@ in
         enabled = compositing;
         size = 6;
         passes = 2;
+        # Without this, blur and a translucent surface (Vicinae's
+        # launcher_window.opacity, the windowrule opacities below) don't
+        # compose correctly — Hyprland wiki, "Layer rules"/"Blur" gotchas.
+        ignore_opacity = true;
       };
       shadow.enabled = compositing;
+      active_opacity = 1.0;
+      inactive_opacity = 0.85;
     };
 
     animations.enabled = compositing;
+
+    windowrule = [
+      "opacity 1.0 override 1.0 override, match:fullscreen 1"
+      "opacity 0.9 override 0.82 override, match:float 1"
+      "opacity 0.88 override 0.8 override, match:class ^(konsole)$"
+    ];
 
     # Single click selects, focus follows mouse — the same choice
     # home/desktop/plasma/workspace.nix makes, for the reason noted there

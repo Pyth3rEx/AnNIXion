@@ -83,14 +83,15 @@ let
     foreground = ${hexq palette.text}
     secondary_background = ${hexaq 85 palette.surface}
     # waybar/tokens/glass.css's "glass pane" edge is a soft 1px CSS inset
-    # shadow at alpha(@text, 0.16) — blurred and anti-aliased by GTK, so it
+    # shadow at alpha(@text, 0.1) — blurred and anti-aliased by GTK, so it
     # reads as a whisper. Vicinae's border is a hard, unblurred stroke at
-    # the same width, so the same alpha reads far stronger here; dropped
-    # well below it to land at the same visual weight.
-    border = ${hexaq 8 palette.text}
+    # the same width, so the same alpha reads far stronger here; 8% still
+    # read as a visible white outline, so dropped further to land at the
+    # same visual weight as the waybar hairline.
+    border = ${hexaq 3 palette.text}
 
     [colors.main_window]
-    border = ${hexaq 8 palette.text}
+    border = ${hexaq 3 palette.text}
 
     [colors.accents]
     blue = ${hexq palette.forensic}
@@ -121,10 +122,27 @@ let
       };
       activate_on_single_click = true;
       launcher_window = {
-        opacity = 0.95;
+        # 0.95 (the earlier value) is nearly indistinguishable from fully
+        # opaque — `vicinae config default`'s own example is 0.6. Picked 0.75
+        # as a middle ground: visibly translucent without the readability
+        # problems reported at very low opacity (vicinaehq/vicinae#2097).
+        opacity = 0.75;
         blur.enabled = true;
-        material = "auto"; # liquid_glass where the compositor's ext-background-effect protocol supports it, blur otherwise
+        # "auto" would pick liquid_glass via ext-background-effect, but that
+        # protocol only landed in Hyprland 0.56.0 — this flake's pinned to
+        # 0.55.4, so force the compositor-blur path instead of trusting
+        # auto-detection to fall back cleanly.
+        material = "blur";
         rounding = 18; # waybar's own capsules round this hard (tokens/widget.css's border-radius: 20px)
+        # Hyprland doesn't round layer-shell surfaces itself (only toplevel
+        # windows), so turning client_side_decorations off entirely — the
+        # previous attempt at killing the border — also lost the rounded
+        # corners. Keep CSD on for its rounded clip/shadow, zero the border
+        # stroke width instead of fighting the theme's border alpha.
+        client_side_decorations = {
+          enabled = true;
+          border_width = 0;
+        };
       };
       # Pinned to the top of the root search's empty-query view
       favorites = [ "@annixion/annixion-kill-chain:kill-chain" ];
