@@ -29,6 +29,7 @@
 #temperature.critical,
 #battery.critical:not(.charging),
 #power-profiles-daemon.performance,
+#custom-offensive-mode.activated,
 #custom-tray-arrow.dnd-inhibited-none,
 #custom-tray-arrow.dnd-inhibited-notification {
   color: @offensive;

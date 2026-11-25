@@ -36,7 +36,8 @@
 }
 
 #power-profiles-daemon,
-#idle_inhibitor {
+#idle_inhibitor,
+#custom-offensive-mode {
   margin: 4px 5px;
   padding: 6px 15px 6px 10px;
   background-color: @surface;

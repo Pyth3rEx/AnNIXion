@@ -4,15 +4,19 @@
   lib,
   pkgs,
   config,
+  osConfig,
   annixionCssPrelude,
   ...
 }:
 let
   primaryOutput = config.annixion.desktop.hyprland.waybar.primaryOutput;
   keyboardName = config.annixion.desktop.hyprland.waybar.keyboardName;
+  offensiveEnabled = osConfig.annixion.offensiveNet.enable or false;
+
   powerProfilesDaemonModule = import ./modules/power-profiles-daemon.nix;
   workspaceModule = import ./modules/workspace.nix;
   idleInhibitorModule = import ./modules/idle-inhibitor.nix;
+  offensiveModeModule = import ./modules/offensive-mode.nix;
   groupsModule = import ./modules/groups.nix;
   distroModule = import ./modules/distro.nix;
   storageModule = import ./modules/storage.nix;
@@ -29,9 +33,13 @@ let
   clockModule = import ./modules/clock.nix;
   trayNotifModule = import ./modules/tray-notif.nix;
 
-  centerModules = powerProfilesDaemonModule // workspaceModule // idleInhibitorModule;
+  centerModules =
+    powerProfilesDaemonModule
+    // workspaceModule
+    // idleInhibitorModule
+    // lib.optionalAttrs offensiveEnabled offensiveModeModule;
 
-  centerModulesOrder = [
+  centerModulesOrder = lib.optional offensiveEnabled "custom/offensive-mode" ++ [
     "power-profiles-daemon"
     "hyprland/workspaces"
     "idle_inhibitor"
