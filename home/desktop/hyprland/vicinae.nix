@@ -1,11 +1,4 @@
-# annixion-kill-chain — a Vicinae extension replacing the rofi picklist this
-# started as (#223 follow-up). Vicinae's own component model (List.Section +
-# a read-only detail pane, screens pushed with a back breadcrumb) is the
-# closest thing on Wayland to Plasma's Kickoff, so the kill-chain tree is
-# rendered there instead of reinventing its chrome. The extension itself
-# (../../../vicinae-extension) is generic — it just renders whatever tree
-# JSON it's given — so this file's only job is turning catalog/ into that
-# tree, byte-identical in content to apps-menu.nix's XDG menu.
+# annixion-kill-chain — a Vicinae extension replacing the rofi picklist
 {
   config,
   lib,
@@ -122,23 +115,10 @@ let
       };
       activate_on_single_click = true;
       launcher_window = {
-        # 0.95 (the earlier value) is nearly indistinguishable from fully
-        # opaque — `vicinae config default`'s own example is 0.6. Picked 0.75
-        # as a middle ground: visibly translucent without the readability
-        # problems reported at very low opacity (vicinaehq/vicinae#2097).
         opacity = 0.75;
         blur.enabled = true;
-        # "auto" would pick liquid_glass via ext-background-effect, but that
-        # protocol only landed in Hyprland 0.56.0 — this flake's pinned to
-        # 0.55.4, so force the compositor-blur path instead of trusting
-        # auto-detection to fall back cleanly.
         material = "blur";
-        rounding = 18; # waybar's own capsules round this hard (tokens/widget.css's border-radius: 20px)
-        # Hyprland doesn't round layer-shell surfaces itself (only toplevel
-        # windows), so turning client_side_decorations off entirely — the
-        # previous attempt at killing the border — also lost the rounded
-        # corners. Keep CSD on for its rounded clip/shadow, zero the border
-        # stroke width instead of fighting the theme's border alpha.
+        rounding = 18;
         client_side_decorations = {
           enabled = true;
           border_width = 0;
@@ -171,9 +151,6 @@ in
       {
         name = "vicinae-blur";
         blur = "on";
-        # on (Hyprland's default) means the blur only ever reveals the
-        # wallpaper/bottom layers, never real windows — off shows the
-        # actual desktop through it.
         xray = "off";
         ignore_alpha = 0;
         "match:namespace" = "vicinae";
