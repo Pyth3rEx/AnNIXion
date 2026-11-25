@@ -13,7 +13,7 @@
   "commands": [
     {
       "name": "kill-chain",
-      "title": "Kill Chain",
+      "title": "AnNIXion",
       "subtitle": "Browse tools by phase",
       "description": "Browse the AnNIXion catalog by kill-chain phase, subcategory and tool",
       "mode": "view"
