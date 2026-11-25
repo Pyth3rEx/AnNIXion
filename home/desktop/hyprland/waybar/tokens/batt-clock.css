@@ -31,3 +31,15 @@
   border-radius: 20px;
   color: @text;
 }
+
+#mpris {
+  margin: 4px 5px;
+  padding: 6px 16px;
+  background-color: @surface_glass;
+  border-radius: 20px;
+  color: @text;
+}
+
+#mpris.paused {
+  color: @passive;
+}

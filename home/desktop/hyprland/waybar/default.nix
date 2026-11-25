@@ -23,6 +23,7 @@ let
   storageModule = import ./modules/storage.nix;
   systemModule = import ./modules/system.nix;
   audioModule = import ./modules/audio.nix;
+  mprisModule = import ./modules/mpris.nix;
   connectionsModule = import ./modules/connections.nix;
   networkInfoModule = import ./modules/network-info.nix;
   batteryModule = import ./modules/battery.nix;
@@ -86,6 +87,10 @@ in
       pkgs.jq
     ];
 
+    # Backs the mpris module below: "playerctld" (its default `player`)
+    # always tracks whichever MPRIS player last changed state.
+    services.playerctld.enable = true;
+
     # Blur-behind for the same glass look as the windows (workspace.nix),
     # so the translucent capsules (tokens/*.css, @surface_glass) actually
     # show wallpaper through them instead of just a flat dim colour.
@@ -126,6 +131,7 @@ in
         // storageModule
         // systemModule
         // audioModule
+        // mprisModule
         // connectionsModule
         // networkInfoModule
         // batteryModule
@@ -146,6 +152,7 @@ in
           ];
           modules-center = centerModulesOrder;
           modules-right = [
+            "mpris"
             "group/audio"
             "battery"
             "hyprland/language"
