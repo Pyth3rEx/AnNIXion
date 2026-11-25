@@ -14,6 +14,7 @@
 #tray-group,
 #battery,
 #clock,
+#custom-network-info,
 #workspaces {
   box-shadow:
     inset 0 0 0 1px alpha(@text, 0.1),

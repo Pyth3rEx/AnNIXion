@@ -2,7 +2,9 @@
 #custom-tray-arrow.inhibited-none,
 #custom-tray-arrow.dnd-none,
 #battery.charging,
-#power-profiles-daemon.power-saver {
+#power-profiles-daemon.power-saver,
+#network.wifi,
+#network.wired {
   color: @passive;
 }
 
@@ -14,11 +16,13 @@
 #battery.warning:not(.charging),
 #custom-tray-arrow.notification,
 #custom-tray-arrow.dnd-notification,
-#custom-tray-arrow.inhibited-notification {
+#custom-tray-arrow.inhibited-notification,
+#network.linked {
   color: @probe;
 }
 
 #network.disabled,
+#network.disconnected,
 #cpu.critical,
 #disk.critical,
 #memory.critical,

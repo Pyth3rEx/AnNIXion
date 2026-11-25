@@ -18,6 +18,7 @@ let
   systemModule = import ./modules/system.nix;
   audioModule = import ./modules/audio.nix;
   connectionsModule = import ./modules/connections.nix;
+  networkInfoModule = import ./modules/network-info.nix;
   batteryModule = import ./modules/battery.nix;
   clockModule = import ./modules/clock.nix;
   trayNotifModule = import ./modules/tray-notif.nix;
@@ -49,7 +50,10 @@ in
   };
 
   config = {
-    home.packages = [ pkgs.pavucontrol ];
+    home.packages = [
+      pkgs.pavucontrol
+      pkgs.jq
+    ];
 
     programs.waybar = {
       enable = lib.mkDefault true;
@@ -80,6 +84,7 @@ in
         // systemModule
         // audioModule
         // connectionsModule
+        // networkInfoModule
         // batteryModule
         // clockModule
         // trayNotifModule
@@ -92,11 +97,12 @@ in
             "group/distro-group"
             "group/storage"
             "group/system"
+            "group/connections"
+            "custom/network-info"
           ];
           modules-center = centerModulesOrder;
           modules-right = [
             "group/audio"
-            "group/connections"
             "battery"
             "clock"
             "group/tray-group"

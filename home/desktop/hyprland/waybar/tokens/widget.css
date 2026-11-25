@@ -59,14 +59,16 @@
 #disk,
 #memory,
 #cpu,
-#temperature,
-#bluetooth {
+#temperature {
   margin-right: 2px;
   padding: 0 8px;
 }
 
+#custom-network,
+#bluetooth,
 #network {
-  padding: 0px 10px 0px 4px;
+  min-width: 32px;
+  padding: 0 8px;
 }
 
 #pulseaudio {
