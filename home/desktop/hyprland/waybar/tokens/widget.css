@@ -3,7 +3,7 @@
 /*======= MODULE INDEPENDENT =======*/
 #distro-group {
   margin: 4px 5px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -40,7 +40,7 @@
 #custom-offensive-mode {
   margin: 4px 5px;
   padding: 6px 15px 6px 10px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -52,7 +52,7 @@
 #storage {
   margin: 4px 5px;
   padding: 6px 6px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -80,7 +80,7 @@
 /*======= TRAY =======*/
 #tray-group {
   margin: 4px 5px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
 }
 

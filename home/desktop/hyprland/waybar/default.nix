@@ -12,6 +12,7 @@ let
   primaryOutput = config.annixion.desktop.hyprland.waybar.primaryOutput;
   keyboardName = config.annixion.desktop.hyprland.waybar.keyboardName;
   offensiveEnabled = osConfig.annixion.offensiveNet.enable or false;
+  compositing = osConfig.annixion.desktop.compositing;
 
   powerProfilesDaemonModule = import ./modules/power-profiles-daemon.nix;
   workspaceModule = import ./modules/workspace.nix;
@@ -85,6 +86,18 @@ in
       pkgs.jq
     ];
 
+    # Blur-behind for the same glass look as the windows (workspace.nix),
+    # so the translucent capsules (tokens/*.css, @surface_glass) actually
+    # show wallpaper through them instead of just a flat dim colour.
+    wayland.windowManager.hyprland.settings.layerrule = lib.optionals compositing [
+      {
+        name = "waybar-blur";
+        blur = "on";
+        ignore_alpha = 0;
+        "match:namespace" = "waybar";
+      }
+    ];
+
     programs.waybar = {
       enable = lib.mkDefault true;
       systemd.enable = lib.mkDefault true;
@@ -145,6 +158,7 @@ in
 
       style = lib.mkDefault (
         annixionCssPrelude
+        + "@define-color surface_glass alpha(@surface, 0.82);\n"
         + builtins.readFile ./tokens/state.css
         + builtins.readFile ./tokens/workspace.css
         + builtins.readFile ./tokens/widget.css

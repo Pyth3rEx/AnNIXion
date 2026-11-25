@@ -3,7 +3,7 @@
 #battery {
   margin: 4px 5px;
   padding: 6px 16px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -11,7 +11,7 @@
 #clock {
   margin: 4px 5px;
   padding: 6px 10px 6px 16px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -19,7 +19,7 @@
 #language {
   margin: 4px 5px;
   padding: 6px 16px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -27,7 +27,7 @@
 #custom-network-info {
   margin: 4px 5px;
   padding: 6px 16px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
