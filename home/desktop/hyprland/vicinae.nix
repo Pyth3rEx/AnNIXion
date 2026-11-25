@@ -75,12 +75,6 @@ let
     background = ${hexaq 78 palette.ground}
     foreground = ${hexq palette.text}
     secondary_background = ${hexaq 85 palette.surface}
-    # waybar/tokens/glass.css's "glass pane" edge is a soft 1px CSS inset
-    # shadow at alpha(@text, 0.1) — blurred and anti-aliased by GTK, so it
-    # reads as a whisper. Vicinae's border is a hard, unblurred stroke at
-    # the same width, so the same alpha reads far stronger here; 8% still
-    # read as a visible white outline, so dropped further to land at the
-    # same visual weight as the waybar hairline.
     border = ${hexaq 3 palette.text}
 
     [colors.main_window]

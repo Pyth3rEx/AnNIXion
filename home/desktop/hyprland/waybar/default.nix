@@ -62,7 +62,6 @@ in
             layer = "top";
             height = 42;
             spacing = 6;
-            # An exclusions-only "output" array needs a trailing "*" to fall through to everything else (man waybar).
             output = [
               "!${primaryOutput}"
               "*"
