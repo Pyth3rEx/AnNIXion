@@ -178,6 +178,27 @@ _: {
   name = "AdaptixC2";
   genericName = "Adversary Emulation & C2 Framework";
   comment = "Extensible C2 — dockerised teamserver, native Qt operator client";
+  description = ''
+    AdaptixC2 is an extensible command-and-control framework: a dockerised Go
+    teamserver paired with a native Qt operator console, extended through
+    `.axs` Extension Kits that add listeners, agents and payload generators
+    without rebuilding the core.
+  '';
+  docs = "https://adaptix-framework.gitbook.io/";
+  snippets = [
+    {
+      label = "Build the server and its extenders";
+      command = "adaptixc2 build";
+    }
+    {
+      label = "Bring the teamserver up";
+      command = "adaptixc2 up";
+    }
+    {
+      label = "Follow teamserver logs";
+      command = "adaptixc2 logs";
+    }
+  ];
   exec = "AdaptixClient";
   launch = "gui"; # Qt console runs directly
   mark = {

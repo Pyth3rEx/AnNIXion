@@ -45,10 +45,12 @@
     orientation = "horizontal";
     drawer = {
       transition-duration = 500;
-      transition-left-to-right = false;
+      transition-left-to-right = true;
     };
     modules = [
-      "network"
+      "custom/network"
+      "network#wired"
+      "network#wifi"
       "bluetooth"
     ];
   };

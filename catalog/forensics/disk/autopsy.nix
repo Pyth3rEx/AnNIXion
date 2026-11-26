@@ -4,6 +4,12 @@ _: {
   name = "Autopsy";
   genericName = "Digital Forensics Platform";
   comment = "GUI frontend for The Sleuth Kit disk forensics";
+  description = ''
+    Autopsy is a graphical disk-forensics platform over The Sleuth Kit:
+    timeline analysis, keyword search, recovering deleted files, and
+    examining disk images and file systems case by case.
+  '';
+  docs = "https://sleuthkit.org/autopsy/docs.php";
   exec = "autopsy";
   launch = "gui"; # runs directly
   mark = {

@@ -3,7 +3,7 @@
 #workspaces {
   margin: 4px 5px;
   padding: 6px 6px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
 }
 

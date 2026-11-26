@@ -3,6 +3,22 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "GitHub CLI";
   genericName = "Git CLI";
+  description = "GitHub CLI brings pull requests, issues, releases and GitHub Actions runs to the shell, authenticated against your GitHub account.";
+  docs = "https://cli.github.com/manual/";
+  snippets = [
+    {
+      label = "List your pull requests";
+      command = "gh pr list";
+    }
+    {
+      label = "Check out a PR locally";
+      command = "gh pr checkout <number>";
+    }
+    {
+      label = "Create a PR from the current branch";
+      command = "gh pr create";
+    }
+  ];
   exec = "gh";
   launch = "term"; # konsole, closes with the tool
   mark = {

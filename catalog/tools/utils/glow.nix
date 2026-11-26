@@ -4,6 +4,22 @@ _: {
   name = "Glow";
   genericName = "Markdown Viewer";
   comment = "Render Markdown on the command line";
+  description = "Glow renders Markdown in the terminal with proper headings, tables and syntax-highlighted code blocks — the `text/markdown` file-type handler on this desktop.";
+  docs = "https://github.com/charmbracelet/glow#readme";
+  snippets = [
+    {
+      label = "Render a markdown file";
+      command = "glow README.md";
+    }
+    {
+      label = "Browse markdown files in a directory";
+      command = "glow .";
+    }
+    {
+      label = "Pipe stdin through glow";
+      command = "cat notes.md | glow -";
+    }
+  ];
   exec = "glow %f";
   launch = "term"; # konsole, closes with the tool
   mimeType = [ "text/markdown" ];

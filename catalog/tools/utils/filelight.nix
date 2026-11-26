@@ -3,6 +3,8 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "Filelight";
   genericName = "Disk Usage Analyzer";
+  description = "Filelight draws disk usage as concentric rings — a quick way to spot what is actually eating space on a drive.";
+  docs = "https://docs.kde.org/?application=filelight";
   exec = "filelight";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

@@ -4,6 +4,8 @@ _: {
   name = "QGit";
   genericName = "Git GUI";
   comment = "Graphical history, diff and commit browser for any git repository";
+  description = "QGit browses a repository's history as a graph, with side-by-side diffs and a commit/file browser — provider-agnostic, unlike GitHub Desktop.";
+  docs = "https://github.com/tibirna/qgit";
   exec = "qgit";
   launch = "gui"; # runs directly
   mark = {

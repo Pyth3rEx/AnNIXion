@@ -4,6 +4,8 @@ _: {
   name = "Kleopatra";
   genericName = "PGP & Certificate Manager";
   comment = "OpenPGP and X.509 certificate management";
+  description = "Kleopatra manages OpenPGP and X.509 certificates — generate and import keys, sign and encrypt files, and verify signatures.";
+  docs = "https://docs.kde.org/?application=kleopatra";
   exec = "kleopatra";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

@@ -8,6 +8,19 @@ _: {
   name = "BloodHound.py";
   genericName = "AD Data Collector";
   comment = "Collects AD session, ACL and membership data for the BloodHound CE graph";
+  description = ''
+    BloodHound.py collects on-prem Active Directory session, ACL and
+    membership data over LDAP/SMB/Kerberos with an already-valid domain
+    account, built on Impacket. Its output zip uploads into BloodHound CE's
+    own UI.
+  '';
+  docs = "https://github.com/dirkjanm/BloodHound.py";
+  snippets = [
+    {
+      label = "Full collection via LDAP/SMB";
+      command = "bloodhound-python -u <user> -p <password> -d <domain> -ns <DC-IP> -c All";
+    }
+  ];
   exec = "bloodhound-python";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

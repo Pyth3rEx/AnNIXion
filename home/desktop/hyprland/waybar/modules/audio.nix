@@ -7,9 +7,9 @@
       headset = "󰋋";
       hands-free = "󰋋";
       default = [
-        ""
-        ""
-        ""
+        "󰕿"
+        "󰖀"
+        "󰕾"
       ];
     };
     on-click = "pavucontrol";

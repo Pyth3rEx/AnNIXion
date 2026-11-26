@@ -7,6 +7,23 @@ _: {
   name = "AzureHound";
   genericName = "Entra ID Data Collector";
   comment = "Collects Entra ID roles, groups and app data for the BloodHound CE graph";
+  description = ''
+    AzureHound collects Entra ID (Azure AD) roles, groups, app registrations
+    and role assignments over the Graph API, with an already-valid
+    credential or device-code login. Its output uploads into BloodHound
+    CE's UI the same way BloodHound.py's on-prem collection does.
+  '';
+  docs = "https://github.com/SpecterOps/AzureHound";
+  snippets = [
+    {
+      label = "Collect with a user/password login";
+      command = "azurehound -u <user> -p '<password>' -t <tenant-id> list -o azurehound.json";
+    }
+    {
+      label = "Collect with a device-code login";
+      command = "azurehound --device-code -t <tenant-id> list -o azurehound.json";
+    }
+  ];
   exec = "azurehound";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

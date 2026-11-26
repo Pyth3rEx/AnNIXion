@@ -574,6 +574,28 @@ _: {
   name = "SysReptor";
   genericName = "Pentest Reporting Platform";
   comment = "Self-hosted pentest reporting — findings, templates, PDF export";
+  description = ''
+    SysReptor is self-hosted pentest reporting: findings, designs and
+    templates assembled into a report and exported to DOCX/PDF. Ships with
+    `reptor`, its API client, for pushing findings and tool output into a
+    report from the shell. See docs/sysreptor.md for the deployment this
+    wrapper drives and where the encryption keys live.
+  '';
+  docs = "https://docs.sysreptor.com/";
+  snippets = [
+    {
+      label = "Bring the stack up and open the UI";
+      command = "sysreptor open";
+    }
+    {
+      label = "Create another login";
+      command = "sysreptor superuser";
+    }
+    {
+      label = "Back up the whole instance";
+      command = "sysreptor backup";
+    }
+  ];
   exec = "sysreptor open";
   launch = "hold"; # konsole: the first pull is long and the errors are worth reading
   mark = {

@@ -3,7 +3,7 @@
 /*======= MODULE INDEPENDENT =======*/
 #distro-group {
   margin: 4px 5px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -36,10 +36,11 @@
 }
 
 #power-profiles-daemon,
-#idle_inhibitor {
+#idle_inhibitor,
+#custom-offensive-mode {
   margin: 4px 5px;
   padding: 6px 15px 6px 10px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -51,7 +52,7 @@
 #storage {
   margin: 4px 5px;
   padding: 6px 6px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
   color: @text;
 }
@@ -59,14 +60,16 @@
 #disk,
 #memory,
 #cpu,
-#temperature,
-#bluetooth {
+#temperature {
   margin-right: 2px;
   padding: 0 8px;
 }
 
+#custom-network,
+#bluetooth,
 #network {
-  padding: 0px 10px 0px 4px;
+  min-width: 32px;
+  padding: 0 8px;
 }
 
 #pulseaudio {
@@ -77,7 +80,7 @@
 /*======= TRAY =======*/
 #tray-group {
   margin: 4px 5px;
-  background-color: @surface;
+  background-color: @surface_glass;
   border-radius: 20px;
 }
 

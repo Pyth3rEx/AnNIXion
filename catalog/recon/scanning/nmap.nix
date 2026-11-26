@@ -5,6 +5,31 @@
   name = "Nmap";
   genericName = "Network Scanner";
   comment = "Network exploration and security auditing";
+  description = ''
+    Nmap discovers hosts and services on a network by sending crafted packets
+    and interpreting the responses: host discovery, port scanning, service
+    and version detection, OS fingerprinting, and scriptable checks via the
+    Nmap Scripting Engine (NSE).
+  '';
+  docs = "https://nmap.org/book/man.html";
+  snippets = [
+    {
+      label = "Service/version scan with default scripts";
+      command = "nmap -sV -sC <IP>";
+    }
+    {
+      label = "All 65535 TCP ports";
+      command = "nmap -p- <IP>";
+    }
+    {
+      label = "OS detection, version, scripts, traceroute";
+      command = "nmap -A <IP>";
+    }
+    {
+      label = "Quick UDP sweep of common ports";
+      command = "nmap -sU --top-ports 20 <IP>";
+    }
+  ];
   exec = "nmap";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

@@ -4,6 +4,22 @@ _: {
   name = "WhatWeb";
   genericName = "Web Recon";
   comment = "Web server fingerprinting and technology detection";
+  description = ''
+    WhatWeb fingerprints a web target's technology stack — CMS, frameworks,
+    JavaScript libraries, server software and version strings — from over
+    a thousand passive and active detection plugins.
+  '';
+  docs = "https://github.com/urbanadventurer/WhatWeb/wiki";
+  snippets = [
+    {
+      label = "Fingerprint a site";
+      command = "whatweb <URL>";
+    }
+    {
+      label = "Aggressive scan, verbose plugin output";
+      command = "whatweb -a 3 -v <URL>";
+    }
+  ];
   exec = "whatweb";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {

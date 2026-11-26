@@ -4,6 +4,26 @@ _: {
   name = "PowerShell";
   genericName = "Shell";
   comment = "Cross-platform PowerShell 7";
+  description = ''
+    PowerShell is the shell Windows administration and tooling is written
+    in — object pipelines instead of text, and cmdlets for AD, remoting and
+    the rest of the Windows ecosystem.
+  '';
+  docs = "https://learn.microsoft.com/powershell/scripting/overview";
+  snippets = [
+    {
+      label = "List running processes";
+      command = "Get-Process";
+    }
+    {
+      label = "Query AD for a user (RSAT)";
+      command = "Get-ADUser -Identity <user> -Properties *";
+    }
+    {
+      label = "Start a remote session";
+      command = "Enter-PSSession -ComputerName <host>";
+    }
+  ];
   exec = "pwsh";
   launch = "term"; # konsole, closes with the tool
   # The prompt chevron, unframed: bodies.terminal is the same two strokes

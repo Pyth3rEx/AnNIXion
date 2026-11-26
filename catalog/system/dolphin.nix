@@ -3,6 +3,8 @@ _: {
   package = null; # ships with the desktop, not this module
   name = "Dolphin";
   genericName = "File Manager";
+  description = "Dolphin is KDE's file manager: tabs, split views, a places panel and version-control integration for browsing and organising files.";
+  docs = "https://docs.kde.org/?application=dolphin";
   exec = "dolphin";
   launch = "gui"; # runs directly
   # Ships its own .desktop, which asks for the stock icon name;

@@ -6,6 +6,8 @@ _: {
   name = "QGIS";
   genericName = "GIS / Mapping";
   comment = "Geospatial analysis and map authoring";
+  description = "QGIS handles geospatial analysis and map authoring — layering imagery, coordinates and overlays into maps for a report, on the version-locked LTR branch.";
+  docs = "https://docs.qgis.org/";
   exec = "qgis";
   launch = "gui"; # runs directly
   # Ships its own .desktop (org.qgis.qgis.desktop), which asks for the stock

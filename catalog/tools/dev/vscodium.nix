@@ -5,6 +5,8 @@
   name = "VSCodium";
   genericName = "Text Editor";
   comment = "Code Editing. Redefined.";
+  description = "VSCodium is a telemetry-free build of VS Code — same editor, extensions and debugger, built from the open-source code without Microsoft's branding or telemetry.";
+  docs = "https://code.visualstudio.com/docs";
   exec = "codium";
   launch = "gui"; # runs directly
   wmClass = "vscodium";

@@ -47,6 +47,18 @@ function contentsMarkdown(node: TreeNode): string {
 	return lines.length > 0 ? lines.map((line) => `- ${line}`).join("\n") : "_Nothing here yet._";
 }
 
+function toolMarkdown(tool: Tool): string {
+	const parts: string[] = [];
+	if (tool.description) parts.push(tool.description);
+	if (tool.snippets.length > 0) {
+		const blocks = tool.snippets.map(
+			(snippet) => `**${snippet.label}**\n\`\`\`sh\n${snippet.command}\n\`\`\``,
+		);
+		parts.push(["### Snippets", ...blocks].join("\n\n"));
+	}
+	return parts.length > 0 ? parts.join("\n\n") : "_No description available._";
+}
+
 function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 	return (
 		<List.Item
@@ -66,10 +78,21 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 						}}
 					/>
 					<Action.CopyToClipboard title="Copy Command" content={tool.exec} />
+					{tool.docs ? (
+						<Action.OpenInBrowser title="Open Documentation" url={tool.docs} />
+					) : null}
+					{tool.snippets.map((snippet, i) => (
+						<Action.CopyToClipboard
+							key={i}
+							title={`Copy Snippet: ${snippet.label}`}
+							content={snippet.command}
+						/>
+					))}
 				</ActionPanel>
 			}
 			detail={
 				<List.Item.Detail
+					markdown={toolMarkdown(tool)}
 					metadata={
 						<List.Item.Detail.Metadata>
 							<List.Item.Detail.Metadata.Label title="Tool" text={tool.name} />
@@ -94,6 +117,9 @@ function ToolItem({ tool, breadcrumb }: { tool: Tool; breadcrumb: string[] }) {
 								<List.Item.Detail.Metadata.Label title="Comment" text={tool.comment} />
 							) : null}
 							<List.Item.Detail.Metadata.Label title="Command" text={tool.exec} />
+							{tool.docs ? (
+								<List.Item.Detail.Metadata.Link title="Documentation" target={tool.docs} text={tool.docs} />
+							) : null}
 						</List.Item.Detail.Metadata>
 					}
 				/>

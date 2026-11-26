@@ -1,8 +1,11 @@
 {
-  network = {
+  "custom/network" = {
+    format = "󰑩";
+    tooltip = false;
+  };
+  "network#wifi" = {
+    interface = "wl*";
     format-wifi = "{icon}";
-    format-ethernet = "󰌗";
-    format-linked = "󱘖";
     format-disconnected = "󰤣";
     format-disabled = "󰤮";
     format-icons = [
@@ -15,12 +18,19 @@
     tooltip-format-disconnected = "No Connection";
     tooltip-format-disabled = "Wi-Fi is OFF";
     tooltip-format-wifi = "󱄙  {essid} ({signalStrength}%)\n\n󰐻  Freq: {frequency}GHz\n  {bandwidthDownBytes}   {bandwidthUpBytes}";
-    tooltip-format-ethernet = "󰈀  {ifname} (Connected)\n  {bandwidthDownBytes}   {bandwidthUpBytes}";
-    tooltip-format-linked = "󱘖 {ifname}: No IP Address";
-    on-click = "nm-applet --indicator";
-    on-click-right = "pkill nm-applet";
+    on-click = "nm-connection-editor";
     on-scroll-up = "nmcli radio wifi on";
     on-scroll-down = "nmcli radio wifi off";
+  };
+  "network#wired" = {
+    interface = "en*";
+    format-ethernet = "󰌗";
+    format-linked = "󱘖";
+    format-disconnected = "󰈂";
+    tooltip-format-ethernet = "󰈀  {ifname} (Connected)\n  {bandwidthDownBytes}   {bandwidthUpBytes}";
+    tooltip-format-linked = "󱘖 {ifname}: No IP Address";
+    tooltip-format-disconnected = "No Connection";
+    on-click = "nm-connection-editor";
   };
   bluetooth = {
     format = "󰂯";

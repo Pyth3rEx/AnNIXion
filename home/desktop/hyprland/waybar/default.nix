@@ -4,27 +4,44 @@
   lib,
   pkgs,
   config,
+  osConfig,
   annixionCssPrelude,
   ...
 }:
 let
   primaryOutput = config.annixion.desktop.hyprland.waybar.primaryOutput;
+  keyboardName = config.annixion.desktop.hyprland.waybar.keyboardName;
+  offensiveEnabled = osConfig.annixion.offensiveNet.enable or false;
+  compositing = osConfig.annixion.desktop.compositing;
+
   powerProfilesDaemonModule = import ./modules/power-profiles-daemon.nix;
   workspaceModule = import ./modules/workspace.nix;
   idleInhibitorModule = import ./modules/idle-inhibitor.nix;
+  offensiveModeModule = import ./modules/offensive-mode.nix;
   groupsModule = import ./modules/groups.nix;
   distroModule = import ./modules/distro.nix;
   storageModule = import ./modules/storage.nix;
   systemModule = import ./modules/system.nix;
   audioModule = import ./modules/audio.nix;
+  mprisModule = import ./modules/mpris.nix;
   connectionsModule = import ./modules/connections.nix;
+  networkInfoModule = import ./modules/network-info.nix;
   batteryModule = import ./modules/battery.nix;
+  languageModule = lib.recursiveUpdate (import ./modules/language.nix) (
+    lib.optionalAttrs (keyboardName != null) {
+      "hyprland/language".keyboard-name = keyboardName;
+    }
+  );
   clockModule = import ./modules/clock.nix;
   trayNotifModule = import ./modules/tray-notif.nix;
 
-  centerModules = powerProfilesDaemonModule // workspaceModule // idleInhibitorModule;
+  centerModules =
+    powerProfilesDaemonModule
+    // workspaceModule
+    // idleInhibitorModule
+    // lib.optionalAttrs offensiveEnabled offensiveModeModule;
 
-  centerModulesOrder = [
+  centerModulesOrder = lib.optional offensiveEnabled "custom/offensive-mode" ++ [
     "power-profiles-daemon"
     "hyprland/workspaces"
     "idle_inhibitor"
@@ -48,8 +65,43 @@ in
     '';
   };
 
+  options.annixion.desktop.hyprland.waybar.keyboardName = lib.mkOption {
+    type = lib.types.nullOr lib.types.str;
+    default = null;
+    example = "at-translated-set-2-keyboard";
+    description = ''
+      Device name (from `hyprctl devices -j`, under "keyboards") that the
+      hyprland/language widget should read the active layout from.
+
+      Hyprland reports every HID as a "keyboard" (power button, hotkey
+      rails, video-bus, …), so without this pinned, waybar's module can
+      land on one that throws a format error and permanently disables
+      itself. Hardware-specific, so left unset here — set it in
+      user/home.nix once you know your real keyboard's name.
+    '';
+  };
+
   config = {
-    home.packages = [ pkgs.pavucontrol ];
+    home.packages = [
+      pkgs.pavucontrol
+      pkgs.jq
+    ];
+
+    # Backs the mpris module below: "playerctld" (its default `player`)
+    # always tracks whichever MPRIS player last changed state.
+    services.playerctld.enable = true;
+
+    # Blur-behind for the same glass look as the windows (workspace.nix),
+    # so the translucent capsules (tokens/*.css, @surface_glass) actually
+    # show wallpaper through them instead of just a flat dim colour.
+    wayland.windowManager.hyprland.settings.layerrule = lib.optionals compositing [
+      {
+        name = "waybar-blur";
+        blur = "on";
+        ignore_alpha = 0;
+        "match:namespace" = "waybar";
+      }
+    ];
 
     programs.waybar = {
       enable = lib.mkDefault true;
@@ -62,7 +114,6 @@ in
             layer = "top";
             height = 42;
             spacing = 6;
-            # An exclusions-only "output" array needs a trailing "*" to fall through to everything else (man waybar).
             output = [
               "!${primaryOutput}"
               "*"
@@ -80,8 +131,11 @@ in
         // storageModule
         // systemModule
         // audioModule
+        // mprisModule
         // connectionsModule
+        // networkInfoModule
         // batteryModule
+        // languageModule
         // clockModule
         // trayNotifModule
         // {
@@ -93,12 +147,15 @@ in
             "group/distro-group"
             "group/storage"
             "group/system"
+            "group/connections"
+            "custom/network-info"
           ];
           modules-center = centerModulesOrder;
           modules-right = [
+            "mpris"
             "group/audio"
-            "group/connections"
             "battery"
+            "hyprland/language"
             "clock"
             "group/tray-group"
           ];
@@ -108,6 +165,7 @@ in
 
       style = lib.mkDefault (
         annixionCssPrelude
+        + "@define-color surface_glass alpha(@surface, 0.82);\n"
         + builtins.readFile ./tokens/state.css
         + builtins.readFile ./tokens/workspace.css
         + builtins.readFile ./tokens/widget.css

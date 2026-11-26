@@ -3,6 +3,26 @@ _: {
   package = p: p.dnsutils;
   name = "dig";
   genericName = "DNS Lookup";
+  description = ''
+    dig queries DNS directly, bypassing whatever the system resolver would
+    cache — look up a record type, follow a trace from the root, or do a
+    reverse lookup from an IP.
+  '';
+  docs = "https://bind9.readthedocs.io/en/latest/manpages.html";
+  snippets = [
+    {
+      label = "Basic A record lookup";
+      command = "dig <domain>";
+    }
+    {
+      label = "Any record type, terse output";
+      command = "dig +short <domain> ANY";
+    }
+    {
+      label = "Reverse lookup from an IP";
+      command = "dig -x <IP>";
+    }
+  ];
   exec = "dig";
   launch = "hold"; # konsole, shell kept open afterwards
   mark = {
